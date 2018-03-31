@@ -6,4 +6,4 @@ New Animation/Motion/Location
 New Shape System other than particle
 
 
-Target Sizes of ShapeFactories
+Rotation of shapes (Probably done by the System)

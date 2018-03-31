@@ -36,6 +36,12 @@ public class Audio {
 					beat.detect(song.mix);
 				}
 			});
+		}
+
+		public BeatDetect getBeat() {
+			return beat;
 		};
+		
+		
 	}
 }

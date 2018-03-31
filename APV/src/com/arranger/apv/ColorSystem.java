@@ -11,7 +11,7 @@ public class ColorSystem {
 	}
 
 	public Color getCurrentColor() {
-		if (parent.getAudio().getBeatInfo().beat.isKick()) {
+		if (parent.getAudio().getBeatInfo().getBeat().isKick()) {
 			return Color.RED;
 		}
 		

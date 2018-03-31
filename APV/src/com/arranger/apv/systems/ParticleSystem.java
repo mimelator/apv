@@ -50,7 +50,6 @@ public class ParticleSystem extends ShapeSystem {
 		for (APVShape p : particles) {
 			((ParticleData)p.getData()).update();
 		}
-		
 		parent.shape(groupShape);
 	}
 	
@@ -64,7 +63,6 @@ public class ParticleSystem extends ShapeSystem {
 		private Color color = Color.WHITE;
 		
 		public ParticleData() {
-			super();
 			rebirth(0, 0);
 			lifespan = parent.random(LIFESPAN);
 		}

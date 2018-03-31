@@ -45,7 +45,7 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 	/**
 	 * Helper function to translate an awt Shape to something useable by Processing
 	 */
-	protected Point2D[] flattenShape(Shape shape ) {
+	public static Point2D[] flattenShape(Shape shape) {
     	List<Point2D> points = new ArrayList<Point2D>();
         PathIterator pi = shape.getPathIterator(null, 1);
         float [] coords = new float[6];

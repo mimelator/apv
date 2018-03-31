@@ -3,7 +3,10 @@ package com.arranger.apv;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.arranger.apv.LocationSystem.CircularLocationSystem;
 import com.arranger.apv.factories.CircleFactory;
+import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
+import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.systems.ParticleSystem;
@@ -57,7 +60,7 @@ public class Main extends PApplet {
 	}
 
 	public void setup() {
-		locationSystem = new LocationSystem(this);
+		locationSystem = new CircularLocationSystem(this);//new LocationSystem(this);
 		colorSystem = new ColorSystem(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
@@ -67,6 +70,8 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
+		systems.add(new ParticleSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+		systems.add(new ParticleSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
 		systems.add(new ParticleSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new ParticleSystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 		systems.add(new ParticleSystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
