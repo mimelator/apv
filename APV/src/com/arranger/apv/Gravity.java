@@ -14,12 +14,16 @@ public class Gravity {
 	}
 	
 	public void keyEvent(KeyEvent keyEvent) {
-		if (keyEvent.getAction() == KeyEvent.RELEASE && keyEvent.getKeyCode() == PApplet.UP) {
-			gravityIndex++;
+		if (keyEvent.getAction() == KeyEvent.RELEASE) {
+			if (keyEvent.getKeyCode() == PApplet.UP) {
+				gravityIndex++;
+			} else if (keyEvent.getKeyCode() == PApplet.DOWN) {
+				gravityIndex--;
+			}
 		}
 	}
 	
 	public float getCurrentGravity() {
-		return GRAVITY[gravityIndex % GRAVITY.length];
+		return GRAVITY[Math.abs(gravityIndex) % GRAVITY.length];
 	}
 }

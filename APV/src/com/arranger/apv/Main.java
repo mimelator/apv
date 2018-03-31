@@ -7,13 +7,15 @@ import java.util.List;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
-import com.arranger.apv.loc.CircularLocationSystem;
-import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.loc.CircularLocationSystem;
+import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.systems.ParticleSystem;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.event.KeyEvent;
 
 public class Main extends PApplet {
@@ -31,11 +33,14 @@ public class Main extends PApplet {
 	
 	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
 	protected int systemIndex = 0;
+
+	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
+	protected int locationIndex = 0;
 	
 	protected Audio audio;
 	protected Gravity gravity;
 	protected ColorSystem colorSystem;
-	protected LocationSystem locationSystem;
+
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -58,11 +63,13 @@ public class Main extends PApplet {
 	}
 	
 	public LocationSystem getLocationSystem() {
-		return locationSystem;
+		return locationSystems.get(Math.abs(locationIndex) % locationSystems.size());
 	}
 
 	public void setup() {
-		locationSystem = new LocationSystem(this);//new CircularLocationSystem(this);//new LocationSystem(this);
+		locationSystems.add(new MouseLocationSystem(this));
+		locationSystems.add(new CircularLocationSystem(this));
+		
 		colorSystem = new ColorSystem(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
@@ -99,7 +106,11 @@ public class Main extends PApplet {
 			systemIndex++;
 		} else if (event.getKeyCode() == PApplet.LEFT) {
 			systemIndex--;
-		}
+		} else {
+			if (event.getKeyCode() == PConstants.ENTER) {
+				locationIndex++;
+			}
+		} 
 	}
 
 	protected void drawDebug() {
