@@ -1,15 +1,15 @@
 package com.arranger.apv.factories;
 
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 
-public class CircleFactory extends PrimitiveShapeFactory {
+public class SquareFactory  extends PrimitiveShapeFactory {
 
-	public CircleFactory(Main parent) {
+	public SquareFactory(Main parent) {
 		super(parent);
 	}
 
@@ -18,8 +18,9 @@ public class CircleFactory extends PrimitiveShapeFactory {
 		return new PrimitiveShape(parent, data) {
 			@Override
 			protected Shape createPrimitiveShape(float size) {
-				return new Ellipse2D.Float(0, 0, size, size);
+				return new Rectangle2D.Float(0, 0, size, size);
 			}
 		};
 	}
 }
+
