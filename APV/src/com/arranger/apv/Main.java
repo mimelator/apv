@@ -1,9 +1,15 @@
 package com.arranger.apv;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.arranger.apv.factories.CircleFactory;
+import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.systems.ParticleSystem;
 
 import processing.core.PApplet;
+import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
@@ -18,7 +24,9 @@ public class Main extends PApplet {
 	private static final String SPRITE_PNG = "sprite.png";
 	private static final boolean DEBUG_TEXT = false;
 	
-	protected ShapeSystem sys;
+	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
+	protected int systemIndex = 0;
+	
 	protected Audio audio;
 	protected Gravity gravity;
 	
@@ -47,20 +55,32 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		ShapeFactory fact = new SquareFactory(this); //new SpriteFactory(this, SPRITE_PNG); //new CircleFactory(this);
-		sys = new ParticleSystem(this, fact, NUMBER_PARTICLES);
-		sys.setup();
+		systems.add(new ParticleSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+		systems.add(new ParticleSystem(this, new CircleFactory(this), NUMBER_PARTICLES));
+		systems.add(new ParticleSystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+		
+		for (ShapeSystem system : systems) {
+			system.setup();
+		}
 	}
 	
 	public void draw() {
-		background(0);
-		sys.draw();
+		background(0); //TODO Use a background to facilitate transitions from systems
+		ShapeSystem currentSystem = systems.get(systemIndex % systems.size());
+		currentSystem.draw();
 		
 		if (DEBUG_TEXT) {
 			drawDebug();
 		}
 	}
-	
+
+	@Override
+	public void keyReleased(KeyEvent event) {
+		if (event.getKeyCode() == PApplet.RIGHT) {
+			systemIndex++;
+		}
+	}
+
 	protected void drawDebug() {
 		fill(255);
 		textSize(16);
