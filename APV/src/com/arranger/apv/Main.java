@@ -19,6 +19,7 @@ public class Main extends PApplet {
 	
 	protected ShapeSystem sys;
 	protected Audio audio;
+	protected Gravity gravity;
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -31,8 +32,13 @@ public class Main extends PApplet {
 	public Audio getAudio() {
 		return audio;
 	}
+	
+	public Gravity getGravity() {
+		return gravity;
+	}
 
 	public void setup() {
+		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 
 		//Graphics hints
@@ -48,5 +54,11 @@ public class Main extends PApplet {
 	public void draw() {
 		background(0);
 		sys.draw();
+		
+		fill(255);
+		textSize(16);
+//		text("Frame rate: " + (int)frameRate, 10, 20);
+//		text("mouseXY:  " + mouseX + " " + mouseY, 10, 36);
+//		text("Gravity: " + gravity.getCurrentGravity(), 10, 52);
 	}
 }

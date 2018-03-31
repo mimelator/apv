@@ -80,7 +80,7 @@ public class ParticleSystem extends ShapeSystem {
 				rebirth(parent.mouseX, parent.mouseY); //TODO Externalize Location Logic
 			}
 			
-			gravity.y = DEFAULT_GRAVITY;// parent.getCurrentGravity();
+			gravity.y = parent.getGravity().getCurrentGravity();
 			velocity.add(gravity);
 
 			//lifespan changes the alpha of the color
