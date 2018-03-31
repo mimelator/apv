@@ -1,6 +1,7 @@
 package com.arranger.apv.systems;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,17 +16,13 @@ import processing.core.PShape;
 import processing.core.PVector;
 
 /**
- * For each APVShape, the Particle System should manage:
+ * For each APVShape, the Particle System manages:
  *	
  *  LifeSpan
  *  Gravity
  *  Translation
  *  Alpha Adjust
- *  
- *  I don't want the APVShape to have to know about any of the four above topics.
- *  Those should just be manged by this ParticleSystem.  However, I need to attach
- *  data to each of the APVShapes
- */
+*/
 public class ParticleSystem extends ShapeSystem {
 
 	private List<APVShape> particles = new ArrayList<APVShape>();
@@ -50,7 +47,6 @@ public class ParticleSystem extends ShapeSystem {
 
 	@Override
 	public void draw() {
-		//update and reset any particles
 		for (APVShape p : particles) {
 			((ParticleData)p.getData()).update();
 		}
@@ -59,35 +55,33 @@ public class ParticleSystem extends ShapeSystem {
 	}
 	
 	protected class ParticleData extends Data {
-		//lifespan and gravity
 		private static final float DEFAULT_GRAVITY = 0.1f;
 		private static final int LIFESPAN = 255;
 		
 		private float lifespan = LIFESPAN;
 		private PVector gravity = new PVector(0, DEFAULT_GRAVITY);
 		private PVector velocity;
-		private Color color = Color.WHITE; //TODO Externalize COLOR!!!!
+		private Color color = Color.WHITE;
 		
 		public ParticleData() {
 			super();
-			rebirth(parent.width / 2, parent.height / 2);
+			rebirth(0, 0);
 			lifespan = parent.random(LIFESPAN);
 		}
 		
 		public void update() {
-			lifespan = lifespan - 1;
-			if (lifespan < 0) {
-				rebirth(parent.mouseX, parent.mouseY); //TODO Externalize Location Logic
+			if (--lifespan < 0) {
+				Point2D p = parent.getLocationSystem().getCurrentPoint();
+				rebirth((float)p.getX(), (float)p.getY());
 			}
 			
 			gravity.y = parent.getGravity().getCurrentGravity();
 			velocity.add(gravity);
 
-			//lifespan changes the alpha of the color
-			PShape pShape = this.shape.getShape();
+			//lifespan changes the alpha 
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
-			pShape.setFill(result);
-			pShape.translate(velocity.x, velocity.y);
+			shape.setColor(result);
+			shape.getShape().translate(velocity.x, velocity.y);
 		}
 		
 		private void rebirth(float x, float y) {
@@ -97,12 +91,12 @@ public class ParticleSystem extends ShapeSystem {
 			velocity.mult(speed);
 			lifespan = LIFESPAN;
 			
-			if (this.shape != null && this.shape.getShape() != null) {
-				PShape pShape = this.shape.getShape();
+			if (shape != null && shape.getShape() != null) {
+				PShape pShape = shape.getShape();
 				pShape.resetMatrix();
 				pShape.translate(x, y);
 			}
-			//color = parent.getBeatInfo().getCurrentColor();
+			color = parent.getColorSystem().getCurrentColor();
 		}
 	}
 }

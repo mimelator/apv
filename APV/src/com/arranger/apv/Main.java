@@ -29,6 +29,8 @@ public class Main extends PApplet {
 	
 	protected Audio audio;
 	protected Gravity gravity;
+	protected ColorSystem colorSystem;
+	protected LocationSystem locationSystem;
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -46,7 +48,17 @@ public class Main extends PApplet {
 		return gravity;
 	}
 
+	public ColorSystem getColorSystem() {
+		return colorSystem;
+	}
+	
+	public LocationSystem getLocationSystem() {
+		return locationSystem;
+	}
+
 	public void setup() {
+		locationSystem = new LocationSystem(this);
+		colorSystem = new ColorSystem(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 
@@ -65,7 +77,7 @@ public class Main extends PApplet {
 	}
 	
 	public void draw() {
-		background(0); //TODO Use a background to facilitate transitions from systems
+		background(0); //TODO Omit drawing a background to facilitate transitions from systems
 		ShapeSystem currentSystem = systems.get(systemIndex % systems.size());
 		currentSystem.draw();
 		

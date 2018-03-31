@@ -29,6 +29,11 @@ public class SpriteFactory extends ShapeFactory {
 		}
 		
 		@Override
+		public void setColor(int color) {
+			getShape().setTint(color);
+		}
+
+		@Override
 		protected PShape createNewShape() {
 			float size = parent.random(10,60);
 		    PShape s = parent.createShape();

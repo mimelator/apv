@@ -1,0 +1,9 @@
+Stroke or No Stroke
+Omit Drawing Backgrounds for Transitions
+Work on Transitions
+
+New Animation/Motion/Location
+New Shape System other than particle
+
+
+Target Sizes of ShapeFactories

@@ -24,6 +24,10 @@ public abstract class APVShape {
 	public Data getData() {
 		return data;
 	}
+	
+	public void setColor(int color) {
+		getShape().setFill(color);
+	}
 
 	protected abstract PShape createNewShape();
 
