@@ -1,12 +1,14 @@
 package com.arranger.apv;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arranger.apv.LocationSystem.CircularLocationSystem;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
+import com.arranger.apv.loc.CircularLocationSystem;
+import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.systems.ParticleSystem;
@@ -60,7 +62,7 @@ public class Main extends PApplet {
 	}
 
 	public void setup() {
-		locationSystem = new CircularLocationSystem(this);//new LocationSystem(this);
+		locationSystem = new LocationSystem(this);//new CircularLocationSystem(this);//new LocationSystem(this);
 		colorSystem = new ColorSystem(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
@@ -70,11 +72,11 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		systems.add(new ParticleSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
-		systems.add(new ParticleSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+		systems.add(new ParticleSystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 		systems.add(new ParticleSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new ParticleSystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-		systems.add(new ParticleSystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+		systems.add(new ParticleSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+		systems.add(new ParticleSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		
 		for (ShapeSystem system : systems) {
 			system.setup();
@@ -82,8 +84,8 @@ public class Main extends PApplet {
 	}
 	
 	public void draw() {
-		background(0); //TODO Omit drawing a background to facilitate transitions from systems
-		ShapeSystem currentSystem = systems.get(systemIndex % systems.size());
+		background(Color.BLACK.getRGB()); //TODO Omit drawing a background to facilitate transitions from systems
+		ShapeSystem currentSystem = systems.get(Math.abs(systemIndex) % systems.size());
 		currentSystem.draw();
 		
 		if (DEBUG_TEXT) {
@@ -95,6 +97,8 @@ public class Main extends PApplet {
 	public void keyReleased(KeyEvent event) {
 		if (event.getKeyCode() == PApplet.RIGHT) {
 			systemIndex++;
+		} else if (event.getKeyCode() == PApplet.LEFT) {
+			systemIndex--;
 		}
 	}
 
