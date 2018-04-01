@@ -25,14 +25,33 @@ public abstract class PathLocationSystem extends LocationSystem {
 	
 	public Point2D getCurrentPoint() {
 		float pct = getPercentagePathComplete();
-		int result = (int)PApplet.lerp(0, points.length - 1, pct);
-		return points[result % points.length];
+		float result = PApplet.lerp(0, points.length - 1, pct);
+
+		int indexFloor = (int)Math.floor(result);
+		int indexCeil = (int)Math.ceil(result);
+		float pct2 = result - indexFloor;
+		
+		float x1 = (float)points[indexFloor].getX();
+		float y1 = (float)points[indexFloor].getY();
+		float x2 = (float)points[indexCeil].getX();
+		float y2 = (float)points[indexCeil].getY();
+		
+		//try to do further interpoloation
+		float x = PApplet.lerp(x1, x2, pct2);
+		float y = PApplet.lerp(y1, y2, pct2);
+		
+		return new Point2D.Float(x, y);
 	}
 
 	protected float getPercentagePathComplete() {
 		int millisEllapsed = parent.millis() - startTime;
 		float secEllapsed = millisEllapsed / 1000.f;
 		secEllapsed %= secondsPerPath; 
-		return secEllapsed / secondsPerPath;
+		float result = secEllapsed / secondsPerPath;
+		if (result < 0.0f || result > 1.0f) {
+			throw new RuntimeException("Illegal value for pct: " + result);
+		}
+		return result;
 	}
+
 }

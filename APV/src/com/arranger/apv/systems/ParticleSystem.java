@@ -81,7 +81,7 @@ public class ParticleSystem extends ShapeSystem {
 			shape.setColor(result);
 			
 			//move it
-//			shape.translate(velocity.x, velocity.y);
+			shape.translate(velocity.x, velocity.y);
 		}
 		
 		private void rebirth(float x, float y) {
@@ -93,12 +93,9 @@ public class ParticleSystem extends ShapeSystem {
 			
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
-				shape.rotate(parent.random(parent.random(360)));
 				shape.translate(x, y);
 			}
 			color = parent.getColorSystem().getCurrentColor();
-			
-			
 		}
 	}
 }

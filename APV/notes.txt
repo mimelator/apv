@@ -1,10 +1,11 @@
 More Location Systems that follow complex paths and change speeds
   Location Systems could also respond automatically to beats
-  Rotate Location Systems (doesn't matter for MouseSystem)
   Change Direction of Location System (doesn't matter for MouseSystem)
+  Rotate Location Systems (doesn't matter for MouseSystem)
+  
 
 New Shape Systems other than Particle
-Rotation of shapes (Probably done by the System)
+Rotation of shapes
 Advanced Color Systems
 Size Scalar
 Start using the Frequency Bands of the Song

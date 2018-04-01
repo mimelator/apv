@@ -20,7 +20,8 @@ public class Audio {
 		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
-			((AudioPlayer)source).play();
+			AudioPlayer audioPlayer = (AudioPlayer)source;
+			audioPlayer.loop();
 		}
 	}
 	
@@ -48,7 +49,5 @@ public class Audio {
 		public BeatDetect getBeat() {
 			return beat;
 		};
-		
-		
 	}
 }

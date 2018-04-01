@@ -9,6 +9,7 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.loc.BeatCircularLocationSystem;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -22,14 +23,16 @@ import processing.event.KeyEvent;
 public class Main extends PApplet {
 	
 	public static final boolean AUDIO_IN = true;
+	
+	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
-//	private static final int WIDTH = 1024;
-//	private static final int HEIGHT = 768;
+	private static final int WIDTH = 1024;
+	private static final int HEIGHT = 768;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
-	private static final int NUMBER_PARTICLES = 100;//1000;
+	private static final int NUMBER_PARTICLES = 1000;
 
 	private static final String SPRITE_PNG = "sprite.png";
 	private static final boolean DEBUG_TEXT = false;
@@ -50,8 +53,11 @@ public class Main extends PApplet {
 	}
 
 	public void settings() {
-		//size(WIDTH, HEIGHT, P2D);
-		fullScreen(P2D);
+		if (FULL_SCREEN) {
+			fullScreen(P2D);
+		} else {
+			size(WIDTH, HEIGHT, P2D);
+		}
 	}
 	
 	public Audio getAudio() {
@@ -73,6 +79,7 @@ public class Main extends PApplet {
 	public void setup() {
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
+		locationSystems.add(new BeatCircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
 		
 		colorSystem = new ColorSystem(this);
@@ -107,12 +114,15 @@ public class Main extends PApplet {
 
 	@Override
 	public void keyReleased(KeyEvent event) {
-		if (event.getKeyCode() == PApplet.RIGHT) {
+		int code = event.getKeyCode();
+		if (code == PApplet.RIGHT) {
 			systemIndex++;
-		} else if (event.getKeyCode() == PApplet.LEFT) {
+		} else if (code == PApplet.LEFT) {
 			systemIndex--;
-		} else {
-			if (event.getKeyCode() == PConstants.ENTER) {
+		} else if (code == PConstants.ENTER) {
+			if (event.isShiftDown()) {
+				locationIndex--;
+			} else {
 				locationIndex++;
 			}
 		} 
