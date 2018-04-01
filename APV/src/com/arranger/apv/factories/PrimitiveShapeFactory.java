@@ -38,6 +38,7 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 			}
 			
 			result.endShape();
+			
 			return result;
 		}
 	}

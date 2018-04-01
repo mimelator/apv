@@ -12,6 +12,7 @@ import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
+import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.ParticleSystem;
 
 import processing.core.PApplet;
@@ -20,13 +21,15 @@ import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
-	public static final String SONG = "03 When Things Get Strange v10.mp3";
-	public static final int WIDTH = 1024;
-	public static final int HEIGHT = 768;
+	public static final boolean AUDIO_IN = true;
+	private static final String SONG = "03 When Things Get Strange v10.mp3";
+	
+//	private static final int WIDTH = 1024;
+//	private static final int HEIGHT = 768;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
-	private static final int NUMBER_PARTICLES = 1000;
+	private static final int NUMBER_PARTICLES = 100;//1000;
 
 	private static final String SPRITE_PNG = "sprite.png";
 	private static final boolean DEBUG_TEXT = false;
@@ -47,7 +50,8 @@ public class Main extends PApplet {
 	}
 
 	public void settings() {
-		size(WIDTH, HEIGHT, P3D);
+		//size(WIDTH, HEIGHT, P2D);
+		fullScreen(P2D);
 	}
 	
 	public Audio getAudio() {
@@ -69,6 +73,7 @@ public class Main extends PApplet {
 	public void setup() {
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
+		locationSystems.add(new RectLocationSystem(this));
 		
 		colorSystem = new ColorSystem(this);
 		gravity = new Gravity(this);

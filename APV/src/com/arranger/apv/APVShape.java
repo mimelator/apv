@@ -21,6 +21,18 @@ public abstract class APVShape {
 		return shape;
 	}
 	
+	public void resetMatrix() {
+		getShape().resetMatrix();
+	}
+	
+	public void translate(float x, float y) {
+		getShape().translate(x, y);
+	}
+	
+	public void rotate(float radians) {
+		getShape().rotate(radians);
+	}
+	
 	public Data getData() {
 		return data;
 	}

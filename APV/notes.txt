@@ -1,15 +1,13 @@
 More Location Systems that follow complex paths and change speeds
   Location Systems could also respond automatically to beats
+  Rotate Location Systems (doesn't matter for MouseSystem)
+  Change Direction of Location System (doesn't matter for MouseSystem)
 
 New Shape Systems other than Particle
 Rotation of shapes (Probably done by the System)
-
 Advanced Color Systems
-
 Size Scalar
-
 Start using the Frequency Bands of the Song
-
 Create a background layer using stuff like: 
 	https://necessarydisorder.wordpress.com/2017/11/15/drawing-from-noise-and-then-making-animated-loopy-gifs-from-there/
 

@@ -3,6 +3,7 @@ package com.arranger.apv;
 
 import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
+import ddf.minim.AudioSource;
 import ddf.minim.Minim;
 import ddf.minim.analysis.BeatDetect;
 
@@ -12,9 +13,15 @@ public class Audio {
 	
 	public Audio(Main parent, String file, int bufferSize) {
 		Minim minim = new Minim(parent);
-		AudioPlayer song = minim.loadFile(file, bufferSize);
-		song.play();
-		beatInfo = new BeatInfo(song);
+		
+		AudioSource source = (Main.AUDIO_IN) ? 
+			minim.getLineIn(Minim.STEREO, bufferSize) :
+				minim.loadFile(file, bufferSize) ;
+		
+		beatInfo = new BeatInfo(source);
+		if (source instanceof AudioPlayer) {
+			((AudioPlayer)source).play();
+		}
 	}
 	
 	public BeatInfo getBeatInfo() {
@@ -25,15 +32,15 @@ public class Audio {
 
 		protected BeatDetect beat;
 		
-		public BeatInfo(AudioPlayer song) {
-			beat = new BeatDetect(song.bufferSize(), song.sampleRate());
-			song.addListener(new AudioListener() {
+		public BeatInfo(AudioSource source) {
+			beat = new BeatDetect(source.bufferSize(), source.sampleRate());
+			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
-					beat.detect(song.mix);
+					beat.detect(source.mix);
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					beat.detect(song.mix);
+					beat.detect(source.mix);
 				}
 			});
 		}

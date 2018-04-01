@@ -79,7 +79,9 @@ public class ParticleSystem extends ShapeSystem {
 			//lifespan changes the alpha 
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			shape.setColor(result);
-			shape.getShape().translate(velocity.x, velocity.y);
+			
+			//move it
+//			shape.translate(velocity.x, velocity.y);
 		}
 		
 		private void rebirth(float x, float y) {
@@ -90,11 +92,13 @@ public class ParticleSystem extends ShapeSystem {
 			lifespan = LIFESPAN;
 			
 			if (shape != null && shape.getShape() != null) {
-				PShape pShape = shape.getShape();
-				pShape.resetMatrix();
-				pShape.translate(x, y);
+				shape.resetMatrix();
+				shape.rotate(parent.random(parent.random(360)));
+				shape.translate(x, y);
 			}
 			color = parent.getColorSystem().getCurrentColor();
+			
+			
 		}
 	}
 }
