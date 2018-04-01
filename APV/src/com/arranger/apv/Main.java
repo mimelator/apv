@@ -14,7 +14,8 @@ import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
-import com.arranger.apv.systems.ParticleSystem;
+import com.arranger.apv.systems.GravitySystem;
+import com.arranger.apv.systems.RotSystem;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -91,11 +92,12 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		systems.add(new ParticleSystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
-		systems.add(new ParticleSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
-		systems.add(new ParticleSystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-		systems.add(new ParticleSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-		systems.add(new ParticleSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		
 		for (ShapeSystem system : systems) {
 			system.setup();

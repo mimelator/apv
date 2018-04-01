@@ -13,7 +13,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	public static class HypocycloidFactory extends ParametricFactory {
 
 		public HypocycloidFactory(Main parent) {
-			super(parent, true, 20, 0, 2);
+			super(parent, true, false, 20, 0, 2);
 		}
 
 		/**
@@ -35,7 +35,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	public static class InvoluteFactory extends ParametricFactory {
 
 		public InvoluteFactory(Main parent) {
-			super(parent, true, 15, 0, .5);
+			super(parent, true, true, 15, 0, .5);
 		}
 
 		/**
@@ -59,6 +59,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
     private static final double Y_OUT_OF_BOUNDS = 0;
 	
 	protected boolean closeShape = true;
+	protected boolean stroke = true;
 	protected double periods = 20;
 	protected double periodOffset = 0;
 	protected double precision = 1;
@@ -67,11 +68,13 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	
 	private ParametricFactory(Main parent, 
 			boolean closeShape, 
+			boolean stroke,
 			double periods, 
 			double periodOffset,
 			double precision) {
 		super(parent);
 		this.closeShape = closeShape;
+		this.stroke = stroke;
 		this.precision = precision;
 		this.periods = periods;
 		this.periodOffset = periodOffset;
@@ -79,13 +82,17 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 
 	@Override
 	public APVShape createShape(Data data) {
-		return new PrimitiveShape(parent, data) {
+		APVShape apvShape =  new PrimitiveShape(parent, data) {
 			@Override
 			protected Shape createPrimitiveShape(float size) {
 				Point2D [] points = genPoints(size);
 				return pointsToShape(points);
 			}
 		};
+		
+		apvShape.getShape().setStroke(stroke);
+		
+		return apvShape;
 	}
 	
     private Point2D[] genPoints(float size) {
