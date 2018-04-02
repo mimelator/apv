@@ -29,31 +29,58 @@ public class GravitySystem extends LifecycleSystem {
 	protected class GravityData extends LifecycleData {
 		private static final float DEFAULT_GRAVITY = 0.1f;
 		
-		private PVector gravity = new PVector(0, DEFAULT_GRAVITY);
-		private PVector velocity;
+		protected PVector gravity = new PVector(0, DEFAULT_GRAVITY);
+		protected PVector velocity;
 		
 		
 		public void update() {
 			super.update();
 			
-			gravity.y = parent.getGravity().getCurrentGravity();
-			velocity.add(gravity);
+			updateGravity();
+			updateLocation();
+		}
+		
+		protected void centerShape() {
+			int y = parent.height / 2;
+			int x = parent.width / 2;
+			shape.translate(x, y); //Center the shape
+		}
 
-			//move it
+		protected void updateLocation() {
 			shape.translate(velocity.x, velocity.y);
 		}
 
 		/**
-		 * this is too clumsyfor the sub classes
+		 * called from {@link #update()} and changes the gravity based on the global gravity 
 		 */
-		protected void rebirth() {
-			super.rebirth();
-			Point2D p = parent.getLocationSystem().getCurrentPoint();
-			float a = parent.random(PApplet.TWO_PI);
-			float speed = parent.random(0.5f, 4);
-			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
-			velocity.mult(speed);
+		protected void updateGravity() {
+			gravity.y = parent.getGravity().getCurrentGravity();
+			velocity.add(gravity);
+		}
+
+		/**
+		 * TODO this is too clumsy for the sub classes
+		 */
+		protected void respawn() {
+			super.respawn();
 			
+			//pick a direction
+			float a = parent.random(PApplet.TWO_PI);
+			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
+
+			//get the speed
+			float speed = parent.random(0.5f, 4);
+			velocity.mult(speed);
+
+			//Set initial location
+			setInitialLocation();
+		}
+
+		/**
+		 * Called from respawn
+		 */
+		protected void setInitialLocation() {
+			Point2D p = parent.getLocationSystem().getCurrentPoint();
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.translate((float)p.getX(), (float)p.getY());

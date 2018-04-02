@@ -13,9 +13,8 @@ import com.arranger.apv.ShapeSystem;
 import processing.core.PShape;
 
 /**
- * For each APVShape manage:
- *	
- *  lifespan
+ * Manages lifespan (and color) and delegates drawing to the {@link LifecycleData#update()} 
+ * to change the attributes (eg: location, rotation, scaling) of the Shape
  */
 public abstract class LifecycleSystem extends ShapeSystem {
 
@@ -50,26 +49,32 @@ public abstract class LifecycleSystem extends ShapeSystem {
 
 	protected class LifecycleData extends Data {
 		
-		private static final int LIFESPAN = 255;
+		public static final int LIFESPAN = 255;
 		protected float lifespan = LIFESPAN;
 		protected Color color = Color.WHITE;
 		
 		public LifecycleData() {
-			rebirth();
+			respawn();
 			lifespan = parent.random(LIFESPAN);
 		}
 		
+		/**
+		 * Every Draw cycle will give each LifecycleData the chance to update it's attributes
+		 * This Lifecyle Data will also check for "death" and respawn
+		 */
 		public void update() {
 			lifespan--;
 			if (isDead()) {
-				rebirth();
+				respawn();
 			}
 			
 			updateColor();
 		}
 
+		/**
+		 * called from {@link #update()} and changes the alpha based on lifespan 
+		 */
 		protected void updateColor() {
-			//lifespan changes the alpha 
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			shape.setColor(result);
 		}
@@ -78,7 +83,10 @@ public abstract class LifecycleSystem extends ShapeSystem {
 			return lifespan < 0;
 		}
 		
-		protected void rebirth() {
+		/**
+		 * Resets lifespan and color
+		 */
+		protected void respawn() {
 			lifespan = LIFESPAN;
 			color = parent.getColorSystem().getCurrentColor();
 		}

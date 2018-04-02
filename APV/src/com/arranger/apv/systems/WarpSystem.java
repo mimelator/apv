@@ -57,8 +57,8 @@ public class WarpSystem extends DirectLifecycleSystem {
 			bright += 5;
 		}
 		
-		protected void rebirth() {
-			super.rebirth();
+		protected void respawn() {
+			super.respawn();
 			angle = parent.random(0, 2 * PApplet.PI * 100);
 			dist  = parent.random(parent.width / 50, parent.width);
 			speed = parent.random(0 * warp(), .1f * warp());

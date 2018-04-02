@@ -9,7 +9,6 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
-import com.arranger.apv.loc.BeatCircularLocationSystem;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -25,6 +24,7 @@ import processing.event.KeyEvent;
 public class Main extends PApplet {
 	
 	public static final boolean AUDIO_IN = true;
+	private static final boolean USE_BG = false;
 	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
@@ -92,7 +92,6 @@ public class Main extends PApplet {
 	public void setup() {
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
-		locationSystems.add(new BeatCircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
 		
 		colorSystem = new ColorSystem(this);
@@ -104,14 +103,16 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		backgroundSystems.add(new WarpSystem(this, new SquareFactory(this), 500));
+		if (USE_BG) {
+			backgroundSystems.add(new WarpSystem(this, new SquareFactory(this), 500));
+		}
 		
-		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+		systems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+		systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		
 		for (ShapeSystem system : systems) {
 			system.setup();
@@ -125,13 +126,18 @@ public class Main extends PApplet {
 	public void draw() {
 		//TODO Omit drawing a background to facilitate transitions from systems
 		background(Color.BLACK.getRGB()); 
-		ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
-		bgSys.draw();
+		
+		if (USE_BG) {
+			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+			bgSys.draw();
+			addDebugMsg("bgSys" + bgSys.getClass().getSimpleName() + ":" + bgSys.factory.getClass().getSimpleName());
+		}
 		ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
 		fgSys.draw();
+		addDebugMsg("fgSys: " + fgSys.getClass().getSimpleName() + ":" + fgSys.factory.getClass().getSimpleName());
 		
 		if (DEBUG_TEXT) {
-			doDebugMsg(bgSys, fgSys);
+			doDebugMsg();
 		}
 	}
 
@@ -161,12 +167,10 @@ public class Main extends PApplet {
 		debugStatements.add(msg);
 	}
 	
-	protected void doDebugMsg(ShapeSystem bgSys, ShapeSystem fgSys) {
+	protected void doDebugMsg() {
 		addDebugMsg("Frame rate: " + (int)frameRate);
 		addDebugMsg("mouseXY:  " + mouseX + " " + mouseY);
 		addDebugMsg("Gravity: " + gravity.getCurrentGravity());
-		addDebugMsg("bgSys" + bgSys.getClass().getSimpleName() + ":" + bgSys.factory.getClass().getSimpleName());
-		addDebugMsg("fgSys: " + fgSys.getClass().getSimpleName() + ":" + fgSys.factory.getClass().getSimpleName());
 		addDebugMsg("loc: " + getLocationSystem().getClass().getSimpleName());
 		drawDebug();
 	}

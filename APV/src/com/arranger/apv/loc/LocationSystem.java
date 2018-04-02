@@ -13,5 +13,9 @@ public abstract class LocationSystem {
 	}
 
 	public abstract Point2D getCurrentPoint();
+	
+	protected Point2D getDefaultLocation() {
+		return new Point2D.Float(parent.width / 2, parent.height / 2);
+	}
 
 }

@@ -8,8 +8,11 @@ import com.arranger.apv.ShapeFactory;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class RotSystem extends LifecycleSystem {
+public class RotSystem extends GravitySystem {
 
+	public static final int DEGREES = 360;
+	public static final int ROTATION_SPEED = 1;
+	
 	public RotSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
 	}
@@ -19,9 +22,12 @@ public class RotSystem extends LifecycleSystem {
 		return new RotData();
 	}
 	
-	protected class RotData extends LifecycleData {
+	protected class RotData extends GravityData {
 		
-		private PVector velocity;
+		
+		protected float heading; 
+		protected PVector dist; //distance from center of the screen
+		protected Point2D p; //initial location
 		
 		public RotData() {
 			super();
@@ -29,24 +35,34 @@ public class RotSystem extends LifecycleSystem {
 
 		public void update() {
 			super.update();
+			shape.resetMatrix();
 			
-			velocity.rotate(PApplet.radians(15));
-			shape.translate(velocity.x, velocity.y);
+			dist.add(velocity);
+			heading += ROTATION_SPEED;
+			
+			shape.rotate(PApplet.radians(heading));
+			shape.translate((float)p.getX(), (float)p.getY()); //Starting point
+			shape.translate(dist.x, dist.y); //move it along
 		}
 		
-		protected void rebirth() {
-			super.rebirth();
-			Point2D p = parent.getLocationSystem().getCurrentPoint();
-			float a = parent.random(PApplet.TWO_PI);
-			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
-			velocity.mult(parent.random(0.5f, 4));
-			
-			//TODO Review exact same code as GravitySystem$GravityData#rebirth
-			if (shape != null && shape.getShape() != null) {
-				shape.resetMatrix();
-				shape.translate((float)p.getX(), (float)p.getY());
-			}
+		protected void updateLocation() {
+			//Do nothing here
+		}
+		
+		@Override
+		protected void updateGravity() {
+			//Don't use gravity
+		}
+
+		protected void respawn() {
+			super.respawn();
+			heading = parent.random(DEGREES);
+			dist = new PVector();
+		}
+
+		@Override
+		protected void setInitialLocation() {
+			p = parent.getLocationSystem().getCurrentPoint();
 		}
 	}
-
 }

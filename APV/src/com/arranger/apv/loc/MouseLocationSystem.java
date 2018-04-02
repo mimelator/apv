@@ -11,6 +11,9 @@ public class MouseLocationSystem extends LocationSystem {
 	}
 
 	public Point2D getCurrentPoint() {
+		if (parent.mouseX == 0 && parent.mouseY == 0) {
+			return getDefaultLocation();
+		}
 		return new Point2D.Float(parent.mouseX, parent.mouseY);
 	}
 }
