@@ -65,6 +65,10 @@ public abstract class LifecycleSystem extends ShapeSystem {
 				rebirth();
 			}
 			
+			updateColor();
+		}
+
+		protected void updateColor() {
 			//lifespan changes the alpha 
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			shape.setColor(result);

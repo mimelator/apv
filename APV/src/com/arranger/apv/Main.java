@@ -14,9 +14,9 @@ import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
-import com.arranger.apv.systems.DirectLifecycleSystem;
 import com.arranger.apv.systems.GravitySystem;
 import com.arranger.apv.systems.RotSystem;
+import com.arranger.apv.systems.WarpSystem;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -36,7 +36,7 @@ public class Main extends PApplet {
 	private static final int NUMBER_PARTICLES = 1000;
 
 	private static final String SPRITE_PNG = "sprite.png";
-	private static final boolean DEBUG_TEXT = false;
+	private static final boolean DEBUG_TEXT = true;
 	
 	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
 	protected int systemIndex = 0;
@@ -79,6 +79,15 @@ public class Main extends PApplet {
 	public LocationSystem getLocationSystem() {
 		return locationSystems.get(Math.abs(locationIndex) % locationSystems.size());
 	}
+	
+	/**
+	 * This little tool will keep interpolating between the low and high values based
+	 * upon the frameCount.  It should complete a circuit every
+	 */
+	public float oscillate(float low, float high) {
+		float cos = cos(PI + frameCount / 60.0f / 5); //TODO Fix this ugly equation and accept a timing param
+		return PApplet.map(cos, -1, 1, 0, 10);
+	}
 
 	public void setup() {
 		locationSystems.add(new MouseLocationSystem(this));
@@ -95,7 +104,7 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		backgroundSystems.add(new DirectLifecycleSystem(this, new SquareFactory(this), 500));
+		backgroundSystems.add(new WarpSystem(this, new SquareFactory(this), 500));
 		
 		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
@@ -116,16 +125,13 @@ public class Main extends PApplet {
 	public void draw() {
 		//TODO Omit drawing a background to facilitate transitions from systems
 		background(Color.BLACK.getRGB()); 
-		ShapeSystem ss = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
-		ss.draw();
-		ss = systems.get(Math.abs(systemIndex) % systems.size());
-		ss.draw();
+		ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+		bgSys.draw();
+		ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
+		fgSys.draw();
 		
 		if (DEBUG_TEXT) {
-			addDebugMsg("Frame rate: " + (int)frameRate);
-			addDebugMsg("mouseXY:  " + mouseX + " " + mouseY);
-			addDebugMsg("Gravity: " + gravity.getCurrentGravity());
-			drawDebug();
+			doDebugMsg(bgSys, fgSys);
 		}
 	}
 
@@ -154,6 +160,16 @@ public class Main extends PApplet {
 	public void addDebugMsg(String msg) {
 		debugStatements.add(msg);
 	}
+	
+	protected void doDebugMsg(ShapeSystem bgSys, ShapeSystem fgSys) {
+		addDebugMsg("Frame rate: " + (int)frameRate);
+		addDebugMsg("mouseXY:  " + mouseX + " " + mouseY);
+		addDebugMsg("Gravity: " + gravity.getCurrentGravity());
+		addDebugMsg("bgSys" + bgSys.getClass().getSimpleName() + ":" + bgSys.factory.getClass().getSimpleName());
+		addDebugMsg("fgSys: " + fgSys.getClass().getSimpleName() + ":" + fgSys.factory.getClass().getSimpleName());
+		addDebugMsg("loc: " + getLocationSystem().getClass().getSimpleName());
+		drawDebug();
+	}
 
 	protected void drawDebug() {
 		fill(255);
@@ -169,12 +185,5 @@ public class Main extends PApplet {
 		debugStatements.clear();
 	}
 	
-	/**
-	 * This little tool will keep interpolating between the low and high values based
-	 * upon the frameCount.  It should complete a circuit every
-	 */
-	public float oscillate(float low, float high) {
-		float cos = cos(PI + frameCount / 60.0f / 5); //TODO Fix this ugly equation and accept a timing param
-		return PApplet.map(cos, -1, 1, 0, 10);
-	}
+
 }
