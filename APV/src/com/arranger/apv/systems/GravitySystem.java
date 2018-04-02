@@ -36,12 +36,14 @@ public class GravitySystem extends LifecycleSystem {
 			
 			gravity.y = parent.getGravity().getCurrentGravity();
 			velocity.add(gravity);
-			//velocity.rotate(PApplet.radians(15));
 
 			//move it
 			shape.translate(velocity.x, velocity.y);
 		}
 
+		/**
+		 * this is too clumsyfor the sub classes
+		 */
 		protected void rebirth(float x, float y) {
 			super.rebirth(x, y);
 			float a = parent.random(PApplet.TWO_PI);

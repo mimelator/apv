@@ -14,6 +14,7 @@ import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
+import com.arranger.apv.systems.DirectLifecycleSystem;
 import com.arranger.apv.systems.GravitySystem;
 import com.arranger.apv.systems.RotSystem;
 
@@ -24,7 +25,6 @@ import processing.event.KeyEvent;
 public class Main extends PApplet {
 	
 	public static final boolean AUDIO_IN = true;
-	
 	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
@@ -92,6 +92,7 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
+		systems.add(new DirectLifecycleSystem(this, null));
 		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
@@ -136,5 +137,15 @@ public class Main extends PApplet {
 		text("Frame rate: " + (int)frameRate, 10, 20);
 		text("mouseXY:  " + mouseX + " " + mouseY, 10, 36);
 		text("Gravity: " + gravity.getCurrentGravity(), 10, 52);
+	}
+	
+	/**
+	 * This little tool will keep interpolating between the low and high values based
+	 * upon the frameCount.  It should complete a circuit every
+	 */
+	public float oscillate(float low, float high) {
+		float secondsPerOscilation = 60.0f / 5;
+		float cos = cos(PI + frameCount / secondsPerOscilation);
+		return PApplet.map(cos, -1, 1, 0, 10);
 	}
 }
