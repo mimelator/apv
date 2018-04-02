@@ -40,6 +40,10 @@ public abstract class APVShape {
 	public void setColor(int color) {
 		getShape().setFill(color);
 	}
+	
+	public void centerShape() {
+		getShape().translate(parent.height / 2, parent.width / 2); 
+	}
 
 	protected abstract PShape createNewShape();
 

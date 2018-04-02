@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.factories.CircleFactory;
+import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
@@ -24,7 +25,7 @@ import processing.event.KeyEvent;
 public class Main extends PApplet {
 	
 	public static final boolean AUDIO_IN = true;
-	private static final boolean USE_BG = false;
+	private static final boolean USE_BG = true;
 	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
@@ -84,8 +85,8 @@ public class Main extends PApplet {
 	 * This little tool will keep interpolating between the low and high values based
 	 * upon the frameCount.  It should complete a circuit every
 	 */
-	public float oscillate(float low, float high) {
-		float cos = cos(PI + frameCount / 60.0f / 5); //TODO Fix this ugly equation and accept a timing param
+	public float oscillate(float low, float high, float oscScalar) {
+		float cos = cos(PI + frameCount / frameRate / oscScalar);
 		return PApplet.map(cos, -1, 1, 0, 10);
 	}
 
@@ -104,7 +105,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new WarpSystem(this, new SquareFactory(this), 500));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
 		}
 		
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
@@ -168,10 +169,9 @@ public class Main extends PApplet {
 	}
 	
 	protected void doDebugMsg() {
+		addDebugMsg("Loc: " + getLocationSystem().getClass().getSimpleName());
 		addDebugMsg("Frame rate: " + (int)frameRate);
-		addDebugMsg("mouseXY:  " + mouseX + " " + mouseY);
-		addDebugMsg("Gravity: " + gravity.getCurrentGravity());
-		addDebugMsg("loc: " + getLocationSystem().getClass().getSimpleName());
+		addDebugMsg("MouseXY:  " + mouseX + " " + mouseY);
 		drawDebug();
 	}
 

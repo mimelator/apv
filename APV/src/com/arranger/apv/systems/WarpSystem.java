@@ -5,10 +5,14 @@ import com.arranger.apv.ShapeFactory;
 
 import processing.core.PApplet;
 
+/**
+ * @see https://blog.ktbyte.com/2018/02/05/how-to-make-a-warp-drive-hyperdrive-effect-in-processing/
+ */
 public class WarpSystem extends DirectLifecycleSystem {
 
 	private static final int MIN_WARP = 0;
 	private static final int MAX_WARP = 10;
+	private static final float OSCILLATIONS_SCALAR = 5;
 	
 	public WarpSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
@@ -22,11 +26,11 @@ public class WarpSystem extends DirectLifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
-		parent.addDebugMsg("WARP " + PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
+		parent.addDebugMsg("Warp " + PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
 	}
 	
 	private float warp() {
-		return parent.oscillate(MIN_WARP, MAX_WARP);
+		return parent.oscillate(MIN_WARP, MAX_WARP, OSCILLATIONS_SCALAR);
 	}
 
 	protected class WarpData extends DirectLifecycleData {
@@ -46,7 +50,8 @@ public class WarpSystem extends DirectLifecycleSystem {
 			parent.translate(dist, 0);
 			parent.stroke(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			parent.strokeWeight(thick);
-			parent.line(0, 0, speed, 0); // draw line from previous to next position
+			//parent.line(0, 0, speed, 0); // draw line from previous to next position
+			parent.shape(shape.getShape());
 		}
 		
 		@Override

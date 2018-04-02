@@ -13,11 +13,14 @@ import com.arranger.apv.ShapeSystem;
 import processing.core.PShape;
 
 /**
- * Manages lifespan (and color) and delegates drawing to the {@link LifecycleData#update()} 
+ * Manages lifespan, color and stroke and delegates drawing to the {@link LifecycleData#update()} 
  * to change the attributes (eg: location, rotation, scaling) of the Shape
  */
 public abstract class LifecycleSystem extends ShapeSystem {
 
+	public static final int DEFAULT_STROKE_WEIGHT = 1;
+	public static final Color DEFAULT_STROKE_COLOR = Color.BLACK;
+	
 	protected List<APVShape> particles = new ArrayList<APVShape>();
 	protected PShape groupShape;
 	protected int numParticles;
@@ -36,11 +39,27 @@ public abstract class LifecycleSystem extends ShapeSystem {
 			APVShape s = factory.createShape(createData());
 			particles.add(s);
 			groupShape.addChild(s.getShape());
+			
+			
+			//setInitialStroke(pShape);
+			
 		}
+	}
+
+	/**
+	 * called during {@link #setup()} to set the stroke of the PShape
+	 */
+	protected void setInitialStroke(PShape pShape) {
+		pShape.setStroke(DEFAULT_STROKE_COLOR.getRGB());
+		pShape.setStrokeWeight(DEFAULT_STROKE_WEIGHT);
 	}
 
 	@Override
 	public void draw() {
+		if (particles.isEmpty()) {
+			setup();
+		}
+		
 		for (APVShape p : particles) {
 			((LifecycleData)p.getData()).update();
 		}
@@ -50,6 +69,7 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	protected class LifecycleData extends Data {
 		
 		public static final int LIFESPAN = 255;
+		
 		protected float lifespan = LIFESPAN;
 		protected Color color = Color.WHITE;
 		
@@ -59,6 +79,7 @@ public abstract class LifecycleSystem extends ShapeSystem {
 		}
 		
 		/**
+		 * {@link LifecycleSystem#draw()}
 		 * Every Draw cycle will give each LifecycleData the chance to update it's attributes
 		 * This Lifecyle Data will also check for "death" and respawn
 		 */
@@ -79,12 +100,17 @@ public abstract class LifecycleSystem extends ShapeSystem {
 			shape.setColor(result);
 		}
 	
+		/**
+		 * checks to see whether lifespan has expired
+		 * called from {@link #update()}
+		 */
 		protected boolean isDead() {
 			return lifespan < 0;
 		}
 		
 		/**
 		 * Resets lifespan and color
+		 * called from {@link #update()} when {@link #isDead()} is true
 		 */
 		protected void respawn() {
 			lifespan = LIFESPAN;

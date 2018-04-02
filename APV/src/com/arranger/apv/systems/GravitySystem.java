@@ -21,18 +21,28 @@ public class GravitySystem extends LifecycleSystem {
 	}
 	
 	@Override
+	public void draw() {
+		super.draw();
+		parent.addDebugMsg("Gravity: " + parent.getGravity().getCurrentGravity());
+	}
+
+	@Override
 	protected LifecycleData createData() {
 		return new GravityData();
 	}
 
 
 	protected class GravityData extends LifecycleData {
+		private static final int HIGH_SPEED_RANGE = 4;
+		private static final float LOW_SPEED_RANGE = 0.5f;
 		private static final float DEFAULT_GRAVITY = 0.1f;
 		
 		protected PVector gravity = new PVector(0, DEFAULT_GRAVITY);
 		protected PVector velocity;
 		
-		
+		/**
+		 * {@link GravitySystem#draw()}
+		 */
 		public void update() {
 			super.update();
 			
@@ -40,12 +50,9 @@ public class GravitySystem extends LifecycleSystem {
 			updateLocation();
 		}
 		
-		protected void centerShape() {
-			int y = parent.height / 2;
-			int x = parent.width / 2;
-			shape.translate(x, y); //Center the shape
-		}
-
+		/**
+		 * called from {@link #update()} and changes the location based on {@link #velocity}
+		 */
 		protected void updateLocation() {
 			shape.translate(velocity.x, velocity.y);
 		}
@@ -59,7 +66,8 @@ public class GravitySystem extends LifecycleSystem {
 		}
 
 		/**
-		 * TODO this is too clumsy for the sub classes
+		 * called when {@link #isDead()} is true during the update/draw phase
+		 * Also called during {@link GravitySystem#setup()} / {@link #setShape(com.arranger.apv.APVShape)}
 		 */
 		protected void respawn() {
 			super.respawn();
@@ -69,7 +77,7 @@ public class GravitySystem extends LifecycleSystem {
 			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
 
 			//get the speed
-			float speed = parent.random(0.5f, 4);
+			float speed = parent.random(LOW_SPEED_RANGE, HIGH_SPEED_RANGE);
 			velocity.mult(speed);
 
 			//Set initial location
@@ -77,7 +85,7 @@ public class GravitySystem extends LifecycleSystem {
 		}
 
 		/**
-		 * Called from respawn
+		 * called during {@link #respawn()}
 		 */
 		protected void setInitialLocation() {
 			Point2D p = parent.getLocationSystem().getCurrentPoint();

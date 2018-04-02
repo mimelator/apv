@@ -13,13 +13,21 @@ import com.arranger.apv.ShapeFactory;
 import processing.core.PShape;
 
 public abstract class PrimitiveShapeFactory extends ShapeFactory {
-
+	
+	private static final int LARGE_SHAPE_SIZE = 60;
+	private static final int SMALL_SHAPE_SIZE = 10;
+	
 	public PrimitiveShapeFactory(Main parent) {
 		super(parent);
 	}
 	
+	protected float newShapeSize() {
+		float size = parent.random(SMALL_SHAPE_SIZE, LARGE_SHAPE_SIZE);
+		return size;
+	}
+	
 	public abstract class PrimitiveShape extends APVShape {
-		
+
 		public PrimitiveShape(Main parent, Data data) {
 			super(parent, data);
 		}
@@ -28,7 +36,7 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 		
 		@Override
 		protected PShape createNewShape() {
-			float size = parent.random(10, 60);
+			float size = newShapeSize();
 			Shape shape = createPrimitiveShape(size);
 
 			PShape result = parent.createShape();

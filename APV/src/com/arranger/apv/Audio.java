@@ -1,6 +1,7 @@
 package com.arranger.apv;
 
 
+import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSource;
@@ -22,6 +23,11 @@ public class Audio {
 		if (source instanceof AudioPlayer) {
 			AudioPlayer audioPlayer = (AudioPlayer)source;
 			audioPlayer.loop();
+		} else if (source instanceof AudioInput) {
+			AudioInput audioInput = (AudioInput)source;
+			if (!audioInput.isMonitoring()) {
+				audioInput.enableMonitoring();
+			}
 		}
 	}
 	

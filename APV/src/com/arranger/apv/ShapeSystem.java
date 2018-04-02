@@ -13,9 +13,6 @@ public abstract class ShapeSystem {
 		this.factory = factory;
 	}
 	
-	/**
-	 * Use the factory to initialize shapes
-	 */
 	public abstract void setup();
 	
 	/**
