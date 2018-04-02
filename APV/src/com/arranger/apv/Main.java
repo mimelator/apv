@@ -40,6 +40,9 @@ public class Main extends PApplet {
 	
 	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
 	protected int systemIndex = 0;
+	
+	protected List<ShapeSystem> backgroundSystems = new ArrayList<ShapeSystem>();
+	protected int backgroundSystemIndex = 0;
 
 	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
 	protected int locationIndex = 0;
@@ -92,7 +95,8 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
-		systems.add(new DirectLifecycleSystem(this, null));
+		backgroundSystems.add(new DirectLifecycleSystem(this, new SquareFactory(this), 500));
+		
 		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
@@ -103,14 +107,24 @@ public class Main extends PApplet {
 		for (ShapeSystem system : systems) {
 			system.setup();
 		}
+		
+		for (ShapeSystem system : backgroundSystems) {
+			system.setup();
+		}
 	}
 	
 	public void draw() {
-		background(Color.BLACK.getRGB()); //TODO Omit drawing a background to facilitate transitions from systems
-		ShapeSystem currentSystem = systems.get(Math.abs(systemIndex) % systems.size());
-		currentSystem.draw();
+		//TODO Omit drawing a background to facilitate transitions from systems
+		background(Color.BLACK.getRGB()); 
+		ShapeSystem ss = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+		ss.draw();
+		ss = systems.get(Math.abs(systemIndex) % systems.size());
+		ss.draw();
 		
 		if (DEBUG_TEXT) {
+			addDebugMsg("Frame rate: " + (int)frameRate);
+			addDebugMsg("mouseXY:  " + mouseX + " " + mouseY);
+			addDebugMsg("Gravity: " + gravity.getCurrentGravity());
 			drawDebug();
 		}
 	}
@@ -120,8 +134,10 @@ public class Main extends PApplet {
 		int code = event.getKeyCode();
 		if (code == PApplet.RIGHT) {
 			systemIndex++;
+			backgroundSystemIndex++;
 		} else if (code == PApplet.LEFT) {
 			systemIndex--;
+			backgroundSystemIndex--;
 		} else if (code == PConstants.ENTER) {
 			if (event.isShiftDown()) {
 				locationIndex--;
@@ -130,13 +146,27 @@ public class Main extends PApplet {
 			}
 		} 
 	}
+	
+	public static final int TEXT_SIZE = 16;
+	public static final int TEXT_INDEX = 10;
+	protected List<String> debugStatements = new ArrayList<String>();
+	
+	public void addDebugMsg(String msg) {
+		debugStatements.add(msg);
+	}
 
 	protected void drawDebug() {
 		fill(255);
-		textSize(16);
-		text("Frame rate: " + (int)frameRate, 10, 20);
-		text("mouseXY:  " + mouseX + " " + mouseY, 10, 36);
-		text("Gravity: " + gravity.getCurrentGravity(), 10, 52);
+		textAlign(PApplet.LEFT, PApplet.TOP);
+		textSize(TEXT_SIZE);
+		
+		int offset = TEXT_INDEX;
+		for (String s : debugStatements) {
+			text(s, TEXT_INDEX, offset);
+			offset += TEXT_SIZE;
+		}
+		
+		debugStatements.clear();
 	}
 	
 	/**
@@ -144,8 +174,7 @@ public class Main extends PApplet {
 	 * upon the frameCount.  It should complete a circuit every
 	 */
 	public float oscillate(float low, float high) {
-		float secondsPerOscilation = 60.0f / 5;
-		float cos = cos(PI + frameCount / secondsPerOscilation);
+		float cos = cos(PI + frameCount / 60.0f / 5); //TODO Fix this ugly equation and accept a timing param
 		return PApplet.map(cos, -1, 1, 0, 10);
 	}
 }

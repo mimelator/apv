@@ -1,7 +1,6 @@
 package com.arranger.apv.systems;
 
 import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,9 @@ import processing.core.PShape;
  */
 public abstract class LifecycleSystem extends ShapeSystem {
 
-	private List<APVShape> particles = new ArrayList<APVShape>();
-	private PShape groupShape;
-	private int numParticles;
+	protected List<APVShape> particles = new ArrayList<APVShape>();
+	protected PShape groupShape;
+	protected int numParticles;
 	
 	protected abstract LifecycleData createData();
 	
@@ -56,25 +55,28 @@ public abstract class LifecycleSystem extends ShapeSystem {
 		protected Color color = Color.WHITE;
 		
 		public LifecycleData() {
-			rebirth(0, 0);
+			rebirth();
 			lifespan = parent.random(LIFESPAN);
 		}
 		
 		public void update() {
-			if (--lifespan < 0) {
-				Point2D p = parent.getLocationSystem().getCurrentPoint();
-				rebirth((float)p.getX(), (float)p.getY());
+			lifespan--;
+			if (isDead()) {
+				rebirth();
 			}
 			
 			//lifespan changes the alpha 
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			shape.setColor(result);
 		}
+	
+		protected boolean isDead() {
+			return lifespan < 0;
+		}
 		
-		protected void rebirth(float x, float y) {
+		protected void rebirth() {
 			lifespan = LIFESPAN;
 			color = parent.getColorSystem().getCurrentColor();
 		}
 	}
-	
 }

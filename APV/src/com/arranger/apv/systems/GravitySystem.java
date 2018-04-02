@@ -1,5 +1,7 @@
 package com.arranger.apv.systems;
 
+import java.awt.geom.Point2D;
+
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
@@ -44,8 +46,9 @@ public class GravitySystem extends LifecycleSystem {
 		/**
 		 * this is too clumsyfor the sub classes
 		 */
-		protected void rebirth(float x, float y) {
-			super.rebirth(x, y);
+		protected void rebirth() {
+			super.rebirth();
+			Point2D p = parent.getLocationSystem().getCurrentPoint();
 			float a = parent.random(PApplet.TWO_PI);
 			float speed = parent.random(0.5f, 4);
 			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
@@ -53,7 +56,7 @@ public class GravitySystem extends LifecycleSystem {
 			
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
-				shape.translate(x, y);
+				shape.translate((float)p.getX(), (float)p.getY());
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package com.arranger.apv.systems;
 
+import java.awt.geom.Point2D;
+
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
@@ -32,15 +34,17 @@ public class RotSystem extends LifecycleSystem {
 			shape.translate(velocity.x, velocity.y);
 		}
 		
-		protected void rebirth(float x, float y) {
-			super.rebirth(x, y);
+		protected void rebirth() {
+			super.rebirth();
+			Point2D p = parent.getLocationSystem().getCurrentPoint();
 			float a = parent.random(PApplet.TWO_PI);
 			velocity = new PVector(PApplet.cos(a), PApplet.sin(a));
 			velocity.mult(parent.random(0.5f, 4));
 			
+			//TODO Review exact same code as GravitySystem$GravityData#rebirth
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
-				shape.translate(x, y);
+				shape.translate((float)p.getX(), (float)p.getY());
 			}
 		}
 	}
