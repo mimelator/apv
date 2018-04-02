@@ -89,7 +89,7 @@ public class Main extends PApplet {
 		float cos = cos(PI + frameCount / frameRate / oscScalar);
 		return PApplet.map(cos, -1, 1, 0, 10);
 	}
-
+	
 	public void setup() {
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
@@ -188,6 +188,4 @@ public class Main extends PApplet {
 		
 		debugStatements.clear();
 	}
-	
-
 }

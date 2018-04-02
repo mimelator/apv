@@ -1,3 +1,14 @@
+Audio Line In Notes
+
+When wanting to analyze to iTunes
+I'm currently setting the default Sound Output Device to Soundflower
+Then i'm running SoundFlowerBed and "monitoring" the default output device
+
+
+
+
+
+
 Warp System
 
 

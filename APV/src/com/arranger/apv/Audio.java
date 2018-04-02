@@ -8,6 +8,10 @@ import ddf.minim.AudioSource;
 import ddf.minim.Minim;
 import ddf.minim.analysis.BeatDetect;
 
+/**
+ * http://code.compartmental.net/tools/minim/
+ *
+ */
 public class Audio {
 
 	protected BeatInfo beatInfo;

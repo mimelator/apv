@@ -4,9 +4,13 @@ import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
 import processing.core.PApplet;
+import processing.opengl.PShader;
 
 /**
- * @see https://blog.ktbyte.com/2018/02/05/how-to-make-a-warp-drive-hyperdrive-effect-in-processing/
+ * @see https://blog.ktbyte.com/2018/02/05/how-to-make-a-warp-drive-hyperdrive-effect-in-processing
+ * 
+ * 
+ * TODO: Learn about creating trails
  */
 public class WarpSystem extends DirectLifecycleSystem {
 
@@ -14,8 +18,14 @@ public class WarpSystem extends DirectLifecycleSystem {
 	private static final int MAX_WARP = 10;
 	private static final float OSCILLATIONS_SCALAR = 5;
 	
+	private PShader shader;
+	
 	public WarpSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
+		
+//		shader = parent.loadShader("filters/blur.glsl");
+		shader = parent.loadShader("filters/pointfrag.glsl", "filters/pointvert.glsl");
+		shader.set("sharpness", 0.9f);
 	}
 	
 	@Override
@@ -26,6 +36,11 @@ public class WarpSystem extends DirectLifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
+		float w = parent.random(5, 50);
+		shader.set("weight", w);
+	    parent.strokeWeight(w);
+		parent.shader(shader);
+		
 		parent.addDebugMsg("Warp " + PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
 	}
 	
