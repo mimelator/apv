@@ -13,27 +13,30 @@ import processing.core.PImage;
  */
 public class PlasmaSystem extends ShapeSystem implements PConstants {
 	
-	int seed = 127;
-	float ratio = 0.5f;
-	int tsize = 8;
+	private static final int TSIZE = 8; 
+	private static final float RATIO = 0.35f;
+	private static final int DISTANCE = 500;
+	private static final int DEFAULT_ALPHA = 255;
+	
+	
+	int initialSeed = 127;
 	int maxSize;
+	int featuresize;
 	int[][] plasma;
 
 	float a1, ai1;
 
 	float[][] coords;
-	int distance = 500;
-	int featuresize;
-
+	
 	int xr, yr, xg, yg, xb, yb;
 	
+	int alpha = DEFAULT_ALPHA;
 	PImage img;
 	PImage result;
-	
-	int alpha = 127;
 
-	public PlasmaSystem(Main parent, ShapeFactory factory) {
+	public PlasmaSystem(Main parent, ShapeFactory factory, int alpha) {
 		super(parent, factory);
+		this.alpha = alpha;
 	}
 
 	@Override
@@ -41,14 +44,14 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		
 		//size(513, 513);  //Size is 2^tsize + 1
 		
-		maxSize = (int)(Math.pow(2, tsize)) + 1;
+		maxSize = (int)(Math.pow(2, TSIZE)) + 1;
 		featuresize = (int)(maxSize / 2);
 		plasma = new int[maxSize][maxSize];
 		coords = new float[3][11];
 
 		for (int y = 0; y < maxSize; y += featuresize) {
 			for (int x = 0; x < maxSize; x += featuresize) {
-				setSample(x, y, (int) (random(-seed, seed)));
+				setSample(x, y, (int) (random(-initialSeed, initialSeed)));
 			}
 		}
 
@@ -57,7 +60,7 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		while (samplesize > 1) {
 			DiamondSquare(samplesize);
 			samplesize = samplesize >> 1;
-			seed *= ratio;
+			initialSeed *= RATIO;
 		}
 		
 		for (int v = 0; v < 3; v++) {
@@ -76,19 +79,21 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		a1 = random(0, TWO_PI);
 		ai1 = 0.1f;
 		
-		img = parent.createImage(maxSize, (2 * maxSize), RGB);
-		result = parent.createImage(parent.width, parent.height, RGB);
+		img = parent.createImage(maxSize, (2 * maxSize), ARGB);
+		result = parent.createImage(parent.width, parent.height, ARGB);
 	}
 
-	int lowH = Integer.MAX_VALUE;
-	int highH = Integer.MIN_VALUE;
+//	int lowH = Integer.MAX_VALUE;
+//	int highH = Integer.MIN_VALUE;
 	
 	@Override
 	public void draw() {
 		int width = maxSize;
 
-		parent.addDebugMsg("img pixel size: " + img.pixels.length);
-		parent.addDebugMsg("lowH: " + lowH + " highH: " + highH);
+		parent.addDebugMsg("Alpha: " + alpha);
+		
+//		parent.addDebugMsg("img pixel size: " + img.pixels.length);
+//		parent.addDebugMsg("lowH: " + lowH + " highH: " + highH);
 		
 		
 		for (int v = 0; v < 3; v++) {
@@ -121,8 +126,8 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 			rx3 = rx2;
 
 			//Perspective projection on screen
-			sx = rx3 * 512 / (rz3 + distance);
-			sy = ry3 * 512 / (rz3 + distance);
+			sx = rx3 * 512 / (rz3 + DISTANCE);
+			sy = ry3 * 512 / (rz3 + DISTANCE);
 
 			coords[v][9] = sx + ((maxSize -1) / 2);
 			coords[v][10] = sy + ((maxSize -1) / 2);
@@ -159,8 +164,8 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 				bc = plasma[x3][y3] + 128;
 				int h = i + i + ((j + j) * width); //range of h = (255 + 255) + ((255 + 255) * 255)
 				
-				lowH = Math.min(lowH, h);
-				highH = Math.max(highH, h);
+//				lowH = Math.min(lowH, h);
+//				highH = Math.max(highH, h);
 				
 				img.pixels[h] = color(rc, gc, bc);
 				img.pixels[h+1] = color(rc, gc, bc);
@@ -231,14 +236,14 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		int halfstep = stepsize / 2;
 		for (int y = halfstep; y < maxSize + halfstep; y += stepsize) {
 			for (int x = halfstep; x < maxSize + halfstep; x += stepsize) {
-				sampleSquare(x, y, stepsize, (int)(random(-seed, seed)));
+				sampleSquare(x, y, stepsize, (int)(random(-initialSeed, initialSeed)));
 			}
 		}
 
 		for (int y = 0; y < maxSize; y += stepsize) {
 			for (int x = 0; x < maxSize; x += stepsize) {
-				sampleDiamond(x + halfstep, y, stepsize, (int)(random(-seed, seed)));
-				sampleDiamond(x, y + halfstep, stepsize, (int)(random(-seed, seed)));
+				sampleDiamond(x + halfstep, y, stepsize, (int)(random(-initialSeed, initialSeed)));
+				sampleDiamond(x, y + halfstep, stepsize, (int)(random(-initialSeed, initialSeed)));
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import java.awt.Color;
 import ddf.minim.analysis.BeatDetect;
 
 /**
- * TODO lots of work here
+ * Basic BeatColor System toggles between red & white
  */
 public class ColorSystem {
 
@@ -19,5 +19,22 @@ public class ColorSystem {
 		BeatDetect beat = parent.getAudio().getBeatInfo().getBeat();
 		boolean kick = beat.isKick();
 		return kick ? Color.RED : Color.WHITE;
+	}
+	
+	public static class RandomColor extends ColorSystem {
+
+		public RandomColor(Main parent) {
+			super(parent);
+		}
+		
+		public Color getCurrentColor() {
+			
+			float hue = parent.random(1.0f);
+			float saturation = 1;
+			float brightness = 1;
+			
+			return Color.getHSBColor(hue, saturation, brightness);
+		}
+		
 	}
 }

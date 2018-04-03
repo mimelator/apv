@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.ColorSystem.RandomColor;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -108,7 +109,7 @@ public class Main extends PApplet {
 		locationSystems.add(new CircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
 		
-		colorSystem = new ColorSystem(this);
+		colorSystem = new RandomColor(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 
@@ -118,7 +119,8 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this)));
+			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 255));
+			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 120));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
 			backgroundSystems.add(new ExpShapeSystem(this, new EmptyShapeFactory(this)));
 		}
