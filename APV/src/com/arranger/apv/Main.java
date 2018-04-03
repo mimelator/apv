@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -14,6 +15,7 @@ import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
+import com.arranger.apv.systems.ExpShapeSystem;
 import com.arranger.apv.systems.GravitySystem;
 import com.arranger.apv.systems.RotSystem;
 import com.arranger.apv.systems.WarpSystem;
@@ -38,6 +40,15 @@ public class Main extends PApplet {
 
 	private static final String SPRITE_PNG = "sprite.png";
 	private static final boolean DEBUG_TEXT = true;
+	
+	private static class EmptyShapeFactory extends ShapeFactory {
+		public EmptyShapeFactory(Main parent) {
+			super(parent);
+		}
+		public APVShape createShape(Data data) {
+			return null;
+		}
+	}
 	
 	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
 	protected int systemIndex = 0;
@@ -106,6 +117,7 @@ public class Main extends PApplet {
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
+			backgroundSystems.add(new ExpShapeSystem(this, new EmptyShapeFactory(this)));
 		}
 		
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
