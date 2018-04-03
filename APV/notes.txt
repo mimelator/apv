@@ -1,4 +1,19 @@
-TODO: Rapid changes amongst systems, factories, gravity, etc....
+
+Refactor CarnivalShapeSystem -> LifecycleDirectDrawSystem
+Extract Particle from CarnivalShapeSystem
+Candidates include StarWeb
+
+
+RefactorOpenProcShapeSystem -> DirectDraw
+Extract common functions
+Extract ShowerSystem
+
+
+
+
+
+
+Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
 
 
 

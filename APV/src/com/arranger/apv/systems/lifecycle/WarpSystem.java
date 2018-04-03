@@ -1,4 +1,4 @@
-package com.arranger.apv.systems;
+package com.arranger.apv.systems.lifecycle;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
@@ -31,7 +31,7 @@ public class WarpSystem extends DirectLifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
-		parent.addDebugMsg("Warp " + warp());//PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
+		parent.addDebugMsg("Warp " + warp());
 	}
 	
 	private float warp() {

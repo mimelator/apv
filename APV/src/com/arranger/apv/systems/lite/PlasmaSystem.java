@@ -1,4 +1,4 @@
-package com.arranger.apv.systems;
+package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
