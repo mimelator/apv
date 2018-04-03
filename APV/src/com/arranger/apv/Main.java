@@ -16,10 +16,11 @@ import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
-import com.arranger.apv.systems.ExpShapeSystem;
+import com.arranger.apv.systems.CarnivalShapeSystem;
 import com.arranger.apv.systems.GravitySystem;
 import com.arranger.apv.systems.PlasmaSystem;
 import com.arranger.apv.systems.RotSystem;
+import com.arranger.apv.systems.StarWebSystem;
 import com.arranger.apv.systems.WarpSystem;
 
 import processing.core.PApplet;
@@ -101,7 +102,7 @@ public class Main extends PApplet {
 	 */
 	public float oscillate(float low, float high, float oscScalar) {
 		float cos = cos(PI + frameCount / frameRate / oscScalar);
-		return PApplet.map(cos, -1, 1, 0, 10);
+		return PApplet.map(cos, -1, 1, 0, high);
 	}
 	
 	public void setup() {
@@ -122,9 +123,10 @@ public class Main extends PApplet {
 			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 255));
 			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 120));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
-			backgroundSystems.add(new ExpShapeSystem(this, new EmptyShapeFactory(this)));
+			backgroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 		}
 		
+		systems.add(new StarWebSystem(this, new EmptyShapeFactory(this)));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));

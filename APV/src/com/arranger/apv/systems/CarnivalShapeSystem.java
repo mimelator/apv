@@ -17,14 +17,14 @@ import processing.core.PVector;
  * @author markimel
  *
  */
-public class ExpShapeSystem extends ShapeSystem implements PConstants {
+public class CarnivalShapeSystem extends ShapeSystem implements PConstants {
 
 	private static final int NUM_NEW_PARTICLES = 10;
 	ArrayList<Particle> pts;
 	boolean onPressed, showInstruction = true;
 	PFont f;
 
-	public ExpShapeSystem(Main parent, ShapeFactory factory) {
+	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent, factory);
 	}
 

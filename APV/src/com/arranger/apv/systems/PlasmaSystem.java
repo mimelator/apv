@@ -180,6 +180,7 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		result.updatePixels();
 		result.pixels = resizePixels(img.pixels, img.width, img.height, parent.width, parent.height);
 		result.loadPixels();
+		
 		parent.image(result, 0, 0);
 	}
 	

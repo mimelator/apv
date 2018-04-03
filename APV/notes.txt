@@ -26,3 +26,7 @@ Create a background layer using stuff like:
 	https://necessarydisorder.wordpress.com/2017/11/15/drawing-from-noise-and-then-making-animated-loopy-gifs-from-there/
 
 
+Tint Code: https://processing.org/tutorials/pixels/
+float redTint = parent.oscillate(0, 255, 5);
+		parent.tint(parent.color(redTint, 0, 0));
+		parent.addDebugMsg("redTint: " + redTint);
