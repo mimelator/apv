@@ -142,12 +142,16 @@ public class Main extends PApplet {
 		
 		if (USE_BG) {
 			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+			pushMatrix();
 			bgSys.draw();
+			popMatrix();
 			addDebugMsg("bgSys" + bgSys.getClass().getSimpleName() + ":" + bgSys.factory.getClass().getSimpleName());
 		}
 		ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
+		pushMatrix();
 		fgSys.draw();
 		addDebugMsg("fgSys: " + fgSys.getClass().getSimpleName() + ":" + fgSys.factory.getClass().getSimpleName());
+		popMatrix();
 		
 		if (DEBUG_TEXT) {
 			doDebugMsg();
