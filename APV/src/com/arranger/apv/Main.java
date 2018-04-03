@@ -20,6 +20,7 @@ import com.arranger.apv.systems.CarnivalShapeSystem;
 import com.arranger.apv.systems.GravitySystem;
 import com.arranger.apv.systems.PlasmaSystem;
 import com.arranger.apv.systems.RotSystem;
+import com.arranger.apv.systems.ShowerSystem;
 import com.arranger.apv.systems.StarWebSystem;
 import com.arranger.apv.systems.WarpSystem;
 
@@ -102,7 +103,7 @@ public class Main extends PApplet {
 	 */
 	public float oscillate(float low, float high, float oscScalar) {
 		float cos = cos(PI + frameCount / frameRate / oscScalar);
-		return PApplet.map(cos, -1, 1, 0, high);
+		return PApplet.map(cos, -1, 1, low, high);
 	}
 	
 	public void setup() {
@@ -120,6 +121,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new ShowerSystem(this, new EmptyShapeFactory(this)));
 			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 255));
 			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 120));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));

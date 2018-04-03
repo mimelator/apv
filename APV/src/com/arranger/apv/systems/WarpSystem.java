@@ -12,11 +12,11 @@ import processing.core.PApplet;
  */
 public class WarpSystem extends DirectLifecycleSystem {
 
-	private static final boolean SET_DEFAULT_WARP = true;
+	private static final boolean SET_DEFAULT_WARP = false;
 	private static final float DEFAULT_WARP = .5f;
 	
-	private static final int MIN_WARP = 0;
-	private static final int MAX_WARP = 10;
+	private static final float MIN_WARP = .2f;//0;
+	private static final float MAX_WARP = .7f;//10;
 	private static final float OSCILLATIONS_SCALAR = 5;
 	
 	public WarpSystem(Main parent, ShapeFactory factory, int numParticles) {
@@ -31,7 +31,7 @@ public class WarpSystem extends DirectLifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
-		parent.addDebugMsg("Warp " + PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
+		parent.addDebugMsg("Warp " + warp());//PApplet.round(warp() * MAX_WARP) / (double)MAX_WARP);
 	}
 	
 	private float warp() {
