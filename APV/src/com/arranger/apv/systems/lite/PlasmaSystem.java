@@ -1,17 +1,13 @@
 package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PImage;
 
 /**
  * From: https://www.openprocessing.org/sketch/402928
  */
-public class PlasmaSystem extends ShapeSystem implements PConstants {
+public class PlasmaSystem extends LiteShapeSystem {
 	
 	private static final int TSIZE = 8; 
 	private static final float RATIO = 0.35f;
@@ -34,8 +30,8 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 	PImage img;
 	PImage result;
 
-	public PlasmaSystem(Main parent, ShapeFactory factory, int alpha) {
-		super(parent, factory);
+	public PlasmaSystem(Main parent, int alpha) {
+		super(parent);
 		this.alpha = alpha;
 	}
 
@@ -249,19 +245,7 @@ public class PlasmaSystem extends ShapeSystem implements PConstants {
 		}
 	}
 
-	float random(float low, float high) {
-		return parent.random(low, high);
-	}
-	
 	int color(int r, int g, int b) {
 		return parent.color(r, g, b, alpha);
-	}
-	
-	float cos(float theta) {
-		return PApplet.cos(theta);
-	}
-	
-	float sin(float theta) {
-		return PApplet.sin(theta);
 	}
 }

@@ -17,10 +17,10 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
+import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
-import com.arranger.apv.systems.lite.RotSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.StarWebSystem;
 
@@ -121,14 +121,14 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new ShowerSystem(this, new EmptyShapeFactory(this)));
-			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 255));
-			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this), 120));
+			backgroundSystems.add(new ShowerSystem(this));
+			backgroundSystems.add(new PlasmaSystem(this, 255));
+			backgroundSystems.add(new PlasmaSystem(this, 120));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
 			backgroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 		}
 		
-		systems.add(new StarWebSystem(this, new EmptyShapeFactory(this)));
+		systems.add(new StarWebSystem(this));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
@@ -154,12 +154,12 @@ public class Main extends PApplet {
 			pushMatrix();
 			bgSys.draw();
 			popMatrix();
-			addDebugMsg("bgSys" + bgSys.getClass().getSimpleName() + ":" + bgSys.factory.getClass().getSimpleName());
+			debugSystem("bgSys", bgSys);
 		}
 		ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
 		pushMatrix();
 		fgSys.draw();
-		addDebugMsg("fgSys: " + fgSys.getClass().getSimpleName() + ":" + fgSys.factory.getClass().getSimpleName());
+		debugSystem("fgSys", fgSys);
 		popMatrix();
 		
 		if (DEBUG_TEXT) {
@@ -191,6 +191,13 @@ public class Main extends PApplet {
 	
 	public void addDebugMsg(String msg) {
 		debugStatements.add(msg);
+	}
+	
+	protected void debugSystem(String name, ShapeSystem ss) {
+		addDebugMsg(name +": " + ss.getClass().getSimpleName());
+		if (ss.factory != null) {
+			addDebugMsg("  --factory: " + ss.factory.getClass().getSimpleName());
+		}
 	}
 	
 	protected void doDebugMsg() {

@@ -5,10 +5,8 @@ import java.util.ArrayList;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PVector;
 
@@ -17,7 +15,7 @@ import processing.core.PVector;
  * @author markimel
  *
  */
-public class CarnivalShapeSystem extends ShapeSystem implements PConstants {
+public class CarnivalShapeSystem extends LiteShapeSystem {
 
 	private static final int NUM_NEW_PARTICLES = 10;
 	ArrayList<Particle> pts;
@@ -25,7 +23,8 @@ public class CarnivalShapeSystem extends ShapeSystem implements PConstants {
 	PFont f;
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
-		super(parent, factory);
+		super(parent);
+		this.factory = factory; //Could use the shape factory
 	}
 
 	@Override

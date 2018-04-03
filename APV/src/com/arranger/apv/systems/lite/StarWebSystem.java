@@ -5,17 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PVector;
 
 /**
  * https://www.openprocessing.org/sketch/147466
  */
-public class StarWebSystem extends ShapeSystem implements PConstants {
+public class StarWebSystem extends LiteShapeSystem {
 
 	private static final int LARGE_RADIUS = 150;
 	private static final int SMALL_RADIUS = 50;
@@ -28,8 +25,8 @@ public class StarWebSystem extends ShapeSystem implements PConstants {
 	int fc, num = NUM_BALLS, edge = NUM_EDGES;
 	List<Ball> balls = new ArrayList<Ball>();
 
-	public StarWebSystem(Main parent, ShapeFactory factory) {
-		super(parent, factory);
+	public StarWebSystem(Main parent) {
+		super(parent);
 	}
 
 	@Override
@@ -59,10 +56,6 @@ public class StarWebSystem extends ShapeSystem implements PConstants {
 		}
 	}
 	
-	float random(float low, float high) {
-		return parent.random(low, high);
-	}
-
 	class Ball {
 		
 		PVector org, loc;

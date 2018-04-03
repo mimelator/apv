@@ -1,11 +1,9 @@
-package com.arranger.apv.systems.lite;
+package com.arranger.apv.systems.lifecycle;
 
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.systems.lifecycle.GravitySystem;
-import com.arranger.apv.systems.lifecycle.LifecycleSystem;
 
 import processing.core.PApplet;
 import processing.core.PVector;

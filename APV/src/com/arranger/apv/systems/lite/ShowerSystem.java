@@ -3,16 +3,13 @@ package com.arranger.apv.systems.lite;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 
 /**
  * https://www.openprocessing.org/sketch/385918
  */
-public class ShowerSystem extends ShapeSystem implements PConstants {
+public class ShowerSystem extends LiteShapeSystem {
 	
 	private static final int OSCILLATION_SCALAR = 4;
 	private static final int HIGH_FILL_VAL = 55;
@@ -28,8 +25,8 @@ public class ShowerSystem extends ShapeSystem implements PConstants {
 	private int prevFillColor;
 	private int curFillColor;
 	
-	public ShowerSystem(Main parent, ShapeFactory factory) {
-		super(parent, factory);
+	public ShowerSystem(Main parent) {
+		super(parent);
 	}
 
 	@Override
@@ -96,13 +93,5 @@ public class ShowerSystem extends ShapeSystem implements PConstants {
 		float amt = PApplet.map(currentFrame, 0, numFrames, 0, 1);
 		int useColor = parent.lerpColor(color1, color2, amt);
 		return useColor;
-	}
-
-	float cos(float theta) {
-		return PApplet.cos(theta);
-	}
-	
-	float sin(float theta) {
-		return PApplet.sin(theta);
 	}
 }
