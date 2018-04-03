@@ -17,6 +17,7 @@ import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.ExpShapeSystem;
 import com.arranger.apv.systems.GravitySystem;
+import com.arranger.apv.systems.PlasmaSystem;
 import com.arranger.apv.systems.RotSystem;
 import com.arranger.apv.systems.WarpSystem;
 
@@ -26,6 +27,7 @@ import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
+	private static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BG = true;
 	private static final boolean FULL_SCREEN = true;
@@ -70,9 +72,9 @@ public class Main extends PApplet {
 
 	public void settings() {
 		if (FULL_SCREEN) {
-			fullScreen(P2D);
+			fullScreen(RENDERER);
 		} else {
-			size(WIDTH, HEIGHT, P2D);
+			size(WIDTH, HEIGHT, RENDERER);
 		}
 	}
 	
@@ -116,6 +118,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new PlasmaSystem(this, new EmptyShapeFactory(this)));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
 			backgroundSystems.add(new ExpShapeSystem(this, new EmptyShapeFactory(this)));
 		}
