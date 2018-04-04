@@ -11,9 +11,7 @@ import processing.core.PFont;
 import processing.core.PVector;
 
 /**
- * Adapt to look at this: https://www.openprocessing.org/sketch/521068
- * @author markimel
- *
+ * https://www.openprocessing.org/sketch/521068
  */
 public class CarnivalShapeSystem extends LiteShapeSystem {
 
@@ -24,13 +22,12 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
-		this.factory = factory; //Could use the shape factory
+		this.factory = factory; //TODO: Use the shape factory
 	}
 
 	@Override
 	public void setup() {
 		pts = new ArrayList<Particle>();
-		
 	}
 
 	@Override
@@ -86,7 +83,6 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 		}
 
 		void update() {
-			int frameCount = parent.frameCount;
 			
 			if (passedLife >= lifeSpan) {
 				dead = true;
@@ -94,6 +90,7 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 				passedLife++;
 			}
 
+			int frameCount = parent.frameCount;
 			alpha = (float) (lifeSpan - passedLife) / lifeSpan * 70 + 50;
 			weight = (float) (lifeSpan - passedLife) / lifeSpan * weightRange;
 

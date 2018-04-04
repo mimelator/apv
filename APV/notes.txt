@@ -1,20 +1,11 @@
-Testing out branches.
 
+Refactor CarnivalShapeSystem & StarWeb ???
+Lifecycle systems:
+	GravitySystem extends LifecycleSystem
+	RotSystem extends LifecycleSystem
+	WarpSystem extends DirectLifecycleSystem
 
-
-
-Refactor CarnivalShapeSystem -> LifecycleDirectDrawSystem
-Extract Particle from CarnivalShapeSystem
-Candidates include StarWeb
-
-
-RefactorOpenProcShapeSystem -> DirectDraw
-Extract common functions
-Extract ShowerSystem
-
-
-
-
+	CarnivalShapeSystem extends LiteShapeSystem 
 
 
 Programmatically switch between systems, factories, locations, color schemes, gravity, etc....

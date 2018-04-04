@@ -16,16 +16,6 @@ public abstract class LiteShapeSystem extends ShapeSystem implements PConstants 
 		super(parent, null);
 	}
 
-	@Override
-	public void setup() {
-
-	}
-
-	@Override
-	public void draw() {
-
-	}
-
 	protected float cos(float theta) {
 		return PApplet.cos(theta);
 	}
