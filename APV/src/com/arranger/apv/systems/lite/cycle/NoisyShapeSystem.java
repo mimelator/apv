@@ -11,12 +11,10 @@ import processing.core.PVector;
  */
 public class NoisyShapeSystem extends LiteCycleShapeSystem {
 
+	private static final int AMAX_RAND_RANGE = 50;
 	private static final int HIGH_SPEED = 15; //25
 	private static final int LOW_SPEED = 3; //5
-	
-	
 	private static final int FRAMES_PER_RESET = 200;
-	
 	private static final int HIGH_ALPHA = 255;
 	private static final int LOW_ALPHA = 20;
 	
@@ -43,7 +41,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 		
 		noisescale = random(.01f, .1f);
 		parent.noiseDetail(5, random(.1f, 1));
-		amax = random(0, 20);
+		amax = random(0, AMAX_RAND_RANGE);
 		a1 = random(1, amax);
 		a2 = random(1, amax);
 		a3 = random(1, amax);
