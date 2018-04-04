@@ -8,11 +8,18 @@ import processing.core.PApplet;
 
 public class DefaultBackgroundSystem extends BackDropSystem {
 
+	private static final float PCT_BG_REFRESH = .8f;
 	protected static final int RATE = 1200;
 	protected static final int RANGE = 100;
+	protected float bgRefreshPct;
 	
 	public DefaultBackgroundSystem(Main parent) {
+		this(parent, PCT_BG_REFRESH);
+	}
+	
+	public DefaultBackgroundSystem(Main parent, float bgRefreshPct) {
 		super(parent);
+		this.bgRefreshPct = bgRefreshPct;
 	}
 	
 	/**
@@ -21,9 +28,10 @@ public class DefaultBackgroundSystem extends BackDropSystem {
 	@Override
 	public void drawBackground() {
 		float res = PApplet.map(parent.frameCount % RATE, 0, RATE, 0, RANGE);
-		if (res < .8f * RANGE) {
+		if (res < bgRefreshPct * RANGE) {
 			parent.background(Color.BLACK.getRGB());
 		}
+		parent.addDebugMsg("bgRefreshPct: " + bgRefreshPct);
 	}
 
 }

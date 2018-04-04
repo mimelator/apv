@@ -8,6 +8,7 @@ import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.ColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.DefaultBackgroundSystem;
+import com.arranger.apv.bg.OscilatingBackDrop;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -159,7 +160,11 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN.darker()));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
 			backDropSystems.add(new DefaultBackgroundSystem(this));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
+			backDropSystems.add(new DefaultBackgroundSystem(this, .5f));
 		}
 		
 		for (ShapeSystem system : systems) {
@@ -172,16 +177,11 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB());
 	}
 
-	protected void redrawBackground() {
-		//Oscillate between white and black
-//		int bgColor = (int)oscillate(Color.WHITE.getRGB(), Color.BLACK.getRGB(), 5);
-//		background(bgColor);
-	}
-	
 	public void draw() {
 		if (USE_BACKDROP) {
-			BackDropSystem backDropSystem = backDropSystems.get(0);
+			BackDropSystem backDropSystem = backDropSystems.get(backDropIndex % backDropSystems.size());
 			backDropSystem.drawBackground();
+			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
 		}
 		
 		if (USE_BG) {
@@ -215,9 +215,11 @@ public class Main extends PApplet {
 		if (code == PApplet.RIGHT) {
 			systemIndex++;
 			backgroundIndex++;
+			backDropIndex++;
 		} else if (code == PApplet.LEFT) {
 			systemIndex--;
 			backgroundIndex--;
+			backDropIndex--;
 		} else if (code == PConstants.ENTER) {
 			if (event.isShiftDown()) {
 				locationIndex--;

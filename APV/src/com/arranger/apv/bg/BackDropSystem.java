@@ -2,7 +2,9 @@ package com.arranger.apv.bg;
 
 import com.arranger.apv.Main;
 
-public abstract class BackDropSystem {
+import processing.core.PConstants;
+
+public abstract class BackDropSystem implements PConstants {
 	
 	protected Main parent;
 
