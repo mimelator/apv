@@ -19,10 +19,10 @@ import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
-import com.arranger.apv.systems.lite.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.StarWebSystem;
+import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 
 import processing.core.PApplet;
 import processing.core.PConstants;

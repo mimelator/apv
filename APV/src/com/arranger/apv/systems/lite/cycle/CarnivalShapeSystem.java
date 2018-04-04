@@ -1,24 +1,18 @@
-package com.arranger.apv.systems.lite;
+package com.arranger.apv.systems.lite.cycle;
+
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
 import processing.core.PApplet;
-import processing.core.PFont;
 import processing.core.PVector;
 
 /**
  * https://www.openprocessing.org/sketch/521068
  */
-public class CarnivalShapeSystem extends LiteShapeSystem {
-
-	private static final int NUM_NEW_PARTICLES = 10;
-	ArrayList<Particle> pts;
-	boolean onPressed, showInstruction = true;
-	PFont f;
+public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
@@ -27,45 +21,37 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 
 	@Override
 	public void setup() {
-		pts = new ArrayList<Particle>();
+
 	}
 
-	@Override
 	public void draw() {
 		parent.pushMatrix();
 		parent.colorMode(HSB);
 		parent.rectMode(CENTER);
 		
-		Point2D point = parent.getLocationSystem().getCurrentPoint();
-		float x = (float)point.getX();
-		float y = (float)point.getY();
+		super.draw();
 		
-		for (int i = 0; i < NUM_NEW_PARTICLES; i++) {
-			Particle newP = new Particle(x, y, i + pts.size(), i + pts.size());
-			pts.add(newP);
-		}
-		
-		for (int i = pts.size() - 1; i > -1; i--) {
-			Particle p = pts.get(i);
-			if (p.dead) {
-				pts.remove(i);
-			} else {
-				p.update();
-				p.display();
-			}
-		}
 		parent.colorMode(RGB);
 		parent.popMatrix();
 	}
 
-	class Particle {
-		PVector loc, vel, acc;
-		int lifeSpan, passedLife;
-		boolean dead;
-		float alpha, weight, weightRange, decay, xOfst, yOfst;
-		int c;
+	@Override
+	protected LiteCycleObj createObj(int index) {
+		Point2D point = parent.getLocationSystem().getCurrentPoint();
+		float x = (float)point.getX();
+		float y = (float)point.getY();
+		int curSize = lcObjects.size();
+		return new Particle(x, y, index + curSize, index + curSize);
+	}
 
-		Particle(float x, float y, float xOfst, float yOfst) {
+	private class Particle extends LiteCycleObj {
+		private PVector loc, vel, acc;
+		private int lifeSpan, passedLife;
+		private boolean dead;
+		private float alpha, weight, weightRange, decay, xOfst, yOfst;
+		private int c;
+
+		private Particle(float x, float y, float xOfst, float yOfst) {
 			loc = new PVector(x, y);
 
 			float randDegrees = parent.random(360);
@@ -82,8 +68,13 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 			this.yOfst = yOfst;
 		}
 
-		void update() {
-			
+		@Override
+		public boolean isDead() {
+			return dead;
+		}
+		
+		@Override
+		public void update() {
 			if (passedLife >= lifeSpan) {
 				dead = true;
 			} else {
@@ -114,7 +105,8 @@ public class CarnivalShapeSystem extends LiteShapeSystem {
 			loc.add(vel);
 		}
 
-		void display() {
+		@Override
+		public void display() {
 			parent.strokeWeight(weight + 1.5f);
 			parent.stroke(0, alpha);
 			parent.point(loc.x, loc.y);
