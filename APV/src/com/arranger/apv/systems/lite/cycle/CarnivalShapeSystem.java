@@ -3,6 +3,8 @@ package com.arranger.apv.systems.lite.cycle;
 
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.ColorSystem;
+import com.arranger.apv.ColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
@@ -13,15 +15,27 @@ import processing.core.PVector;
  * https://www.openprocessing.org/sketch/521068
  */
 public class CarnivalShapeSystem extends LiteCycleShapeSystem {
+	
+	private boolean useCustomColor = false;
+	private ColorSystem colorSystem;
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
 		this.factory = factory; 
 	}
+	
+	public CarnivalShapeSystem(Main parent, ShapeFactory factory, boolean useCustomColor) {
+		super(parent);
+		this.factory = factory;
+		this.useCustomColor = useCustomColor;
+	}
 
 	@Override
 	public void setup() {
 		shouldCreateNewObjectsEveryDraw = true;
+		if (useCustomColor) {
+			colorSystem = new OscillatingColor(parent);
+		}
 	}
 
 	public void draw() {
@@ -62,7 +76,12 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 			acc = new PVector(0, 0);
 			lifeSpan = (int) (parent.random(30, 90));
 			decay = parent.random(0.75f, 0.9f);
-			c = parent.color(parent.random(255), parent.random(255), 255);
+			
+			ColorSystem cs = (useCustomColor) ? colorSystem : parent.getColorSystem();
+			c = cs.getCurrentColor().getRGB();
+
+			//Original color scheme
+			//c = parent.color(parent.random(255), parent.random(255), 255);
 			weightRange = parent.random(3, 50);
 
 			this.xOfst = xOfst;

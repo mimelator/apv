@@ -22,6 +22,7 @@ import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
+import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
@@ -134,6 +135,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new AttractorSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
 			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
@@ -146,11 +148,12 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
+			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
+			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
 			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
 			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
 			systems.add(new StarWebSystem(this));
-			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			systems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
 			systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
 			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
@@ -182,7 +185,7 @@ public class Main extends PApplet {
 
 	public void draw() {
 		if (USE_BACKDROP) {
-			BackDropSystem backDropSystem = backDropSystems.get(backDropIndex % backDropSystems.size());
+			BackDropSystem backDropSystem = backDropSystems.get(Math.abs(backDropIndex) % backDropSystems.size());
 			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
 			backDropSystem.drawBackground();
 		}
