@@ -12,6 +12,10 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 	private static final int NUM_NEW_OBJECTS = 10;
 	protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	protected int numNewObjects;
+	protected boolean shouldCreateSetupObjects = true;
+	protected boolean shouldCreateNewObjectsEveryDraw = true;
+	protected boolean shouldRepopulateObjectsEveryDraw = false;
+	protected int framesPerReset = Integer.MAX_VALUE;
 	
 	public LiteCycleShapeSystem(Main parent) {
 		super(parent);
@@ -25,12 +29,16 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 	
 	@Override
 	public void setup() {
-		
+		if (shouldCreateSetupObjects) {
+			createNewObjects();
+		}
 	}
 	
 	@Override
 	public void draw() {
-		createNewObjects();
+		if (shouldCreateNewObjectsEveryDraw) {
+			createNewObjects();
+		}
 	
 		for (int i = lcObjects.size() - 1; i > -1; i--) {
 			LiteCycleObj obj = lcObjects.get(i);
@@ -41,12 +49,26 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 				obj.display();
 			}
 		}
+		
+		if (shouldRepopulateObjectsEveryDraw) {
+			while (lcObjects.size() < numNewObjects) {
+				lcObjects.add(createObj(lcObjects.size()  - 1));
+			}
+		}
 	}
 
 	protected void createNewObjects() {
+		if ((parent.frameCount % framesPerReset) == 0) {
+			reset();
+		} 
+		
 		for (int i = 0; i < numNewObjects; i++) {
 			lcObjects.add(createObj(i));
 		}
+	}
+	
+	protected  void reset() {
+		lcObjects.clear();
 	}
 
 	protected abstract LiteCycleObj createObj(int index);

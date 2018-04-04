@@ -16,12 +16,12 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
-		this.factory = factory; //TODO: Use the shape factory
+		this.factory = factory; 
 	}
 
 	@Override
 	public void setup() {
-
+		shouldCreateNewObjectsEveryDraw = true;
 	}
 
 	public void draw() {
@@ -29,6 +29,11 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 		parent.rectMode(CENTER);
 		
 		super.draw();
+	}
+	
+	@Override
+	protected void reset() {
+		
 	}
 
 	@Override
@@ -103,6 +108,8 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 		@Override
 		public void display() {
+			//TODO Use Shape Factory
+			
 			parent.strokeWeight(weight + 1.5f);
 			parent.stroke(0, alpha);
 			parent.point(loc.x, loc.y);

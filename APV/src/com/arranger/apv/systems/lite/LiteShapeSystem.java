@@ -24,6 +24,10 @@ public abstract class LiteShapeSystem extends ShapeSystem implements PConstants 
 		return PApplet.sin(theta);
 	}
 	
+	protected float random(float high) {
+		return parent.random(high);
+	}
+	
 	protected float random(float low, float high) {
 		return parent.random(low, high);
 	}

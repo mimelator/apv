@@ -25,7 +25,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	private static final int DEFAULT_ELLIPSE_STROKE_WEIGHT = 1;
 	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;
 	
-	private static final int FRAMES_PER_RESET = 20000;
+	private static final int STAR_WEB_FRAMES_PER_RESET = 20000;
 	
 	int fc, edge = NUM_EDGES;
 
@@ -48,19 +48,13 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	
 	@Override
 	public void setup() {
-		reset();
+		shouldCreateNewObjectsEveryDraw = false;
+		framesPerReset = STAR_WEB_FRAMES_PER_RESET;
+		super.setup();
 	}
 	
 	@Override
 	protected void createNewObjects() {
-		if ((parent.frameCount % FRAMES_PER_RESET) == 0) {
-			reset();
-		}
-	}
-
-	protected void reset() {
-		lcObjects.clear();
-		
 		int width = parent.width;
 		int height = parent.height;
 		
@@ -68,7 +62,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 			PVector org = new PVector(random(edge, width - edge), random(edge, height - edge));
 			float radius = random(SMALL_RADIUS, LARGE_RADIUS);
 			PVector loc = new PVector(org.x + radius, org.y);
-			float offSet = random(0, TWO_PI);
+			float offSet = random(TWO_PI);
 			int dir = 1;
 			float r = random(0, 1);
 			if (r > .5) {

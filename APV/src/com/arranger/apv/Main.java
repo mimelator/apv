@@ -23,6 +23,7 @@ import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
+import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 
 import processing.core.PApplet;
@@ -125,6 +126,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
 			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new ShowerSystem(this));

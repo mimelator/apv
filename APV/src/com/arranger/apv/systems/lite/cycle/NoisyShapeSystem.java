@@ -14,7 +14,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 	private static final int AMAX_RAND_RANGE = 50;
 	private static final int HIGH_SPEED = 15; //25
 	private static final int LOW_SPEED = 3; //5
-	private static final int FRAMES_PER_RESET = 200;
+	private static final int NOISY_FRAMES_PER_RESET = 200;
 	private static final int HIGH_ALPHA = 255;
 	private static final int LOW_ALPHA = 20;
 	
@@ -33,12 +33,13 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 	
 	@Override
 	public void setup() {
-		reset();
+		shouldCreateNewObjectsEveryDraw = false;
+		shouldRepopulateObjectsEveryDraw = false;
+		framesPerReset = NOISY_FRAMES_PER_RESET;
+		super.setup();
 	}
 	
 	protected void reset() {
-		lcObjects.clear();
-		
 		noisescale = random(.01f, .1f);
 		parent.noiseDetail(5, random(.1f, 1));
 		amax = random(0, AMAX_RAND_RANGE);
@@ -48,16 +49,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 		a4 = random(1, amax);
 		a5 = random(LOW_SPEED, HIGH_SPEED);
 		
-		for (int i = 0; i < numNewObjects; i++) {
-			lcObjects.add(createObj(i));
-		}
-	}
-
-	@Override
-	protected void createNewObjects() {
-		if ((parent.frameCount % FRAMES_PER_RESET) == 0) {
-			reset();
-		}
+		super.reset();
 	}
 
 	private class Mobile extends LiteCycleObj {
@@ -72,7 +64,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 		private Mobile() {
 			width = parent.width;
 			height = parent.height;
-			prevPos = new PVector(random(0, width), random(0, height));
+			prevPos = new PVector(random(width), random(height));
 			curPos = prevPos.copy();
 			alpha = (int) parent.random(LOW_ALPHA, HIGH_ALPHA);
 			color = parent.getColorSystem().getCurrentColor();
@@ -96,7 +88,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 					alpha);
 			parent.line(prevPos.x, prevPos.y, curPos.x, curPos.y);
 			if (curPos.x > width || curPos.x < 0 || curPos.y > height || curPos.y < 0) {
-				prevPos = new PVector(random(0, width), random(0, height));
+				prevPos = new PVector(random(width), random(height));
 				curPos = prevPos.copy();
 			}
 		}

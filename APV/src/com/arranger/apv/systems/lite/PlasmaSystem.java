@@ -64,15 +64,15 @@ public class PlasmaSystem extends LiteShapeSystem {
 			coords[v][1] = (int) (random(-(maxSize / 2), maxSize / 2));
 			coords[v][2] = (int) (random(-255, 255));
 
-			coords[v][3] = random(0, TWO_PI);
-			coords[v][4] = random(0, TWO_PI);
-			coords[v][5] = random(0, TWO_PI);
+			coords[v][3] = random(TWO_PI);
+			coords[v][4] = random(TWO_PI);
+			coords[v][5] = random(TWO_PI);
 
 			coords[v][6] = random(0.002f, 0.005f);
 			coords[v][7] = random(0.002f, 0.005f);
 			coords[v][8] = random(0.002f, 0.005f);
 		}
-		a1 = random(0, TWO_PI);
+		a1 = random(TWO_PI);
 		ai1 = 0.1f;
 		
 		img = parent.createImage(maxSize, (2 * maxSize), ARGB);
