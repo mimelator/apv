@@ -134,6 +134,8 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
+			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
 			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
@@ -144,7 +146,6 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			systems.add(new LightWormSystem(this));
 			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
 			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
@@ -182,16 +183,16 @@ public class Main extends PApplet {
 	public void draw() {
 		if (USE_BACKDROP) {
 			BackDropSystem backDropSystem = backDropSystems.get(backDropIndex % backDropSystems.size());
-			backDropSystem.drawBackground();
 			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
+			backDropSystem.drawBackground();
 		}
 		
 		if (USE_BG) {
 			pushStyle();
 			pushMatrix();
 			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundIndex) % backgroundSystems.size());
-			bgSys.draw();
 			debugSystem("bgSys", bgSys);
+			bgSys.draw();
 			popMatrix();
 			popStyle();
 		}
@@ -200,8 +201,8 @@ public class Main extends PApplet {
 			pushStyle();
 			pushMatrix();
 			ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
-			fgSys.draw();
 			debugSystem("fgSys", fgSys);
+			fgSys.draw();
 			popMatrix();
 			popStyle();
 		}

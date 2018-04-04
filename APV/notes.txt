@@ -1,6 +1,7 @@
 *****************************************************************************
 Questions:
 1) Should all Foreground systems respond to Location?
+2) Could i have a transition where systems overlap and fade out/in?
 
 
 
