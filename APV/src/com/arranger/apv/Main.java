@@ -128,6 +128,7 @@ public class Main extends PApplet {
 			backgroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 		}
 		
+		systems.add(new StarWebSystem(this, new SquareFactory(this)));
 		systems.add(new StarWebSystem(this));
 		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));

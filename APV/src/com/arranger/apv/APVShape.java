@@ -11,7 +11,9 @@ public abstract class APVShape {
 	public APVShape(Main parent, Data data) {
 		this.parent = parent;
 		this.data = data;
-		this.data.shape = this;
+		if (data != null) {
+			this.data.shape = this;
+		}
 	}
 	
 	public PShape getShape() {

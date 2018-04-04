@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
+import com.arranger.apv.ShapeFactory;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -22,11 +24,19 @@ public class StarWebSystem extends LiteShapeSystem {
 	private static final int BALL_CONNECTION_DISTANCE = 60;
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
 	
+	private static final int DEFAULT_ELLIPSE_STROKE_WEIGHT = 1;
+	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;
+	
 	int fc, num = NUM_BALLS, edge = NUM_EDGES;
 	List<Ball> balls = new ArrayList<Ball>();
 
 	public StarWebSystem(Main parent) {
 		super(parent);
+	}
+	
+	public StarWebSystem(Main parent, ShapeFactory factory) {
+		super(parent);
+		this.factory = factory;
 	}
 
 	@Override
@@ -46,7 +56,6 @@ public class StarWebSystem extends LiteShapeSystem {
 			Ball myBall = new Ball(org, loc, radius, dir, offSet);
 			balls.add(myBall);
 		}
-
 	}
 
 	@Override
@@ -64,6 +73,7 @@ public class StarWebSystem extends LiteShapeSystem {
 		int s, dir, d = BALL_CONNECTION_DISTANCE;
 		Color ballColor = parent.getColorSystem().getCurrentColor();
 		Color lineColor = parent.getColorSystem().getCurrentColor();
+		APVShape factoryShape;
 		
 		Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
 			org = _org;
@@ -71,6 +81,10 @@ public class StarWebSystem extends LiteShapeSystem {
 			radius = _radius;
 			dir = _dir;
 			offSet = _offSet;
+			
+			if (factory != null) {
+				factoryShape = factory.createShape(null);
+			}
 		}
 
 		void run() {
@@ -97,10 +111,17 @@ public class StarWebSystem extends LiteShapeSystem {
 		}
 
 		void display() {
-			parent.noStroke();
 			for (int i = 0; i < 5; i++) {
-				parent.fill(ballColor.getRGB(), i * 50);
-				parent.ellipse(loc.x, loc.y, sz - 2 * i, sz - 2 * i);
+				if (factoryShape != null) {
+					parent.rectMode(CENTER);
+					parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
+					parent.fill(ballColor.getRGB());
+					parent.shape(factoryShape.getShape(), loc.x, loc.y);
+				} else {
+					parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
+					parent.fill(ballColor.getRGB(), i * 50);
+					parent.ellipse(loc.x, loc.y, sz - 2 * i, sz - 2 * i);
+				}
 			}
 		}
 	}
