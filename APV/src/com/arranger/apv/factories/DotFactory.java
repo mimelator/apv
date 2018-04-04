@@ -10,6 +10,10 @@ public class DotFactory extends CircleFactory {
 	public DotFactory(Main parent) {
 		super(parent);
 	}
+	
+	public DotFactory(Main parent, float scale) {
+		super(parent, scale);
+	}
 
 	protected float newShapeSize() {
 		float size = parent.random(SMALL_SHAPE_SIZE, LARGE_SHAPE_SIZE);

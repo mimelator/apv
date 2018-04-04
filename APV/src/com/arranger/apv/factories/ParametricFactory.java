@@ -13,9 +13,13 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	public static class HypocycloidFactory extends ParametricFactory {
 
 		public HypocycloidFactory(Main parent) {
-			super(parent, true, false, 20, 0, 2);
+			super(parent, DEFAULT_SCALE, true, false, 20, 0, 2);
 		}
 
+		public HypocycloidFactory(Main parent, float scale) {
+			super(parent, scale, true, false, 20, 0, 2);
+		}
+		
 		/**
 		 * http://www-groups.dcs.st-and.ac.uk/history/Curves/Hypocycloid.html
 		 * x = (a - b) cos(t) + b cos((a/b - 1)t), y = (a - b) sin(t) - b sin((a/b - 1)t)
@@ -35,7 +39,11 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	public static class InvoluteFactory extends ParametricFactory {
 
 		public InvoluteFactory(Main parent) {
-			super(parent, true, true, 15, 0, .5);
+			super(parent, DEFAULT_SCALE, true, true, 15, 0, .5);
+		}
+		
+		public InvoluteFactory(Main parent, float scale) {
+			super(parent, scale, true, true, 15, 0, .5);
 		}
 
 		/**
@@ -67,12 +75,14 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	protected abstract double [] genPoint(double theta);
 	
 	private ParametricFactory(Main parent, 
+			float scale,
 			boolean closeShape, 
 			boolean stroke,
 			double periods, 
 			double periodOffset,
 			double precision) {
 		super(parent);
+		this.scale = scale;
 		this.closeShape = closeShape;
 		this.stroke = stroke;
 		this.precision = precision;
@@ -86,10 +96,12 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 			@Override
 			protected Shape createPrimitiveShape(float size) {
 				Point2D [] points = genPoints(size);
-				return pointsToShape(points);
+				GeneralPath genPath = pointsToShape(points);
+				return genPath;
 			}
 		};
 		
+		apvShape.scale(scale);
 		apvShape.getShape().setStroke(stroke);
 		
 		return apvShape;

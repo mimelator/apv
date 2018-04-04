@@ -21,8 +21,13 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 		super(parent);
 	}
 	
+	public PrimitiveShapeFactory(Main parent, float scale) {
+		super(parent, scale);
+	}
+
 	protected float newShapeSize() {
 		float size = parent.random(SMALL_SHAPE_SIZE, LARGE_SHAPE_SIZE);
+		size *= scale;
 		return size;
 	}
 	

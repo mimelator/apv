@@ -12,6 +12,10 @@ public class CircleFactory extends PrimitiveShapeFactory {
 	public CircleFactory(Main parent) {
 		super(parent);
 	}
+	
+	public CircleFactory(Main parent, float scale) {
+		super(parent, scale);
+	}
 
 	@Override
 	public APVShape createShape(Data data) {

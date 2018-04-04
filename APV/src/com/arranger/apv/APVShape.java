@@ -35,6 +35,10 @@ public abstract class APVShape {
 		getShape().rotate(radians);
 	}
 	
+	public void scale(float scale) {
+		getShape().scale(scale);
+	}
+	
 	public Data getData() {
 		return data;
 	}

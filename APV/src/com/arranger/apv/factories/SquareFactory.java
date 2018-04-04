@@ -12,6 +12,10 @@ public class SquareFactory  extends PrimitiveShapeFactory {
 	public SquareFactory(Main parent) {
 		super(parent);
 	}
+	
+	public SquareFactory(Main parent, float scale) {
+		super(parent, scale);
+	}
 
 	@Override
 	public APVShape createShape(Data data) {

@@ -17,6 +17,11 @@ public class SpriteFactory extends ShapeFactory {
 		super(parent);
 		sprite = parent.loadImage(file);
 	}
+	
+	public SpriteFactory(Main parent, String file, float scale) {
+		this(parent, file);
+		this.scale = scale;
+	}
 
 	@Override
 	public APVShape createShape(Data data) {
@@ -36,6 +41,8 @@ public class SpriteFactory extends ShapeFactory {
 		@Override
 		protected PShape createNewShape() {
 			float size = parent.random(10,60);
+			size *= getScale();
+			
 		    PShape s = parent.createShape();
 		    s.beginShape(PApplet.QUAD);
 		    s.noStroke();

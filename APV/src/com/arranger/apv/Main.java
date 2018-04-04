@@ -124,13 +124,15 @@ public class Main extends PApplet {
 			backgroundSystems.add(new ShowerSystem(this));
 			backgroundSystems.add(new PlasmaSystem(this, 255));
 			backgroundSystems.add(new PlasmaSystem(this, 120));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this), 500));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), 500));
 			backgroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 		}
 		
-		systems.add(new StarWebSystem(this, new SquareFactory(this)));
+		systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
+		systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
 		systems.add(new StarWebSystem(this));
-		systems.add(new GravitySystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+		systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
@@ -198,6 +200,7 @@ public class Main extends PApplet {
 		addDebugMsg(name +": " + ss.getClass().getSimpleName());
 		if (ss.factory != null) {
 			addDebugMsg("  --factory: " + ss.factory.getClass().getSimpleName());
+			addDebugMsg("    --scale: " + ss.factory.getScale());
 		}
 	}
 	
