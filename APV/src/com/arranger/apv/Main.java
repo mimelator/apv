@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.ColorSystem.RandomColor;
+import com.arranger.apv.bg.BackDropSystem;
+import com.arranger.apv.bg.DefaultBackgroundSystem;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -36,6 +38,7 @@ public class Main extends PApplet {
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	private static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
+	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
 	private static final boolean FULL_SCREEN = true;
@@ -64,7 +67,10 @@ public class Main extends PApplet {
 	protected int systemIndex = 0;
 	
 	protected List<ShapeSystem> backgroundSystems = new ArrayList<ShapeSystem>();
-	protected int backgroundSystemIndex = 0;
+	protected int backgroundIndex = 0;
+	
+	protected List<BackDropSystem> backDropSystems = new ArrayList<BackDropSystem>();
+	protected int backDropIndex = 0;
 
 	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
 	protected int locationIndex = 0;
@@ -152,6 +158,10 @@ public class Main extends PApplet {
 			systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		}
 		
+		if (USE_BACKDROP) {
+			backDropSystems.add(new DefaultBackgroundSystem(this));
+		}
+		
 		for (ShapeSystem system : systems) {
 			system.setup();
 		}
@@ -159,16 +169,25 @@ public class Main extends PApplet {
 		for (ShapeSystem system : backgroundSystems) {
 			system.setup();
 		}
+		background(Color.BLACK.getRGB());
+	}
+
+	protected void redrawBackground() {
+		//Oscillate between white and black
+//		int bgColor = (int)oscillate(Color.WHITE.getRGB(), Color.BLACK.getRGB(), 5);
+//		background(bgColor);
 	}
 	
 	public void draw() {
-		//TODO Omit drawing a background to facilitate transitions from systems
-		background(Color.BLACK.getRGB()); 
+		if (USE_BACKDROP) {
+			BackDropSystem backDropSystem = backDropSystems.get(0);
+			backDropSystem.drawBackground();
+		}
 		
 		if (USE_BG) {
 			pushStyle();
 			pushMatrix();
-			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundIndex) % backgroundSystems.size());
 			bgSys.draw();
 			debugSystem("bgSys", bgSys);
 			popMatrix();
@@ -195,10 +214,10 @@ public class Main extends PApplet {
 		int code = event.getKeyCode();
 		if (code == PApplet.RIGHT) {
 			systemIndex++;
-			backgroundSystemIndex++;
+			backgroundIndex++;
 		} else if (code == PApplet.LEFT) {
 			systemIndex--;
-			backgroundSystemIndex--;
+			backgroundIndex--;
 		} else if (code == PConstants.ENTER) {
 			if (event.isShiftDown()) {
 				locationIndex--;
