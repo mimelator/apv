@@ -11,18 +11,20 @@ import com.arranger.apv.Main;
  */
 public class LightWormSystem extends LiteShapeSystem {
 
-	private static final int COLOR_ALPHA = 30;
 	private static final float STROKE_WEIGHT = 1.0f;
 	private static final float SHAPE_SIZE = 5f;//4; Accept Param (.5-20)  Large numbers MUST have small num dragons
 	private static final int NUM_TRAILS = 32;//64; Trails Min(12) Max(64)
 	
 	private static final float MOTION_SPEED = 0.004f;//0.008f; Modulate (0.0005f - 0.012f);
 	private static final int MOTION_RADIUS = 250;//200; TODO base this on screen size
-	private static final int DEFAULT_NUM_DRAGONS = 7;//32; TODO Accept Param (2-10)
+	private static final int DEFAULT_NUM_DRAGONS = 7;//32;  Accept Param (2-10)
 	
 	private static final boolean USE_ORIG_COLORS_DEFAULT = true;
-	private static final float DEFAULT_COLOR_SPEED = 5.0f;//50.0f;TODO Modulate (4, 100)
-	private static final float COLOR_SCALAR = 5.5f; //10//higher number rainbow
+	private static final float DEFAULT_COLOR_SPEED = 5.0f;//50.0f;Modulate (4, 100)
+	private static final float COLOR_SCALAR = 5.5f; //10  //higher number rainbow
+	private static final int LOW_COLOR_OSC_SCALAR = 2;
+	private static final int HIGH_COLOR_OSC_SCALAR = 20;
+	private static final int COLOR_ALPHA = 30;
 	
 	private static final float FADE_DIV = 5.0f;
 	private static final float FADE_AREA = (float)NUM_TRAILS / FADE_DIV;
@@ -52,13 +54,12 @@ public class LightWormSystem extends LiteShapeSystem {
 		if (!useOrigColors) {
 			colorSystems = new ColorSystem[numDragons];
 			for (int index = 0; index < numDragons; index++) {
-				colorSystems[index] = new OscillatingColor(parent, random(2, 15));
+				colorSystems[index] = new OscillatingColor(parent, random(LOW_COLOR_OSC_SCALAR, HIGH_COLOR_OSC_SCALAR));
 			}
 		}
 	}
 
 	private static final int TOTAL_OFFSET_VALS = 8; //Hard coded for the offset table
-	
 	
 	@Override
 	public void setup() {
