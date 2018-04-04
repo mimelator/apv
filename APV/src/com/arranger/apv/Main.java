@@ -23,6 +23,7 @@ import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.StarWebSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
+import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -30,9 +31,12 @@ import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
+	private static final int PLASMA_ALPHA_LOW = 120;
+	private static final int PLASMA_ALPHA_HIGH = 255;
 	private static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BG = true;
+	private static final boolean USE_FG = true;
 	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
@@ -121,23 +125,28 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new ShowerSystem(this));
-			backgroundSystems.add(new PlasmaSystem(this, 255));
-			backgroundSystems.add(new PlasmaSystem(this, 120));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), 500));
-			backgroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
+			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
+			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
 		}
 		
-		systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-		systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
-		systems.add(new StarWebSystem(this));
-		systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-		systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
-		systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
-		systems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-		systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+		if (USE_FG) {
+			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
+			systems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
+			systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
+			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
+			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
+			systems.add(new StarWebSystem(this));
+			systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));
+			systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
+			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+			systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+			systems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+			systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+		}
 		
 		for (ShapeSystem system : systems) {
 			system.setup();
@@ -153,17 +162,24 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB()); 
 		
 		if (USE_BG) {
-			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
+			pushStyle();
 			pushMatrix();
+			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundSystemIndex) % backgroundSystems.size());
 			bgSys.draw();
-			popMatrix();
 			debugSystem("bgSys", bgSys);
+			popMatrix();
+			popStyle();
 		}
-		ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
-		pushMatrix();
-		fgSys.draw();
-		debugSystem("fgSys", fgSys);
-		popMatrix();
+		
+		if (USE_FG) {
+			pushStyle();
+			pushMatrix();
+			ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
+			fgSys.draw();
+			debugSystem("fgSys", fgSys);
+			popMatrix();
+			popStyle();
+		}
 		
 		if (DEBUG_TEXT) {
 			doDebugMsg();

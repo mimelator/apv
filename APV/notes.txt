@@ -1,42 +1,33 @@
-
-Refactor CarnivalShapeSystem & StarWeb ???
-Lifecycle systems:
-	GravitySystem extends LifecycleSystem
-	RotSystem extends LifecycleSystem
-	WarpSystem extends DirectLifecycleSystem
-
-	CarnivalShapeSystem extends LiteShapeSystem 
+*****************************************************************************
+TODO: 
+1) Beat Location Systems
+	pay attention to panning as well (scale and move left or right)
 
 
-Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
+2) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
 
 
+3) More Location Systems that follow complex paths and change speeds
+  Location Systems could also respond automatically to beats
+  Change Direction of Location System (doesn't matter for MouseSystem)
 
+4) Advanced Color Systems
+
+5) Start using the Frequency Bands of the Song
+
+6) Tint 
+	Code: https://processing.org/tutorials/pixels/
+	float redTint = parent.oscillate(0, 255, 5);
+		parent.tint(parent.color(redTint, 0, 0));
+		parent.addDebugMsg("redTint: " + redTint);
+*****************************************************************************
+		
+		
+		
+*****************************************************************************
 Audio Line In Notes
 
 When wanting to analyze to iTunes
 I'm currently setting the default Sound Output Device to Soundflower
 Then i'm running SoundFlowerBed and "monitoring" the default output device
-
-
-
-More Location Systems that follow complex paths and change speeds
-  Location Systems could also respond automatically to beats
-  Change Direction of Location System (doesn't matter for MouseSystem)
-  
-
-Advanced Color Systems
-Size Scalar
-Start using the Frequency Bands of the Song
-
-
-
-
-Create a background layer using stuff like: 
-	https://necessarydisorder.wordpress.com/2017/11/15/drawing-from-noise-and-then-making-animated-loopy-gifs-from-there/
-
-
-Tint Code: https://processing.org/tutorials/pixels/
-float redTint = parent.oscillate(0, 255, 5);
-		parent.tint(parent.color(redTint, 0, 0));
-		parent.addDebugMsg("redTint: " + redTint);
+*****************************************************************************

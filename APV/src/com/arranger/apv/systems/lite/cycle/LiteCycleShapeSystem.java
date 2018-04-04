@@ -9,24 +9,28 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
 public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 
 	
-	private static final int NUM_NEW_PARTICLES = 10;
+	private static final int NUM_NEW_OBJECTS = 10;
 	protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
-	protected int numNewParticles;
+	protected int numNewObjects;
 	
 	public LiteCycleShapeSystem(Main parent) {
 		super(parent);
-		numNewParticles = NUM_NEW_PARTICLES;
+		numNewObjects = NUM_NEW_OBJECTS;
 	}
 
+	public LiteCycleShapeSystem(Main parent, int numNewObjects) {
+		super(parent);
+		this.numNewObjects = numNewObjects;
+	}
+	
 	@Override
 	public void setup() {
+		
 	}
 	
 	@Override
 	public void draw() {
-		for (int i = 0; i < numNewParticles; i++) {
-			lcObjects.add(createObj(i));
-		}
+		createNewObjects();
 	
 		for (int i = lcObjects.size() - 1; i > -1; i--) {
 			LiteCycleObj obj = lcObjects.get(i);
@@ -36,6 +40,12 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 				obj.update();
 				obj.display();
 			}
+		}
+	}
+
+	protected void createNewObjects() {
+		for (int i = 0; i < numNewObjects; i++) {
+			lcObjects.add(createObj(i));
 		}
 	}
 

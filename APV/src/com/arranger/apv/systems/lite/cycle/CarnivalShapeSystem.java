@@ -25,14 +25,10 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	}
 
 	public void draw() {
-		parent.pushMatrix();
 		parent.colorMode(HSB);
 		parent.rectMode(CENTER);
 		
 		super.draw();
-		
-		parent.colorMode(RGB);
-		parent.popMatrix();
 	}
 
 	@Override
