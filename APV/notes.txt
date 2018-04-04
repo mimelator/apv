@@ -1,4 +1,13 @@
 *****************************************************************************
+Questions:
+1) Should all Foreground systems respond to Location?
+
+
+
+*****************************************************************************
+
+
+*****************************************************************************
 TODO: 
 1) Beat Location Systems
 	pay attention to panning as well (scale and move left or right)

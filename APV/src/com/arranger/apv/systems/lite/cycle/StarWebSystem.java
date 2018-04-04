@@ -1,8 +1,6 @@
-package com.arranger.apv.systems.lite;
+package com.arranger.apv.systems.lite.cycle;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
@@ -14,12 +12,12 @@ import processing.core.PVector;
 /**
  * https://www.openprocessing.org/sketch/147466
  */
-public class StarWebSystem extends LiteShapeSystem {
+public class StarWebSystem extends LiteCycleShapeSystem {
 
 	private static final int LARGE_RADIUS = 150;
 	private static final int SMALL_RADIUS = 50;
 	private static final int NUM_EDGES = 100;
-	private static final int NUM_BALLS = 180;
+	private static final int DEFAULT_NUM_BALLS = 180;
 	private static final int LINE_ALPHA = 150;
 	private static final int BALL_CONNECTION_DISTANCE = 60;
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
@@ -27,23 +25,46 @@ public class StarWebSystem extends LiteShapeSystem {
 	private static final int DEFAULT_ELLIPSE_STROKE_WEIGHT = 1;
 	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;
 	
-	int fc, num = NUM_BALLS, edge = NUM_EDGES;
-	List<Ball> balls = new ArrayList<Ball>();
+	private static final int FRAMES_PER_RESET = 20000;
+	
+	int fc, edge = NUM_EDGES;
 
 	public StarWebSystem(Main parent) {
-		super(parent);
+		super(parent, DEFAULT_NUM_BALLS);
 	}
 	
 	public StarWebSystem(Main parent, ShapeFactory factory) {
-		super(parent);
+		this(parent, factory, DEFAULT_NUM_BALLS);
+	}
+	
+	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects) {
+		super(parent, numNewObjects);
 		this.factory = factory;
 	}
-
+	
+	public StarWebSystem(Main parent, int numNewObjects) {
+		super(parent, numNewObjects);
+	}
+	
 	@Override
 	public void setup() {
+		reset();
+	}
+	
+	@Override
+	protected void createNewObjects() {
+		if ((parent.frameCount % FRAMES_PER_RESET) == 0) {
+			reset();
+		}
+	}
+
+	protected void reset() {
+		lcObjects.clear();
+		
 		int width = parent.width;
 		int height = parent.height;
-		for (int i = 0; i < num; i++) {
+		
+		for (int i = 0; i < numNewObjects; i++) {
 			PVector org = new PVector(random(edge, width - edge), random(edge, height - edge));
 			float radius = random(SMALL_RADIUS, LARGE_RADIUS);
 			PVector loc = new PVector(org.x + radius, org.y);
@@ -53,29 +74,29 @@ public class StarWebSystem extends LiteShapeSystem {
 			if (r > .5) {
 				dir = -1;
 			}
-			Ball myBall = new Ball(org, loc, radius, dir, offSet);
-			balls.add(myBall);
+			lcObjects.add(new Ball(org, loc, radius, dir, offSet));
 		}
 	}
 
 	@Override
-	public void draw() {
-		for (Ball b : balls) {
-			b.run();
-		}
+	protected LiteCycleObj createObj(int index) {
+		throw new RuntimeException("StarWebSystem::createObj not implemented");
 	}
 	
-	class Ball {
+	private class Ball extends LiteCycleObj {
+		
+		private static final int DEFAULT_SIZE = 10;
+		private static final int NUM_SHAPES = 5;
 		
 		PVector org, loc;
-		float sz = 10;
+		float sz = DEFAULT_SIZE;
 		float theta, radius, offSet;
-		int s, dir, d = BALL_CONNECTION_DISTANCE;
+		int dir, d = BALL_CONNECTION_DISTANCE;
 		Color ballColor = parent.getColorSystem().getCurrentColor();
 		Color lineColor = parent.getColorSystem().getCurrentColor();
 		APVShape factoryShape;
 		
-		Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
+		private Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
 			org = _org;
 			loc = _loc;
 			radius = _radius;
@@ -86,36 +107,31 @@ public class StarWebSystem extends LiteShapeSystem {
 				factoryShape = factory.createShape(null);
 			}
 		}
-
-		void run() {
-			move();
-			display();
-			lineBetween();
+		
+		@Override
+		public boolean isDead() {
+			return false;
 		}
 
-		void move() {
+		@Override
+		public void update() {
 			loc.x = org.x + PApplet.sin(theta + offSet) * radius;
 			loc.y = org.y + PApplet.cos(theta + offSet) * radius;
 			theta += (0.0523 / 2 * dir);
 		}
 
-		void lineBetween() {
-			for (Ball other : balls) {
-				float distance = loc.dist(other.loc);
-				if (distance > 0 && distance < d) {
-					parent.strokeWeight(LINE_STROKE_WEIGHT);
-					parent.stroke(lineColor.getRGB(), LINE_ALPHA); 
-					parent.line(loc.x, loc.y, other.loc.x, other.loc.y);        
-				}
-			}
+		@Override
+		public void display() {
+			drawShapes();
+			lineBetween();
 		}
 
-		void display() {
-			for (int i = 0; i < 5; i++) {
+		private void drawShapes() {
+			for (int i = 0; i < NUM_SHAPES; i++) {
 				if (factoryShape != null) {
 					parent.rectMode(CENTER);
 					parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
-					parent.fill(ballColor.getRGB());
+					factoryShape.setColor(ballColor.getRGB());
 					parent.shape(factoryShape.getShape(), loc.x, loc.y);
 				} else {
 					parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
@@ -124,6 +140,17 @@ public class StarWebSystem extends LiteShapeSystem {
 				}
 			}
 		}
+		
+		private void lineBetween() {
+			for (LiteCycleObj otherObj : lcObjects) {
+				Ball otherBall = (Ball)otherObj;
+				float distance = loc.dist(otherBall.loc);
+				if (distance > 0 && distance < d) {
+					parent.strokeWeight(LINE_STROKE_WEIGHT);
+					parent.stroke(lineColor.getRGB(), LINE_ALPHA); 
+					parent.line(loc.x, loc.y, otherBall.loc.x, otherBall.loc.y);        
+				}
+			}
+		}
 	}
-
 }
