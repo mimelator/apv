@@ -22,6 +22,7 @@ import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
+import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
@@ -143,6 +144,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
+			systems.add(new LightWormSystem(this));
 			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
 			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));

@@ -6,7 +6,7 @@ import com.arranger.apv.Main;
 
 public class OscilatingBackDrop extends BackDropSystem {
 	
-	private static final int OSCILLATION_SCALAR = 12;
+	private static final int OSCILLATION_SCALAR = 12; //TODO: Experiment with scalar
 	private Color c1, c2;
 
 	public OscilatingBackDrop(Main parent, Color c1, Color c2) {
