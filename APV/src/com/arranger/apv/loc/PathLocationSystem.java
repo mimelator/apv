@@ -26,7 +26,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 	
 	public void keyEvent(KeyEvent keyEvent) {
 		if (keyEvent.getAction() == KeyEvent.RELEASE) {
-			if (keyEvent.getKeyCode() == ' ') {
+			if (keyEvent.getKeyCode() == Main.SPACE_BAR_KEY_CODE) {
 				reverse = !reverse;
 			}
 		}

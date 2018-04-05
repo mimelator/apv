@@ -41,6 +41,8 @@ import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
+	public static final char SPACE_BAR_KEY_CODE = ' ';
+	
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	private static final String RENDERER = P2D;
