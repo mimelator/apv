@@ -19,6 +19,7 @@ import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
+import com.arranger.apv.loc.PerlinNoiseWalker;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
@@ -124,6 +125,7 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
+		locationSystems.add(new PerlinNoiseWalker(this));
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
