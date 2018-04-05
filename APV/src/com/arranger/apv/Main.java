@@ -8,6 +8,7 @@ import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.ColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.DefaultBackgroundSystem;
+import com.arranger.apv.bg.GravAttractorSystem;
 import com.arranger.apv.bg.OscilatingBackDrop;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
@@ -168,6 +169,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
+			backDropSystems.add(new GravAttractorSystem(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN.darker()));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
 			backDropSystems.add(new DefaultBackgroundSystem(this));
@@ -187,9 +189,13 @@ public class Main extends PApplet {
 
 	public void draw() {
 		if (USE_BACKDROP) {
+			pushStyle();
+			pushMatrix();
 			BackDropSystem backDropSystem = backDropSystems.get(Math.abs(backDropIndex) % backDropSystems.size());
 			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
 			backDropSystem.drawBackground();
+			popMatrix();
+			popStyle();
 		}
 		
 		if (USE_BG) {
