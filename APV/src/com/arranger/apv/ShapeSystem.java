@@ -3,13 +3,12 @@ package com.arranger.apv;
 /**
  * Base class for Shape Systems like particle, et al
  */
-public abstract class ShapeSystem {
+public abstract class ShapeSystem extends APVPlugin {
 
-	protected Main parent;
 	protected ShapeFactory factory;
 	
 	public ShapeSystem(Main parent, ShapeFactory factory) {
-		this.parent = parent;
+		super(parent);
 		this.factory = factory;
 	}
 	

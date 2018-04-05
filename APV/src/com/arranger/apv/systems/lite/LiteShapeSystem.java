@@ -4,13 +4,12 @@ import com.arranger.apv.Main;
 import com.arranger.apv.ShapeSystem;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 
 
 /**
  * This is the next version of shape systems that are a bit more optimized and therefore 'lightweight'
  */
-public abstract class LiteShapeSystem extends ShapeSystem implements PConstants {
+public abstract class LiteShapeSystem extends ShapeSystem {
 
 	public LiteShapeSystem(Main parent) {
 		super(parent, null);

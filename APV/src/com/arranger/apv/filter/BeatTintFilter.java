@@ -5,12 +5,11 @@ import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 
 /**
  * https://processing.org/tutorials/pixels/
  */
-public class BeatTintFilter extends BeatFilter implements PConstants {
+public class BeatTintFilter extends BeatFilter {
 
 	private static final int FADE_OUT_FRAMES = 50; 
 	int lastFrameCount = 0;

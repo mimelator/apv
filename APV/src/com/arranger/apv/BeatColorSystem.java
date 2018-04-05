@@ -7,12 +7,11 @@ import ddf.minim.analysis.BeatDetect;
 /**
  * Basic BeatColor System toggles between red & white
  */
-public class BeatColorSystem {
+public class BeatColorSystem extends APVPlugin {
 
-	protected Main parent;
 	
 	public BeatColorSystem(Main parent) {
-		this.parent = parent;
+		super(parent);
 	}
 
 	public Color getCurrentColor() {

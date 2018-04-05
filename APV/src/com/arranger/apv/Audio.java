@@ -12,11 +12,12 @@ import ddf.minim.analysis.BeatDetect;
  * http://code.compartmental.net/tools/minim/
  *
  */
-public class Audio {
+public class Audio extends APVPlugin {
 
 	protected BeatInfo beatInfo;
 	
 	public Audio(Main parent, String file, int bufferSize) {
+		super(parent);
 		Minim minim = new Minim(parent);
 		
 		AudioSource source = (Main.AUDIO_IN) ? 

@@ -3,13 +3,14 @@ package com.arranger.apv;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 
-public class Gravity {
+public class Gravity extends APVPlugin {
 
 	private static final float [] GRAVITY = {.5f, .25f, .1f, .05f, .001f};
 	
 	protected int gravityIndex = 0;
 	
 	public Gravity(Main parent) {
+		super(parent);
 		parent.registerMethod("keyEvent", this);
 	}
 	

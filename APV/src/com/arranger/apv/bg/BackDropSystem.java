@@ -1,15 +1,13 @@
 package com.arranger.apv.bg;
 
+import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
-import processing.core.PConstants;
-
-public abstract class BackDropSystem implements PConstants {
+public abstract class BackDropSystem extends APVPlugin {
 	
-	protected Main parent;
 
 	public BackDropSystem(Main parent) {
-		this.parent = parent;
+		super(parent);
 	}
 	
 	public abstract void drawBackground();

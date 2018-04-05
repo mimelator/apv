@@ -4,9 +4,7 @@ import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
-import processing.core.PConstants;
-
-public abstract class DirectLifecycleSystem extends LifecycleSystem implements PConstants {
+public abstract class DirectLifecycleSystem extends LifecycleSystem {
 
 	public DirectLifecycleSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
