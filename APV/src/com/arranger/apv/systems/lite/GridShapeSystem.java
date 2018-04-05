@@ -3,7 +3,7 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import com.arranger.apv.ColorSystem.OscillatingColor;
+import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
 
 import processing.core.PApplet;

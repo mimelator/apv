@@ -10,7 +10,20 @@ public class Filter {
 		this.parent = parent;
 	}
 	
-	public void preRender() {}
-	public void postRender() {}
+	/**
+	 * Any matrix or style set MUST be undone in {@link #postRender()}
+	 */
+	public void preRender() {
+		parent.pushStyle();
+		parent.pushMatrix();
+	}
+	
+	/**
+	 * Any matrix or style set done in {@link #preRender()} MUST be undone
+	 */
+	public void postRender() {
+		parent.popMatrix();
+		parent.popStyle();
+	}
 	
 }

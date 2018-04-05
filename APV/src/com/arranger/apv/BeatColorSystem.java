@@ -7,11 +7,11 @@ import ddf.minim.analysis.BeatDetect;
 /**
  * Basic BeatColor System toggles between red & white
  */
-public class ColorSystem {
+public class BeatColorSystem {
 
 	protected Main parent;
 	
-	public ColorSystem(Main parent) {
+	public BeatColorSystem(Main parent) {
 		this.parent = parent;
 	}
 
@@ -21,7 +21,7 @@ public class ColorSystem {
 		return kick ? Color.RED : Color.WHITE;
 	}
 	
-	public static class RandomColor extends ColorSystem {
+	public static class RandomColor extends BeatColorSystem {
 
 		public RandomColor(Main parent) {
 			super(parent);
@@ -36,7 +36,7 @@ public class ColorSystem {
 		}
 	}
 	
-	public static class OscillatingColor extends ColorSystem {
+	public static class OscillatingColor extends BeatColorSystem {
 
 		private static final int DEFAULT_SCALAR = 5;
 		private float oscScalar = DEFAULT_SCALAR;

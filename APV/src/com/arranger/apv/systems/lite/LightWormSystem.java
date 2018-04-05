@@ -2,8 +2,8 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
-import com.arranger.apv.ColorSystem;
-import com.arranger.apv.ColorSystem.OscillatingColor;
+import com.arranger.apv.BeatColorSystem;
+import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
 
 /**
@@ -39,7 +39,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	private boolean useOrigColors = USE_ORIG_COLORS_DEFAULT;
 	private int numDragons = DEFAULT_NUM_DRAGONS;
 	private float colorSpeed = DEFAULT_COLOR_SPEED;
-	private ColorSystem [] colorSystems;
+	private BeatColorSystem [] colorSystems;
 	
 	public LightWormSystem(Main parent) {
 		super(parent);
@@ -52,7 +52,7 @@ public class LightWormSystem extends LiteShapeSystem {
 		this.colorSpeed = colorSpeed; 
 		
 		if (!useOrigColors) {
-			colorSystems = new ColorSystem[numDragons];
+			colorSystems = new BeatColorSystem[numDragons];
 			for (int index = 0; index < numDragons; index++) {
 				colorSystems[index] = new OscillatingColor(parent, random(LOW_COLOR_OSC_SCALAR, HIGH_COLOR_OSC_SCALAR));
 			}

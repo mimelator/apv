@@ -80,6 +80,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	
 	private class Ball extends LiteCycleObj {
 		
+		private static final float PCT_TO_DIE = 75;//99.75f;
 		private static final int DEFAULT_SIZE = 10;
 		private static final int NUM_SHAPES = 5;
 		
@@ -87,8 +88,8 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		float sz = DEFAULT_SIZE;
 		float theta, radius, offSet;
 		int dir, d = BALL_CONNECTION_DISTANCE;
-		Color ballColor = parent.getColorSystem().getCurrentColor();
-		Color lineColor = parent.getColorSystem().getCurrentColor();
+		Color ballColor;
+		Color lineColor;
 		APVShape factoryShape;
 		
 		private Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
@@ -101,11 +102,23 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 			if (factory != null) {
 				factoryShape = factory.createShape(null);
 			}
+			
+			resetColor();
 		}
 		
 		@Override
 		public boolean isDead() {
+			float random = random(100);
+			if (random > PCT_TO_DIE) {
+				resetColor();
+			}
+			
 			return false;
+		}
+		
+		private void resetColor() {
+			ballColor = parent.getColorSystem().getCurrentColor();
+			lineColor = parent.getColorSystem().getCurrentColor();
 		}
 
 		@Override

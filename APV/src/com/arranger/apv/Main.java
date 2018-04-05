@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.BeatColorSystem.OscillatingColor;
+import com.arranger.apv.BeatColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.DefaultBackDropSystem;
@@ -16,6 +18,7 @@ import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.filter.BeatShakeFilter;
+import com.arranger.apv.filter.BeatTintFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
@@ -89,9 +92,12 @@ public class Main extends PApplet {
 	protected List<Filter> filters = new ArrayList<Filter>(); 
 	protected int filterIndex = 0;
 	
+	protected List<BeatColorSystem> colorSystems = new ArrayList<BeatColorSystem>(); 
+	protected int colorIndex = 0;
+	
 	protected Audio audio;
 	protected Gravity gravity;
-	protected ColorSystem colorSystem;
+	
 
 	
 	public static void main(String[] args) {
@@ -114,8 +120,8 @@ public class Main extends PApplet {
 		return gravity;
 	}
 
-	public ColorSystem getColorSystem() {
-		return colorSystem;
+	public BeatColorSystem getColorSystem() {
+		return colorSystems.get(Math.abs(colorIndex) % colorSystems.size());
 	}
 	
 	public LocationSystem getLocationSystem() {
@@ -137,7 +143,10 @@ public class Main extends PApplet {
 		locationSystems.add(new CircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
 		
-		colorSystem = new ColorSystem(this);// new RandomColor(this);
+		colorSystems.add(new BeatColorSystem(this));
+		colorSystems.add(new OscillatingColor(this));
+		colorSystems.add(new RandomColor(this));
+		
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 
@@ -192,6 +201,8 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
+			filters.add(new BeatTintFilter(this, SCREEN));
+			filters.add(new BeatTintFilter(this, MULTIPLY));
 			filters.add(new BeatShakeFilter(this));
 			filters.add(new Filter(this));
 		}
@@ -279,6 +290,21 @@ public class Main extends PApplet {
 			} else {
 				filterIndex++;
 			}
+		} else if (code == 'c' || code == 'C') {
+			if (event.isShiftDown()) {
+				colorIndex--;
+			} else {
+				colorIndex++;
+			} 
+		} else if (code == SPACE_BAR_KEY_CODE) {
+			//mess it all up
+			
+			systemIndex += random(systems.size());
+			backgroundIndex += random(backgroundSystems.size());
+			backDropIndex += random(backDropSystems.size());
+			locationIndex += random(locationSystems.size());
+			filterIndex += random(filters.size());
+			colorIndex += random(colorSystems.size());
 		}
 	}
 	
@@ -299,6 +325,7 @@ public class Main extends PApplet {
 	}
 	
 	protected void doDebugMsg() {
+		addDebugMsg("Color: " + getColorSystem().getClass().getSimpleName());
 		addDebugMsg("Loc: " + getLocationSystem().getClass().getSimpleName());
 		addDebugMsg("Frame rate: " + (int)frameRate);
 		addDebugMsg("MouseXY:  " + mouseX + " " + mouseY);
