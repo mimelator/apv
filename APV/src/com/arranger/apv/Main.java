@@ -26,6 +26,7 @@ import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
+import com.arranger.apv.systems.lite.cycle.BubbleShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
@@ -135,6 +136,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new AttractorSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
 			backgroundSystems.add(new LightWormSystem(this));

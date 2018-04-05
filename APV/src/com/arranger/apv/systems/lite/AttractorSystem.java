@@ -60,9 +60,7 @@ public class AttractorSystem extends LiteShapeSystem {
 		magnetism = parent.oscillate(SMALL_MAGNETISM, LARGE_MAGNETISM, MAGNETISM_OSCILATOR);
 		
 		parent.addDebugMsg("  --magnetism: " + magnetism);
-		
 		parent.noStroke();
-		parent.blendMode(DIFFERENCE);
 
 		Color c = parent.getColorSystem().getCurrentColor();
 		Point2D p = parent.getLocationSystem().getCurrentPoint();

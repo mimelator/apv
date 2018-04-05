@@ -8,18 +8,18 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 
-	
-	private static final int NUM_NEW_OBJECTS = 10;
+	public static final int DEFAULT_NUM_NEW_OBJECTS = 10;
+
 	protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	protected int numNewObjects;
 	protected boolean shouldCreateSetupObjects = true;
 	protected boolean shouldCreateNewObjectsEveryDraw = true;
-	protected boolean shouldRepopulateObjectsEveryDraw = false;
+	protected boolean shouldRepopulateObjectsEveryDraw = true;
 	protected int framesPerReset = Integer.MAX_VALUE;
 	
 	public LiteCycleShapeSystem(Main parent) {
 		super(parent);
-		numNewObjects = NUM_NEW_OBJECTS;
+		numNewObjects = DEFAULT_NUM_NEW_OBJECTS;
 	}
 
 	public LiteCycleShapeSystem(Main parent, int numNewObjects) {
