@@ -105,6 +105,7 @@ public class Main extends PApplet {
 	protected List<Filter> filters = new ArrayList<Filter>(); 
 	protected int filterIndex = 0;
 	
+	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
 	
@@ -128,6 +129,10 @@ public class Main extends PApplet {
 	public Gravity getGravity() {
 		return gravity;
 	}
+	
+	public CommandSystem getCommandSystem() {
+		return commandSystem;
+	}
 
 	public ColorSystem getColorSystem() {
 		return (ColorSystem)getPlugin(colorSystems, colorIndex);
@@ -147,6 +152,10 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
+		commandSystem = new CommandSystem(this);
+		gravity = new Gravity(this);
+		audio = new Audio(this, SONG, BUFFER_SIZE);
+		
 		locationSystems.add(new PerlinNoiseWalker(this));
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this));
@@ -156,9 +165,6 @@ public class Main extends PApplet {
 		colorSystems.add(new OscillatingColor(this));
 		colorSystems.add(new RandomColor(this));
 		
-		gravity = new Gravity(this);
-		audio = new Audio(this, SONG, BUFFER_SIZE);
-
 		//Graphics hints
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);

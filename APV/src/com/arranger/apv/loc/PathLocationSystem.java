@@ -3,11 +3,11 @@ package com.arranger.apv.loc;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 import com.arranger.apv.factories.PrimitiveShapeFactory;
 
 import processing.core.PApplet;
-import processing.event.KeyEvent;
 
 public abstract class PathLocationSystem extends LocationSystem {
 
@@ -21,16 +21,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 		this.secondsPerPath = secondsPerPath;
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
-		parent.registerMethod("keyEvent", this);
-	}
-	
-	public void keyEvent(KeyEvent keyEvent) {
-		if (keyEvent.getAction() == KeyEvent.RELEASE) {
-			int keyCode = keyEvent.getKeyCode();
-			if (keyCode == 'r' || keyCode == 'R') {
-				reverse = !reverse;
-			}
-		}
+		CommandSystem cs = parent.getCommandSystem();
+		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
 	}
 	
 	protected abstract Shape createPath();

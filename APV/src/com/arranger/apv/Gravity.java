@@ -1,9 +1,9 @@
 package com.arranger.apv;
 
 import processing.core.PApplet;
-import processing.event.KeyEvent;
 
 public class Gravity extends APVPlugin {
+	
 
 	private static final float [] GRAVITY = {.5f, .25f, .1f, .05f, .001f};
 	
@@ -11,17 +11,10 @@ public class Gravity extends APVPlugin {
 	
 	public Gravity(Main parent) {
 		super(parent);
-		parent.registerMethod("keyEvent", this);
-	}
-	
-	public void keyEvent(KeyEvent keyEvent) {
-		if (keyEvent.getAction() == KeyEvent.RELEASE) {
-			if (keyEvent.getKeyCode() == PApplet.UP) {
-				gravityIndex++;
-			} else if (keyEvent.getKeyCode() == PApplet.DOWN) {
-				gravityIndex--;
-			}
-		}
+		
+		CommandSystem cs = parent.getCommandSystem();
+		cs.registerCommand(PApplet.UP, "Gravity", "Increases Gravity", event -> gravityIndex++);
+		cs.registerCommand(PApplet.DOWN, "Gravity", "Decreases Gravity", event -> gravityIndex++);
 	}
 	
 	public float getCurrentGravity() {
