@@ -1,4 +1,4 @@
-
+Work on debugging low framerate
 
 Next is either transition fading OR audio Input
 Create a branch for either one

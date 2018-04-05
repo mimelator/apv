@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 
 import processing.core.PApplet;
@@ -17,7 +17,7 @@ import processing.core.PVector;
 public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	
 	private boolean useCustomColor = false;
-	private BeatColorSystem colorSystem;
+	private ColorSystem colorSystem;
 
 	public CarnivalShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
@@ -77,7 +77,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 			lifeSpan = (int) (parent.random(30, 90));
 			decay = parent.random(0.75f, 0.9f);
 			
-			BeatColorSystem cs = (useCustomColor) ? colorSystem : parent.getColorSystem();
+			ColorSystem cs = (useCustomColor) ? colorSystem : parent.getColorSystem();
 			c = cs.getCurrentColor().getRGB();
 
 			//Original color scheme

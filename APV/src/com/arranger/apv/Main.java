@@ -7,9 +7,10 @@ import java.util.List;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
-import com.arranger.apv.bg.RefreshBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
+import com.arranger.apv.bg.RefreshBackDrop;
 import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.color.RandomColor;
 import com.arranger.apv.factories.CircleFactory;
@@ -90,7 +91,7 @@ public class Main extends PApplet {
 	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
 	protected int locationIndex = 0;
 	
-	protected List<BeatColorSystem> colorSystems = new ArrayList<BeatColorSystem>(); 
+	protected List<ColorSystem> colorSystems = new ArrayList<ColorSystem>(); 
 	protected int colorIndex = 0;
 	
 	protected List<Filter> filters = new ArrayList<Filter>(); 
@@ -120,8 +121,8 @@ public class Main extends PApplet {
 		return gravity;
 	}
 
-	public BeatColorSystem getColorSystem() {
-		return (BeatColorSystem)getPlugin(colorSystems, colorIndex);
+	public ColorSystem getColorSystem() {
+		return (ColorSystem)getPlugin(colorSystems, colorIndex);
 	}
 	
 	public LocationSystem getLocationSystem() {
