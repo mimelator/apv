@@ -20,5 +20,6 @@ public class OscilatingBackDrop extends BackDropSystem {
 		float amt = parent.oscillate(0, 1, OSCILLATION_SCALAR);
 		int lerpColor = parent.lerpColor(c1.getRGB(), c2.getRGB(), amt);
 		parent.background(lerpColor);
+		parent.addDebugMsg(" --color from to: " + c1.getRGB() + " -> " + c2.getRGB() + " at: " + amt + "%");
 	}
 }

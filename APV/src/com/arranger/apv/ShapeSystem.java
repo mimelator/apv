@@ -13,6 +13,9 @@ public abstract class ShapeSystem {
 		this.factory = factory;
 	}
 	
+	/**
+	 * called once
+	 */
 	public abstract void setup();
 	
 	/**

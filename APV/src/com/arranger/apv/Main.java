@@ -8,7 +8,7 @@ import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.ColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
-import com.arranger.apv.bg.DefaultBackgroundSystem;
+import com.arranger.apv.bg.DefaultBackDropSystem;
 import com.arranger.apv.bg.OscilatingBackDrop;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
@@ -24,6 +24,7 @@ import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
+import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
@@ -137,44 +138,48 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new GridShapeSystem(this, 10, 5));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new AttractorSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
-			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
+			backgroundSystems.add(new GridShapeSystem(this));
 			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new ShowerSystem(this));
 			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
+			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
+			backgroundSystems.add(new LightWormSystem(this));
+			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
 			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
 		}
 		
 		if (USE_FG) {
 			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
-			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
-			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
-			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
-			systems.add(new StarWebSystem(this));
-			systems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
-			systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
-			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));
-			systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
-			systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
+			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
+			systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));			
+			systems.add(new StarWebSystem(this));
 			systems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+			systems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
+			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
+			systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
+			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
+			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
+			systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+			systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
 			systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		}
 		
 		if (USE_BACKDROP) {
-			backDropSystems.add(new BlurBackDrop(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN.darker()));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
-			backDropSystems.add(new DefaultBackgroundSystem(this));
+			backDropSystems.add(new DefaultBackDropSystem(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
-			backDropSystems.add(new DefaultBackgroundSystem(this, .5f));
+			backDropSystems.add(new DefaultBackDropSystem(this, .5f));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
+			backDropSystems.add(new BlurBackDrop(this));
 		}
 		
 		for (ShapeSystem system : systems) {
