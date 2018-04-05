@@ -1,5 +1,3 @@
-Work on debugging low framerate
-
 Add help system to toggle avaiable commands
 
 

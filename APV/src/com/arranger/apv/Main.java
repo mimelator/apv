@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.Set;
 
 import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
@@ -47,7 +50,6 @@ import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
@@ -108,7 +110,7 @@ public class Main extends PApplet {
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
-	
+	protected boolean showHelp = true;
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -153,6 +155,33 @@ public class Main extends PApplet {
 	
 	public void setup() {
 		commandSystem = new CommandSystem(this);
+		
+		//add commands
+		commandSystem.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
+				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
+		commandSystem.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
+				(event) -> { foregroundIndex--; backgroundIndex--; backDropIndex--;});
+		commandSystem.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
+		commandSystem.registerCommand('f', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
+		commandSystem.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
+		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", 
+				(event) -> {
+					//mess it all up
+					foregroundIndex += random(foregroundSystems.size());
+					backgroundIndex += random(backgroundSystems.size());
+					backDropIndex += random(backDropSystems.size());
+					locationIndex += random(locationSystems.size());
+					filterIndex += random(filters.size());
+					colorIndex += random(colorSystems.size());
+					});
+		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
+		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
+		
+		
+		
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 		
@@ -222,7 +251,6 @@ public class Main extends PApplet {
 			filters.add(new Filter(this));
 		}
 		
-		
 		for (ShapeSystem system : foregroundSystems) {
 			system.setup();
 		}
@@ -287,50 +315,9 @@ public class Main extends PApplet {
 		if (MONITOR_FRAME_RATE) {
 			doMonitorCheck(backDropSystem, filter, bgSys, fgSys);
 		}
-	}
-	
-	
-	@Override
-	public void keyReleased(KeyEvent event) {
-		int code = event.getKeyCode();
-		if (code == PApplet.RIGHT) {
-			foregroundIndex++;
-			backgroundIndex++;
-			backDropIndex++;
-		} else if (code == PApplet.LEFT) {
-			foregroundIndex--;
-			backgroundIndex--;
-			backDropIndex--;
-		} else if (code == PConstants.ENTER) {
-			if (event.isShiftDown()) {
-				locationIndex--;
-			} else {
-				locationIndex++;
-			}
-		} else if (code == 'f' || code == 'F') {
-			if (event.isShiftDown()) {
-				filterIndex--;
-			} else {
-				filterIndex++;
-			}
-		} else if (code == 'c' || code == 'C') {
-			if (event.isShiftDown()) {
-				colorIndex--;
-			} else {
-				colorIndex++;
-			} 
-		} else if (code == SPACE_BAR_KEY_CODE) {
-			//mess it all up
-			foregroundIndex += random(foregroundSystems.size());
-			backgroundIndex += random(backgroundSystems.size());
-			backDropIndex += random(backDropSystems.size());
-			locationIndex += random(locationSystems.size());
-			filterIndex += random(filters.size());
-			colorIndex += random(colorSystems.size());
-		} else if (code == 'm' || code == 'M') {
-			if (MONITOR_FRAME_RATE) {
-				dumpMonitorInfo();
-			}
+		
+		if (showHelp) {
+			showHelp();
 		}
 	}
 	
@@ -363,17 +350,20 @@ public class Main extends PApplet {
 	}
 
 	protected void drawDebug() {
+		drawText(debugStatements);
+		debugStatements.clear();
+	}
+
+	protected void drawText(List<String> msgs) {
 		fill(255);
 		textAlign(PApplet.LEFT, PApplet.TOP);
 		textSize(TEXT_SIZE);
 		
 		int offset = TEXT_INDEX;
-		for (String s : debugStatements) {
+		for (String s : msgs) {
 			text(s, TEXT_INDEX, offset);
 			offset += TEXT_SIZE;
 		}
-		
-		debugStatements.clear();
 	}
 	
 	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
@@ -413,5 +403,24 @@ public class Main extends PApplet {
 			OptionalDouble average = counts.stream().mapToDouble(a -> a).average();
 			System.out.println(entry.getKey() + ": avg: " + decFormat.format(average.getAsDouble()) + " " + counts.size() + " entries");
 		}
+	}
+	
+	private void showHelp() {
+		Set<String> messages = new HashSet<String>();
+		commandSystem.visitCommands(true, e -> {
+			List<APVCommand> cmds = e.getValue();
+			cmds.forEach(c -> {
+				messages.add(c.getName() + ": " + c.getHelpText());
+			});
+		});
+		commandSystem.visitCommands(false, e -> {
+			List<APVCommand> cmds = e.getValue();
+			cmds.forEach(c -> {
+				messages.add(String.valueOf(c.getCharKey()).trim() + ": " + c.getName() + ": " + c.getHelpText());
+			});
+		});
+		
+		translate(width / 5, height / 5);
+		drawText(new ArrayList<String>(messages));
 	}
 }

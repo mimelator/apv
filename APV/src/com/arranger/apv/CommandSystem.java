@@ -11,9 +11,20 @@ public class CommandSystem extends APVPlugin {
 	
 	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
 	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
-
-	//TODO Implement all the other commands including a new Help Command
 	
+	@FunctionalInterface
+	public static interface IVisitor {
+		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
+	}
+	
+	public void visitCommands(boolean isKeyCommands, IVisitor visitor) {
+		if (isKeyCommands) {
+			keyCommands.entrySet().forEach(e -> visitor.visit(e));
+		} else {
+			charCommands.entrySet().forEach(e -> visitor.visit(e));
+		}
+	}
+
 	public CommandSystem(Main parent) {
 		super(parent);
 		parent.registerMethod("keyEvent", this);
@@ -30,6 +41,7 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	public void registerCommand(char key, String name, String helpText, CommandHandler handler) {
+		key = Character.toLowerCase(key);
 		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
 		List<APVCommand> list = charCommands.get(key);
 		if (list == null) {
@@ -43,7 +55,7 @@ public class CommandSystem extends APVPlugin {
 		if (keyEvent.getAction() == KeyEvent.RELEASE) {
 			List<APVCommand> list = keyCommands.get(keyEvent.getKeyCode());
 			if (list == null || list.isEmpty()) {
-				list = charCommands.get(keyEvent.getKey());
+				list = charCommands.get(Character.toLowerCase(keyEvent.getKey()));
 			}
 			
 			if (list != null) {
@@ -57,7 +69,7 @@ public class CommandSystem extends APVPlugin {
 		public void onKeyPressed(KeyEvent event);
 	}
 	
-	private static class APVCommand {
+	public static class APVCommand {
 		
 		private CommandHandler handler;
 		private int commandKey;
@@ -77,6 +89,21 @@ public class CommandSystem extends APVPlugin {
 			this.helpText = helpText;
 			this.handler = handler;
 		}
-	    
+
+		public int getCommandKey() {
+			return commandKey;
+		}
+
+		public char getCharKey() {
+			return charKey;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getHelpText() {
+			return helpText;
+		}
 	}
 }
