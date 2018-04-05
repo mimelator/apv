@@ -1,30 +1,17 @@
-*****************************************************************************
-Questions:
-1) Should all Foreground systems respond to Location?
-2) Could i have a transition where systems overlap and fade out/in?
+This is a quick test.
 
-
-
-*****************************************************************************
-
+Next is either transition fading OR audio Input
+Create a branch for either one
 
 *****************************************************************************
 TODO: 
 1) Beat Location Systems
 	pay attention to panning as well (scale and move left or right)
 
-
 2) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
-
-
-3) More Location Systems that follow complex paths and change speeds
-  Location Systems could also respond automatically to beats
-  Change Direction of Location System (doesn't matter for MouseSystem)
-
+3) Location Systems could also respond automatically to beats
 4) Advanced Color Systems
-
 5) Start using the Frequency Bands of the Song
-
 6) Tint 
 	Code: https://processing.org/tutorials/pixels/
 	float redTint = parent.oscillate(0, 255, 5);
