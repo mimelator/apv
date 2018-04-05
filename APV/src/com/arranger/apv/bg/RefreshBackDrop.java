@@ -6,18 +6,18 @@ import com.arranger.apv.Main;
 
 import processing.core.PApplet;
 
-public class DefaultBackDropSystem extends BackDropSystem {
+public class RefreshBackDrop extends BackDropSystem {
 
 	private static final float PCT_BG_REFRESH = .8f;
 	protected static final int RATE = 1200;
 	protected static final int RANGE = 100;
 	protected float bgRefreshPct;
 	
-	public DefaultBackDropSystem(Main parent) {
+	public RefreshBackDrop(Main parent) {
 		this(parent, PCT_BG_REFRESH);
 	}
 	
-	public DefaultBackDropSystem(Main parent, float bgRefreshPct) {
+	public RefreshBackDrop(Main parent, float bgRefreshPct) {
 		super(parent);
 		this.bgRefreshPct = bgRefreshPct;
 	}

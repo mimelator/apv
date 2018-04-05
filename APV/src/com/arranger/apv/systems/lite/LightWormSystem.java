@@ -2,9 +2,9 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
-import com.arranger.apv.BeatColorSystem;
-import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
+import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.OscillatingColor;
 
 /**
  * https://www.openprocessing.org/sketch/396905

@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APVShape.Data;
-import com.arranger.apv.BeatColorSystem.OscillatingColor;
-import com.arranger.apv.BeatColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
-import com.arranger.apv.bg.DefaultBackDropSystem;
+import com.arranger.apv.bg.RefreshBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
+import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.color.RandomColor;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -77,8 +78,8 @@ public class Main extends PApplet {
 		}
 	}
 	
-	protected List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
-	protected int systemIndex = 0;
+	protected List<ShapeSystem> foregroundSystems = new ArrayList<ShapeSystem>();
+	protected int foregroundIndex = 0;
 	
 	protected List<ShapeSystem> backgroundSystems = new ArrayList<ShapeSystem>();
 	protected int backgroundIndex = 0;
@@ -89,16 +90,15 @@ public class Main extends PApplet {
 	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
 	protected int locationIndex = 0;
 	
-	protected List<Filter> filters = new ArrayList<Filter>(); 
-	protected int filterIndex = 0;
-	
 	protected List<BeatColorSystem> colorSystems = new ArrayList<BeatColorSystem>(); 
 	protected int colorIndex = 0;
+	
+	protected List<Filter> filters = new ArrayList<Filter>(); 
+	protected int filterIndex = 0;
 	
 	protected Audio audio;
 	protected Gravity gravity;
 	
-
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -121,11 +121,11 @@ public class Main extends PApplet {
 	}
 
 	public BeatColorSystem getColorSystem() {
-		return colorSystems.get(Math.abs(colorIndex) % colorSystems.size());
+		return (BeatColorSystem)getPlugin(colorSystems, colorIndex);
 	}
 	
 	public LocationSystem getLocationSystem() {
-		return locationSystems.get(Math.abs(locationIndex) % locationSystems.size());
+		return (LocationSystem)getPlugin(locationSystems, locationIndex);
 	}
 	
 	/**
@@ -174,28 +174,28 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
-			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
-			systems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			systems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
-			systems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));			
-			systems.add(new StarWebSystem(this));
-			systems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-			systems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
-			systems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
-			systems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
-			systems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
-			systems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			systems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
-			systems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-			systems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
+			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
+			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
+			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));			
+			foregroundSystems.add(new StarWebSystem(this));
+			foregroundSystems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
+			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+			foregroundSystems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		}
 		
 		if (USE_BACKDROP) {
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN.darker()));
-			backDropSystems.add(new DefaultBackDropSystem(this));
+			backDropSystems.add(new RefreshBackDrop(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
-			backDropSystems.add(new DefaultBackDropSystem(this, .5f));
+			backDropSystems.add(new RefreshBackDrop(this, .5f));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
 			backDropSystems.add(new BlurBackDrop(this));
 		}
@@ -208,7 +208,7 @@ public class Main extends PApplet {
 		}
 		
 		
-		for (ShapeSystem system : systems) {
+		for (ShapeSystem system : foregroundSystems) {
 			system.setup();
 		}
 		
@@ -222,7 +222,7 @@ public class Main extends PApplet {
 		if (USE_BACKDROP) {
 			pushStyle();
 			pushMatrix();
-			BackDropSystem backDropSystem = backDropSystems.get(Math.abs(backDropIndex) % backDropSystems.size());
+			BackDropSystem backDropSystem = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
 			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
 			backDropSystem.drawBackground();
 			popMatrix();
@@ -231,7 +231,7 @@ public class Main extends PApplet {
 		
 		Filter filter = null;
 		if (USE_FILTERS) {
-			filter = filters.get(Math.abs(filterIndex) % filters.size());
+			filter = (Filter)getPlugin(filters, filterIndex);
 			addDebugMsg("filter: " + filter.getClass().getSimpleName());
 			filter.preRender();
 		}
@@ -239,7 +239,7 @@ public class Main extends PApplet {
 		if (USE_BG) {
 			pushStyle();
 			pushMatrix();
-			ShapeSystem bgSys = backgroundSystems.get(Math.abs(backgroundIndex) % backgroundSystems.size());
+			ShapeSystem bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
 			debugSystem("bgSys", bgSys);
 			bgSys.draw();
 			popMatrix();
@@ -249,7 +249,7 @@ public class Main extends PApplet {
 		if (USE_FG) {
 			pushStyle();
 			pushMatrix();
-			ShapeSystem fgSys = systems.get(Math.abs(systemIndex) % systems.size());
+			ShapeSystem fgSys = (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
 			debugSystem("fgSys", fgSys);
 			fgSys.draw();
 			popMatrix();
@@ -266,16 +266,16 @@ public class Main extends PApplet {
 			doDebugMsg();
 		}
 	}
-
+	
 	@Override
 	public void keyReleased(KeyEvent event) {
 		int code = event.getKeyCode();
 		if (code == PApplet.RIGHT) {
-			systemIndex++;
+			foregroundIndex++;
 			backgroundIndex++;
 			backDropIndex++;
 		} else if (code == PApplet.LEFT) {
-			systemIndex--;
+			foregroundIndex--;
 			backgroundIndex--;
 			backDropIndex--;
 		} else if (code == PConstants.ENTER) {
@@ -298,14 +298,17 @@ public class Main extends PApplet {
 			} 
 		} else if (code == SPACE_BAR_KEY_CODE) {
 			//mess it all up
-			
-			systemIndex += random(systems.size());
+			foregroundIndex += random(foregroundSystems.size());
 			backgroundIndex += random(backgroundSystems.size());
 			backDropIndex += random(backDropSystems.size());
 			locationIndex += random(locationSystems.size());
 			filterIndex += random(filters.size());
 			colorIndex += random(colorSystems.size());
 		}
+	}
+	
+	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
+		return list.get(Math.abs(index) % list.size());
 	}
 	
 	public static final int TEXT_SIZE = 16;

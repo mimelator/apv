@@ -3,10 +3,10 @@ package com.arranger.apv.systems.lite.cycle;
 
 import java.awt.geom.Point2D;
 
-import com.arranger.apv.BeatColorSystem;
-import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.OscillatingColor;
 
 import processing.core.PApplet;
 import processing.core.PVector;

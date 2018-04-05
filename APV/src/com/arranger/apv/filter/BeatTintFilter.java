@@ -1,8 +1,8 @@
 package com.arranger.apv.filter;
 
-import com.arranger.apv.BeatColorSystem;
-import com.arranger.apv.BeatColorSystem.OscillatingColor;
 import com.arranger.apv.Main;
+import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.OscillatingColor;
 
 import processing.core.PApplet;
 
