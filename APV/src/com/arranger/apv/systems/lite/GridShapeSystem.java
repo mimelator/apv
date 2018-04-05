@@ -20,26 +20,28 @@ public class GridShapeSystem extends LiteShapeSystem {
 	float[][] distances;
 	float maxDistance;
 	int space;
-	int maxSize;
+	int shapeSize;
 	Color col;
+	
 	
 	public GridShapeSystem(Main parent) {
 		this(parent, SPACER, LARGE_STROKE_WEIGHT);
 	}
 		
-	public GridShapeSystem(Main parent, int space, int maxSize) {
+	public GridShapeSystem(Main parent, int space, int shapeSize) {
 		super(parent);
 		this.space = space; 
-		this.maxSize = maxSize;
+		this.shapeSize = shapeSize;
 	}
-
+	
 	@Override
 	public void setup() {
-		
+		distances = new float[parent.width][parent.height];
 	}
 
 	@Override
 	public void draw() {
+		int time = parent.millis();
 		parent.stroke(255);
 		col = new OscillatingColor(parent, COLOR_OSC_SCALAR).getCurrentColor();
 		Point2D pt = parent.getLocationSystem().getCurrentPoint();
@@ -49,7 +51,7 @@ public class GridShapeSystem extends LiteShapeSystem {
 		int height = parent.height;
 
 		maxDistance = PApplet.dist(ptX, ptY, width, height);
-		distances = new float[width][height];
+		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				float distance = PApplet.dist(ptX, ptY, x, y);
@@ -57,8 +59,8 @@ public class GridShapeSystem extends LiteShapeSystem {
 			}
 		}
 
-		parent.strokeWeight(maxSize);
-		parent.addDebugMsg("  --pointSize: " + maxSize);
+		parent.strokeWeight(shapeSize);
+		
 
 		float maxDistance = Float.MIN_VALUE;
 		for (int y = 0; y < height; y += space) {
@@ -71,7 +73,10 @@ public class GridShapeSystem extends LiteShapeSystem {
 			}
 		}
 		
+		parent.addDebugMsg("  --space: " + space); 
+		parent.addDebugMsg("  --shapeSize: " + shapeSize);
 		parent.addDebugMsg("  --maxDistance: " + maxDistance);
+		parent.addDebugMsg("  --drawingTime: " + String.valueOf(parent.millis() - time));
 	}
 
 }

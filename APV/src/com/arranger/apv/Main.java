@@ -200,7 +200,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new GridShapeSystem(this, 10, 5));
+			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new AttractorSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
@@ -376,10 +376,10 @@ public class Main extends PApplet {
 		if (frameRate < FRAME_RATE_THRESHOLD) {
 			//This is an ugly way to build a key
 			StringBuilder builder = new StringBuilder();
-			builder.append((backDrop != null) ? backDrop.getName() : "").append('-'); 
-			builder.append((filter != null) ? filter.getName() : "").append('-');
-			builder.append((bg != null) ? bg.getName() : "").append('-');
-			builder.append((fg != null) ? fg.getName() : "").append('-');
+			builder.append((backDrop != null) ? backDrop.getName() : "()").append(':'); 
+			builder.append((filter != null) ? filter.getName() : "()").append(':');
+			builder.append((bg != null) ? bg.getName() : "()").append(':');
+			builder.append((fg != null) ? fg.getName() : "()");
 			String key = builder.toString();
 			
 			List<Float> frames = monitorRecords.get(key);
@@ -393,6 +393,7 @@ public class Main extends PApplet {
 	}
 	
 	private void dumpMonitorInfo() {
+		System.out.println("name, numEntries, avgTime");
 		for (Map.Entry<String, List<Float>> entry : monitorRecords.entrySet()) {
 			List<Float> counts = entry.getValue();
 			if (counts.size() < MIN_THRESHOLD_ENTRIES) {
@@ -401,7 +402,7 @@ public class Main extends PApplet {
 			
 			//get the average
 			OptionalDouble average = counts.stream().mapToDouble(a -> a).average();
-			System.out.println(entry.getKey() + ": avg: " + decFormat.format(average.getAsDouble()) + " " + counts.size() + " entries");
+			System.out.println(entry.getKey() + "," + counts.size() + "," + decFormat.format(average.getAsDouble()));
 		}
 	}
 	

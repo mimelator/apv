@@ -1,8 +1,9 @@
-Add help system to toggle avaiable commands
-
-
 Next is either transition fading OR audio Input
-Create a branch for either one
+
+TODO: Optimize this
+BeatTintFilter
+GridShapeSystem
+Carnival?
 
 *****************************************************************************
 TODO: 
