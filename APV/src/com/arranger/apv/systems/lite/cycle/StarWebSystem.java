@@ -7,6 +7,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 
 import processing.core.PApplet;
+import processing.core.PShape;
 import processing.core.PVector;
 
 /**
@@ -123,10 +124,15 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		private void drawShapes() {
 			for (int i = 0; i < NUM_SHAPES; i++) {
 				if (factoryShape != null) {
+					PShape drawShape = factoryShape.getShape();
+					
 					parent.rectMode(CENTER);
 					parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
 					factoryShape.setColor(ballColor.getRGB());
-					parent.shape(factoryShape.getShape(), loc.x, loc.y);
+					
+					parent.shape(drawShape, 
+							loc.x - (drawShape.width / 2), 
+							loc.y - (drawShape.height / 2) );
 				} else {
 					parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
 					parent.fill(ballColor.getRGB(), i * 50);

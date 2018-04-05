@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APVShape.Data;
-import com.arranger.apv.ColorSystem.RandomColor;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.DefaultBackDropSystem;
@@ -16,6 +15,8 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.filter.BeatShakeFilter;
+import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -50,6 +51,7 @@ public class Main extends PApplet {
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
+	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
@@ -83,6 +85,9 @@ public class Main extends PApplet {
 
 	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
 	protected int locationIndex = 0;
+	
+	protected List<Filter> filters = new ArrayList<Filter>(); 
+	protected int filterIndex = 0;
 	
 	protected Audio audio;
 	protected Gravity gravity;
@@ -132,7 +137,7 @@ public class Main extends PApplet {
 		locationSystems.add(new CircularLocationSystem(this));
 		locationSystems.add(new RectLocationSystem(this));
 		
-		colorSystem = new RandomColor(this);
+		colorSystem = new ColorSystem(this);// new RandomColor(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 
@@ -186,6 +191,12 @@ public class Main extends PApplet {
 			backDropSystems.add(new BlurBackDrop(this));
 		}
 		
+		if (USE_FILTERS) {
+			filters.add(new BeatShakeFilter(this));
+			filters.add(new Filter(this));
+		}
+		
+		
 		for (ShapeSystem system : systems) {
 			system.setup();
 		}
@@ -207,6 +218,13 @@ public class Main extends PApplet {
 			popStyle();
 		}
 		
+		Filter filter = null;
+		if (USE_FILTERS) {
+			filter = filters.get(Math.abs(filterIndex) % filters.size());
+			addDebugMsg("filter: " + filter.getClass().getSimpleName());
+			filter.preRender();
+		}
+		
 		if (USE_BG) {
 			pushStyle();
 			pushMatrix();
@@ -225,6 +243,12 @@ public class Main extends PApplet {
 			fgSys.draw();
 			popMatrix();
 			popStyle();
+		}
+		
+		if (USE_FILTERS) {
+			if (filter != null) {
+				filter.postRender();
+			}
 		}
 		
 		if (DEBUG_TEXT) {
@@ -249,7 +273,13 @@ public class Main extends PApplet {
 			} else {
 				locationIndex++;
 			}
-		} 
+		} else if (code == 'f' || code == 'F') {
+			if (event.isShiftDown()) {
+				filterIndex--;
+			} else {
+				filterIndex++;
+			}
+		}
 	}
 	
 	public static final int TEXT_SIZE = 16;
