@@ -9,4 +9,8 @@ public abstract class APVPlugin implements PConstants {
 	public APVPlugin(Main parent) {
 		this.parent = parent;
 	}
+	
+	public String getName() {
+		return getClass().getSimpleName();
+	}
 }

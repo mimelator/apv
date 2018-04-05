@@ -1,8 +1,12 @@
 package com.arranger.apv;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.OptionalDouble;
 
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.bg.BackDropSystem;
@@ -58,7 +62,6 @@ public class Main extends PApplet {
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
-	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
@@ -67,8 +70,13 @@ public class Main extends PApplet {
 	private static final int BUFFER_SIZE = 512; //Default is 1024
 	private static final int NUMBER_PARTICLES = 1000;
 
+	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	private static final String SPRITE_PNG = "sprite.png";
+	
 	private static final boolean DEBUG_TEXT = true;
+	private static final boolean MONITOR_FRAME_RATE = true;
+	private static final int FRAME_RATE_THRESHOLD = 30;
+	private static final int MIN_THRESHOLD_ENTRIES = 3;
 	
 	private static class EmptyShapeFactory extends ShapeFactory {
 		public EmptyShapeFactory(Main parent) {
@@ -220,11 +228,12 @@ public class Main extends PApplet {
 	}
 
 	public void draw() {
+		BackDropSystem backDropSystem = null;
 		if (USE_BACKDROP) {
 			pushStyle();
 			pushMatrix();
-			BackDropSystem backDropSystem = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
-			addDebugMsg("bDrop: " + backDropSystem.getClass().getSimpleName());
+			backDropSystem = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
+			addDebugMsg("bDrop: " + backDropSystem.getName());
 			backDropSystem.drawBackground();
 			popMatrix();
 			popStyle();
@@ -233,24 +242,26 @@ public class Main extends PApplet {
 		Filter filter = null;
 		if (USE_FILTERS) {
 			filter = (Filter)getPlugin(filters, filterIndex);
-			addDebugMsg("filter: " + filter.getClass().getSimpleName());
+			addDebugMsg("filter: " + filter.getName());
 			filter.preRender();
 		}
 		
+		ShapeSystem bgSys = null;
 		if (USE_BG) {
 			pushStyle();
 			pushMatrix();
-			ShapeSystem bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
+			bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
 			debugSystem("bgSys", bgSys);
 			bgSys.draw();
 			popMatrix();
 			popStyle();
 		}
 		
+		ShapeSystem fgSys = null;
 		if (USE_FG) {
 			pushStyle();
 			pushMatrix();
-			ShapeSystem fgSys = (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
+			fgSys = (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
 			debugSystem("fgSys", fgSys);
 			fgSys.draw();
 			popMatrix();
@@ -266,7 +277,12 @@ public class Main extends PApplet {
 		if (DEBUG_TEXT) {
 			doDebugMsg();
 		}
+		
+		if (MONITOR_FRAME_RATE) {
+			doMonitorCheck(backDropSystem, filter, bgSys, fgSys);
+		}
 	}
+	
 	
 	@Override
 	public void keyReleased(KeyEvent event) {
@@ -305,6 +321,10 @@ public class Main extends PApplet {
 			locationIndex += random(locationSystems.size());
 			filterIndex += random(filters.size());
 			colorIndex += random(colorSystems.size());
+		} else if (code == 'm' || code == 'M') {
+			if (MONITOR_FRAME_RATE) {
+				dumpMonitorInfo();
+			}
 		}
 	}
 	
@@ -321,16 +341,16 @@ public class Main extends PApplet {
 	}
 	
 	protected void debugSystem(String name, ShapeSystem ss) {
-		addDebugMsg(name +": " + ss.getClass().getSimpleName());
+		addDebugMsg(name +": " + ss.getName());
 		if (ss.factory != null) {
-			addDebugMsg("  --factory: " + ss.factory.getClass().getSimpleName());
+			addDebugMsg("  --factory: " + ss.factory.getName());
 			addDebugMsg("    --scale: " + ss.factory.getScale());
 		}
 	}
 	
 	protected void doDebugMsg() {
-		addDebugMsg("Color: " + getColorSystem().getClass().getSimpleName());
-		addDebugMsg("Loc: " + getLocationSystem().getClass().getSimpleName());
+		addDebugMsg("Color: " + getColorSystem().getName());
+		addDebugMsg("Loc: " + getLocationSystem().getName());
 		addDebugMsg("Frame rate: " + (int)frameRate);
 		addDebugMsg("MouseXY:  " + mouseX + " " + mouseY);
 		drawDebug();
@@ -348,5 +368,44 @@ public class Main extends PApplet {
 		}
 		
 		debugStatements.clear();
+	}
+	
+	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
+	private static DecimalFormat decFormat = new DecimalFormat(".##");
+	
+	private void doMonitorCheck(APVPlugin backDrop, 
+								APVPlugin filter, 
+								APVPlugin bg, 
+								APVPlugin fg) {
+		if (frameRate < FRAME_RATE_THRESHOLD) {
+			//This is an ugly way to build a key
+			StringBuilder builder = new StringBuilder();
+			builder.append((backDrop != null) ? backDrop.getName() : "").append('-'); 
+			builder.append((filter != null) ? filter.getName() : "").append('-');
+			builder.append((bg != null) ? bg.getName() : "").append('-');
+			builder.append((fg != null) ? fg.getName() : "").append('-');
+			String key = builder.toString();
+			
+			List<Float> frames = monitorRecords.get(key);
+			if (frames == null) {
+				frames = new ArrayList<Float>();
+				monitorRecords.put(key, frames);
+			}
+			
+			frames.add(frameRate);
+		}
+	}
+	
+	private void dumpMonitorInfo() {
+		for (Map.Entry<String, List<Float>> entry : monitorRecords.entrySet()) {
+			List<Float> counts = entry.getValue();
+			if (counts.size() < MIN_THRESHOLD_ENTRIES) {
+				continue;
+			}
+			
+			//get the average
+			OptionalDouble average = counts.stream().mapToDouble(a -> a).average();
+			System.out.println(entry.getKey() + ": avg: " + decFormat.format(average.getAsDouble()) + " " + counts.size() + " entries");
+		}
 	}
 }
