@@ -7,21 +7,32 @@ import com.arranger.apv.Main;
 import com.arranger.apv.factories.PrimitiveShapeFactory;
 
 import processing.core.PApplet;
+import processing.event.KeyEvent;
 
 public abstract class PathLocationSystem extends LocationSystem {
 
 	protected Point2D[] points;
 	protected int secondsPerPath; 
 	private int startTime;
-	
-	protected abstract Shape createPath();
+	private boolean reverse = false;
 	
 	public PathLocationSystem(Main parent, int secondsPerPath) {
 		super(parent);
 		this.secondsPerPath = secondsPerPath;
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
+		parent.registerMethod("keyEvent", this);
 	}
+	
+	public void keyEvent(KeyEvent keyEvent) {
+		if (keyEvent.getAction() == KeyEvent.RELEASE) {
+			if (keyEvent.getKeyCode() == ' ') {
+				reverse = !reverse;
+			}
+		}
+	}
+	
+	protected abstract Shape createPath();
 	
 	public Point2D getCurrentPoint() {
 		float pct = getPercentagePathComplete();
@@ -51,7 +62,12 @@ public abstract class PathLocationSystem extends LocationSystem {
 		if (result < 0.0f || result > 1.0f) {
 			throw new RuntimeException("Illegal value for pct: " + result);
 		}
-		return result;
+		
+		if (reverse) {
+			return 1.0f - result;
+		} else {
+			return result;
+		}
 	}
 
 }
