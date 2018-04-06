@@ -75,7 +75,7 @@ public class Main extends PApplet {
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	private static final String SPRITE_PNG = "sprite.png";
 	
-	private static final boolean DEBUG_TEXT = true;
+	private static final boolean DEBUG = true;
 	private static final boolean MONITOR_FRAME_RATE = true;
 	private static final int FRAME_RATE_THRESHOLD = 30;
 	private static final int MIN_THRESHOLD_ENTRIES = 3;
@@ -111,6 +111,7 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Gravity gravity;
 	protected boolean showHelp = true;
+	protected boolean debug = DEBUG;
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -179,7 +180,7 @@ public class Main extends PApplet {
 					});
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
-		
+		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
 		
 		
 		gravity = new Gravity(this);
@@ -261,20 +262,12 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB());
 	}
 
-	protected void drawSystem(ShapeSystem s, String debugName) {
-		pushStyle();
-		pushMatrix();
-		addDebugMsg(debugName + ": " + s.getName());
-		s.draw();
-		popMatrix();
-		popStyle();
-	}
-	
+
 	public void draw() {
-		BackDropSystem backDropSystem = null;
+		BackDropSystem backDrop = null;
 		if (USE_BACKDROP) {
-			backDropSystem = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
-			drawSystem(backDropSystem, "backDrop");
+			backDrop = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
+			drawSystem(backDrop, "backDrop");
 		}
 		
 		Filter filter = null;
@@ -302,17 +295,26 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (DEBUG_TEXT) {
+		if (debug) {
 			doDebugMsg();
 		}
 		
 		if (MONITOR_FRAME_RATE) {
-			doMonitorCheck(backDropSystem, filter, bgSys, fgSys);
+			doMonitorCheck(backDrop, filter, bgSys, fgSys);
 		}
 		
 		if (showHelp) {
 			showHelp();
 		}
+	}
+	
+	protected void drawSystem(ShapeSystem s, String debugName) {
+		pushStyle();
+		pushMatrix();
+		addDebugMsg(debugName + ": " + s.getName());
+		s.draw();
+		popMatrix();
+		popStyle();
 	}
 	
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {

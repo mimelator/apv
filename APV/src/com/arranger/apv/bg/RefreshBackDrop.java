@@ -23,7 +23,7 @@ public class RefreshBackDrop extends BackDropSystem {
 	}
 	
 	/**
-	 * //Don't draw background 20% of the time.
+	 * Don't draw background bgRefreshPct of the time.
 	 */
 	@Override
 	public void drawBackground() {
