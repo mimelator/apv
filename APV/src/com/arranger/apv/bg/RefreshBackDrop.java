@@ -31,7 +31,7 @@ public class RefreshBackDrop extends BackDropSystem {
 		if (res < bgRefreshPct * RANGE) {
 			parent.background(Color.BLACK.getRGB());
 		}
-		parent.addDebugMsg("bgRefreshPct: " + bgRefreshPct);
+		parent.addDebugMsg("  --bgRefreshPct: " + bgRefreshPct);
 	}
 
 }

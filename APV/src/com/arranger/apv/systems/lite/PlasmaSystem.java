@@ -86,7 +86,7 @@ public class PlasmaSystem extends LiteShapeSystem {
 	public void draw() {
 		int width = maxSize;
 
-		parent.addDebugMsg("Alpha: " + alpha);
+		parent.addDebugMsg("  --alpha: " + alpha);
 		
 //		parent.addDebugMsg("img pixel size: " + img.pixels.length);
 //		parent.addDebugMsg("lowH: " + lowH + " highH: " + highH);

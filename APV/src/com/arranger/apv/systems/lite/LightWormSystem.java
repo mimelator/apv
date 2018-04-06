@@ -149,6 +149,6 @@ public class LightWormSystem extends LiteShapeSystem {
 		}  
 
 		counter += MOTION_SPEED;
-		parent.addDebugMsg("-- FillTime: " + fillTime);
+		parent.addDebugMsg("  --fillTime: " + fillTime);
 	}
 }
