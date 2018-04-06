@@ -8,6 +8,7 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 import ddf.minim.AudioSource;
 import ddf.minim.analysis.FFT;
+import processing.core.PApplet;
 
 /**
  * For more information about Minim and additional features, visit
@@ -15,8 +16,9 @@ import ddf.minim.analysis.FFT;
  */
 public class FreqDetector extends LiteShapeSystem {
 
-	FFT fftLog;
-	float spectrumScale = 50;
+	private static final float AMPLITUDE_SCALING_CEILING = 100f;
+	private static float DISPLAY_SCALING_FACTOR = 50;
+	FFT fft;
 	AudioSource source;
 
 	public FreqDetector(Main parent) {
@@ -26,48 +28,53 @@ public class FreqDetector extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		source = parent.getAudio().getBeatInfo().getSource();
-		fftLog = new FFT(source.bufferSize(), source.sampleRate());
-		fftLog.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
+		fft = new FFT(source.bufferSize(), source.sampleRate());
+		fft.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
 	}
 
 	@Override
 	public void draw() {
 		parent.rectMode(CORNERS);
-		parent.textSize(18);
 
-		fftLog.forward(source.mix);
-		int w = parent.width / fftLog.avgSize();
-		float bounds = fftLog.avgSize();
+		fft.forward(source.mix);
+		float bounds = fft.avgSize();
+		int frequencyWidth = (int)(parent.width / bounds);
 		
 		Point2D pt = parent.getLocationSystem().getCurrentPoint();
-		float x = (float)pt.getX();
-		float y = (float)pt.getY();
+		float curPosX = (float)pt.getX();
+		float curPosY = (float)pt.getY();
 		
 		Color c = parent.getColorSystem().getCurrentColor();
+		
+		float minAmp = Float.MAX_VALUE;
+		float maxAmp = Float.MIN_VALUE;
 
-		for (int i = 0; i < bounds; i++) {
+		for (int index = 0; index < bounds; index++) {
+			float leftX = index * frequencyWidth;
+			float rightX = index * frequencyWidth + frequencyWidth;
 			
-			float leftX = i * w;
-			float rightX = i * w + w;
-			
-			if (x >= leftX && y < rightX) {
+			//color differently based on the current point supplied by the LocationSystem
+			if (curPosX >= leftX && curPosY < rightX) {
 				parent.fill(c.getRGB(), 255);
 			} else {
 				parent.fill(c.getRGB(), 125);
 			}
 
-			// Adjust the scale according to a scale
-			// Range of values is 0 to 100
+			//Need to scale lower frequencies less than high frequencies
+			float pctComplete = (float) index / bounds;
+			float scaleFactor = (float) Math.pow(pctComplete, Math.E) * AMPLITUDE_SCALING_CEILING;
+			scaleFactor = PApplet.constrain(scaleFactor, 1, AMPLITUDE_SCALING_CEILING);
+			float scale = DISPLAY_SCALING_FACTOR * scaleFactor;
 
-			float f = (float) i;
-			float pctComplete = f / bounds;
-			float scaleFactor = (float) Math.pow(pctComplete, Math.E) * 100;
-			if (scaleFactor < 1)
-				scaleFactor = 1;
-			float scale = spectrumScale * scaleFactor;
-
-			float h = parent.height - fftLog.getAvg(i) * scale;
-			parent.rect(leftX, parent.height, rightX, h);
+			float amplitude = fft.getAvg(index);
+			minAmp = Math.min(minAmp, amplitude);
+			maxAmp = Math.max(maxAmp, amplitude);
+			
+			float rectHeight = parent.height - (amplitude * scale);
+			parent.rect(leftX, parent.height, rightX, rectHeight);
 		}
+		
+		parent.addDebugMsg("  --minAmp: " + minAmp);
+		parent.addDebugMsg("  --maxAmp: " + maxAmp);
 	}
 }
