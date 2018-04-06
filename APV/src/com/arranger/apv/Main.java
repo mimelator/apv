@@ -261,16 +261,20 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB());
 	}
 
+	protected void drawSystem(ShapeSystem s, String debugName) {
+		pushStyle();
+		pushMatrix();
+		addDebugMsg(debugName + ": " + s.getName());
+		s.draw();
+		popMatrix();
+		popStyle();
+	}
+	
 	public void draw() {
 		BackDropSystem backDropSystem = null;
 		if (USE_BACKDROP) {
-			pushStyle();
-			pushMatrix();
 			backDropSystem = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
-			addDebugMsg("bDrop: " + backDropSystem.getName());
-			backDropSystem.drawBackground();
-			popMatrix();
-			popStyle();
+			drawSystem(backDropSystem, "backDrop");
 		}
 		
 		Filter filter = null;
@@ -282,24 +286,14 @@ public class Main extends PApplet {
 		
 		ShapeSystem bgSys = null;
 		if (USE_BG) {
-			pushStyle();
-			pushMatrix();
 			bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
-			debugSystem("bgSys", bgSys);
-			bgSys.draw();
-			popMatrix();
-			popStyle();
+			drawSystem(bgSys, "bgSys");
 		}
 		
 		ShapeSystem fgSys = null;
 		if (USE_FG) {
-			pushStyle();
-			pushMatrix();
 			fgSys = (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
-			debugSystem("fgSys", fgSys);
-			fgSys.draw();
-			popMatrix();
-			popStyle();
+			drawSystem(fgSys, "fgSys");
 		}
 		
 		if (USE_FILTERS) {

@@ -1,9 +1,5 @@
 Next is either transition fading OR audio Input
 
-TODO: Optimize this
-BeatTintFilter
-GridShapeSystem
-Carnival?
 
 *****************************************************************************
 TODO: 
@@ -30,3 +26,8 @@ When wanting to analyze to iTunes
 I'm currently setting the default Sound Output Device to Soundflower
 Then i'm running SoundFlowerBed and "monitoring" the default output device
 *****************************************************************************
+
+
+Dependencies: 
+	Minim: http://code.compartmental.net/tools/minim/
+	Processing: http://processing.org/

@@ -19,19 +19,15 @@ public class Audio extends APVPlugin {
 	public Audio(Main parent, String file, int bufferSize) {
 		super(parent);
 		Minim minim = new Minim(parent);
-		
-		AudioSource source = (Main.AUDIO_IN) ? 
-			minim.getLineIn(Minim.STEREO, bufferSize) :
-				minim.loadFile(file, bufferSize) ;
-		
+		AudioSource source = (Main.AUDIO_IN) ? minim.getLineIn() : minim.loadFile(file, bufferSize) ;
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
 			AudioPlayer audioPlayer = (AudioPlayer)source;
 			audioPlayer.loop();
 		} else if (source instanceof AudioInput) {
 			AudioInput audioInput = (AudioInput)source;
-			if (!audioInput.isMonitoring()) {
-				audioInput.enableMonitoring();
+			if (audioInput.isMonitoring()) {
+				audioInput.disableMonitoring();
 			}
 		}
 	}
