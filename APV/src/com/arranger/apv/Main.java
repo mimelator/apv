@@ -30,7 +30,7 @@ import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
-import com.arranger.apv.filter.TintFilter;
+import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -261,8 +261,9 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
-			filters.add(new TintFilter(this, TintFilter.BLEND_MODE.EXCLUSION));
-			filters.add(new TintFilter(this, TintFilter.BLEND_MODE.LIGHTEST));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.EXCLUSION));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
 			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));

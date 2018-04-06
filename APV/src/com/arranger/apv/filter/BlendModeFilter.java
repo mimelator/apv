@@ -6,11 +6,11 @@ import com.arranger.apv.Main;
 
 import processing.core.PApplet;
 
-public class TintFilter extends Filter {
+public class BlendModeFilter extends Filter {
 	
 	public enum BLEND_MODE {
 			BLEND(PApplet.BLEND),
-			ADD(PApplet.BLEND),
+			ADD(PApplet.ADD),
 			SUBTRACT(PApplet.SUBTRACT),
 			DARKEST(PApplet.DARKEST),
 			LIGHTEST(PApplet.LIGHTEST),
@@ -31,7 +31,7 @@ public class TintFilter extends Filter {
 	BLEND_MODE blendMode;
 	Color color = Color.BLACK;
 
-	public TintFilter(Main parent, BLEND_MODE blendMode) {
+	public BlendModeFilter(Main parent, BLEND_MODE blendMode) {
 		super(parent);
 		this.blendMode = blendMode;
 	}
