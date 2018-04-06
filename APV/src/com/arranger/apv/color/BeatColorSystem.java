@@ -3,8 +3,7 @@ package com.arranger.apv.color;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-
-import ddf.minim.analysis.BeatDetect;
+import com.arranger.apv.audio.APVBeatDetector;
 
 /**
  * Basic BeatColor System toggles between red & white
@@ -16,7 +15,7 @@ public class BeatColorSystem extends ColorSystem {
 	}
 
 	public Color getCurrentColor() {
-		BeatDetect beat = parent.getAudio().getBeatInfo().getBeat();
+		APVBeatDetector beat = parent.getAudio().getBeatInfo().getBeat();
 		boolean kick = beat.isKick();
 		return kick ? Color.RED : Color.WHITE;
 	}

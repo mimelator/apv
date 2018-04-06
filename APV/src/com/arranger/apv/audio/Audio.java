@@ -1,19 +1,23 @@
-package com.arranger.apv;
+package com.arranger.apv.audio;
 
+
+import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Main;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSource;
 import ddf.minim.Minim;
-import ddf.minim.analysis.BeatDetect;
 
 /**
  * http://code.compartmental.net/tools/minim/
+ * 
+ * beat.setSensitivity(300); {@link FreqDetector}
  *
  */
 public class Audio extends APVPlugin {
-
+	
 	protected BeatInfo beatInfo;
 	
 	public Audio(Main parent, String file, int bufferSize) {
@@ -38,10 +42,10 @@ public class Audio extends APVPlugin {
 	
 	public class BeatInfo {
 
-		protected BeatDetect beat;
+		protected APVBeatDetector beat;
 		
 		public BeatInfo(AudioSource source) {
-			beat = new BeatDetect(source.bufferSize(), source.sampleRate());
+			beat = new APVBeatDetector(parent, source.bufferSize(), source.sampleRate());
 			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
 					beat.detect(source.mix);
@@ -53,7 +57,7 @@ public class Audio extends APVPlugin {
 			});
 		}
 
-		public BeatDetect getBeat() {
+		public APVBeatDetector getBeat() {
 			return beat;
 		};
 	}

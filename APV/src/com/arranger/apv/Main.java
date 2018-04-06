@@ -12,6 +12,8 @@ import java.util.Set;
 
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.audio.Audio;
+import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
@@ -59,10 +61,10 @@ public class Main extends PApplet {
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	private static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
-	private static final boolean USE_BACKDROP = true;
+	private static final boolean USE_BACKDROP = false;
 	private static final boolean USE_BG = true;
-	private static final boolean USE_FG = true;
-	private static final boolean USE_FILTERS = true;
+	private static final boolean USE_FG = false;
+	private static final boolean USE_FILTERS = false;
 	private static final boolean FULL_SCREEN = true;
 	
 	private static final int WIDTH = 1024;
@@ -201,6 +203,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new FreqDetector(this));
 			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new AttractorSystem(this));
