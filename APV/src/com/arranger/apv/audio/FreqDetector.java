@@ -18,6 +18,7 @@ public class FreqDetector extends LiteShapeSystem {
 
 	private static final float AMPLITUDE_SCALING_CEILING = 100f;
 	private static float DISPLAY_SCALING_FACTOR = 50;
+	
 	FFT fft;
 	AudioSource source;
 
