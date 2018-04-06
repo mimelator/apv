@@ -10,8 +10,8 @@ public class RectLocationSystem extends PathLocationSystem {
 	private static final int LOOP_IN_SECONDS = 5;
 	private static final float SCALE = .75f;
 	
-	public RectLocationSystem(Main parent) {
-		super(parent, LOOP_IN_SECONDS);
+	public RectLocationSystem(Main parent, boolean splitter) {
+		super(parent, LOOP_IN_SECONDS, splitter);
 	}
 
 	@Override

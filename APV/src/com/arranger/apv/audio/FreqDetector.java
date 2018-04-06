@@ -31,7 +31,7 @@ public class FreqDetector extends LiteShapeSystem {
 	public void draw() {
 		parent.rectMode(CORNERS);
 
-		FFT fft = parent.getAudio().getBeatInfo().getFF();
+		FFT fft = parent.getAudio().getBeatInfo().getFFT();
 		float bounds = fft.avgSize();
 		int frequencyWidth = (int)(parent.width / bounds);
 		

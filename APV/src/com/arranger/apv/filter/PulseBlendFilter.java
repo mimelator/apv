@@ -1,9 +1,8 @@
-package com.arranger.apv.archive;
+package com.arranger.apv.filter;
 
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.filter.PulseBeatFilter;
 
 import processing.core.PApplet;
 
@@ -22,7 +21,7 @@ import processing.core.PApplet;
  * 
  * 
  */
-public class PulseBlendFilter extends PulseBeatFilter {
+public class PulseBlendFilter extends PulseBasedFilter {
 	
 	enum MODES {
 			BLEND(PApplet.BLEND),

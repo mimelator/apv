@@ -10,8 +10,8 @@ public class CircularLocationSystem extends PathLocationSystem {
 	private static final int LOOP_IN_SECONDS = 5;
 	private static final float SCALE = .75f;
 	
-	public CircularLocationSystem(Main parent) {
-		super(parent, LOOP_IN_SECONDS);
+	public CircularLocationSystem(Main parent, boolean splitter) {
+		super(parent, LOOP_IN_SECONDS, splitter);
 	}
 
 	@Override

@@ -1,10 +1,13 @@
+
 package com.arranger.apv.loc;
 
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.CommandSystem;
+import com.arranger.apv.FrameSkipper;
 import com.arranger.apv.Main;
+import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.factories.PrimitiveShapeFactory;
 
 import processing.core.PApplet;
@@ -15,8 +18,11 @@ public abstract class PathLocationSystem extends LocationSystem {
 	protected int secondsPerPath; 
 	private int startTime;
 	private boolean reverse = false;
+	private PulseListener pulseListener;
+	private FrameSkipper frameSkipper;
+	private boolean splitter = true;
 	
-	public PathLocationSystem(Main parent, int secondsPerPath) {
+	public PathLocationSystem(Main parent, int secondsPerPath, boolean splitter) {
 		super(parent);
 		this.secondsPerPath = secondsPerPath;
 		points = PrimitiveShapeFactory.flattenShape(createPath());
@@ -24,11 +30,23 @@ public abstract class PathLocationSystem extends LocationSystem {
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
 		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> this.reverse = !reverse);
+		pulseListener = new PulseListener(parent, 1, 2); //Direction Change every two pulses
+		frameSkipper = new FrameSkipper(parent);
+		this.splitter = splitter;
 	}
 	
 	protected abstract Shape createPath();
 	
 	public Point2D getCurrentPoint() {
+		//check either for splitter OR check the pulseListener to reverse course
+		if (splitter) {
+			reverse = !reverse;
+		} else {
+			if (frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+				reverse = !reverse;
+			}
+		}
+		
 		float pct = getPercentagePathComplete();
 		float result = PApplet.lerp(0, points.length - 1, pct);
 

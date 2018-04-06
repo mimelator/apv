@@ -3,7 +3,7 @@ package com.arranger.apv.archive;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
-import com.arranger.apv.filter.PulseBeatFilter;
+import com.arranger.apv.filter.PulseBasedFilter;
 
 import processing.core.PApplet;
 
@@ -32,7 +32,7 @@ import processing.core.PApplet;
 	
 	REPLACE - the pixels entirely replace the others and don't utilize alpha (transparency) values
  */
-public class BeatTintFilter extends PulseBeatFilter {
+public class BeatTintFilter extends PulseBasedFilter {
 
 	private static final int FADE_OUT_FRAMES = 50; 
 	int lastFrameCount = 0;

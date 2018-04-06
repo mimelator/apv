@@ -4,11 +4,11 @@ import com.arranger.apv.Main;
 
 import ddf.minim.analysis.BeatDetect;
 
-public abstract class PulseBeatFilter extends Filter {
+public abstract class PulseBasedFilter extends Filter {
 	
 	protected BeatDetect pulseDetector;
 
-	public PulseBeatFilter(Main parent) {
+	public PulseBasedFilter(Main parent) {
 		super(parent);
 		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 	}

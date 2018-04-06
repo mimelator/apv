@@ -1,22 +1,12 @@
-Then start adapting as many existing plugins to use the Detectors as possible.
-Adopt a global parameter which increase/decreases the influence of the Detectors.
-
-
-Transitions:
-	Use PImage to record the last screen and then use pluggable filters to wipe the PImage away
-	
-Global Params:
-	Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
-
-
-
 
 *****************************************************************************
 TODO: 
+0) Transitions Use PImage to record the last screen and then use pluggable filters to wipe the PImage away
 1) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
 2) Location Systems could also respond automatically to beats
 3) Advanced Color Systems
 4) Stereo Listener
+5) Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
 *****************************************************************************
 		
 		

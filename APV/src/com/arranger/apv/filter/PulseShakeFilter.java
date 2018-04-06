@@ -4,7 +4,7 @@ import com.arranger.apv.Main;
 
 import processing.core.PApplet;
 
-public class PulseShakeFilter extends PulseBeatFilter {
+public class PulseShakeFilter extends PulseBasedFilter {
 	
 	private static final float SHAKE_SIZE = 1.5f;
 	

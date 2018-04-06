@@ -66,7 +66,7 @@ public class Audio extends APVPlugin {
 			return source;
 		}
 		
-		public FFT getFF() {
+		public FFT getFFT() {
 			return fft;
 		}
 		

@@ -14,9 +14,11 @@ import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.FreqDetector;
+import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
+import com.arranger.apv.bg.PulseRefreshBackDrop;
 import com.arranger.apv.bg.RefreshBackDrop;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.ColorSystem;
@@ -28,9 +30,9 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
-import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -182,12 +184,12 @@ public class Main extends PApplet {
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", 
 				(event) -> {
 					//mess it all up
-					foregroundIndex += random(foregroundSystems.size());
-					backgroundIndex += random(backgroundSystems.size());
-					backDropIndex += random(backDropSystems.size());
-					locationIndex += random(locationSystems.size());
-					filterIndex += random(filters.size());
-					colorIndex += random(colorSystems.size());
+					foregroundIndex += random(foregroundSystems.size() - 1);
+					backgroundIndex += random(backgroundSystems.size() - 1);
+					backDropIndex += random(backDropSystems.size() - 1);
+					locationIndex += random(locationSystems.size() - 1);
+					filterIndex += random(filters.size() - 1);
+					colorIndex += random(colorSystems.size() - 1);
 					});
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
@@ -199,8 +201,10 @@ public class Main extends PApplet {
 		
 		locationSystems.add(new PerlinNoiseWalker(this));
 		locationSystems.add(new MouseLocationSystem(this));
-		locationSystems.add(new CircularLocationSystem(this));
-		locationSystems.add(new RectLocationSystem(this));
+		locationSystems.add(new CircularLocationSystem(this, false));
+		locationSystems.add(new CircularLocationSystem(this, true));
+		locationSystems.add(new RectLocationSystem(this, false));
+		locationSystems.add(new RectLocationSystem(this, true));
 		
 		colorSystems.add(new BeatColorSystem(this));
 		colorSystems.add(new OscillatingColor(this));
@@ -249,14 +253,14 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
+			backDropSystems.add(new PulseRefreshBackDrop(this));
+			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES, PulseListener.DEFAULT_PULSES_TO_SKIP * 4));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE.darker().darker()));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.YELLOW, Color.BLACK));
-			backDropSystems.add(new BackDropSystem(this));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN));
-			backDropSystems.add(new RefreshBackDrop(this));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.YELLOW.darker(), Color.BLACK));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
-			backDropSystems.add(new RefreshBackDrop(this, .5f));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
+			backDropSystems.add(new BackDropSystem(this));
+			backDropSystems.add(new RefreshBackDrop(this));
 			backDropSystems.add(new BlurBackDrop(this));
 		}
 		
