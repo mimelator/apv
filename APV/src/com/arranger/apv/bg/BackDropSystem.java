@@ -3,7 +3,7 @@ package com.arranger.apv.bg;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeSystem;
 
-public abstract class BackDropSystem extends ShapeSystem {
+public class BackDropSystem extends ShapeSystem {
 	
 
 	public BackDropSystem(Main parent) {
@@ -19,6 +19,7 @@ public abstract class BackDropSystem extends ShapeSystem {
 		drawBackground();
 	}
 
-	public abstract void drawBackground();
-
+	public void drawBackground() {
+		parent.background(0);
+	}
 }

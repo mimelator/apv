@@ -24,6 +24,7 @@ import com.arranger.apv.Main;
 import ddf.minim.AudioBuffer;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
+import processing.core.PApplet;
 
 public class APVBeatDetector extends APVPlugin {
 
@@ -153,7 +154,12 @@ public class APVBeatDetector extends APVPlugin {
 
 	private void initFEResources() {
 		spect = new FFT(timeSize, sampleRate);
+		
+		//TODO PARAMETERIZE
+		//spect.window(windowFunction);
 		spect.logAverages(60, 3);
+		
+		
 		int numAvg = spect.avgSize();
 		fIsOnset = new boolean[numAvg];
 		feBuffer = new float[numAvg][sampleRate / timeSize];
@@ -417,40 +423,32 @@ public class APVBeatDetector extends APVPlugin {
 	 * @param p
 	 *            the PApplet to draw in
 	 */
-	// public void drawGraph(PApplet p)
-	// {
-	// if (algorithm == SOUND_ENERGY)
-	// {
-	// // draw valGraph
-	// for (int i = 0; i < valCnt; i++)
-	// {
-	// p.stroke(255);
-	// p.line(i, (p.height / 2) - valGraph[i], i, (p.height / 2)
-	// + valGraph[i]);
-	// }
-	// // draw varGraph
-	// for (int i = 0; i < varCnt - 1; i++)
-	// {
-	// p.stroke(255);
-	// p.line(i, p.height - varGraph[i], i + 1, p.height - varGraph[i + 1]);
-	// }
-	// }
-	// else
-	// {
-	// p.strokeWeight(5);
-	// for (int i = 0; i < fTimer.length; i++)
-	// {
-	// int c = (i % 3 == 0) ? p.color(255, 0, 0) : p.color(255);
-	// p.stroke(c);
-	// long clock = System.currentTimeMillis();
-	// if (clock - fTimer[i] < sensitivity)
-	// {
-	// float h = PApplet.map(clock - fTimer[i], 0, sensitivity, 100, 0);
-	// p.line((i * 10), p.height - h, (i * 10), p.height);
-	// }
-	// }
-	// }
-	// }
+	public void drawGraph() {
+		Main p = this.parent;
+		if (algorithm == SOUND_ENERGY) {
+			// draw valGraph
+			for (int i = 0; i < valCnt; i++) {
+				p.stroke(255);
+				p.line(i, (p.height / 2) - valGraph[i], i, (p.height / 2) + valGraph[i]);
+			}
+			// draw varGraph
+			for (int i = 0; i < varCnt - 1; i++) {
+				p.stroke(255);
+				p.line(i, p.height - varGraph[i], i + 1, p.height - varGraph[i + 1]);
+			}
+		} else {
+			p.strokeWeight(5);
+			for (int i = 0; i < fTimer.length; i++) {
+				int c = (i % 3 == 0) ? p.color(255, 0, 0) : p.color(255);
+				p.stroke(c);
+				long clock = System.currentTimeMillis();
+				if (clock - fTimer[i] < sensitivity) {
+					float h = PApplet.map(clock - fTimer[i], 0, sensitivity, 100, 0);
+					p.line((i * 10), p.height - h, (i * 10), p.height);
+				}
+			}
+		}
+	}
 
 	private void sEnergy(float[] samples) {
 		// compute the energy level
@@ -461,33 +459,29 @@ public class APVBeatDetector extends APVPlugin {
 		level /= samples.length;
 		level = (float) Math.sqrt(level);
 		float instant = level * 100;
-		// compute the average local energy
-		float E = average(eBuffer);
-		// compute the variance of the energies in eBuffer
-		float V = variance(eBuffer, E);
-		// compute C using a linear digression of C with V
-		float C = (-0.0025714f * V) + 1.5142857f;
-		// filter negaive values
-		float diff = (float) Math.max(instant - C * E, 0);
+		
+		float E = average(eBuffer); // compute the average local energy
+		float V = variance(eBuffer, E); // compute the variance of the energies in eBuffer
+		float C = (-0.0025714f * V) + 1.5142857f; // compute C using a linear digression of C with V
+		float diff = (float) Math.max(instant - C * E, 0); // filter negaive values
 		pushVal(diff);
-		// find the average of only the positive values in dBuffer
-		float dAvg = specAverage(dBuffer);
-		// filter negative values
-		float diff2 = (float) Math.max(diff - dAvg, 0);
+		float dAvg = specAverage(dBuffer); // find the average of only the positive values in dBuffer
+		float diff2 = (float) Math.max(diff - dAvg, 0); // filter negative values
 		pushVar(diff2);
+		
+//		System.out.println("diff2: " + diff2 + " instant: " + instant);
+		
 		// report false if it's been less than 'sensitivity'
 		// milliseconds since the last true value
 		if (System.currentTimeMillis() - timer < sensitivity) {
 			isOnset = false;
-		}
-		// if we've made it this far then we're allowed to set a new
-		// value, so set it true if it deserves to be, restart the timer
-		else if (diff2 > 0 && instant > 2) {
+		} else if (diff2 > 0 && instant > 2) {
+			// if we've made it this far then we're allowed to set a new
+			// value, so set it true if it deserves to be, restart the timer
 			isOnset = true;
 			timer = System.currentTimeMillis();
-		}
-		// OMG it wasn't true!
-		else {
+		} else {
+			// OMG it wasn't true!
 			isOnset = false;
 		}
 		eBuffer[insertAt] = instant;

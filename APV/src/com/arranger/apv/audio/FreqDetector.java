@@ -10,11 +10,11 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
  */
 public class FreqDetector extends LiteShapeSystem {
 
-	private static final int GREEN = 200;
-
-	int numberOfOnsetsThreshold = 4;
-	int lowBand = 5;
-	int highBand = 15;
+//	private static final int GREEN = 200;
+//
+//	int numberOfOnsetsThreshold = 4;
+//	int lowBand = 5;
+//	int highBand = 15;
 	
 	public FreqDetector(Main parent) {
 		super(parent);
@@ -27,11 +27,11 @@ public class FreqDetector extends LiteShapeSystem {
 
 	@Override
 	public void draw() {
-		APVBeatDetector beat = parent.getAudio().getBeatInfo().beat;
+		//APVBeatDetector beat = parent.getAudio().getBeatInfo().freqDetector;
 
 		// draw a green rectangle for every detect band
 		// that had an onset this frame
-		int detectSize = beat.detectSize();
+/*		int detectSize = beat.detectSize();
 		float rectW = parent.width / detectSize;
 		for (int i = 0; i < detectSize; ++i) {
 			// test one frequency band for an onset
@@ -49,6 +49,9 @@ public class FreqDetector extends LiteShapeSystem {
 			parent.fill(232, 179, 2, 200);
 			parent.rect(rectW * lowBand, 0, (highBand - lowBand) * rectW, parent.height);
 		}
+		*/
+		
+		//beat.drawGraph();
 	}
 
 }

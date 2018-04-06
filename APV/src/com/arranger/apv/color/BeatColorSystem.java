@@ -15,8 +15,8 @@ public class BeatColorSystem extends ColorSystem {
 	}
 
 	public Color getCurrentColor() {
-		APVBeatDetector beat = parent.getAudio().getBeatInfo().getBeat();
-		boolean kick = beat.isKick();
-		return kick ? Color.RED : Color.WHITE;
+		APVBeatDetector beat = parent.getAudio().getBeatInfo().getPulseDetector();
+		boolean pulse = beat.isOnset();
+		return pulse ? Color.RED : Color.WHITE;
 	}
 }

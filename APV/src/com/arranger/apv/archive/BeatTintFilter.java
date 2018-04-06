@@ -1,15 +1,38 @@
-package com.arranger.apv.filter;
+package com.arranger.apv.archive;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.filter.PulseBeatFilter;
 
 import processing.core.PApplet;
 
 /**
  * https://processing.org/tutorials/pixels/
+ * 
+ * https://processing.org/reference/blendMode_.html
+ * 
+ * BLEND - linear interpolation of colours: C = A*factor + B. This is the default blending mode.
+
+	ADD - additive blending with white clip: C = min(A*factor + B, 255)
+	
+	SUBTRACT - subtractive blending with black clip: C = max(B - A*factor, 0)
+	
+	DARKEST - only the darkest colour succeeds: C = min(A*factor, B)
+	
+	LIGHTEST - only the lightest colour succeeds: C = max(A*factor, B)
+	
+	DIFFERENCE - subtract colors from underlying image.
+	
+	EXCLUSION - similar to DIFFERENCE, but less extreme.
+	
+	MULTIPLY - multiply the colors, result will always be darker.
+	
+	SCREEN - opposite multiply, uses inverse values of the colors.
+	
+	REPLACE - the pixels entirely replace the others and don't utilize alpha (transparency) values
  */
-public class BeatTintFilter extends BeatFilter {
+public class BeatTintFilter extends PulseBeatFilter {
 
 	private static final int FADE_OUT_FRAMES = 50; 
 	int lastFrameCount = 0;
@@ -27,7 +50,7 @@ public class BeatTintFilter extends BeatFilter {
 	public void preRender() {
 		super.preRender();
 		
-		if (beatDetect.isKick()) {
+		if (pulseDetector.isOnset()) {
 			lastFrameCount = parent.frameCount;
 		}
 	

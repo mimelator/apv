@@ -28,9 +28,8 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
-import com.arranger.apv.filter.BeatShakeFilter;
-import com.arranger.apv.filter.BeatTintFilter;
 import com.arranger.apv.filter.Filter;
+import com.arranger.apv.filter.PulseShakeFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -61,10 +60,10 @@ public class Main extends PApplet {
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	private static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
-	private static final boolean USE_BACKDROP = false;
+	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
-	private static final boolean USE_FG = false;
-	private static final boolean USE_FILTERS = false;
+	private static final boolean USE_FG = true;
+	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
 	
 	private static final int WIDTH = 1024;
@@ -147,13 +146,22 @@ public class Main extends PApplet {
 		return (LocationSystem)getPlugin(locationSystems, locationIndex);
 	}
 	
+	private static final int TARGET_FRAME_RATE_FOR_OSC = 30;
+	
 	/**
 	 * This little tool will keep interpolating between the low and high values based
 	 * upon the frameCount.  It should complete a circuit every
+	 * 
+	 * @param oscSpeed the lower the number the faster the cycling.  Typically between : 4 and 20
 	 */
-	public float oscillate(float low, float high, float oscScalar) {
-		float cos = cos(PI + frameCount / frameRate / oscScalar);
+	public float oscillate(float low, float high, float oscSpeed) {
+		float fr = TARGET_FRAME_RATE_FOR_OSC; //frameRate
+		float cos = cos(PI * frameCount / fr / oscSpeed);
 		return PApplet.map(cos, -1, 1, low, high);
+	}
+	
+	public boolean randomBoolean() {
+		return random(10) > 5;
 	}
 	
 	public void setup() {
@@ -240,7 +248,10 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN.darker()));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE.darker().darker()));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.YELLOW, Color.BLACK));
+			backDropSystems.add(new BackDropSystem(this));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.GREEN));
 			backDropSystems.add(new RefreshBackDrop(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
 			backDropSystems.add(new RefreshBackDrop(this, .5f));
@@ -249,9 +260,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
-			filters.add(new BeatTintFilter(this, SCREEN));
-			filters.add(new BeatTintFilter(this, MULTIPLY));
-			filters.add(new BeatShakeFilter(this));
+			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
 		}
 		

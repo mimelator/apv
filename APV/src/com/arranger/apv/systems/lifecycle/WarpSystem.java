@@ -31,7 +31,7 @@ public class WarpSystem extends DirectLifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
-		parent.addDebugMsg("Warp " + warp());
+		parent.addDebugMsg("  --warp " + warp());
 	}
 	
 	private float warp() {

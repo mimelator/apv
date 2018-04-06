@@ -12,13 +12,13 @@ import ddf.minim.Minim;
 
 /**
  * http://code.compartmental.net/tools/minim/
- * 
- * beat.setSensitivity(300); {@link FreqDetector}
- *
  */
 public class Audio extends APVPlugin {
 	
+	private static final float DEFAULT_PULSE_DECTECT_SCALAR = 5.0f;
+	
 	protected BeatInfo beatInfo;
+	public float scaleFactor = DEFAULT_PULSE_DECTECT_SCALAR;
 	
 	public Audio(Main parent, String file, int bufferSize) {
 		super(parent);
@@ -42,23 +42,46 @@ public class Audio extends APVPlugin {
 	
 	public class BeatInfo {
 
-		protected APVBeatDetector beat;
+		protected APVBeatDetector freqDetector;
+		protected APVBeatDetector pulseDetector;
 		
 		public BeatInfo(AudioSource source) {
-			beat = new APVBeatDetector(parent, source.bufferSize(), source.sampleRate());
+			freqDetector = new APVBeatDetector(parent, source.bufferSize(), source.sampleRate());
+			pulseDetector = new APVBeatDetector(parent); 
+			pulseDetector.setSensitivity(60);
+			addListeners(source);
+		}
+
+		protected void addListeners(AudioSource source) {
 			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
-					beat.detect(source.mix);
+					freqDetector.detect(source.mix);
+					pulseDetector.detect(source.mix);
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					beat.detect(source.mix);
+					freqDetector.detect(source.mix); //Stereo detection
+					scale(sampsL); 
+					pulseDetector.detect(sampsL); //Mono amplitutde detection
 				}
 			});
 		}
+		
+		/**
+		 * Scales in place  (not very functional)
+		 */
+		protected void scale(float [] samps) {
+			for (int i=0; i<samps.length; i++) {
+				samps[i] *= scaleFactor;
+			}
+		}
 
-		public APVBeatDetector getBeat() {
-			return beat;
+		public APVBeatDetector getPulseDetector() {
+			return pulseDetector;
+		};
+		
+		public APVBeatDetector getFreqDetector() {
+			return freqDetector;
 		};
 	}
 }
