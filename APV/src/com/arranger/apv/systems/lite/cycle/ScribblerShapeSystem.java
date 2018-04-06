@@ -15,7 +15,8 @@ import processing.core.PApplet;
 public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 	
 	private static final int SCRIBBLER_DEFAULT_FRAMES_PER_RESET = 1500;
-	private static final float MAX_VELOCITY = 2.5f;
+	private static final float MAX_THETA = .2f;//0.1f;
+	private static final float MAX_VELOCITY = 5;//2.5f;
 	private static final float MAX_STROKE_WEIGHT = 1.5f;
 	
 	public ScribblerShapeSystem(Main parent) {
@@ -40,6 +41,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 	}
 	
 	private class Scribbler extends LiteCycleObj {
+		
 		float prevX = 0, prevY = 0;
 		float theta;
 		float distance;
@@ -105,7 +107,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 		}
 
 		void randomizeVelocities() {
-			thetaV = -0.05f + random(0.1f);
+			thetaV = -0.05f + random(MAX_THETA);
 			distanceV = 0.2f + random(MAX_VELOCITY);
 		}
 

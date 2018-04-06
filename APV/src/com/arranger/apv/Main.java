@@ -220,6 +220,7 @@ public class Main extends PApplet {
 			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new AttractorSystem(this));
+			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
 			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
 			backgroundSystems.add(new GridShapeSystem(this));

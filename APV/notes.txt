@@ -1,12 +1,14 @@
+Reverse LightWormSystem Mode
+
 
 *****************************************************************************
 TODO: 
 0) Transitions Use PImage to record the last screen and then use pluggable filters to wipe the PImage away
 1) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
-2) Location Systems could also respond automatically to beats
-3) Advanced Color Systems
-4) Stereo Listener
-5) Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
+	a) Maybe record combinations that are really nice?
+2) Advanced Color Systems
+3) Stereo Listener
+4) Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
 *****************************************************************************
 		
 		

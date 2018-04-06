@@ -2,7 +2,9 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
+import com.arranger.apv.FrameSkipper;
 import com.arranger.apv.Main;
+import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 
@@ -41,6 +43,10 @@ public class LightWormSystem extends LiteShapeSystem {
 	private float colorSpeed = DEFAULT_COLOR_SPEED;
 	private BeatColorSystem [] colorSystems;
 	
+	private PulseListener pulseListener;
+	private FrameSkipper frameSkipper;
+	private boolean reverse = true;
+	
 	public LightWormSystem(Main parent) {
 		super(parent);
 	}
@@ -63,6 +69,10 @@ public class LightWormSystem extends LiteShapeSystem {
 	
 	@Override
 	public void setup() {
+		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
+		pulseListener = new PulseListener(parent, 1, 2); //Direction Change every two pulses
+		frameSkipper = new FrameSkipper(parent);
+		
 		// initialize arrays
 		fadeTable = new float[NUM_TRAILS];
 		positionTable = new float[numDragons][NUM_TRAILS][2];
@@ -97,6 +107,11 @@ public class LightWormSystem extends LiteShapeSystem {
 	
 	@Override
 	public void draw() {
+		if (frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+			reverse = !reverse;
+		}
+		
+		parent.addDebugMsg("  --reverse: " + reverse);
 		parent.strokeWeight(STROKE_WEIGHT);
 		
 		int halfWidth = parent.width / 2;
@@ -120,6 +135,7 @@ public class LightWormSystem extends LiteShapeSystem {
 			}
 
 			int fillStart = parent.millis();
+			
 			for (int j = 0; j < numDragons; j++) {
 				float [][] jPos = positionTable[j];
 				float [] iPos = jPos[i];
@@ -130,6 +146,7 @@ public class LightWormSystem extends LiteShapeSystem {
 				parent.rect(shapeX, shapeY, sz, sz);
 				//parent.ellipse(shapeX, shapeY, sz, sz); 10x slower for ellipse
 			}
+			
 			fillTime += (parent.millis() - fillStart);
 		}
 
@@ -138,7 +155,7 @@ public class LightWormSystem extends LiteShapeSystem {
 				positionTable[j][i] = positionTable[j][i + 1];
 			}
 		}
-
+		
 		for (int i = 0; i < numDragons; i++) {
 			float [][] iPos = positionTable[i];
 			float [] iOfs = ofs[i];
@@ -146,9 +163,14 @@ public class LightWormSystem extends LiteShapeSystem {
 			iPos[NUM_TRAILS - 1] = new float[] { 
 					(sin(counter * iOfs[0] + iOfs[1]) + cos(counter * iOfs[2] + iOfs[3])) * MOTION_RADIUS,
 					(cos(counter * iOfs[4] + iOfs[5]) + sin(counter * iOfs[6] + iOfs[7])) * MOTION_RADIUS};
-		}  
+		}
+		
 
-		counter += MOTION_SPEED;
+		if (reverse) {
+			counter -= MOTION_SPEED;
+		} else {
+			counter += MOTION_SPEED;
+		}
 		parent.addDebugMsg("  --fillTime: " + fillTime);
 	}
 }
