@@ -30,6 +30,7 @@ import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
+import com.arranger.apv.filter.TintFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -62,8 +63,8 @@ public class Main extends PApplet {
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
-	private static final boolean USE_FG = false;
-	private static final boolean USE_FILTERS = false;
+	private static final boolean USE_FG = true;
+	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
 	
 	private static final int WIDTH = 1024;
@@ -260,7 +261,13 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
+			filters.add(new TintFilter(this, TintFilter.BLEND_MODE.EXCLUSION));
+			filters.add(new TintFilter(this, TintFilter.BLEND_MODE.LIGHTEST));
 			filters.add(new PulseShakeFilter(this));
+			filters.add(new Filter(this));
+			filters.add(new Filter(this));
+			filters.add(new Filter(this));
+			filters.add(new Filter(this));
 			filters.add(new Filter(this));
 		}
 		
@@ -282,17 +289,17 @@ public class Main extends PApplet {
 			drawSystem(backDrop, "backDrop");
 		}
 		
+		ShapeSystem bgSys = null;
+		if (USE_BG) {
+			bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
+			drawSystem(bgSys, "bgSys");
+		}
+		
 		Filter filter = null;
 		if (USE_FILTERS) {
 			filter = (Filter)getPlugin(filters, filterIndex);
 			addDebugMsg("filter: " + filter.getName());
 			filter.preRender();
-		}
-		
-		ShapeSystem bgSys = null;
-		if (USE_BG) {
-			bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
-			drawSystem(bgSys, "bgSys");
 		}
 		
 		ShapeSystem fgSys = null;

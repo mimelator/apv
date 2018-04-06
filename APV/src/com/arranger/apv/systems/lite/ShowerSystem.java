@@ -54,8 +54,6 @@ public class ShowerSystem extends LiteShapeSystem {
 		float s = parent.width / 3 + parent.width / 3 * sin(n);
 		float r = parent.width / NUM_LINES;
 		
-		parent.blendMode(BLEND);
-		
 		//oscilate the alpha
 		float alpha = parent.oscillate(LOW_FILL_VAL, HIGH_FILL_VAL, OSCILLATION_SCALAR);
 		int useFillColor = getColor(curFillFrame, FILL_CHANGE_RATE, prevFillColor, curFillColor); 

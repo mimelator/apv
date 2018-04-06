@@ -10,6 +10,7 @@ import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSource;
 import ddf.minim.Minim;
 import ddf.minim.analysis.BeatDetect;
+import ddf.minim.analysis.FFT;
 
 /**
  * http://code.compartmental.net/tools/minim/
@@ -45,32 +46,45 @@ public class Audio extends APVPlugin {
 	public class BeatInfo {
 
 		protected AudioSource source;
-		protected BeatDetect freqDetector;
 		protected BeatDetect pulseDetector;
+		protected FFT fft;
 		
 		public BeatInfo(AudioSource source) {
 			this.source = source;
-			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
 			pulseDetector = new BeatDetect(); 
 			pulseDetector.setSensitivity(60);
-			addListeners(source);
+			addListener(source);
+			createFFT();
+		}
+		
+		protected void createFFT() {
+			fft = new FFT(source.bufferSize(), source.sampleRate());
+			fft.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
 		}
 		
 		public AudioSource getSource() {
 			return source;
 		}
+		
+		public FFT getFF() {
+			return fft;
+		}
+		
+		public BeatDetect getPulseDetector() {
+			return pulseDetector;
+		};
 
-		protected void addListeners(AudioSource source) {
+		protected void addListener(AudioSource source) {
 			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
-					freqDetector.detect(source.mix);
 					pulseDetector.detect(source.mix);
+					fft.forward(source.mix);
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					freqDetector.detect(source.mix); //Stereo detection
 					scale(sampsL); 
 					pulseDetector.detect(sampsL); //Mono amplitutde detection
+					fft.forward(source.mix);
 				}
 			});
 		}
@@ -83,13 +97,5 @@ public class Audio extends APVPlugin {
 				samps[i] *= scaleFactor;
 			}
 		}
-
-		public BeatDetect getPulseDetector() {
-			return pulseDetector;
-		};
-		
-		public BeatDetect getFreqDetector() {
-			return freqDetector;
-		};
 	}
 }

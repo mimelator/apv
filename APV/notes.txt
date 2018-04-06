@@ -1,26 +1,9 @@
-BeatDetector notes:
-	The BD attempts to give boolean answers to the question:
-		Was there an 'event' now for a specific frequency band
-		
-	The FFT module can provide the following:
-		What is the current magnitude (needs to be scaled) at a specific frequency band
-
-	The PulseDetector answers an even simpler question:
-		Is this the current pulse of the song?
-
-
-
-DONE: Enhance the Audio#BeatInfo class to have two BeatDetectors: 1 for frequency, 1 for pulse
-
-Paramaterize the APVBeatDetector to get a superior amount of precision as well as change the FFT_WINDOW
-Modify the FreqDetector to have expose a useful API for the APVBeatDetector's frequency info
-
 Then start adapting as many existing plugins to use the Detectors as possible.
 Adopt a global parameter which increase/decreases the influence of the Detectors.
 
 
 Transitions:
-	Use PIMage to record the last screen and then use pluggable filters to wipe the PImage away
+	Use PImage to record the last screen and then use pluggable filters to wipe the PImage away
 	
 Global Params:
 	Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
@@ -30,18 +13,10 @@ Global Params:
 
 *****************************************************************************
 TODO: 
-1) Beat Location Systems
-	pay attention to panning as well (scale and move left or right)
-
-2) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
-3) Location Systems could also respond automatically to beats
-4) Advanced Color Systems
-5) Start using the Frequency Bands of the Song
-6) Tint 
-	Code: https://processing.org/tutorials/pixels/
-	float redTint = parent.oscillate(0, 255, 5);
-		parent.tint(parent.color(redTint, 0, 0));
-		parent.addDebugMsg("redTint: " + redTint);
+1) Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
+2) Location Systems could also respond automatically to beats
+3) Advanced Color Systems
+4) Stereo Listener
 *****************************************************************************
 		
 		

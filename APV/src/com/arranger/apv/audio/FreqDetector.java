@@ -6,7 +6,6 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.Main;
 import com.arranger.apv.systems.lite.LiteShapeSystem;
 
-import ddf.minim.AudioSource;
 import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 
@@ -17,10 +16,7 @@ import processing.core.PApplet;
 public class FreqDetector extends LiteShapeSystem {
 
 	private static final float AMPLITUDE_SCALING_CEILING = 100f;
-	private static float DISPLAY_SCALING_FACTOR = 50;
-	
-	FFT fft;
-	AudioSource source;
+	private static float DISPLAY_SCALING_FACTOR = 25;
 
 	public FreqDetector(Main parent) {
 		super(parent);
@@ -28,16 +24,14 @@ public class FreqDetector extends LiteShapeSystem {
 
 	@Override
 	public void setup() {
-		source = parent.getAudio().getBeatInfo().getSource();
-		fft = new FFT(source.bufferSize(), source.sampleRate());
-		fft.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
+		
 	}
 
 	@Override
 	public void draw() {
 		parent.rectMode(CORNERS);
 
-		fft.forward(source.mix);
+		FFT fft = parent.getAudio().getBeatInfo().getFF();
 		float bounds = fft.avgSize();
 		int frequencyWidth = (int)(parent.width / bounds);
 		

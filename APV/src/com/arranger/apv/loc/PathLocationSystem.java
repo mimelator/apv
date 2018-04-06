@@ -23,6 +23,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		startTime = parent.millis();
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
+		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> this.reverse = !reverse);
 	}
 	
 	protected abstract Shape createPath();
