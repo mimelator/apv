@@ -62,8 +62,8 @@ public class Main extends PApplet {
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
-	private static final boolean USE_FG = true;
-	private static final boolean USE_FILTERS = true;
+	private static final boolean USE_FG = false;
+	private static final boolean USE_FILTERS = false;
 	private static final boolean FULL_SCREEN = true;
 	
 	private static final int WIDTH = 1024;

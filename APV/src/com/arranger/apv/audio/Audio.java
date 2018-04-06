@@ -9,6 +9,7 @@ import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSource;
 import ddf.minim.Minim;
+import ddf.minim.analysis.BeatDetect;
 
 /**
  * http://code.compartmental.net/tools/minim/
@@ -23,7 +24,8 @@ public class Audio extends APVPlugin {
 	public Audio(Main parent, String file, int bufferSize) {
 		super(parent);
 		Minim minim = new Minim(parent);
-		AudioSource source = (Main.AUDIO_IN) ? minim.getLineIn() : minim.loadFile(file, bufferSize) ;
+		AudioSource source = (Main.AUDIO_IN) ? minim.getLineIn() : minim.loadFile(file, bufferSize);
+		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
 			AudioPlayer audioPlayer = (AudioPlayer)source;
@@ -42,14 +44,20 @@ public class Audio extends APVPlugin {
 	
 	public class BeatInfo {
 
-		protected APVBeatDetector freqDetector;
-		protected APVBeatDetector pulseDetector;
+		protected AudioSource source;
+		protected BeatDetect freqDetector;
+		protected BeatDetect pulseDetector;
 		
 		public BeatInfo(AudioSource source) {
-			freqDetector = new APVBeatDetector(parent, source.bufferSize(), source.sampleRate());
-			pulseDetector = new APVBeatDetector(parent); 
+			this.source = source;
+			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
+			pulseDetector = new BeatDetect(); 
 			pulseDetector.setSensitivity(60);
 			addListeners(source);
+		}
+		
+		public AudioSource getSource() {
+			return source;
 		}
 
 		protected void addListeners(AudioSource source) {
@@ -76,11 +84,11 @@ public class Audio extends APVPlugin {
 			}
 		}
 
-		public APVBeatDetector getPulseDetector() {
+		public BeatDetect getPulseDetector() {
 			return pulseDetector;
 		};
 		
-		public APVBeatDetector getFreqDetector() {
+		public BeatDetect getFreqDetector() {
 			return freqDetector;
 		};
 	}

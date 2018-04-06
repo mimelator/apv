@@ -1,11 +1,12 @@
 package com.arranger.apv.filter;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.audio.APVBeatDetector;
+
+import ddf.minim.analysis.BeatDetect;
 
 public abstract class PulseBeatFilter extends Filter {
 	
-	protected APVBeatDetector pulseDetector;
+	protected BeatDetect pulseDetector;
 
 	public PulseBeatFilter(Main parent) {
 		super(parent);

@@ -1,8 +1,13 @@
 package com.arranger.apv.audio;
 
+import java.awt.Color;
+import java.awt.geom.Point2D;
+
 import com.arranger.apv.Main;
 import com.arranger.apv.systems.lite.LiteShapeSystem;
 
+import ddf.minim.AudioSource;
+import ddf.minim.analysis.FFT;
 
 /**
  * For more information about Minim and additional features, visit
@@ -10,48 +15,59 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
  */
 public class FreqDetector extends LiteShapeSystem {
 
-//	private static final int GREEN = 200;
-//
-//	int numberOfOnsetsThreshold = 4;
-//	int lowBand = 5;
-//	int highBand = 15;
-	
+	FFT fftLog;
+	float spectrumScale = 50;
+	AudioSource source;
+
 	public FreqDetector(Main parent) {
 		super(parent);
 	}
 
 	@Override
 	public void setup() {
-		
+		source = parent.getAudio().getBeatInfo().getSource();
+		fftLog = new FFT(source.bufferSize(), source.sampleRate());
+		fftLog.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
 	}
 
 	@Override
 	public void draw() {
-		//APVBeatDetector beat = parent.getAudio().getBeatInfo().freqDetector;
+		parent.rectMode(CORNERS);
+		parent.textSize(18);
 
-		// draw a green rectangle for every detect band
-		// that had an onset this frame
-/*		int detectSize = beat.detectSize();
-		float rectW = parent.width / detectSize;
-		for (int i = 0; i < detectSize; ++i) {
-			// test one frequency band for an onset
-			if (beat.isOnset(i)) {
-				parent.fill(0, GREEN, 0);
-				parent.rect(i * rectW, 0, rectW, parent.height);
+		fftLog.forward(source.mix);
+		int w = parent.width / fftLog.avgSize();
+		float bounds = fftLog.avgSize();
+		
+		Point2D pt = parent.getLocationSystem().getCurrentPoint();
+		float x = (float)pt.getX();
+		float y = (float)pt.getY();
+		
+		Color c = parent.getColorSystem().getCurrentColor();
+
+		for (int i = 0; i < bounds; i++) {
+			
+			float leftX = i * w;
+			float rightX = i * w + w;
+			
+			if (x >= leftX && y < rightX) {
+				parent.fill(c.getRGB(), 255);
+			} else {
+				parent.fill(c.getRGB(), 125);
 			}
-		}
 
-		// draw an orange rectangle over the bands in
-		// the range we are querying
-		
-		// at least this many bands must have an onset for isRange to return true
-		if (beat.isRange(lowBand, highBand, numberOfOnsetsThreshold)) {
-			parent.fill(232, 179, 2, 200);
-			parent.rect(rectW * lowBand, 0, (highBand - lowBand) * rectW, parent.height);
+			// Adjust the scale according to a scale
+			// Range of values is 0 to 100
+
+			float f = (float) i;
+			float pctComplete = f / bounds;
+			float scaleFactor = (float) Math.pow(pctComplete, Math.E) * 100;
+			if (scaleFactor < 1)
+				scaleFactor = 1;
+			float scale = spectrumScale * scaleFactor;
+
+			float h = parent.height - fftLog.getAvg(i) * scale;
+			parent.rect(leftX, parent.height, rightX, h);
 		}
-		*/
-		
-		//beat.drawGraph();
 	}
-
 }
