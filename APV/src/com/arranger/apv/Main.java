@@ -406,6 +406,8 @@ public class Main extends PApplet {
 	}
 	
 	protected void doDebugMsg() {
+		addDebugMsg("Auto: " + autoMode);
+		addDebugMsg("SnapMode: " + snapMode);
 		addDebugMsg("Audio: " + getAudio().getScaleFactor());
 		addDebugMsg("Color: " + getColorSystem().getName());
 		addDebugMsg("Loc: " + getLocationSystem().getName());

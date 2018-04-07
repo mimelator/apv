@@ -64,6 +64,7 @@ public class Audio extends APVPlugin {
 			pulseDetector = new BeatDetect(); 
 			pulseDetector.setSensitivity(60);
 			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
+			freqDetector.setSensitivity(5);
 			addListeners(source);
 			createFFT();
 		}
@@ -98,9 +99,10 @@ public class Audio extends APVPlugin {
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					scale(sampsL); 
+					scale(sampsR, .5f);
+					freqDetector.detect(sampsL); //dont scale the freq just yet
+					scale(sampsL, scaleFactor); 
 					pulseDetector.detect(sampsL); //Mono amplitutde detection
-					freqDetector.detect(sampsL);
 					fft.forward(source.mix);
 				}
 			});
@@ -109,9 +111,9 @@ public class Audio extends APVPlugin {
 		/**
 		 * Scales in place  (not very functional)
 		 */
-		protected void scale(float [] samps) {
+		protected void scale(float [] samps, float sf) {
 			for (int i=0; i<samps.length; i++) {
-				samps[i] *= scaleFactor;
+				samps[i] *= sf;
 			}
 		}
 	}
