@@ -1,4 +1,5 @@
-Reverse LightWormSystem Mode
+SuperPulse (Microphone snap)
+Exclusion System (This will require ID's and a serialization system)
 
 
 *****************************************************************************

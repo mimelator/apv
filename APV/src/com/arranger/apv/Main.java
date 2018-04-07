@@ -146,7 +146,15 @@ public class Main extends PApplet {
 	}
 	
 	public LocationSystem getLocationSystem() {
-		return (LocationSystem)getPlugin(locationSystems, locationIndex);
+		LocationSystem ls = null;
+		while (ls == null) {
+			ls = (LocationSystem)getPlugin(locationSystems, locationIndex);
+			if (autoMode  && ls instanceof MouseLocationSystem) {
+				locationIndex++;
+				ls = null;
+			}
+		}
+		return ls;
 	}
 	
 	private static final int TARGET_FRAME_RATE_FOR_OSC = 30;
@@ -171,26 +179,23 @@ public class Main extends PApplet {
 		commandSystem = new CommandSystem(this);
 		
 		//add commands
+		commandSystem.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
+				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
+		commandSystem.registerCommand('b', "Background", "Cycles through the background systems", 
+				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
+		commandSystem.registerCommand('p', "Backdrop", "Cycles through the backdrop systems", 
+				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
 		commandSystem.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
 				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
 		commandSystem.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
 				(event) -> { foregroundIndex--; backgroundIndex--; backDropIndex--;});
 		commandSystem.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
-		commandSystem.registerCommand('f', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
+		commandSystem.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
 		commandSystem.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
-		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", 
-				(event) -> {
-					//mess it all up
-					foregroundIndex += random(foregroundSystems.size() - 1);
-					backgroundIndex += random(backgroundSystems.size() - 1);
-					backDropIndex += random(backDropSystems.size() - 1);
-					locationIndex += random(locationSystems.size() - 1);
-					filterIndex += random(filters.size() - 1);
-					colorIndex += random(colorSystems.size() - 1);
-					});
+		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
@@ -216,6 +221,8 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
+			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
 			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
@@ -254,10 +261,11 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
+			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.WHITE));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
 			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES, PulseListener.DEFAULT_PULSES_TO_SKIP * 4));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE.darker().darker()));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.YELLOW.darker(), Color.BLACK));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
 			backDropSystems.add(new BackDropSystem(this));
@@ -266,15 +274,17 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.EXCLUSION));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
+			filters.add(new PulseShakeFilter(this));
+			filters.add(new PulseShakeFilter(this));
 			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.EXCLUSION));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
 		}
 		
 		for (ShapeSystem system : foregroundSystems) {
@@ -285,10 +295,31 @@ public class Main extends PApplet {
 			system.setup();
 		}
 		background(Color.BLACK.getRGB());
+		
+		pulseListener = new PulseListener(this, 1, 16);
+		frameSkipper = new FrameSkipper(this);
 	}
 
+	private static final boolean DEFAULT_AUTO_MODE = true;
+	private PulseListener pulseListener;
+	private FrameSkipper frameSkipper;
+	private boolean autoMode = DEFAULT_AUTO_MODE;
+	
+	public void scramble() {
+		//mess it all up
+		foregroundIndex += random(foregroundSystems.size() - 1);
+		backgroundIndex += random(backgroundSystems.size() - 1);
+		backDropIndex += random(backDropSystems.size() - 1);
+		locationIndex += random(locationSystems.size() - 1);
+		filterIndex += random(filters.size() - 1);
+		colorIndex += random(colorSystems.size() - 1);
+	}
 
 	public void draw() {
+		if (autoMode && frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+			scramble();
+		}
+		
 		BackDropSystem backDrop = null;
 		if (USE_BACKDROP) {
 			backDrop = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
@@ -363,6 +394,7 @@ public class Main extends PApplet {
 	}
 	
 	protected void doDebugMsg() {
+		addDebugMsg("Audio: " + getAudio().getScaleFactor());
 		addDebugMsg("Color: " + getColorSystem().getName());
 		addDebugMsg("Loc: " + getLocationSystem().getName());
 		addDebugMsg("Frame rate: " + (int)frameRate);

@@ -2,6 +2,7 @@ package com.arranger.apv.audio;
 
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
 import ddf.minim.AudioInput;
@@ -37,8 +38,16 @@ public class Audio extends APVPlugin {
 				audioInput.disableMonitoring();
 			}
 		}
+		
+		CommandSystem cs = parent.getCommandSystem();
+		cs.registerCommand('+', "Audio+", "Increases the audio sensitivity", event -> scaleFactor++);
+		cs.registerCommand('-', "Audio-", "Decreases the audio sensitivity", event -> scaleFactor--);
 	}
 	
+	public float getScaleFactor() {
+		return scaleFactor;
+	}
+
 	public BeatInfo getBeatInfo() {
 		return beatInfo;
 	}

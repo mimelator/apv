@@ -3,7 +3,11 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.APVShape;
+import com.arranger.apv.FrameSkipper;
 import com.arranger.apv.Main;
+import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.audio.PulseListener;
 
 import processing.core.PApplet;
 
@@ -12,9 +16,9 @@ import processing.core.PApplet;
  */
 public class AttractorSystem extends LiteShapeSystem {
 
-	private static final int LARGE_MAGNETISM = 30;
+	private static final int LARGE_MAGNETISM = 50;
 	private static final int SMALL_MAGNETISM = 7;
-	private static final int MAGNETISM_OSCILATOR = 8;
+	private static final int MAGNETISM_OSCILATOR = 4;
 	private static final int RADIUS_OSCILATOR = 5;
 	private static final int LARGE_RADIUS = 8;
 	private static final int SMALL_RADIUS = 3;
@@ -33,9 +37,19 @@ public class AttractorSystem extends LiteShapeSystem {
 	private float magnetism;
 	private float radius;
 	private float gensoku = 0.95f;
+	
+	private PulseListener pulseListener;
+	private FrameSkipper frameSkipper;
+	private boolean reverse = true;
+	private APVShape shape = null;
 
 	public AttractorSystem(Main parent) {
 		super(parent);
+	}
+	
+	public AttractorSystem(Main parent, ShapeFactory shapeFactory) {
+		super(parent);
+		this.factory = shapeFactory;
 	}
 
 	@Override
@@ -48,10 +62,23 @@ public class AttractorSystem extends LiteShapeSystem {
 			ax[i] = 0;
 			ay[i] = 0;
 		}
+		
+		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
+		
+		if (factory != null) {
+			shape = factory.createShape(null);
+		}
+		
+		pulseListener = new PulseListener(parent, 1, 8); 
+		frameSkipper = new FrameSkipper(parent);
 	}
 
 	@Override
 	public void draw() {
+		if (frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+			reverse = !reverse;
+		}
+		
 		if (parent.frameCount % RESET_FRAMES == 0) {
 			setup();
 		}
@@ -60,6 +87,8 @@ public class AttractorSystem extends LiteShapeSystem {
 		magnetism = parent.oscillate(SMALL_MAGNETISM, LARGE_MAGNETISM, MAGNETISM_OSCILATOR);
 		
 		parent.addDebugMsg("  --magnetism: " + magnetism);
+		parent.addDebugMsg("  --radius: " + radius);
+		parent.addDebugMsg("  --reverse: " + reverse);
 		parent.noStroke();
 
 		Color c = parent.getColorSystem().getCurrentColor();
@@ -69,10 +98,12 @@ public class AttractorSystem extends LiteShapeSystem {
 		
 		for (int i = 0; i < NUM_SHAPES; i++) {
 			float distance = PApplet.dist(mouseX, mouseY, x[i], y[i]); 
+			
+			float tempMagnetism = (reverse) ? -magnetism : magnetism;
 
 			if (distance > 3) {
-				ax[i] = magnetism * (mouseX - x[i]) / (distance * distance);
-				ay[i] = magnetism * (mouseY - y[i]) / (distance * distance);
+				ax[i] = tempMagnetism * (mouseX - x[i]) / (distance * distance);
+				ay[i] = tempMagnetism * (mouseY - y[i]) / (distance * distance);
 			}
 			vx[i] += ax[i];
 			vy[i] += ay[i];
@@ -82,19 +113,18 @@ public class AttractorSystem extends LiteShapeSystem {
 
 			x[i] += vx[i];
 			y[i] += vy[i];
-
-			int sokudo = (int) PApplet.dist(0, 0, vx[i], vy[i]);
-//			int r = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, 255);
-//			int g = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 64, 255);
-//			int b = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 128, 255);
 			
-			int r = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getRed());
-			int g = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getGreen());
-			int b = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getBlue());
-			
-			float alpha = 255;//PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 255, 100);
-			parent.fill(r, g, b, alpha);
-			parent.ellipse(x[i], y[i], radius, radius);
+			if (shape != null) {
+				shape.setColor(c.getRGB());
+				parent.shape(shape.getShape(), x[i], y[i]);
+			} else {
+				int sokudo = (int) PApplet.dist(0, 0, vx[i], vy[i]);
+				int r = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getRed());
+				int g = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getGreen());
+				int b = (int) PApplet.map(sokudo, 0, DISTANCE_FOR_COLOR, 0, c.getBlue());
+				parent.fill(r, g, b);
+				parent.ellipse(x[i], y[i], radius, radius);
+			}
 		}
 	}
 
