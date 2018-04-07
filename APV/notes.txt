@@ -1,5 +1,5 @@
-SuperPulse (Microphone snap)
-Exclusion System (This will require ID's and a serialization system)
+Investigate Twitch TV
+Optimize GridShapeSystem based on recent monitor data
 
 
 *****************************************************************************
@@ -9,7 +9,8 @@ TODO:
 	a) Maybe record combinations that are really nice?
 2) Advanced Color Systems
 3) Stereo Listener
-4) Use global user adjustable params to change the level of influence of AUDIO and NUM_PARTICLES
+4) Use global user adjustable params to change the level of influence of NUM_PARTICLES
+5) Exclusion System (This will require ID's and a serialization system) Not Sure is Necessary!!! Random is nice
 *****************************************************************************
 		
 		
