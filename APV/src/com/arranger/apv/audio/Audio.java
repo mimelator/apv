@@ -56,13 +56,15 @@ public class Audio extends APVPlugin {
 
 		protected AudioSource source;
 		protected BeatDetect pulseDetector;
+		protected BeatDetect freqDetector;
 		protected FFT fft;
 		
 		public BeatInfo(AudioSource source) {
 			this.source = source;
 			pulseDetector = new BeatDetect(); 
 			pulseDetector.setSensitivity(60);
-			addListener(source);
+			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
+			addListeners(source);
 			createFFT();
 		}
 		
@@ -81,18 +83,24 @@ public class Audio extends APVPlugin {
 		
 		public BeatDetect getPulseDetector() {
 			return pulseDetector;
-		};
+		}
 
-		protected void addListener(AudioSource source) {
+		public BeatDetect getFreqDetector() {
+			return freqDetector;
+		}
+		
+		protected void addListeners(AudioSource source) {
 			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
 					pulseDetector.detect(source.mix);
+					freqDetector.detect(source.mix);
 					fft.forward(source.mix);
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
 					scale(sampsL); 
 					pulseDetector.detect(sampsL); //Mono amplitutde detection
+					freqDetector.detect(sampsL);
 					fft.forward(source.mix);
 				}
 			});

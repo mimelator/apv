@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.APVShape;
-import com.arranger.apv.FrameSkipper;
+import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.audio.PulseListener;
@@ -39,7 +39,7 @@ public class AttractorSystem extends LiteShapeSystem {
 	private float gensoku = 0.95f;
 	
 	private PulseListener pulseListener;
-	private FrameSkipper frameSkipper;
+	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = true;
 	private APVShape shape = null;
 
@@ -70,7 +70,7 @@ public class AttractorSystem extends LiteShapeSystem {
 		}
 		
 		pulseListener = new PulseListener(parent, 1, 8); 
-		frameSkipper = new FrameSkipper(parent);
+		frameSkipper = new SingleFrameSkipper(parent);
 	}
 
 	@Override

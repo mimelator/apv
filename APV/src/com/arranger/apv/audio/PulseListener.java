@@ -1,8 +1,9 @@
 package com.arranger.apv.audio;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.FrameSkipper;
 import com.arranger.apv.Main;
+import com.arranger.apv.MultiFrameSkipper;
+import com.arranger.apv.SingleFrameSkipper;
 
 import ddf.minim.analysis.BeatDetect;
 
@@ -19,7 +20,7 @@ public class PulseListener extends APVPlugin {
 	private int numFramesToFade;
 	private int pulsesToSkip = DEFAULT_PULSES_TO_SKIP;
 	private int currentPulseSkipped = 0;
-	private FrameSkipper frameSkipper;
+	private SingleFrameSkipper frameSkipper;
 	
 	public PulseListener(Main parent) {
 		this(parent, DEFAULT_FADE_OUT_FRAMES, DEFAULT_PULSES_TO_SKIP);
@@ -30,7 +31,7 @@ public class PulseListener extends APVPlugin {
 		this.numFramesToFade = fadeOutFrames;
 		this.pulsesToSkip = pulsesToSkip;
 		currentPulseSkipped = 0;
-		frameSkipper = new FrameSkipper(parent);
+		frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
 		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 	}
 	
@@ -46,17 +47,14 @@ public class PulseListener extends APVPlugin {
 		float result = 0f;
 		int currentFrame = parent.frameCount;
 		if (pulseDetector.isOnset()) {
-			
 			//Don't increment this count if we've already checked this frame
 			if (frameSkipper.isNewFrame()) {
-				currentPulseSkipped++;
-			}
-			
-			if (currentPulseSkipped % pulsesToSkip == 0) {
 				currentPulseSkipped = 0;
 				lastFrame = currentFrame;
 				result = 1f;
 				parent.addDebugMsg("  --PulseOnset");
+			} else {
+				currentPulseSkipped++;
 			}
 		} else {
 			int numFramesSinceOnset = currentFrame - lastFrame;

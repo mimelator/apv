@@ -15,6 +15,7 @@ import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.audio.PulseListener;
+import com.arranger.apv.audio.SnapListener;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
@@ -68,6 +69,8 @@ public class Main extends PApplet {
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
+	private static final boolean AUTO_MODE = true;
+	private static final boolean SNAP_MODE = true;
 	
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
@@ -116,6 +119,14 @@ public class Main extends PApplet {
 	protected Gravity gravity;
 	protected boolean showHelp = true;
 	protected boolean debug = DEBUG;
+	
+	//Auto system
+	private SnapListener snapListener;
+	private PulseListener pulseListener;
+	private SingleFrameSkipper frameSkipper;
+	private boolean autoMode = AUTO_MODE;
+	private boolean snapMode = SNAP_MODE;
+	
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -199,6 +210,8 @@ public class Main extends PApplet {
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
+		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
+		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
 		
 		
 		gravity = new Gravity(this);
@@ -296,15 +309,11 @@ public class Main extends PApplet {
 		}
 		background(Color.BLACK.getRGB());
 		
+		snapListener = new SnapListener(this);
 		pulseListener = new PulseListener(this, 1, 16);
-		frameSkipper = new FrameSkipper(this);
+		frameSkipper = new SingleFrameSkipper(this);
 	}
 
-	private static final boolean DEFAULT_AUTO_MODE = true;
-	private PulseListener pulseListener;
-	private FrameSkipper frameSkipper;
-	private boolean autoMode = DEFAULT_AUTO_MODE;
-	
 	public void scramble() {
 		//mess it all up
 		foregroundIndex += random(foregroundSystems.size() - 1);
@@ -316,7 +325,10 @@ public class Main extends PApplet {
 	}
 
 	public void draw() {
-		if (autoMode && frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+		//Auto Stuff
+		if (snapMode && snapListener.isSnap() && frameSkipper.isNewFrame()) {  //listen for loud POPs!
+			scramble();
+		} else if (autoMode && frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
 			scramble();
 		}
 		

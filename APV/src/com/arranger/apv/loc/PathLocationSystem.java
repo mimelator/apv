@@ -5,7 +5,7 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.CommandSystem;
-import com.arranger.apv.FrameSkipper;
+import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.factories.PrimitiveShapeFactory;
@@ -19,7 +19,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 	private int startTime;
 	private boolean reverse = false;
 	private PulseListener pulseListener;
-	private FrameSkipper frameSkipper;
+	private SingleFrameSkipper frameSkipper;
 	private boolean splitter = true;
 	
 	public PathLocationSystem(Main parent, int secondsPerPath, boolean splitter) {
@@ -31,7 +31,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
 		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> this.reverse = !reverse);
 		pulseListener = new PulseListener(parent, 1, 2); //Direction Change every two pulses
-		frameSkipper = new FrameSkipper(parent);
+		frameSkipper = new SingleFrameSkipper(parent);
 		this.splitter = splitter;
 	}
 	

@@ -2,7 +2,7 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
-import com.arranger.apv.FrameSkipper;
+import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.color.BeatColorSystem;
@@ -44,7 +44,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	private BeatColorSystem [] colorSystems;
 	
 	private PulseListener pulseListener;
-	private FrameSkipper frameSkipper;
+	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = true;
 	
 	public LightWormSystem(Main parent) {
@@ -71,7 +71,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	public void setup() {
 		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
 		pulseListener = new PulseListener(parent, 1, 2); //Direction Change every two pulses
-		frameSkipper = new FrameSkipper(parent);
+		frameSkipper = new SingleFrameSkipper(parent);
 		
 		// initialize arrays
 		fadeTable = new float[NUM_TRAILS];

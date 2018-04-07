@@ -1,9 +1,13 @@
 package com.arranger.apv;
 
-public class FrameSkipper extends APVPlugin {
+
+/**
+ * Use this class when you only want to perform an action once / frame
+ */
+public class SingleFrameSkipper extends APVPlugin {
 	private int lastPulseFrameSkipped = 0;
 	
-	public FrameSkipper(Main parent) {
+	public SingleFrameSkipper(Main parent) {
 		super(parent);
 	}
 
