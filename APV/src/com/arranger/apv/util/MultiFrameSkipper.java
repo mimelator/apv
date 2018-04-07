@@ -1,4 +1,6 @@
-package com.arranger.apv;
+package com.arranger.apv.util;
+
+import com.arranger.apv.Main;
 
 public class MultiFrameSkipper extends SingleFrameSkipper {
 
@@ -11,6 +13,6 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 
 	@Override
 	public boolean isNewFrame() {
-		return super.isNewFrame() && (parent.frameCount % framesToSkip == 0);
+		return super.isNewFrame() && (parent.getFrameCount() % framesToSkip == 0);
 	}
 }

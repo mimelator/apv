@@ -5,10 +5,10 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.CommandSystem;
-import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.factories.PrimitiveShapeFactory;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
 

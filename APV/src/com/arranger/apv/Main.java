@@ -52,6 +52,7 @@ import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -62,7 +63,7 @@ public class Main extends PApplet {
 	
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
-	private static final String RENDERER = P2D;
+	public static final String RENDERER = P2D;
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
@@ -71,6 +72,7 @@ public class Main extends PApplet {
 	private static final boolean FULL_SCREEN = true;
 	private static final boolean AUTO_MODE = true;
 	private static final boolean SNAP_MODE = true;
+	private static final boolean USE_TRANSITIONS = true;
 	
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
@@ -111,6 +113,9 @@ public class Main extends PApplet {
 	protected List<ColorSystem> colorSystems = new ArrayList<ColorSystem>(); 
 	protected int colorIndex = 0;
 	
+	protected List<TransitionSystem> transitionSystems = new ArrayList<TransitionSystem>();
+	protected int transitionIndex = 0;
+	
 	protected List<Filter> filters = new ArrayList<Filter>(); 
 	protected int filterIndex = 0;
 	
@@ -126,6 +131,7 @@ public class Main extends PApplet {
 	private SingleFrameSkipper frameSkipper;
 	private boolean autoMode = AUTO_MODE;
 	private boolean snapMode = SNAP_MODE;
+	private boolean transitionMode = USE_TRANSITIONS;
 	
 	
 	public static void main(String[] args) {
@@ -156,6 +162,10 @@ public class Main extends PApplet {
 		return (ColorSystem)getPlugin(colorSystems, colorIndex);
 	}
 	
+	public TransitionSystem getTransitionSystem() {
+		return (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
+	}
+	
 	public LocationSystem getLocationSystem() {
 		LocationSystem ls = null;
 		while (ls == null) {
@@ -178,8 +188,12 @@ public class Main extends PApplet {
 	 */
 	public float oscillate(float low, float high, float oscSpeed) {
 		float fr = TARGET_FRAME_RATE_FOR_OSC; //frameRate
-		float cos = cos(PI * frameCount / fr / oscSpeed);
+		float cos = cos(PI * getFrameCount() / fr / oscSpeed);
 		return PApplet.map(cos, -1, 1, low, high);
+	}
+	
+	public int getFrameCount() {
+		return frameCount;
 	}
 	
 	public boolean randomBoolean() {
@@ -206,12 +220,15 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
 		commandSystem.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
+		commandSystem.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
 		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
 		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
+		commandSystem.registerCommand('n', "Transition", "Toggles saving images to disk", event -> transitionMode = !transitionMode);
 		
 		
 		gravity = new Gravity(this);
@@ -300,6 +317,10 @@ public class Main extends PApplet {
 			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
 		}
 		
+		if (USE_TRANSITIONS) {
+			transitionSystems.add(new TransitionSystem(this));
+		}
+		
 		for (ShapeSystem system : foregroundSystems) {
 			system.setup();
 		}
@@ -312,8 +333,13 @@ public class Main extends PApplet {
 		snapListener = new SnapListener(this);
 		pulseListener = new PulseListener(this, 1, 16);
 		frameSkipper = new SingleFrameSkipper(this);
+		
+		
+		//prepare Graphics Context
+		
+		//graphics.image.
 	}
-
+	
 	public void scramble() {
 		//mess it all up
 		foregroundIndex += random(foregroundSystems.size() - 1);
@@ -322,9 +348,17 @@ public class Main extends PApplet {
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
+		transitionIndex += random(transitionSystems.size() - 1);
 	}
 
 	public void draw() {
+		TransitionSystem transition = null;
+		if (transitionMode) {
+			transition = (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
+			addDebugMsg("transition: " + transition.getName());
+			transition.onDrawStart();
+		}
+		
 		//Auto Stuff
 		if (snapMode && snapListener.isSnap() && frameSkipper.isNewFrame()) {  //listen for loud POPs!
 			scramble();
@@ -374,8 +408,12 @@ public class Main extends PApplet {
 		if (showHelp) {
 			showHelp();
 		}
+		
+		if (transition != null) {
+			transition.onDrawStop();
+		}
 	}
-	
+
 	protected void drawSystem(ShapeSystem s, String debugName) {
 		pushStyle();
 		pushMatrix();
@@ -406,6 +444,7 @@ public class Main extends PApplet {
 	}
 	
 	protected void doDebugMsg() {
+		addDebugMsg("saveFileMode: " + transitionMode);
 		addDebugMsg("Auto: " + autoMode);
 		addDebugMsg("SnapMode: " + snapMode);
 		addDebugMsg("Audio: " + getAudio().getScaleFactor());

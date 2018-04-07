@@ -38,19 +38,19 @@ public class ShowerSystem extends LiteShapeSystem {
 	@Override
 	public void draw() {
 		
-		int curFillFrame = parent.frameCount % FILL_CHANGE_RATE;
+		int curFillFrame = parent.getFrameCount() % FILL_CHANGE_RATE;
 		if (curFillFrame == 0) {
 			prevFillColor = curFillColor;
 			curFillColor = parent.getColorSystem().getCurrentColor().getRGB();
 		}
 		
-		int curStrokeFrame = parent.frameCount % STROKE_CHANGE_RATE;
+		int curStrokeFrame = parent.getFrameCount() % STROKE_CHANGE_RATE;
 		if (curStrokeFrame == 0) {
 			prevStrokeColor = curStrokeColor;
 			curStrokeColor = parent.getColorSystem().getCurrentColor().getRGB();
 		}
 		
-		float n = parent.frameCount * 0.01f;
+		float n = parent.getFrameCount() * 0.01f;
 		float s = parent.width / 3 + parent.width / 3 * sin(n);
 		float r = parent.width / NUM_LINES;
 		

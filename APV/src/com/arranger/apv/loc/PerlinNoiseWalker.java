@@ -22,7 +22,7 @@ public class PerlinNoiseWalker extends LocationSystem {
 
 	@Override
 	public Point2D getCurrentPoint() {
-		while (lastFrameChecked < parent.frameCount) {
+		while (lastFrameChecked < parent.getFrameCount()) {
 			walker.step(SCALE);
 			lastFrameChecked++;
 		}

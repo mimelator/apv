@@ -51,10 +51,10 @@ public class BeatTintFilter extends PulseBasedFilter {
 		super.preRender();
 		
 		if (pulseDetector.isOnset()) {
-			lastFrameCount = parent.frameCount;
+			lastFrameCount = parent.getFrameCount();
 		}
 	
-		if (parent.frameCount - lastFrameCount < FADE_OUT_FRAMES) {
+		if (parent.getFrameCount() - lastFrameCount < FADE_OUT_FRAMES) {
 			doTint();
 		}
 	}
@@ -62,7 +62,7 @@ public class BeatTintFilter extends PulseBasedFilter {
 	private void doTint() {
 		parent.colorMode(blendMode);
 		//I want to fade in and fade out the tint
-		int currentFrame = (parent.frameCount - lastFrameCount) % FADE_OUT_FRAMES;
+		int currentFrame = (parent.getFrameCount() - lastFrameCount) % FADE_OUT_FRAMES;
 		
 		//the greater the currentFrame is to the FADE_OUT_FRAMES
 		//the more opaque the effect should be

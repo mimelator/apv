@@ -2,7 +2,7 @@ package com.arranger.apv;
 
 import processing.core.PConstants;
 
-public abstract class APVPlugin implements PConstants {
+public class APVPlugin implements PConstants {
 
 	protected Main parent;
 
@@ -12,5 +12,9 @@ public abstract class APVPlugin implements PConstants {
 	
 	public String getName() {
 		return getClass().getSimpleName();
+	}
+	
+	public Main getParent() {
+		return parent;
 	}
 }

@@ -101,7 +101,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 				passedLife++;
 			}
 
-			int frameCount = parent.frameCount;
+			int frameCount = parent.getFrameCount();
 			alpha = (float) (lifeSpan - passedLife) / lifeSpan * 70 + 50;
 			weight = (float) (lifeSpan - passedLife) / lifeSpan * weightRange;
 

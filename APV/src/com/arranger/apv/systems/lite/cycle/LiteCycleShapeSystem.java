@@ -58,7 +58,7 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 	}
 
 	protected void createNewObjects() {
-		if ((parent.frameCount % framesPerReset) == 0) {
+		if ((parent.getFrameCount() % framesPerReset) == 0) {
 			reset();
 		} 
 		

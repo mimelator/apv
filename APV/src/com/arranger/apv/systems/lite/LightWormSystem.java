@@ -2,11 +2,11 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
-import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 /**
  * https://www.openprocessing.org/sketch/396905
