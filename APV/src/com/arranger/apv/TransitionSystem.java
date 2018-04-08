@@ -47,16 +47,16 @@ public abstract class TransitionSystem extends ShapeSystem {
 	}
 
 	public void onDrawStop() {
-		logger.fine("TransitionSystem:onDrawStop  frame: " + parent.getFrameCount());
+		logger.fine("frame: " + parent.getFrameCount());
 		if (frameFader.isFadeNew()) {
-			logger.info("TransitionSystem:newFade");
+			logger.info("newFade at frame: " + parent.getFrameCount());
 			captureCurrentImage();
 		} else {
 			if (frameFader.isFadeActive() && savedImage != null) {
 				//fade it out
 				float fadePct = frameFader.getFadePct();
 				doTransition(fadePct);
-				logger.fine("TransitionSystem:fadePct: " + fadePct);
+				logger.fine("fadePct: " + fadePct);
 			} else {
 				savedImage = null;
 			}

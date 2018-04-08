@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -99,6 +102,7 @@ public class Main extends PApplet {
 	private static final boolean MONITOR_FRAME_RATE = true;
 	private static final int FRAME_RATE_THRESHOLD = 30;
 	private static final int MIN_THRESHOLD_ENTRIES = 3;
+	private static final boolean DEBUG_LOG_CONFIG = false;
 	
 	private static class EmptyShapeFactory extends ShapeFactory {
 		public EmptyShapeFactory(Main parent) {
@@ -352,12 +356,41 @@ public class Main extends PApplet {
 	}
 
 	protected void configureLogging()  {
+		LogManager logManager = LogManager.getLogManager();
+		logManager.reset();
 		try {
 			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
-			LogManager.getLogManager().readConfiguration(configFile);
+			logManager.readConfiguration(configFile);
 			configFile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		//Dump the loggers
+		if (DEBUG_LOG_CONFIG) {
+			Enumeration<String> loggerNames = logManager.getLoggerNames();
+			while (loggerNames.hasMoreElements()) {
+				debugLogger(logManager.getLogger(loggerNames.nextElement()));
+			}
+		}
+	}
+	
+	protected void debugLogger(Logger l) {
+		Level level = l.getLevel();
+		String name = l.getName();
+		System.out.println("name: " + name + " level: " + level);
+		
+		l = l.getParent();
+		int indent = 1;
+		while (l != null) {
+			for (int index = 0; index < indent; index++) {
+				System.out.print("   ");
+			}
+			level = l.getLevel();
+			name = l.getName();
+			System.out.println("name: " + name + " level: " + level);
+			l = l.getParent();
+			indent++;
 		}
 	}
 	
@@ -568,7 +601,10 @@ public class Main extends PApplet {
 			});
 		});
 		
+		List<String> sortedMessages = new ArrayList<String>(messages);
+		sortedMessages.sort(Comparator.naturalOrder());
+		
 		translate(width / 5, height / 5);
-		drawText(new ArrayList<String>(messages));
+		drawText(new ArrayList<String>(sortedMessages));
 	}
 }
