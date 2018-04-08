@@ -88,7 +88,7 @@ public class Main extends PApplet {
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
-	private static final boolean USE_MESSAGES = false;
+	private static final boolean USE_MESSAGES = true;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
@@ -250,7 +250,7 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
 		commandSystem.registerCommand('b', "Background", "Cycles through the background systems", 
 				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
-		commandSystem.registerCommand('p', "Backdrop", "Cycles through the backdrop systems", 
+		commandSystem.registerCommand('o', "Backdrop", "Cycles through the backdrop systems", 
 				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
 		commandSystem.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
 				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
@@ -265,11 +265,12 @@ public class Main extends PApplet {
 		commandSystem.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
+		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		commandSystem.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
 		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
 		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
+		commandSystem.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
 		
 		
 		gravity = new Gravity(this);
@@ -402,6 +403,11 @@ public class Main extends PApplet {
 		colorIndex += random(colorSystems.size() - 1);
 		//transitionIndex += random(transitionSystems.size() - 1); //can't scramble the transitions.  Don't do it
 		scrambleMode = false;
+		
+		if (messagesEnabled && USE_FG) {
+			//TODO find a better message
+			getMessageSystem().onNewMessage(getForegroundSystem().getName());
+		}
 	}
 	
 	public void draw() {
@@ -417,10 +423,6 @@ public class Main extends PApplet {
 			transition = getTransitionSystem();
 			if (scrambleMode) {
 				transition.startTransition();
-				
-				if (messagesEnabled) {
-					getMessageSystem().onNewMessage(getForegroundSystem().getName());
-				}
 			}
 			
 			transition.onDrawStart();

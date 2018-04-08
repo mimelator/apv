@@ -19,7 +19,7 @@ public abstract class TransitionSystem extends ShapeSystem {
 	
 	private static final Logger logger = Logger.getLogger(TransitionSystem.class.getName());
 	
-	private static final int DEFAULT_FRAMES_TO_FADE = 30;
+	private static final int DEFAULT_FRAMES_TO_FADE = 20;//30;
 	
 	protected FrameFader frameFader;
 	protected PImage savedImage;
