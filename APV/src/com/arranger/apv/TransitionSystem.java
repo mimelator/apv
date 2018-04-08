@@ -6,7 +6,7 @@ import processing.core.PImage;
 
 public class TransitionSystem extends APVPlugin {
 
-	private static final int DEFAULT_FRAMES_TO_FADE = 4;
+	private static final int DEFAULT_FRAMES_TO_FADE = 10;
 	
 	protected MultiFrameSkipper frameSkipper;
 	protected PImage pImage;

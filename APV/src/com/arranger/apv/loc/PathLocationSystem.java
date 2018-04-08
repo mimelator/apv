@@ -13,6 +13,7 @@ import processing.core.PApplet;
 
 public abstract class PathLocationSystem extends LocationSystem {
 
+	private static final int DEFAULT_PULSES_TO_REVERSE = 2; //Direction Change every two pulses
 	protected Point2D[] points;
 	protected int secondsPerPath; 
 	private int startTime;
@@ -25,7 +26,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
 		
-		reverser = new Reverser(parent, 2); //Direction Change every two pulses
+		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE); 
 		this.splitter = splitter;
 		
 		

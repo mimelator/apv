@@ -12,6 +12,7 @@ import com.arranger.apv.util.Reverser;
  */
 public class LightWormSystem extends LiteShapeSystem {
 
+	private static final int DEFAULT_REVERSE_PULSES = 2; //Direction Change every two pulses
 	private static final float STROKE_WEIGHT = 1.0f;
 	private static final float SHAPE_SIZE = 5f;//4; Accept Param (.5-20)  Large numbers MUST have small num dragons
 	private static final int NUM_TRAILS = 32;//64; Trails Min(12) Max(64)
@@ -67,7 +68,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	
 	@Override
 	public void setup() {
-		reverser = new Reverser(parent, 2);  //Direction Change every two pulses
+		reverser = new Reverser(parent, DEFAULT_REVERSE_PULSES); 
 		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
 		
 		// initialize arrays

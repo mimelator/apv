@@ -84,15 +84,9 @@ public class PulseBlendFilter extends PulseBasedFilter {
 		int currentFrame = (parent.getFrameCount() - lastFrameCount) % FADE_OUT_FRAMES;
 		float alpha = PApplet.map(currentFrame, 0, FADE_OUT_FRAMES, 0, 255);
 		
-		//int color = parent.getColorSystem().getCurrentColor().getRGB();
-		//parent.background(Color.BLACK.getRGB(), alpha);
-		
 		int color = Color.BLACK.getRGB();
 		parent.tint(color, alpha);
 		parent.background(color, alpha);
-		
-//		parent.fill(0, alpha);
-//		parent.rect(0, 0, parent.width, parent.height);
 		
 		parent.addDebugMsg("  --alpha: " + alpha);
 	}

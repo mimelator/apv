@@ -333,11 +333,6 @@ public class Main extends PApplet {
 		snapListener = new SnapListener(this);
 		pulseListener = new PulseListener(this, 1, 16);
 		frameSkipper = new SingleFrameSkipper(this);
-		
-		
-		//prepare Graphics Context
-		
-		//graphics.image.
 	}
 	
 	public void scramble() {
