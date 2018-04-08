@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.CommandSystem.APVCommand;
@@ -52,6 +55,8 @@ import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
+import com.arranger.apv.transition.Fade;
+import com.arranger.apv.transition.Swipe;
 import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
@@ -59,8 +64,7 @@ import processing.core.PConstants;
 
 public class Main extends PApplet {
 	
-	public static final char SPACE_BAR_KEY_CODE = ' ';
-	
+	//Change these during active development
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	public static final String RENDERER = P2D;
@@ -70,9 +74,10 @@ public class Main extends PApplet {
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
-	private static final boolean AUTO_MODE = true;
-	private static final boolean SNAP_MODE = true;
+	private static final boolean AUTO_MODE = false;
+	private static final boolean SNAP_MODE = false;
 	private static final boolean USE_TRANSITIONS = true;
+	private static final boolean DEBUG = false;
 	
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
@@ -81,10 +86,12 @@ public class Main extends PApplet {
 	private static final int BUFFER_SIZE = 512; //Default is 1024
 	private static final int NUMBER_PARTICLES = 1000;
 
+	//Don't change the following 3 values
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	private static final String SPRITE_PNG = "sprite.png";
+	public static final char SPACE_BAR_KEY_CODE = ' ';
 	
-	private static final boolean DEBUG = true;
+	//Some default Monitoring params.  Probably don't need to change
 	private static final boolean MONITOR_FRAME_RATE = true;
 	private static final int FRAME_RATE_THRESHOLD = 30;
 	private static final int MIN_THRESHOLD_ENTRIES = 3;
@@ -124,6 +131,7 @@ public class Main extends PApplet {
 	protected Gravity gravity;
 	protected boolean showHelp = true;
 	protected boolean debug = DEBUG;
+	protected boolean scrambleMode = true;	//this is a flag to signal to the TransitionSystem for #onDrawStart
 	
 	//Auto system
 	private SnapListener snapListener;
@@ -201,6 +209,8 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
+		LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINE);
+		
 		commandSystem = new CommandSystem(this);
 		
 		//add commands
@@ -228,7 +238,6 @@ public class Main extends PApplet {
 		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
 		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
 		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
-		commandSystem.registerCommand('n', "Transition", "Toggles saving images to disk", event -> transitionMode = !transitionMode);
 		
 		
 		gravity = new Gravity(this);
@@ -318,7 +327,8 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_TRANSITIONS) {
-			transitionSystems.add(new TransitionSystem(this));
+			transitionSystems.add(new Fade(this));
+			transitionSystems.add(new Swipe(this));
 		}
 		
 		for (ShapeSystem system : foregroundSystems) {
@@ -336,6 +346,10 @@ public class Main extends PApplet {
 	}
 	
 	public void scramble() {
+		scrambleMode = true;
+	}
+	
+	protected void doScramble() {
 		//mess it all up
 		foregroundIndex += random(foregroundSystems.size() - 1);
 		backgroundIndex += random(backgroundSystems.size() - 1);
@@ -343,14 +357,19 @@ public class Main extends PApplet {
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		transitionIndex += random(transitionSystems.size() - 1);
+		//transitionIndex += random(transitionSystems.size() - 1);
+		scrambleMode = false;
 	}
-
+	
 	public void draw() {
 		TransitionSystem transition = null;
 		if (transitionMode) {
 			transition = (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
 			addDebugMsg("transition: " + transition.getName());
+			if (scrambleMode) {
+				transition.startTransition();
+			}
+			
 			transition.onDrawStart();
 		}
 		
@@ -407,7 +426,11 @@ public class Main extends PApplet {
 		}
 		
 		if (transition != null) {
-			transition.onDrawStop();
+			drawSystem(transition, "transition");
+		}
+		
+		if (scrambleMode) {
+			doScramble();
 		}
 	}
 

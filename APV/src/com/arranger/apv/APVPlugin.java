@@ -19,6 +19,8 @@ public class APVPlugin implements PConstants {
 	}
 	
 	public void debug(String msg) {
-		System.out.println(msg);
+		if (parent.debug) {
+			System.out.println(msg);
+		}
 	}
 }
