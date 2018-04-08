@@ -6,6 +6,10 @@ import com.arranger.apv.Main;
 /**
  * The multi frame skipper will only answer true to isNewFrame#every few frames
  * This class is very stateful, and shouldn't be shared by any other client
+ * 
+ * The client must call StartFade at the appropriate time
+ * 
+ * It doesn't cycle automatically.
  */
 public class FrameFader extends APVPlugin {
 	
@@ -49,6 +53,11 @@ public class FrameFader extends APVPlugin {
 	}
 	
 	/**
+	 * When startFade is called, all further calls to isFadeNew
+	 * should return true. Until the frameCount advances.
+	 * At that point, the further away the frameCount advances the 
+	 * smaller the returned percentage will be until 0.
+	 * 
 	 * 1/10th into the fade pct returns 90%
 	 * @return
 	 */

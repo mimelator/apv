@@ -3,10 +3,9 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
-import com.arranger.apv.util.SingleFrameSkipper;
+import com.arranger.apv.util.Reverser;
 
 /**
  * https://www.openprocessing.org/sketch/396905
@@ -43,9 +42,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	private float colorSpeed = DEFAULT_COLOR_SPEED;
 	private BeatColorSystem [] colorSystems;
 	
-	private PulseListener pulseListener;
-	private SingleFrameSkipper frameSkipper;
-	private boolean reverse = true;
+	private Reverser reverser;
 	
 	public LightWormSystem(Main parent) {
 		super(parent);
@@ -63,15 +60,15 @@ public class LightWormSystem extends LiteShapeSystem {
 				colorSystems[index] = new OscillatingColor(parent, random(LOW_COLOR_OSC_SCALAR, HIGH_COLOR_OSC_SCALAR));
 			}
 		}
+		
 	}
 
 	private static final int TOTAL_OFFSET_VALS = 8; //Hard coded for the offset table
 	
 	@Override
 	public void setup() {
-		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
-		pulseListener = new PulseListener(parent, 1, 2); //Direction Change every two pulses
-		frameSkipper = new SingleFrameSkipper(parent);
+		reverser = new Reverser(parent, 2);  //Direction Change every two pulses
+		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
 		
 		// initialize arrays
 		fadeTable = new float[NUM_TRAILS];
@@ -107,9 +104,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	
 	@Override
 	public void draw() {
-		if (frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
-			reverse = !reverse;
-		}
+		boolean reverse = reverser.isReverse();
 		
 		parent.addDebugMsg("  --reverse: " + reverse);
 		parent.strokeWeight(STROKE_WEIGHT);

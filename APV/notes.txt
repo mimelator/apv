@@ -1,7 +1,4 @@
-Unit Tests:
-https://junit.org/junit5/docs/current/user-guide/
-
-maven dependency search for processing: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.processing%22
+Both The PathLocationSystem and the LightWormSystem simultaneously use 
 
 
 *****************************************************************************

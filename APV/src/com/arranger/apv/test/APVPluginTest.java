@@ -12,12 +12,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.audio.Audio;
+import com.arranger.apv.audio.Audio.BeatInfo;
+
+import ddf.minim.analysis.BeatDetect;
 
 public abstract class APVPluginTest {
 	
@@ -26,10 +31,11 @@ public abstract class APVPluginTest {
 	
 	@InjectMocks
 	protected APVPlugin apvPlugin;
-	
+
 	protected int frameIndexStart;
 	protected int frameIndexEnd;
 	protected PeekIterator<Integer> frameIterator;
+	
 	
     @BeforeAll
     static void beforeAll() {
@@ -47,9 +53,19 @@ public abstract class APVPluginTest {
         		return frameIterator.peek();
         	}
 		});
+        
+        Audio audio = Mockito.mock(Audio.class);
+        BeatInfo beatInfo = Mockito.mock(BeatInfo.class);
+        BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
+        
+        when(parent.getAudio()).thenReturn(audio);
+        when(audio.getBeatInfo()).thenReturn(beatInfo);
+        when(beatInfo.getPulseDetector()).thenReturn(beatDetect);
+        when(beatDetect.isOnset()).thenReturn(true);
+        assert(parent.getAudio().getBeatInfo().getPulseDetector() != null);
     }
- 
-    @AfterEach
+
+	@AfterEach
     void afterEach() {
         //System.out.println("After each test method");
     }

@@ -69,7 +69,7 @@ public class Main extends PApplet {
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
-	private static final boolean FULL_SCREEN = false;
+	private static final boolean FULL_SCREEN = true;
 	private static final boolean AUTO_MODE = true;
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
@@ -360,9 +360,11 @@ public class Main extends PApplet {
 		}
 		
 		//Auto Stuff
-		if (snapMode && snapListener.isSnap() && frameSkipper.isNewFrame()) {  //listen for loud POPs!
+		boolean newFrame = frameSkipper.isNewFrame();
+		boolean snap = snapListener.isSnap();
+		if (snapMode && snap && newFrame) {  //listen for loud POPs!
 			scramble();
-		} else if (autoMode && frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
+		} else if (autoMode && newFrame && pulseListener.isNewPulse()) {
 			scramble();
 		}
 		
