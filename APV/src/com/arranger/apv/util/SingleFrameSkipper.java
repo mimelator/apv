@@ -5,9 +5,10 @@ import com.arranger.apv.Main;
 
 /**
  * Use this class when you only want to perform an action once / frame
+ * This class is very stateful, and shouldn't be shared by any other client
  */
 public class SingleFrameSkipper extends APVPlugin {
-	private int lastPulseFrameSkipped = 0;
+	private int lastPulseFrameSkipped = -1;
 	
 	public SingleFrameSkipper(Main parent) {
 		super(parent);

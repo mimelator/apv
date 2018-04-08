@@ -25,10 +25,10 @@ public class FrameFaderTest extends APVPluginTest {
 		frameFader.startFade();
 		
 		assert(frameFader.isFadeActive());
+		assert(frameFader.isFadeNew()); 
 		
 		for (int index = 0; index < FRAMES_TO_FADE - 1; index++) {
-			//bump to the next frame
-			frameIterator.next();
+			advanceFrame();
 			
 			assert(frameFader.isFadeActive());
 			float fadePct = frameFader.getFadePct();
@@ -36,9 +36,11 @@ public class FrameFaderTest extends APVPluginTest {
 		}
 		
 		//bump to the last frame
-		frameIterator.next();
+		advanceFrame();
 		assert(!frameFader.isFadeActive());
 	}
+
+
 
 	@Override
 	protected void setFrameIndexes() {

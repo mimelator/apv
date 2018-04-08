@@ -36,18 +36,18 @@ public class PulseListener extends APVPlugin {
 	}
 	
 	public boolean isPulse() {
-		return getPctPulse() < .0001f;
+		return frameFader.isFadeActive();
 	}
 	
 	public boolean isNewPulse() {
-		return getPctPulse() > .999f;
+		return frameFader.isFadeNew();
 	}
 	
 	public float getPctPulse() {
 		if (!frameFader.isFadeActive()) {
 			return 0;
 		}
-		
+	
 		float result = 0f;
 		if (pulseDetector.isOnset()) {
 			//Don't increment this count if we've already checked this frame

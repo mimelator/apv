@@ -2,6 +2,9 @@ package com.arranger.apv.util;
 
 import com.arranger.apv.Main;
 
+/**
+ * This class is very stateful, and shouldn't be shared by any other client
+ */
 public class MultiFrameSkipper extends SingleFrameSkipper {
 
 	protected int framesToSkip;
@@ -13,6 +16,9 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 
 	@Override
 	public boolean isNewFrame() {
-		return super.isNewFrame() && (parent.getFrameCount() % framesToSkip == 0);
+		boolean newFrame = super.isNewFrame();
+		int frameCount = parent.getFrameCount();
+		boolean frameHasCycled = (frameCount % framesToSkip) == 0;
+		return newFrame && frameHasCycled;
 	}
 }

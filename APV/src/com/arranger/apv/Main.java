@@ -69,7 +69,7 @@ public class Main extends PApplet {
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
-	private static final boolean FULL_SCREEN = true;
+	private static final boolean FULL_SCREEN = false;
 	private static final boolean AUTO_MODE = true;
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;

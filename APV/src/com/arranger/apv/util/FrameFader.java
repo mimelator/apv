@@ -3,7 +3,13 @@ package com.arranger.apv.util;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
+/**
+ * The multi frame skipper will only answer true to isNewFrame#every few frames
+ * This class is very stateful, and shouldn't be shared by any other client
+ */
 public class FrameFader extends APVPlugin {
+	
+	private static final float IS_NEW_FRAME_SIGNAL = -1;
 	
 	private int numFramesToFade;
 	private int lastFrame = 0;
@@ -30,7 +36,16 @@ public class FrameFader extends APVPlugin {
 	}
 
 	public boolean isFadeActive() {
-		return getFadePct() > 0;
+		float fadePct = getFadePct();
+		if (IS_NEW_FRAME_SIGNAL == fadePct) {
+			return true;
+		} else {
+			return fadePct > 0;	
+		}
+	}
+	
+	public boolean isFadeNew() {
+		return getFadePct() == IS_NEW_FRAME_SIGNAL;
 	}
 	
 	/**
@@ -42,7 +57,7 @@ public class FrameFader extends APVPlugin {
 		
 		int numFramesSinceOnset = currentFrame - lastFrame;
 		if (numFramesSinceOnset == 0) {
-			return 1; //started this frame
+			return IS_NEW_FRAME_SIGNAL; //started this frame
 		} else if (numFramesSinceOnset < numFramesToFade) {
 			//still fading
 			return (float)(numFramesToFade - numFramesSinceOnset) / numFramesToFade;

@@ -61,6 +61,13 @@ public abstract class APVPluginTest {
     
     protected abstract void setFrameIndexes();
     
+	/**
+	 * increments the Frame Iterator
+	 */
+	protected void advanceFrame() {
+		frameIterator.next();
+	}
+    
     protected List<Integer> createFrameData(int startFrame, int endFrame) {
     	return IntStream.rangeClosed(startFrame, endFrame).boxed().collect(Collectors.toList());
     }
