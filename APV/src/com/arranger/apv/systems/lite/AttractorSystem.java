@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.APVShape;
-import com.arranger.apv.SingleFrameSkipper;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.audio.PulseListener;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
 
@@ -79,7 +79,7 @@ public class AttractorSystem extends LiteShapeSystem {
 			reverse = !reverse;
 		}
 		
-		if (parent.frameCount % RESET_FRAMES == 0) {
+		if (parent.getFrameCount() % RESET_FRAMES == 0) {
 			setup();
 		}
 		

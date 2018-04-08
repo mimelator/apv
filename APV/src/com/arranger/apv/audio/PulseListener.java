@@ -2,8 +2,9 @@ package com.arranger.apv.audio;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.MultiFrameSkipper;
-import com.arranger.apv.SingleFrameSkipper;
+import com.arranger.apv.util.FrameFader;
+import com.arranger.apv.util.MultiFrameSkipper;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 import ddf.minim.analysis.BeatDetect;
 
@@ -16,11 +17,10 @@ public class PulseListener extends APVPlugin {
 	public static final int DEFAULT_PULSES_TO_SKIP = 4;
 	
 	private BeatDetect pulseDetector;
-	private int lastFrame = 0;
-	private int numFramesToFade;
 	private int pulsesToSkip = DEFAULT_PULSES_TO_SKIP;
-	private int currentPulseSkipped = 0;
+	private int currentPulseSkipped;
 	private SingleFrameSkipper frameSkipper;
+	private FrameFader frameFader;
 	
 	public PulseListener(Main parent) {
 		this(parent, DEFAULT_FADE_OUT_FRAMES, DEFAULT_PULSES_TO_SKIP);
@@ -28,41 +28,52 @@ public class PulseListener extends APVPlugin {
 	
 	public PulseListener(Main parent, int fadeOutFrames, int pulsesToSkip) {
 		super(parent);
-		this.numFramesToFade = fadeOutFrames;
 		this.pulsesToSkip = pulsesToSkip;
 		currentPulseSkipped = 0;
+		
+		//need to trigger the frameFader when ever the pulseDetector returns true
+		frameFader = new FrameFader(parent, fadeOutFrames);
 		frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
 		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 	}
 	
 	public boolean isPulse() {
-		return getPctPulse() < .0001f;
+		float pctPulse = getPctPulse(); //side-effects
+		debug("PulseListener#isPulse getPulse: " + pctPulse);
+		return frameFader.isFadeActive();
 	}
 	
 	public boolean isNewPulse() {
-		return getPctPulse() > .999f;
+		float pctPulse = getPctPulse(); //side-effects
+		debug("PulseListener#isNewPulse getPulse: " + pctPulse);
+		return frameFader.isFadeNew();
 	}
 	
 	public float getPctPulse() {
+		debug("PulseListener#getPctPulse: frameCount: " + parent.getFrameCount());
+		
 		float result = 0f;
-		int currentFrame = parent.frameCount;
-		if (pulseDetector.isOnset()) {
+		boolean onset = pulseDetector.isOnset();
+		debug("PulseListener#getPctPulse: pulseDetector.isOnset: " + onset);
+		if (onset) {
 			//Don't increment this count if we've already checked this frame
-			if (frameSkipper.isNewFrame()) {
+			boolean newFrame = frameSkipper.isNewFrame();
+			debug("PulseListener#getPctPulse: frameSkipper.isNewFrame: " + newFrame);
+			if (newFrame) {
+				frameFader.startFade();
+				debug("PulseListener#getPctPulse -> pulseDetector.isOnset && frameSkipper.isNewFrame");
 				currentPulseSkipped = 0;
-				lastFrame = currentFrame;
 				result = 1f;
 				parent.addDebugMsg("  --PulseOnset");
+				debug("  --PulseOnset");
 			} else {
 				currentPulseSkipped++;
 			}
 		} else {
-			int numFramesSinceOnset = currentFrame - lastFrame;
-			if (numFramesSinceOnset < numFramesToFade) {
-				//still fading
-				result = (float)numFramesSinceOnset / (float)numFramesToFade;
-			}
+			result = frameFader.getFadePct();
 		}
+		
+		debug("PulseListener#getPctPulse: returns: " + result);
 		
 		return result;
 	}

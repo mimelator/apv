@@ -57,10 +57,10 @@ public class PulseBlendFilter extends PulseBasedFilter {
 		super.preRender();
 		
 		if (pulseDetector.isOnset()) {
-			lastFrameCount = parent.frameCount;
+			lastFrameCount = parent.getFrameCount();
 		}
 	
-		if (parent.frameCount - lastFrameCount < FADE_OUT_FRAMES) {
+		if (parent.getFrameCount() - lastFrameCount < FADE_OUT_FRAMES) {
 			doBlend();
 		} else {
 			parent.colorMode(DEFAULT_BLEND_MODE.mode);
@@ -81,18 +81,12 @@ public class PulseBlendFilter extends PulseBasedFilter {
 			parent.colorMode(blendMode.mode);
 		}
 		
-		int currentFrame = (parent.frameCount - lastFrameCount) % FADE_OUT_FRAMES;
+		int currentFrame = (parent.getFrameCount() - lastFrameCount) % FADE_OUT_FRAMES;
 		float alpha = PApplet.map(currentFrame, 0, FADE_OUT_FRAMES, 0, 255);
-		
-		//int color = parent.getColorSystem().getCurrentColor().getRGB();
-		//parent.background(Color.BLACK.getRGB(), alpha);
 		
 		int color = Color.BLACK.getRGB();
 		parent.tint(color, alpha);
 		parent.background(color, alpha);
-		
-//		parent.fill(0, alpha);
-//		parent.rect(0, 0, parent.width, parent.height);
 		
 		parent.addDebugMsg("  --alpha: " + alpha);
 	}

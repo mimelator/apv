@@ -27,7 +27,7 @@ public class RefreshBackDrop extends BackDropSystem {
 	 */
 	@Override
 	public void drawBackground() {
-		float res = PApplet.map(parent.frameCount % RATE, 0, RATE, 0, RANGE);
+		float res = PApplet.map(parent.getFrameCount() % RATE, 0, RATE, 0, RANGE);
 		if (res < bgRefreshPct * RANGE) {
 			parent.background(Color.BLACK.getRGB());
 		}
