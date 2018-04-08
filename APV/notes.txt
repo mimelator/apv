@@ -1,21 +1,29 @@
-Organize the Settings messages alphabetically
+BRANCH: name-the-branch
 
-Special Messages (like song titles)
+1) create GetDisplayName and make sure every class name has a special new name.
+	No need to change the name of the classes
+	Get a reasonable initial StandardMessage.
+
+2) Enable switching of fgSys, bgSys, etc at runtime
+
+3) Parameterize the pulse listeneing ratio at runtime
 
 
-Snap Listener maybe shows a flash?
+4) New Message Types:
+	* https://www.openprocessing.org/sketch/430300
+	* https://www.openprocessing.org/sketch/166952
 
 
 *****************************************************************************
 TODO: 
+* Take screenshots w/the app
 * Investigate Twitch TV
-* Optimize GridShapeSystem based on recent monitor data
-* Programmatically switch between systems, factories, locations, color schemes, gravity, etc....
-	a) Maybe record combinations that are really nice?
+* Maybe record combinations that are really nice?
+	Inclusion / Exclusion System (This will require ID's and a serialization system) Not Sure is Necessary!!! Random is nice
 * Advanced Color Systems
 * Stereo Listener
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
-* Exclusion System (This will require ID's and a serialization system) Not Sure is Necessary!!! Random is nice
+* Snap Listener maybe shows a flash?
 *****************************************************************************
 		
 		
@@ -29,15 +37,7 @@ Then i'm running SoundFlowerBed and "monitoring" the default output device
 *****************************************************************************
 
 
-
-*****************************************************************************
-Jarl2d
-http://jarl2d.sourceforge.net
-http://jarl2d.cvs.sourceforge.net
-
-
-*****************************************************************************
-
 Dependencies: 
 	Minim: http://code.compartmental.net/tools/minim/
 	Processing: http://processing.org/
+	TestNG

@@ -15,7 +15,7 @@ public class RotSystem extends LifecycleSystem {
 	public RotSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
 	}
-
+	
 	@Override
 	protected LifecycleData createData() {
 		return new RotData();

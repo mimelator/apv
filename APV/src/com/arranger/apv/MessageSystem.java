@@ -21,20 +21,20 @@ public abstract class MessageSystem extends ShapeSystem {
 	public void setup() {
 	}
 	
-	public void onNewMessage(String message) {
-		logger.info("starting message: " + message);
-		fadingMessage = new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), message);
+	public void onNewMessage(String[] messages) {
+		logger.info("starting message: " + messages);
+		fadingMessage = new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), messages);
 	}
 	
 	protected class FadingMessage {
 		
 		public FrameFader frameFader;
-		public String message;
+		public String [] messages;
 		
-		public FadingMessage(FrameFader frameFader, String message) {
+		public FadingMessage(FrameFader frameFader, String [] message) {
 			frameFader.startFade();
 			this.frameFader = frameFader;
-			this.message = message;
+			this.messages = message;
 		}
 	}
 }

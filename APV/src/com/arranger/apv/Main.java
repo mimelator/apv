@@ -404,9 +404,12 @@ public class Main extends PApplet {
 		//transitionIndex += random(transitionSystems.size() - 1); //can't scramble the transitions.  Don't do it
 		scrambleMode = false;
 		
-		if (messagesEnabled && USE_FG) {
-			//TODO find a better message
-			getMessageSystem().onNewMessage(getForegroundSystem().getName());
+		if (messagesEnabled && USE_FG && USE_BG) {
+			getMessageSystem().onNewMessage(new String[] {
+												getBackDropSystem().getDisplayName(),
+												getForegroundSystem().getDisplayName(),
+												getBackgroundSystem().getDisplayName()
+					});
 		}
 	}
 	

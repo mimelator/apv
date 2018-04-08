@@ -40,7 +40,6 @@ public abstract class LifecycleSystem extends ShapeSystem {
 			particles.add(s);
 			groupShape.addChild(s.getShape());
 			
-			
 			//setInitialStroke(pShape);
 			
 		}
