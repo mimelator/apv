@@ -1,5 +1,7 @@
 package com.arranger.apv;
 
+import com.arranger.apv.Main.EmptyShapeFactory;
+
 /**
  * Base class for Shape Systems like particle, et al
  */
@@ -21,4 +23,14 @@ public abstract class ShapeSystem extends APVPlugin {
 	 * Render loop
 	 */
 	public abstract void draw();
+
+	@Override
+	public String getName() {
+		if (factory == null || factory instanceof EmptyShapeFactory) {
+			return super.getName();
+		} else {
+			return super.getName() + ":" + factory.getName();
+			
+		}
+	}
 }

@@ -42,6 +42,7 @@ public class StandardMessage extends MessageSystem {
 			return;
 		}
 		
+		parent.strokeWeight(5);
 		parent.textAlign(CENTER, CENTER);
 		parent.translate(parent.width / 2, parent.height / 2);
 		

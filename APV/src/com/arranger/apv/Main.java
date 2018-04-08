@@ -106,7 +106,7 @@ public class Main extends PApplet {
 	private static final int MIN_THRESHOLD_ENTRIES = 3;
 	private static final boolean DEBUG_LOG_CONFIG = false;
 	
-	private static class EmptyShapeFactory extends ShapeFactory {
+	public static class EmptyShapeFactory extends ShapeFactory {
 		public EmptyShapeFactory(Main parent) {
 			super(parent);
 		}
