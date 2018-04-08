@@ -3,12 +3,15 @@ package com.arranger.apv.factories;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.util.logging.Logger;
 
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 
 public abstract class ParametricFactory extends PrimitiveShapeFactory {
+	
+	private static final Logger logger = Logger.getLogger(ParametricFactory.class.getName());
 	
 	public static class HypocycloidFactory extends ParametricFactory {
 
@@ -131,7 +134,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	
     private GeneralPath pointsToShape(Point2D[] points) {
         if (points.length == 0) {
-            System.out.println("points are of length 0");
+        	logger.warning("points are of length 0");
             return new GeneralPath();
         }
 

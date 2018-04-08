@@ -14,13 +14,13 @@ public class FrameFaderTest extends APVPluginTest {
 	@BeforeEach
 	public void beforeEach() {
 		super.beforeEach();
-		System.out.println("FrameFaderTest#beforeEach");
+		debug("FrameFaderTest#beforeEach");
 		frameFader = new FrameFader(parent, FRAMES_TO_FADE);
 	}
 
 	@Test
 	public void testFrameFader() throws Exception {
-		System.out.println("testFrameFader");
+		debug("testFrameFader");
 		assert(frameFader != null);
 		frameFader.startFade();
 		
@@ -32,7 +32,7 @@ public class FrameFaderTest extends APVPluginTest {
 			
 			assert(frameFader.isFadeActive());
 			float fadePct = frameFader.getFadePct();
-			System.out.println("index: " + index + " frameCount: " + parent.getFrameCount() + " fadePct: " + fadePct);
+			debug("index: " + index + " frameCount: " + parent.getFrameCount() + " fadePct: " + fadePct);
 		}
 		
 		//bump to the last frame

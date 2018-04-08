@@ -16,18 +16,18 @@ public class MultiFrameSkipperTest extends APVPluginTest {
 	@BeforeEach
 	public void beforeEach() {
 		super.beforeEach();
-		System.out.println("MultiFrameSkipper#beforeEach");
+		debug("MultiFrameSkipper#beforeEach");
 		multiFrameSkipper = new MultiFrameSkipper(parent, FRAMES_TO_SKIP);
 	}
 
 	@Test
 	public void testMultiFrameSkipperTest() throws Exception {
-		System.out.println("testMultiFrameSkipperTest");
+		debug("testMultiFrameSkipperTest");
 		assert(multiFrameSkipper != null);
 		
 		boolean foundNewFrame = false;
 		for (int index = 0; index < 20 - 1; index++) {
-			System.out.println("Skipping frame: " + parent.getFrameCount());
+			debug("Skipping frame: " + parent.getFrameCount());
 			advanceFrame();
 			if (multiFrameSkipper.isNewFrame()) {
 				foundNewFrame = true;

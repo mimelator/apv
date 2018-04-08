@@ -36,15 +36,22 @@ public abstract class APVPluginTest {
 	protected int frameIndexEnd;
 	protected PeekIterator<Integer> frameIterator;
 	
+	/**
+	 * Not using java.util.logging for tests just yet
+	 */
+	protected void debug(String msg) {
+		System.out.println(msg);
+	}
+	
 	
     @BeforeAll
     static void beforeAll() {
-        //System.out.println("Before all test methods");
+        //debug("Before all test methods");
     }
  
     @BeforeEach
     void beforeEach() {
-    	System.out.println("APVPluginTest#beforeEach");
+    	debug("APVPluginTest#beforeEach");
         MockitoAnnotations.initMocks(this);
         setFrameIndexes();
         frameIterator = new PeekIterator<Integer>(createFrameData(frameIndexStart, frameIndexEnd).iterator());
@@ -67,12 +74,12 @@ public abstract class APVPluginTest {
 
 	@AfterEach
     void afterEach() {
-        //System.out.println("After each test method");
+        //debug("After each test method");
     }
  
     @AfterAll
     static void afterAll() {
-        //System.out.println("After all test methods");
+        //debug("After all test methods");
     }
     
     protected abstract void setFrameIndexes();

@@ -1,41 +1,4 @@
-Both The PathLocationSystem and the LightWormSystem simultaneously use 
-
-
-*****************************************************************************
-Live Transition Branch
-
-	In order to apply the appropriate alpha to the first Transition
-	I need to first extract a common "Fader".  This will fade out according to a set rate whenever the client hits 'reset'.  Uses frameCount
-
-
-
-	 Transitions Use PImage to record the last screen and then use pluggable filters to wipe the PImage away
-
-		Main#draw
-			Create a new PImage and set that on the current GraphicsContext
-				go through the #draw as normal
-			Copy the Pimage to the GC
-			
-			Check if a transition is active.
-			If so, figure out what percentage of it is left.
-				Paint the (previous) image but according to the scaled alpha 
-					randomize the blendMode? 
-
-//Taken from RenderManager & Jarl
-
-Image image = m_renderManager.render(m_context);
-	public Image render(IContext context) {
-		Image image = context.createImage();
-		Graphics2D graphics = (Graphics2D) image.getGraphics();  //https://processing.org/reference/createGraphics_.html
-		graphics.dispose();
-		return image;
-		
-Filter and transition image
-(optionally) Save image: //https://processing.org/reference/save_.html
-
-
-*****************************************************************************
-
+Special Messages (like song titles)
 
 *****************************************************************************
 TODO: 

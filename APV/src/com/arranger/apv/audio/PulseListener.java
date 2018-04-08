@@ -1,5 +1,7 @@
 package com.arranger.apv.audio;
 
+import java.util.logging.Logger;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.FrameFader;
@@ -12,6 +14,8 @@ import ddf.minim.analysis.BeatDetect;
  * TODO change to fade out pulses not frames?
  */
 public class PulseListener extends APVPlugin {
+	
+	private static final Logger logger = Logger.getLogger(PulseListener.class.getName());
 
 	public static final int DEFAULT_FADE_OUT_FRAMES = 100;
 	public static final int DEFAULT_PULSES_TO_SKIP = 4;
@@ -39,33 +43,33 @@ public class PulseListener extends APVPlugin {
 	
 	public boolean isPulse() {
 		float pctPulse = getPctPulse(); //side-effects
-		debug("PulseListener#isPulse getPulse: " + pctPulse);
+		logger.fine("PulseListener#isPulse getPulse: " + pctPulse);
 		return frameFader.isFadeActive();
 	}
 	
 	public boolean isNewPulse() {
 		float pctPulse = getPctPulse(); //side-effects
-		debug("PulseListener#isNewPulse getPulse: " + pctPulse);
+		logger.fine("PulseListener#isNewPulse getPulse: " + pctPulse);
 		return frameFader.isFadeNew();
 	}
 	
 	public float getPctPulse() {
-		debug("PulseListener#getPctPulse: frameCount: " + parent.getFrameCount());
+		logger.fine("PulseListener#getPctPulse: frameCount: " + parent.getFrameCount());
 		
 		float result = 0f;
 		boolean onset = pulseDetector.isOnset();
-		debug("PulseListener#getPctPulse: pulseDetector.isOnset: " + onset);
+		logger.fine("PulseListener#getPctPulse: pulseDetector.isOnset: " + onset);
 		if (onset) {
 			//Don't increment this count if we've already checked this frame
 			boolean newFrame = frameSkipper.isNewFrame();
-			debug("PulseListener#getPctPulse: frameSkipper.isNewFrame: " + newFrame);
+			logger.fine("PulseListener#getPctPulse: frameSkipper.isNewFrame: " + newFrame);
 			if (newFrame) {
 				frameFader.startFade();
-				debug("PulseListener#getPctPulse -> pulseDetector.isOnset && frameSkipper.isNewFrame");
+				logger.fine("PulseListener#getPctPulse -> pulseDetector.isOnset && frameSkipper.isNewFrame");
 				currentPulseSkipped = 0;
 				result = 1f;
 				parent.addDebugMsg("  --PulseOnset");
-				debug("  --PulseOnset");
+				logger.fine("  --PulseOnset");
 			} else {
 				currentPulseSkipped++;
 			}
@@ -73,7 +77,7 @@ public class PulseListener extends APVPlugin {
 			result = frameFader.getFadePct();
 		}
 		
-		debug("PulseListener#getPctPulse: returns: " + result);
+		logger.fine("PulseListener#getPctPulse: returns: " + result);
 		
 		return result;
 	}

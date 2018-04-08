@@ -16,13 +16,13 @@ public class SingleFrameSkipperTest extends APVPluginTest {
 	@BeforeEach
 	public void beforeEach() {
 		super.beforeEach();
-		System.out.println("SingleFrameSkipper#beforeEach");
+		debug("SingleFrameSkipper#beforeEach");
 		singleFrameSkipper = new SingleFrameSkipper(parent);
 	}
 
 	@Test
 	public void testSingleFrameSkipper() throws Exception {
-		System.out.println("testSingleFrameSkipper");
+		debug("testSingleFrameSkipper");
 		assert(singleFrameSkipper != null);
 		assert(singleFrameSkipper.isNewFrame());
 		

@@ -40,8 +40,8 @@ public class Audio extends APVPlugin {
 		}
 		
 		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('+', "Audio+", "Increases the audio sensitivity", event -> scaleFactor++);
-		cs.registerCommand('-', "Audio-", "Decreases the audio sensitivity", event -> scaleFactor--);
+		cs.registerCommand('+', "Audio", "Increases the audio sensitivity", event -> scaleFactor++);
+		cs.registerCommand('-', "Audio", "Decreases the audio sensitivity", event -> scaleFactor--);
 	}
 	
 	public float getScaleFactor() {

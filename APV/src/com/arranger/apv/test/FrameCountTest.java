@@ -15,7 +15,7 @@ public class FrameCountTest extends APVPluginTest {
 
     @Test
     public void frameCountTest() throws Throwable {
-    	System.out.println("FrameCountTest#frameCountTest");
+    	debug("FrameCountTest#frameCountTest");
     	assert(apvPlugin != null);
     	assert(apvPlugin.getParent() != null);
         assert(apvPlugin.getParent().getFrameCount() == 3);

@@ -1,5 +1,7 @@
 package com.arranger.apv.util;
 
+import java.util.logging.Logger;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
@@ -10,6 +12,8 @@ import com.arranger.apv.audio.PulseListener;
  */
 public class Reverser extends APVPlugin {
 	
+	private static final Logger logger = Logger.getLogger(Reverser.class.getName());
+	
 	private PulseListener pulseListener;
 	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = false;
@@ -17,15 +21,18 @@ public class Reverser extends APVPlugin {
 	public Reverser(Main parent, int numPulses) {
 		super(parent);
 		
-		pulseListener = new PulseListener(parent, 1, numPulses); //Direction Change every two pulses
+		pulseListener = new PulseListener(parent, 1, numPulses); //Direction Change every numPulses
 		frameSkipper = new SingleFrameSkipper(parent);
 	}
 
+	/**
+	 * Only automatically reverse once / frame
+	 */
 	public boolean isReverse() {
 		boolean newFrame = frameSkipper.isNewFrame();
 		boolean newPulse = pulseListener.isNewPulse();
 		
-		debug("Reverser [newFrame, newPulse]: [" + newFrame + ", " + newPulse + "]");
+		logger.fine("Reverser [newFrame, newPulse]: [" + newFrame + ", " + newPulse + "]");
 		
 		if (newFrame && newPulse) {
 			reverse = !reverse;

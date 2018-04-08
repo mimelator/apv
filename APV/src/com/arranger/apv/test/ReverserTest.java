@@ -13,19 +13,19 @@ public class ReverserTest extends APVPluginTest {
 	@BeforeEach
 	public void beforeEach() {
 		super.beforeEach();
-		System.out.println("ReverserTest#beforeEach");
+		debug("ReverserTest#beforeEach");
 		reverser = new Reverser(parent, 2);	//cycle time of 2
 	}
 
 	@Test
 	public void testReverserTest() throws Exception {
-		System.out.println("ReverserTest");
+		debug("ReverserTest");
 		assert(reverser != null);
 		
 		boolean curReverse = reverser.isReverse();
 		reverser.setReverse(!curReverse);
 		assert(reverser.isReverse() == !curReverse);
-		System.out.println("1) reverse: " + !curReverse);
+		debug("1) reverse: " + !curReverse);
 		
 		//the next frame should NOT reverse it
 		advanceFrame();
@@ -34,7 +34,7 @@ public class ReverserTest extends APVPluginTest {
 		//the next frame should reverse it back
 		advanceFrame();
 		assert(reverser.isReverse() == curReverse);
-		System.out.println("2) reverse: " + reverser.isReverse());
+		debug("2) reverse: " + reverser.isReverse());
 		
 		//the next frame should NOT reverse it
 		advanceFrame();

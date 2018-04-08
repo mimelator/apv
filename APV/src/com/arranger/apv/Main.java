@@ -1,6 +1,7 @@
 package com.arranger.apv;
 
 import java.awt.Color;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -65,28 +65,32 @@ import processing.core.PConstants;
 public class Main extends PApplet {
 	
 	//Change these during active development
+	private static final int DEFAULT_PULSES_TO_SKIP_FOR_AUTO = 16;
+	private static final int DEFAULT_FRAMES_TO_SKIP_FOR_SNAP = 10;
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	public static final String RENDERER = P2D;
+	private static final int WIDTH = 1024;
+	private static final int HEIGHT = 768;
+	
+	//Features
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
-	private static final boolean AUTO_MODE = false;
-	private static final boolean SNAP_MODE = false;
+	private static final boolean AUTO_MODE = true;
+	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean DEBUG = false;
-	
-	private static final int WIDTH = 1024;
-	private static final int HEIGHT = 768;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
 	private static final int NUMBER_PARTICLES = 1000;
 
-	//Don't change the following 3 values
+	//Don't change the following values
+	private static final String CONFIG = "/config/log.properties";
 	private static final String SONG = "03 When Things Get Strange v10.mp3";
 	private static final String SPRITE_PNG = "sprite.png";
 	public static final char SPACE_BAR_KEY_CODE = ' ';
@@ -140,6 +144,8 @@ public class Main extends PApplet {
 	private boolean autoMode = AUTO_MODE;
 	private boolean snapMode = SNAP_MODE;
 	private boolean transitionMode = USE_TRANSITIONS;
+	
+	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	
 	public static void main(String[] args) {
@@ -209,7 +215,7 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
-		LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINE);
+		configureLogging();
 		
 		commandSystem = new CommandSystem(this);
 		
@@ -302,13 +308,13 @@ public class Main extends PApplet {
 		if (USE_BACKDROP) {
 			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.WHITE));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
-			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES, PulseListener.DEFAULT_PULSES_TO_SKIP * 4));
+			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES / 2, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE.darker().darker()));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
 			backDropSystems.add(new BackDropSystem(this));
-			backDropSystems.add(new RefreshBackDrop(this));
+			backDropSystems.add(new RefreshBackDrop(this,.95f));
 			backDropSystems.add(new BlurBackDrop(this));
 		}
 		
@@ -340,9 +346,19 @@ public class Main extends PApplet {
 		}
 		background(Color.BLACK.getRGB());
 		
-		snapListener = new SnapListener(this);
-		pulseListener = new PulseListener(this, 1, 16);
+		snapListener = new SnapListener(this, DEFAULT_FRAMES_TO_SKIP_FOR_SNAP);
+		pulseListener = new PulseListener(this, 1, DEFAULT_PULSES_TO_SKIP_FOR_AUTO);
 		frameSkipper = new SingleFrameSkipper(this);
+	}
+
+	protected void configureLogging()  {
+		try {
+			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
+			LogManager.getLogManager().readConfiguration(configFile);
+			configFile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void scramble() {
@@ -362,6 +378,8 @@ public class Main extends PApplet {
 	}
 	
 	public void draw() {
+		logger.fine("Drawing frame: " + getFrameCount());
+		
 		TransitionSystem transition = null;
 		if (transitionMode) {
 			transition = (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
@@ -371,15 +389,6 @@ public class Main extends PApplet {
 			}
 			
 			transition.onDrawStart();
-		}
-		
-		//Auto Stuff
-		boolean newFrame = frameSkipper.isNewFrame();
-		boolean snap = snapListener.isSnap();
-		if (snapMode && snap && newFrame) {  //listen for loud POPs!
-			scramble();
-		} else if (autoMode && newFrame && pulseListener.isNewPulse()) {
-			scramble();
 		}
 		
 		BackDropSystem backDrop = null;
@@ -431,6 +440,18 @@ public class Main extends PApplet {
 		
 		if (scrambleMode) {
 			doScramble();
+		}
+		
+		checkAutoScramble();
+	}
+
+	protected void checkAutoScramble() {
+		boolean newFrame = frameSkipper.isNewFrame();
+		boolean snap = snapListener.isSnap();
+		if (snapMode && snap && newFrame) {  //listen for loud POPs!
+			scramble();
+		} else if (autoMode && newFrame && pulseListener.isNewPulse()) {
+			scramble();
 		}
 	}
 
