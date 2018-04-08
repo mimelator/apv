@@ -58,8 +58,8 @@ public class ShowerSystem extends LiteShapeSystem {
 		float alpha = parent.oscillate(LOW_FILL_VAL, HIGH_FILL_VAL, OSCILLATION_SCALAR);
 		int useFillColor = getColor(curFillFrame, FILL_CHANGE_RATE, prevFillColor, curFillColor); 
 		parent.fill(useFillColor, alpha);
-		parent.addDebugMsg("  --alpha: " + alpha);
-		parent.addDebugMsg("  --useFillColor: " + useFillColor);
+		parent.addSettingsMessage("  --alpha: " + alpha);
+		parent.addSettingsMessage("  --useFillColor: " + useFillColor);
 		
 		//change up the stroke
 		float stroke = parent.oscillate(STROKE_WEIGHT_LOW, STROKE_WEIGHT_HIGH, OSCILLATION_SCALAR / 3.0f);

@@ -86,9 +86,9 @@ public class AttractorSystem extends LiteShapeSystem {
 		radius = parent.oscillate(SMALL_RADIUS, LARGE_RADIUS, RADIUS_OSCILATOR);
 		magnetism = parent.oscillate(SMALL_MAGNETISM, LARGE_MAGNETISM, MAGNETISM_OSCILATOR);
 		
-		parent.addDebugMsg("  --magnetism: " + magnetism);
-		parent.addDebugMsg("  --radius: " + radius);
-		parent.addDebugMsg("  --reverse: " + reverse);
+		parent.addSettingsMessage("  --magnetism: " + magnetism);
+		parent.addSettingsMessage("  --radius: " + radius);
+		parent.addSettingsMessage("  --reverse: " + reverse);
 		parent.noStroke();
 
 		Color c = parent.getColorSystem().getCurrentColor();

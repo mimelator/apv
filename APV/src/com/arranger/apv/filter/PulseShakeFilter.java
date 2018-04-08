@@ -36,7 +36,7 @@ public class PulseShakeFilter extends PulseBasedFilter {
 			
 			parent.translate(-x, -y);
 		}
-		parent.addDebugMsg("  --scalar: " + scalar);
-		parent.addDebugMsg("  --shakeSize: " + shakeSize);
+		parent.addSettingsMessage("  --scalar: " + scalar);
+		parent.addSettingsMessage("  --shakeSize: " + shakeSize);
 	}
 }

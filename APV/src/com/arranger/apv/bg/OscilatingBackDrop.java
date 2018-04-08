@@ -26,7 +26,7 @@ public class OscilatingBackDrop extends BackDropSystem {
 		parent.background(lerpColor);
 		
 		String pctString = String.format("%.0f%%", amt * 100);
-		parent.addDebugMsg(" --color from to: " + c1.getRGB() + " -> " + c2.getRGB() + " at: " + pctString);
-		parent.addDebugMsg(" --oscSpeed: " + oscSpeed);
+		parent.addSettingsMessage(" --color from to: " + c1.getRGB() + " -> " + c2.getRGB() + " at: " + pctString);
+		parent.addSettingsMessage(" --oscSpeed: " + oscSpeed);
 	}
 }

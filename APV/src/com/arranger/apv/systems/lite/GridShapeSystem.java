@@ -73,10 +73,10 @@ public class GridShapeSystem extends LiteShapeSystem {
 			}
 		}
 		
-		parent.addDebugMsg("  --space: " + space); 
-		parent.addDebugMsg("  --shapeSize: " + shapeSize);
-		parent.addDebugMsg("  --maxDistance: " + maxDistance);
-		parent.addDebugMsg("  --drawingTime: " + String.valueOf(parent.millis() - time));
+		parent.addSettingsMessage("  --space: " + space); 
+		parent.addSettingsMessage("  --shapeSize: " + shapeSize);
+		parent.addSettingsMessage("  --maxDistance: " + maxDistance);
+		parent.addSettingsMessage("  --drawingTime: " + String.valueOf(parent.millis() - time));
 	}
 
 }

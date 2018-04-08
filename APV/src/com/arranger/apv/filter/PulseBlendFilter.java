@@ -67,7 +67,7 @@ public class PulseBlendFilter extends PulseBasedFilter {
 			blendMode = DEFAULT_BLEND_MODE;
 		}
 		
-		parent.addDebugMsg("  --blendMode: " + blendMode);
+		parent.addSettingsMessage("  --blendMode: " + blendMode);
 	}
 
 	/**
@@ -88,6 +88,6 @@ public class PulseBlendFilter extends PulseBasedFilter {
 		parent.tint(color, alpha);
 		parent.background(color, alpha);
 		
-		parent.addDebugMsg("  --alpha: " + alpha);
+		parent.addSettingsMessage("  --alpha: " + alpha);
 	}
 }

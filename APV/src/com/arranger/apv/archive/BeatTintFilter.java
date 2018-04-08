@@ -72,8 +72,8 @@ public class BeatTintFilter extends PulseBasedFilter {
 		parent.tint(color, alpha);
 		parent.background(color, alpha);
 		
-		parent.addDebugMsg("  --blendMode: " + blendMode);
-		parent.addDebugMsg("  --color: " + color);
-		parent.addDebugMsg("  --alpha: " + alpha);
+		parent.addSettingsMessage("  --blendMode: " + blendMode);
+		parent.addSettingsMessage("  --color: " + color);
+		parent.addSettingsMessage("  --alpha: " + alpha);
 	}
 }

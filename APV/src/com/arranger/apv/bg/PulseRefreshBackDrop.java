@@ -26,7 +26,7 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 			parent.background(Color.BLACK.getRGB());
 		}
 		
-		parent.addDebugMsg("  --currentPulseSkipped: " + pulse.getCurrentPulseSkipped());
-		parent.addDebugMsg("  --pulsesToSkip: " + pulse.getPulsesToSkip());
+		parent.addSettingsMessage("  --currentPulseSkipped: " + pulse.getCurrentPulseSkipped());
+		parent.addSettingsMessage("  --pulsesToSkip: " + pulse.getPulsesToSkip());
 	}
 }

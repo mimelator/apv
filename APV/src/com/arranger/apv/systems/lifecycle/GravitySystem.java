@@ -23,7 +23,7 @@ public class GravitySystem extends LifecycleSystem {
 	@Override
 	public void draw() {
 		super.draw();
-		parent.addDebugMsg("Gravity: " + parent.getGravity().getCurrentGravity());
+		parent.addSettingsMessage("Gravity: " + parent.getGravity().getCurrentGravity());
 	}
 
 	@Override

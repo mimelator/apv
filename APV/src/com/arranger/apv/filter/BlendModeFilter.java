@@ -40,6 +40,6 @@ public class BlendModeFilter extends Filter {
 	public void preRender() {
 		super.preRender();
 		parent.blendMode(blendMode.mode());
-		parent.addDebugMsg("  --blendMode: " + blendMode);
+		parent.addSettingsMessage("  --blendMode: " + blendMode);
 	}
 }

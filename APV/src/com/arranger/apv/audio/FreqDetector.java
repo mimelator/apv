@@ -69,7 +69,7 @@ public class FreqDetector extends LiteShapeSystem {
 			parent.rect(leftX, parent.height, rightX, rectHeight);
 		}
 		
-		parent.addDebugMsg("  --minAmp: " + minAmp);
-		parent.addDebugMsg("  --maxAmp: " + maxAmp);
+		parent.addSettingsMessage("  --minAmp: " + minAmp);
+		parent.addSettingsMessage("  --maxAmp: " + maxAmp);
 	}
 }

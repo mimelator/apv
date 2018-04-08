@@ -107,7 +107,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	public void draw() {
 		boolean reverse = reverser.isReverse();
 		
-		parent.addDebugMsg("  --reverse: " + reverse);
+		parent.addSettingsMessage("  --reverse: " + reverse);
 		parent.strokeWeight(STROKE_WEIGHT);
 		
 		int halfWidth = parent.width / 2;
@@ -167,6 +167,6 @@ public class LightWormSystem extends LiteShapeSystem {
 		} else {
 			counter += MOTION_SPEED;
 		}
-		parent.addDebugMsg("  --fillTime: " + fillTime);
+		parent.addSettingsMessage("  --fillTime: " + fillTime);
 	}
 }

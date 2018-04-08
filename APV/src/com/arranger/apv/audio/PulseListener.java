@@ -68,7 +68,7 @@ public class PulseListener extends APVPlugin {
 				logger.fine("PulseListener#getPctPulse -> pulseDetector.isOnset && frameSkipper.isNewFrame");
 				currentPulseSkipped = 0;
 				result = 1f;
-				parent.addDebugMsg("  --PulseOnset");
+				parent.addSettingsMessage("  --PulseOnset");
 				logger.fine("  --PulseOnset");
 			} else {
 				currentPulseSkipped++;

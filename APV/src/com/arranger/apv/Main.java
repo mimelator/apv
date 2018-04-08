@@ -83,7 +83,7 @@ public class Main extends PApplet {
 	private static final boolean AUTO_MODE = true;
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
-	private static final boolean DEBUG = false;
+	private static final boolean SHOW_SETTINGS = true;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
@@ -134,7 +134,7 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Gravity gravity;
 	protected boolean showHelp = true;
-	protected boolean debug = DEBUG;
+	protected boolean showSettings = SHOW_SETTINGS;
 	protected boolean scrambleMode = true;	//this is a flag to signal to the TransitionSystem for #onDrawStart
 	
 	//Auto system
@@ -241,7 +241,7 @@ public class Main extends PApplet {
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		commandSystem.registerCommand('m', "Slow Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
-		commandSystem.registerCommand('d', "Debug", "Toggles the display of all the debug information", event -> debug = !debug);
+		commandSystem.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
 		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
 		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
 		
@@ -373,17 +373,16 @@ public class Main extends PApplet {
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		//transitionIndex += random(transitionSystems.size() - 1);
+		//transitionIndex += random(transitionSystems.size() - 1); //can't scramble the transitions.  Don't do it
 		scrambleMode = false;
 	}
 	
 	public void draw() {
-		logger.fine("Drawing frame: " + getFrameCount());
+		logger.info("Drawing frame: " + getFrameCount());
 		
 		TransitionSystem transition = null;
 		if (transitionMode) {
 			transition = (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
-			addDebugMsg("transition: " + transition.getName());
 			if (scrambleMode) {
 				transition.startTransition();
 			}
@@ -406,7 +405,7 @@ public class Main extends PApplet {
 		Filter filter = null;
 		if (USE_FILTERS) {
 			filter = (Filter)getPlugin(filters, filterIndex);
-			addDebugMsg("filter: " + filter.getName());
+			addSettingsMessage("filter: " + filter.getName());
 			filter.preRender();
 		}
 		
@@ -422,8 +421,8 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (debug) {
-			doDebugMsg();
+		if (showSettings) {
+			addPrimarySettingsMessages();
 		}
 		
 		if (MONITOR_FRAME_RATE) {
@@ -458,7 +457,7 @@ public class Main extends PApplet {
 	protected void drawSystem(ShapeSystem s, String debugName) {
 		pushStyle();
 		pushMatrix();
-		addDebugMsg(debugName + ": " + s.getName());
+		debugSystem(s, debugName);
 		s.draw();
 		popMatrix();
 		popStyle();
@@ -470,35 +469,36 @@ public class Main extends PApplet {
 	
 	public static final int TEXT_SIZE = 16;
 	public static final int TEXT_INDEX = 10;
-	protected List<String> debugStatements = new ArrayList<String>();
+	protected List<String> settingsMessages = new ArrayList<String>();
 	
-	public void addDebugMsg(String msg) {
-		debugStatements.add(msg);
+	public void addSettingsMessage(String msg) {
+		settingsMessages.add(msg);
 	}
 	
-	protected void debugSystem(String name, ShapeSystem ss) {
-		addDebugMsg(name +": " + ss.getName());
+	protected void debugSystem(ShapeSystem ss, String name) {
+		logger.fine("Drawing system [" + name + "] [" + ss.getName() +"]");
+		addSettingsMessage(name +": " + ss.getName());
 		if (ss.factory != null) {
-			addDebugMsg("  --factory: " + ss.factory.getName());
-			addDebugMsg("    --scale: " + ss.factory.getScale());
+			addSettingsMessage("  --factory: " + ss.factory.getName());
+			addSettingsMessage("    --scale: " + ss.factory.getScale());
 		}
 	}
 	
-	protected void doDebugMsg() {
-		addDebugMsg("saveFileMode: " + transitionMode);
-		addDebugMsg("Auto: " + autoMode);
-		addDebugMsg("SnapMode: " + snapMode);
-		addDebugMsg("Audio: " + getAudio().getScaleFactor());
-		addDebugMsg("Color: " + getColorSystem().getName());
-		addDebugMsg("Loc: " + getLocationSystem().getName());
-		addDebugMsg("Frame rate: " + (int)frameRate);
-		addDebugMsg("MouseXY:  " + mouseX + " " + mouseY);
-		drawDebug();
+	protected void addPrimarySettingsMessages() {
+		addSettingsMessage("Transitions Enabled: " + transitionMode);
+		addSettingsMessage("Auto: " + autoMode);
+		addSettingsMessage("SnapMode: " + snapMode);
+		addSettingsMessage("Audio: " + getAudio().getScaleFactor());
+		addSettingsMessage("Color: " + getColorSystem().getName());
+		addSettingsMessage("Loc: " + getLocationSystem().getName());
+		addSettingsMessage("Frame rate: " + (int)frameRate);
+		addSettingsMessage("MouseXY:  " + mouseX + " " + mouseY);
+		drawSettingsMessages();
 	}
 
-	protected void drawDebug() {
-		drawText(debugStatements);
-		debugStatements.clear();
+	protected void drawSettingsMessages() {
+		drawText(settingsMessages);
+		settingsMessages.clear();
 	}
 
 	protected void drawText(List<String> msgs) {
