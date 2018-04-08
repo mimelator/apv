@@ -1,3 +1,5 @@
+Organize the Settings messages alphabetically
+
 Special Messages (like song titles)
 
 

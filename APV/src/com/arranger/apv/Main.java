@@ -45,6 +45,7 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.PerlinNoiseWalker;
 import com.arranger.apv.loc.RectLocationSystem;
+import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -87,6 +88,7 @@ public class Main extends PApplet {
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
+	private static final boolean USE_MESSAGES = true;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
@@ -131,6 +133,9 @@ public class Main extends PApplet {
 	protected List<TransitionSystem> transitionSystems = new ArrayList<TransitionSystem>();
 	protected int transitionIndex = 0;
 	
+	protected List<MessageSystem> messageSystems = new ArrayList<MessageSystem>();
+	protected int messageIndex = 0;
+	
 	protected List<Filter> filters = new ArrayList<Filter>(); 
 	protected int filterIndex = 0;
 	
@@ -148,6 +153,7 @@ public class Main extends PApplet {
 	private boolean autoMode = AUTO_MODE;
 	private boolean snapMode = SNAP_MODE;
 	private boolean transitionMode = USE_TRANSITIONS;
+	private boolean messagesEnabled = USE_MESSAGES;
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
@@ -180,8 +186,24 @@ public class Main extends PApplet {
 		return (ColorSystem)getPlugin(colorSystems, colorIndex);
 	}
 	
+	public ShapeSystem getForegroundSystem() {
+		return (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
+	}
+
+	public ShapeSystem getBackgroundSystem() {
+		return (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
+	}
+
+	public BackDropSystem getBackDropSystem() {
+		return (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
+	}
+	
 	public TransitionSystem getTransitionSystem() {
 		return (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
+	}
+	
+	public MessageSystem getMessageSystem() {
+		return (MessageSystem)getPlugin(messageSystems, messageIndex);
 	}
 	
 	public LocationSystem getLocationSystem() {
@@ -310,10 +332,10 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
-			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.WHITE));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
 			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES / 2, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE.darker().darker()));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
@@ -341,56 +363,28 @@ public class Main extends PApplet {
 			transitionSystems.add(new Swipe(this));
 		}
 		
-		for (ShapeSystem system : foregroundSystems) {
-			system.setup();
+		if (USE_MESSAGES) {
+			messageSystems.add(new StandardMessage(this));
 		}
 		
-		for (ShapeSystem system : backgroundSystems) {
-			system.setup();
-		}
-		background(Color.BLACK.getRGB());
+		setupSystems(foregroundSystems);
+		setupSystems(backgroundSystems);
+		setupSystems(backDropSystems);
+		//setupSystems(filters);  Filters get left out of the setup for now (they don't extends the SYstem)
+		setupSystems(transitionSystems);
+		setupSystems(messageSystems);
 		
 		snapListener = new SnapListener(this, DEFAULT_FRAMES_TO_SKIP_FOR_SNAP);
 		pulseListener = new PulseListener(this, 1, DEFAULT_PULSES_TO_SKIP_FOR_AUTO);
 		frameSkipper = new SingleFrameSkipper(this);
+		
+		//init background
+		background(Color.BLACK.getRGB());
 	}
 
-	protected void configureLogging()  {
-		LogManager logManager = LogManager.getLogManager();
-		logManager.reset();
-		try {
-			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
-			logManager.readConfiguration(configFile);
-			configFile.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		//Dump the loggers
-		if (DEBUG_LOG_CONFIG) {
-			Enumeration<String> loggerNames = logManager.getLoggerNames();
-			while (loggerNames.hasMoreElements()) {
-				debugLogger(logManager.getLogger(loggerNames.nextElement()));
-			}
-		}
-	}
-	
-	protected void debugLogger(Logger l) {
-		Level level = l.getLevel();
-		String name = l.getName();
-		System.out.println("name: " + name + " level: " + level);
-		
-		l = l.getParent();
-		int indent = 1;
-		while (l != null) {
-			for (int index = 0; index < indent; index++) {
-				System.out.print("   ");
-			}
-			level = l.getLevel();
-			name = l.getName();
-			System.out.println("name: " + name + " level: " + level);
-			l = l.getParent();
-			indent++;
+	protected void setupSystems(List<? extends ShapeSystem> systems) {
+		for (ShapeSystem system : systems) {
+			system.setup();
 		}
 	}
 	
@@ -413,9 +407,14 @@ public class Main extends PApplet {
 	public void draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
+		if (showSettings) {
+			prepareSettingsMessages();
+			addPrimarySettingsMessages();
+		}
+		
 		TransitionSystem transition = null;
 		if (transitionMode) {
-			transition = (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
+			transition = getTransitionSystem();
 			if (scrambleMode) {
 				transition.startTransition();
 			}
@@ -425,13 +424,13 @@ public class Main extends PApplet {
 		
 		BackDropSystem backDrop = null;
 		if (USE_BACKDROP) {
-			backDrop = (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
+			backDrop = getBackDropSystem();
 			drawSystem(backDrop, "backDrop");
 		}
 		
 		ShapeSystem bgSys = null;
 		if (USE_BG) {
-			bgSys = (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
+			bgSys = getBackgroundSystem();
 			drawSystem(bgSys, "bgSys");
 		}
 		
@@ -444,7 +443,7 @@ public class Main extends PApplet {
 		
 		ShapeSystem fgSys = null;
 		if (USE_FG) {
-			fgSys = (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
+			fgSys = getForegroundSystem();
 			drawSystem(fgSys, "fgSys");
 		}
 		
@@ -454,20 +453,24 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (showSettings) {
-			addPrimarySettingsMessages();
-		}
-		
 		if (MONITOR_FRAME_RATE) {
 			doMonitorCheck(backDrop, filter, bgSys, fgSys);
 		}
 		
-		if (showHelp) {
-			showHelp();
-		}
-		
 		if (transition != null) {
 			drawSystem(transition, "transition");
+		}
+		
+		if (messagesEnabled) {
+			drawSystem(getMessageSystem(), "messageSystem");
+		}
+		
+		if (showSettings) {
+			drawSettingsMessages();
+		}
+		
+		if (showHelp) {
+			showHelp();
 		}
 		
 		if (scrambleMode) {
@@ -517,7 +520,13 @@ public class Main extends PApplet {
 		}
 	}
 	
+	protected void prepareSettingsMessages() {
+		settingsMessages.clear();
+	}
+	
 	protected void addPrimarySettingsMessages() {
+		addSettingsMessage("---------System Settings-------");
+		addSettingsMessage("Messages Enabled: " + messagesEnabled);
 		addSettingsMessage("Transitions Enabled: " + transitionMode);
 		addSettingsMessage("Auto: " + autoMode);
 		addSettingsMessage("SnapMode: " + snapMode);
@@ -526,12 +535,13 @@ public class Main extends PApplet {
 		addSettingsMessage("Loc: " + getLocationSystem().getName());
 		addSettingsMessage("Frame rate: " + (int)frameRate);
 		addSettingsMessage("MouseXY:  " + mouseX + " " + mouseY);
-		drawSettingsMessages();
+		
+		addSettingsMessage(" ");
+		addSettingsMessage("---------Live Settings-------");
 	}
 
 	protected void drawSettingsMessages() {
 		drawText(settingsMessages);
-		settingsMessages.clear();
 	}
 
 	protected void drawText(List<String> msgs) {
@@ -606,5 +616,44 @@ public class Main extends PApplet {
 		
 		translate(width / 5, height / 5);
 		drawText(new ArrayList<String>(sortedMessages));
+	}
+	
+	protected void configureLogging()  {
+		LogManager logManager = LogManager.getLogManager();
+		logManager.reset();
+		try {
+			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
+			logManager.readConfiguration(configFile);
+			configFile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//Dump the loggers
+		if (DEBUG_LOG_CONFIG) {
+			Enumeration<String> loggerNames = logManager.getLoggerNames();
+			while (loggerNames.hasMoreElements()) {
+				debugLogger(logManager.getLogger(loggerNames.nextElement()));
+			}
+		}
+	}
+	
+	protected void debugLogger(Logger l) {
+		Level level = l.getLevel();
+		String name = l.getName();
+		System.out.println("name: " + name + " level: " + level);
+		
+		l = l.getParent();
+		int indent = 1;
+		while (l != null) {
+			for (int index = 0; index < indent; index++) {
+				System.out.print("   ");
+			}
+			level = l.getLevel();
+			name = l.getName();
+			System.out.println("name: " + name + " level: " + level);
+			l = l.getParent();
+			indent++;
+		}
 	}
 }
