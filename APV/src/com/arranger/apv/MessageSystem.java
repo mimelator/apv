@@ -1,10 +1,40 @@
 package com.arranger.apv;
 
+import java.util.logging.Logger;
+
+import com.arranger.apv.util.FrameFader;
+
 public abstract class MessageSystem extends ShapeSystem {
 
-	public MessageSystem(Main parent, ShapeFactory factory) {
-		super(parent, factory);
+	private static final Logger logger = Logger.getLogger(MessageSystem.class.getName());
+	
+	protected static final int DEFAULT_MESSAGE_DURATION_FRAMES = 100;
+	
+	protected FadingMessage fadingMessage;
+	
+	
+	public MessageSystem(Main parent) {
+		super(parent, null);
 	}
 
-
+	@Override
+	public void setup() {
+	}
+	
+	public void onNewMessage(String message) {
+		logger.info("starting message: " + message);
+		fadingMessage = new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), message);
+	}
+	
+	protected class FadingMessage {
+		
+		public FrameFader frameFader;
+		public String message;
+		
+		public FadingMessage(FrameFader frameFader, String message) {
+			frameFader.startFade();
+			this.frameFader = frameFader;
+			this.message = message;
+		}
+	}
 }

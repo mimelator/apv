@@ -88,7 +88,7 @@ public class Main extends PApplet {
 	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
-	private static final boolean USE_MESSAGES = true;
+	private static final boolean USE_MESSAGES = false;
 
 	//This is a tradeoff between performance and precision
 	private static final int BUFFER_SIZE = 512; //Default is 1024
@@ -417,6 +417,10 @@ public class Main extends PApplet {
 			transition = getTransitionSystem();
 			if (scrambleMode) {
 				transition.startTransition();
+				
+				if (messagesEnabled) {
+					getMessageSystem().onNewMessage(getForegroundSystem().getName());
+				}
 			}
 			
 			transition.onDrawStart();
