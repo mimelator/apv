@@ -7,6 +7,7 @@ import com.arranger.apv.util.MultiFrameSkipper;
 
 public class MultiFrameSkipperTest extends APVPluginTest {
 	private static final int FRAMES_TO_SKIP = 3;
+	private static final int FRAMES_TO_SKIP_RESET = 7;
 
 	/**
 	 * The multi frame skipper will only answer true to isNewFrame#every few frames
@@ -35,11 +36,25 @@ public class MultiFrameSkipperTest extends APVPluginTest {
 			}
 		}
 		assert(foundNewFrame);
+		
+		
+		//NEED TO TEST reset functionality
+		multiFrameSkipper.reset(FRAMES_TO_SKIP_RESET);
+		foundNewFrame = false;
+		for (int index = 0; index < FRAMES_TO_SKIP_RESET + 3; index++) {
+			debug("Skipping frame: " + parent.getFrameCount());
+			advanceFrame();
+			if (multiFrameSkipper.isNewFrame()) {
+				foundNewFrame = true;
+				break;
+			}
+		}
+		assert(foundNewFrame);
 	}
 
 	@Override
 	protected void setFrameIndexes() {
 		this.frameIndexStart = 1;
-		this.frameIndexEnd = 5;
+		this.frameIndexEnd = 40;
 	}
 }

@@ -8,7 +8,7 @@ import com.arranger.apv.Main;
  * This class is very stateful, and shouldn't be shared by any other client
  */
 public class SingleFrameSkipper extends APVPlugin {
-	private int lastPulseFrameSkipped = -1;
+	protected int lastPulseFrameSkipped = -1;
 	
 	public SingleFrameSkipper(Main parent) {
 		super(parent);

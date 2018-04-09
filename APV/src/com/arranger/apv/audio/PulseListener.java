@@ -54,6 +54,10 @@ public class PulseListener extends APVPlugin {
 	}
 	
 	public float getPctPulse() {
+		if (frameSkipper == null) {
+			return 0.0f;
+		}
+		
 		logger.fine("frameCount: " + parent.getFrameCount());
 		
 		float result = 0f;
@@ -101,7 +105,14 @@ public class PulseListener extends APVPlugin {
 	}
 	
 	private void newPulse() {
-		frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
-		frameFader.startFade();
+		if (frameSkipper != null) {
+			frameSkipper.reset(pulsesToSkip);
+		} else {
+			frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
+		}
+		
+		if (frameFader != null) {
+			frameFader.startFade();
+		}
 	}
 }

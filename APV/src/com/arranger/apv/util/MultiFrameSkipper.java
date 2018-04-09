@@ -23,4 +23,9 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 		boolean frameHasCycled = (frameCount % framesToSkip) == 0;
 		return newFrame && frameHasCycled;
 	}
+	
+	public void reset(int framesToSkip) {
+		lastPulseFrameSkipped = parent.getFrameCount();
+		this.framesToSkip = framesToSkip;
+	}
 }
