@@ -7,11 +7,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 
 import processing.core.PApplet;
@@ -19,8 +22,7 @@ import processing.event.KeyEvent;
 
 public class Perlin extends ControlSystem {
 	
-	//TODO: Execute new commands on Pulse
-	//TODO Show commands fired probaly in Main
+	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
 	private static final Character [] AUTO_CHAR_COMMANDS = {
 			Main.SPACE_BAR_KEY_CODE,
@@ -41,9 +43,9 @@ public class Perlin extends ControlSystem {
 			PApplet.LEFT,
 	};
 	
-	private static final float CHANCE_TO_WALK = .03f;
 	private static final int COMMAND_SIZE = 10;
-	private static final boolean DEBUG_LOOKUPS = false;
+	private static final int DEFAULT_PULSES_TO_SKIP = 2;
+	private PulseListener autoSkipPulseListener;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;
@@ -53,13 +55,22 @@ public class Perlin extends ControlSystem {
 	public Perlin(Main parent) {
 		super(parent);
 		resetLocator(1);
+		autoSkipPulseListener = new PulseListener(parent, DEFAULT_PULSES_TO_SKIP);
 		
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
 		cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode", event -> decWalker());
-		
+		cs.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in Perlin mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
+		cs.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in Perlin mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
 		
 		initializeCommandGrid();
+	}
+	
+	@Override
+	public void addSettingsMessages() {
+		parent.addSettingsMessage("   ---Walker Size: " + walker.getScale());
+		parent.addSettingsMessage("   ---Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
+		parent.addSettingsMessage("   ---Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());
 	}
 	
 	public void incWalker() {
@@ -81,7 +92,7 @@ public class Perlin extends ControlSystem {
 
 	@Override
 	public KeyEvent getNextCommand() {
-		if (parent.random(1) > CHANCE_TO_WALK) {
+		if (!autoSkipPulseListener.isNewPulse()) {
 			return null;
 		}
 		
@@ -94,11 +105,11 @@ public class Perlin extends ControlSystem {
 		int x = (int)currentPoint.getX() % COMMAND_SIZE;
 		int y = (int)currentPoint.getY() % COMMAND_SIZE;
 		
-		if (DEBUG_LOOKUPS) {
+		if (logger.isLoggable(Level.FINE)) {
 			DecimalFormat df2 = new DecimalFormat(".##");
 			String format = String.format("Looking for command at point [%1s,%2s] scaled to [%3d,%4d]", 
 					df2.format(currentPoint.getX()), df2.format(currentPoint.getY()), x, y);
-			System.out.println(format);
+			logger.fine(format);
 		}
 		
 		KeyEvent keyEvent = commandGrid[x][y];
@@ -144,17 +155,21 @@ public class Perlin extends ControlSystem {
 			}
 		}
 		
-		for (KeyEvent [] row : commandGrid) {
-			for (KeyEvent cmd : row) {
-				debugKeyEvent(cmd);
+		if (logger.isLoggable(Level.FINE)) {
+			for (KeyEvent [] row : commandGrid) {
+				for (KeyEvent cmd : row) {
+					debugKeyEvent(cmd);
+				}
 			}
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void debugKeyEvent(KeyEvent keyEvent) {
-		List<APVCommand> commandList = (List<APVCommand>)keyEvent.getNative();
-		System.out.println("Command: " + commandList.get(0).getName() + " [shift=" + keyEvent.isShiftDown() + "]");
+		if (logger.isLoggable(Level.FINE)) {
+			List<APVCommand> commandList = (List<APVCommand>)keyEvent.getNative();
+			logger.fine("Command: " + commandList.get(0).getName() + " [shift=" + keyEvent.isShiftDown() + "]");
+		}
 	}
 
 }

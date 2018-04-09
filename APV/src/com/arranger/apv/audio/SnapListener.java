@@ -1,5 +1,7 @@
 package com.arranger.apv.audio;
 
+import java.util.logging.Logger;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.FrameFader;
@@ -8,6 +10,8 @@ import com.arranger.apv.util.SingleFrameSkipper;
 import ddf.minim.analysis.BeatDetect;
 
 public class SnapListener extends APVPlugin {
+	
+	private static final Logger logger = Logger.getLogger(SnapListener.class.getName());
 
 	protected SingleFrameSkipper frameSkipper;
 	protected FrameFader frameFader;
@@ -52,7 +56,7 @@ public class SnapListener extends APVPlugin {
 		boolean range = fd.isRange(lower, size - 1, 1);
 		if (range) {
 			reset(framesToSkip);
-			System.out.println("Found a Snap at frame: " + parent.getFrameCount());
+			logger.info("Found a Snap at frame: " + parent.getFrameCount());
 		}
 		return range;
 	}
