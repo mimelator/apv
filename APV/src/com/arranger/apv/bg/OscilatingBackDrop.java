@@ -10,13 +10,20 @@ public class OscilatingBackDrop extends BackDropSystem {
 	private static final int SPEED_HIGH = 12;
 	private Color c1, c2;
 	private float oscSpeed;
+	private String displayName;
 
-	public OscilatingBackDrop(Main parent, Color c1, Color c2) {
+	public OscilatingBackDrop(Main parent, Color c1, Color c2, String displayName) {
 		super(parent);
 		this.c1 = c1;
 		this.c2 = c2;
+		this.displayName = displayName;
 		
 		oscSpeed = parent.random(SPEED_LOW, SPEED_HIGH);
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	@Override

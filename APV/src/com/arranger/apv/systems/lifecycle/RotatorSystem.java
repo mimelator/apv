@@ -8,14 +8,25 @@ import com.arranger.apv.ShapeFactory;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class RotSystem extends LifecycleSystem {
+public class RotatorSystem extends LifecycleSystem {
 
 	public static final int ROTATION_SPEED = 1;
 	
-	public RotSystem(Main parent, ShapeFactory factory, int numParticles) {
+	public RotatorSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
 	}
 	
+	
+	
+	/**
+	 * Delegate to the LocationSystem
+	 */
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + "[" + parent.getLocationSystem().getDisplayName() + "]";
+	}
+
+
 	@Override
 	protected LifecycleData createData() {
 		return new RotData();
@@ -36,7 +47,7 @@ public class RotSystem extends LifecycleSystem {
 		}
 
 		/**
-		 * {@link RotSystem#draw()}
+		 * {@link RotatorSystem#draw()}
 		 * 
 		 * Resets the matrix of the shape each time
 		 */

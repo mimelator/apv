@@ -47,7 +47,7 @@ import com.arranger.apv.loc.PerlinNoiseWalker;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
-import com.arranger.apv.systems.lifecycle.RotSystem;
+import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.GridShapeSystem;
@@ -332,25 +332,25 @@ public class Main extends PApplet {
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
 			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));			
 			foregroundSystems.add(new StarWebSystem(this));
-			foregroundSystems.add(new RotSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
-			foregroundSystems.add(new RotSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
+			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
 			foregroundSystems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
 		}
 		
 		if (USE_BACKDROP) {
-			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK, "[White,Black]"));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
 			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES / 2, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker()));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE, "[Black,White]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK, "[Green,Black]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker(), "[Black,DarkRed]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE, "[Black,Blue]"));
 			backDropSystems.add(new BackDropSystem(this));
 			backDropSystems.add(new RefreshBackDrop(this,.95f));
 			backDropSystems.add(new BlurBackDrop(this));

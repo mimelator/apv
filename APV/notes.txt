@@ -1,13 +1,5 @@
 BRANCH: name-the-branch
 
-(DONE) 1) create GetDisplayName and make sure every class name has a special new name.
-	No need to change the name of the classes
-	Get a reasonable initial StandardMessage.
-
-(DONE) 2) Enable switching of fgSys, bgSys, etc at runtime
-
-(DONE) 3) Parameterize the pulse listeneing ratio at runtime
-
 4) New Message Types:
 	Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
 		Fix bug w/Pulse Listener

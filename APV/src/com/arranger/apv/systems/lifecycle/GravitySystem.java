@@ -31,6 +31,13 @@ public class GravitySystem extends LifecycleSystem {
 		return new GravityData();
 	}
 
+	/**
+	 * Delegate to the LocationSystem
+	 */
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + "[" + parent.getLocationSystem().getDisplayName() + "]";
+	}
 
 	protected class GravityData extends LifecycleData {
 		private static final int HIGH_SPEED_RANGE = 4;

@@ -22,7 +22,7 @@ public abstract class MessageSystem extends ShapeSystem {
 	}
 	
 	public void onNewMessage(String[] messages) {
-		logger.info("starting message: " + messages);
+		logger.fine(String.join(",", messages));
 		fadingMessage = new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), messages);
 	}
 	
