@@ -41,7 +41,7 @@ public class Auto extends ControlSystem {
 	@Override
 	public KeyEvent getNextCommand() {
 		if (autoSkipPulseListener.isNewPulse()) {
-			return createKeyEvent(Main.SPACE_BAR_KEY_CODE);
+			return createScramble();
 		} else {
 			return null;
 		}

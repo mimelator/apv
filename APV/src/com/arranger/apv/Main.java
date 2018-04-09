@@ -43,7 +43,7 @@ import com.arranger.apv.filter.PulseShakeFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
-import com.arranger.apv.loc.PerlinNoiseWalker;
+import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
@@ -312,7 +312,7 @@ public class Main extends PApplet {
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 		
-		locationSystems.add(new PerlinNoiseWalker(this));
+		locationSystems.add(new PerlinNoiseWalkerLocationSystem(this));
 		locationSystems.add(new MouseLocationSystem(this));
 		locationSystems.add(new CircularLocationSystem(this, false));
 		locationSystems.add(new CircularLocationSystem(this, true));
@@ -334,25 +334,25 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-//			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-//			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
+			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
+			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
-//			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
-//			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
-//			backgroundSystems.add(new AttractorSystem(this));
-//			backgroundSystems.add(new LightWormSystem(this));
-//			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
-//			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
-//			backgroundSystems.add(new GridShapeSystem(this));
-//			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
-//			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
-//			backgroundSystems.add(new ShowerSystem(this));
-//			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
-//			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
-//			backgroundSystems.add(new LightWormSystem(this));
-//			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
-//			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
-//			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
+			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
+			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
+			backgroundSystems.add(new AttractorSystem(this));
+			backgroundSystems.add(new LightWormSystem(this));
+			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
+			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
+			backgroundSystems.add(new GridShapeSystem(this));
+			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
+			backgroundSystems.add(new ShowerSystem(this));
+			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
+			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
+			backgroundSystems.add(new LightWormSystem(this));
+			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
+			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
 		}
 		
 		if (USE_FG) {
@@ -587,6 +587,12 @@ public class Main extends PApplet {
 		addSettingsMessage("MouseXY:  " + mouseX + " " + mouseY);
 		addSettingsMessage("Mode: " + currentControlMode.name());
 		getControlSystem().addSettingsMessages();
+		
+		//Last Command
+		APVCommand lastCommand = getCommandSystem().getLastCommand();
+		if (lastCommand != null) {
+			addSettingsMessage("Last Command: " + lastCommand.getName());
+		}
 		
 		addSettingsMessage(" ");
 		addSettingsMessage("---------Live Settings-------");

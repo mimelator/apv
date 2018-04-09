@@ -12,6 +12,8 @@ public class CommandSystem extends APVPlugin {
 	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
 	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
 	
+	private APVCommand lastCommand; 
+	
 	@FunctionalInterface
 	public static interface IVisitor {
 		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
@@ -29,7 +31,7 @@ public class CommandSystem extends APVPlugin {
 		super(parent);
 		parent.registerMethod("keyEvent", this);
 	}
-
+	
 	public void registerCommand(int key, String name, String helpText, CommandHandler handler) {
 		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
 		List<APVCommand> list = keyCommands.get(key);
@@ -58,8 +60,9 @@ public class CommandSystem extends APVPlugin {
 				list = charCommands.get(Character.toLowerCase(keyEvent.getKey()));
 			}
 			
-			if (list != null) {
+			if (list != null  && !list.isEmpty()) {
 				list.forEach(c -> c.handler.onKeyPressed(keyEvent));
+				lastCommand = list.get(0);
 			}
 		}
 	}
@@ -69,6 +72,18 @@ public class CommandSystem extends APVPlugin {
 		public void onKeyPressed(KeyEvent event);
 	}
 	
+	public Map<Integer, List<APVCommand>> getKeyCommands() {
+		return keyCommands;
+	}
+
+	public Map<Character, List<APVCommand>> getCharCommands() {
+		return charCommands;
+	}
+
+	public APVCommand getLastCommand() {
+		return lastCommand;
+	}
+
 	public static class APVCommand {
 		
 		private CommandHandler handler;
