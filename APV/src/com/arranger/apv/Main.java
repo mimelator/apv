@@ -60,7 +60,9 @@ import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 import com.arranger.apv.transition.Fade;
+import com.arranger.apv.transition.Shrink;
 import com.arranger.apv.transition.Swipe;
+import com.arranger.apv.transition.Twirl;
 import com.arranger.apv.util.Monitor;
 
 import processing.core.PApplet;
@@ -102,7 +104,6 @@ public class Main extends PApplet {
 	
 	//Some default Monitoring params.  Probably don't need to change
 	private static final boolean MONITOR_FRAME_RATE = true;
-
 	private static final boolean DEBUG_LOG_CONFIG = false;
 	
 	public static class EmptyShapeFactory extends ShapeFactory {
@@ -401,6 +402,8 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_TRANSITIONS) {
+			transitionSystems.add(new Twirl(this, transitionFrames));
+			transitionSystems.add(new Shrink(this, transitionFrames));
 			transitionSystems.add(new Fade(this, transitionFrames));
 			transitionSystems.add(new Swipe(this, transitionFrames));
 		}
@@ -432,17 +435,17 @@ public class Main extends PApplet {
 	
 	public void scramble() {
 		scrambleMode = true;
+		transitionIndex += random(transitionSystems.size() - 1); //switch transitions now
 	}
 	
 	protected void doScramble() {
-		//mess it all up
+		//mess it all up, but transitions were already scrambled
 		foregroundIndex += random(foregroundSystems.size() - 1);
 		backgroundIndex += random(backgroundSystems.size() - 1);
 		backDropIndex += random(backDropSystems.size() - 1);
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		//transitionIndex += random(transitionSystems.size() - 1); //can't scramble the transitions.  Don't do it
 		
 		//send out a cool message about the new system
 		if (messagesEnabled && USE_FG && USE_BG) {

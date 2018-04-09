@@ -1,7 +1,6 @@
-BRANCH: master
+BRANCH: quick-refactor
 
-Right now, I have a lot of swtiches.  It might be nice if i had a common system for these switches.
-	eg: Auto, Snap, FgSys, BgSys, filtersEnabled, messagesEnabled, etc..
+
 
 3) New Transition Types
 
@@ -10,6 +9,7 @@ Right now, I have a lot of swtiches.  It might be nice if i had a common system 
 	* https://www.openprocessing.org/sketch/430300
 	* https://www.openprocessing.org/sketch/166952
 
+5) Unit test for Main.oscillate
 
 *****************************************************************************
 TODO: 
@@ -21,6 +21,7 @@ TODO:
 * Stereo Listener
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?
+* Switch Refactoring for all the boolean flags in Main
 *****************************************************************************
 		
 		

@@ -11,6 +11,8 @@ public class Swipe extends TransitionSystem {
 
 	@Override
 	public void doTransition(float pct) {
+		doStandardFade(pct);
+		
 		pct = 1 - pct;
 		parent.image(savedImage, pct * parent.width, pct * parent.height);
 	}

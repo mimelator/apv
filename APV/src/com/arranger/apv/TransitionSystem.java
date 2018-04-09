@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.util.FrameFader;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
 /**
@@ -17,6 +18,8 @@ import processing.core.PImage;
  */
 public abstract class TransitionSystem extends ShapeSystem {
 	
+	private static final int INITIAL_ALPHA_FOR_FADE = 90;
+	
 	private static final Logger logger = Logger.getLogger(TransitionSystem.class.getName());
 	
 	protected FrameFader frameFader;
@@ -28,6 +31,10 @@ public abstract class TransitionSystem extends ShapeSystem {
 		frameFader = new FrameFader(parent, fadesToTransition);
 	}
 	
+	/**
+	 * Pct will decrease from 1.0f to 0 
+	 * @see FrameFader#getFadePct()
+	 */
 	public abstract void doTransition(float pct);
 	
 	public void onDrawStart() {
@@ -83,5 +90,15 @@ public abstract class TransitionSystem extends ShapeSystem {
 	public void startTransition() {
 		frameFader.startFade();
 		captureCurrentImage();
+	}
+	
+	protected float getAlapha(float pct) {
+		float alpha = PApplet.lerp(0, INITIAL_ALPHA_FOR_FADE, pct);
+		return alpha;
+	}
+	
+	protected void doStandardFade(float pct) {
+		float alpha = getAlapha(pct);
+		parent.tint(255, alpha);  // Display at half opacity
 	}
 }

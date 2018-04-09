@@ -64,6 +64,8 @@ public class FrameFader extends APVPlugin {
 	 * At that point, the further away the frameCount advances the 
 	 * smaller the returned percentage will be until 0.
 	 * 
+	 * Note that when {@link #isFadeNew()} == TRUE, then fadePct will return {@link #IS_NEW_FRAME_SIGNAL} 
+	 * 
 	 * 1/10th into the fade pct returns 90%
 	 * @return
 	 */
