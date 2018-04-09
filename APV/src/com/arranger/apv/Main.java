@@ -148,12 +148,16 @@ public class Main extends PApplet {
 	
 	//Auto system
 	private SnapListener snapListener;
-	private PulseListener pulseListener;
+	private PulseListener autoSkipPulseListener;
 	private SingleFrameSkipper frameSkipper;
 	private boolean autoMode = AUTO_MODE;
 	private boolean snapMode = SNAP_MODE;
 	private boolean transitionMode = USE_TRANSITIONS;
 	private boolean messagesEnabled = USE_MESSAGES;
+	private boolean fgSysEnabled = USE_FG;
+	private boolean bgSysEnabled = USE_BG;
+	private boolean bDropEnabled = USE_BACKDROP;
+	private boolean filtersEnabled = USE_FILTERS;
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
@@ -271,6 +275,13 @@ public class Main extends PApplet {
 		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
 		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
 		commandSystem.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
+		commandSystem.registerCommand('1', "Enable Foregrond", "Toggles between using foregrounds", event -> fgSysEnabled = !fgSysEnabled);
+		commandSystem.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
+		commandSystem.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
+		commandSystem.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
+
+		commandSystem.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
+		commandSystem.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
 		
 		
 		gravity = new Gravity(this);
@@ -376,7 +387,7 @@ public class Main extends PApplet {
 		setupSystems(messageSystems);
 		
 		snapListener = new SnapListener(this, DEFAULT_FRAMES_TO_SKIP_FOR_SNAP);
-		pulseListener = new PulseListener(this, 1, DEFAULT_PULSES_TO_SKIP_FOR_AUTO);
+		autoSkipPulseListener = new PulseListener(this, 1, DEFAULT_PULSES_TO_SKIP_FOR_AUTO);
 		frameSkipper = new SingleFrameSkipper(this);
 		
 		//init background
@@ -402,8 +413,8 @@ public class Main extends PApplet {
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
 		//transitionIndex += random(transitionSystems.size() - 1); //can't scramble the transitions.  Don't do it
-		scrambleMode = false;
 		
+		//send out a cool message about the new system
 		if (messagesEnabled && USE_FG && USE_BG) {
 			getMessageSystem().onNewMessage(new String[] {
 												getBackDropSystem().getDisplayName(),
@@ -411,6 +422,9 @@ public class Main extends PApplet {
 												getBackgroundSystem().getDisplayName()
 					});
 		}
+		
+		//reset the flag
+		scrambleMode = false;
 	}
 	
 	public void draw() {
@@ -432,31 +446,31 @@ public class Main extends PApplet {
 		}
 		
 		BackDropSystem backDrop = null;
-		if (USE_BACKDROP) {
+		if (bDropEnabled) {
 			backDrop = getBackDropSystem();
 			drawSystem(backDrop, "backDrop");
 		}
 		
 		ShapeSystem bgSys = null;
-		if (USE_BG) {
+		if (bgSysEnabled) {
 			bgSys = getBackgroundSystem();
 			drawSystem(bgSys, "bgSys");
 		}
 		
 		Filter filter = null;
-		if (USE_FILTERS) {
+		if (filtersEnabled) {
 			filter = (Filter)getPlugin(filters, filterIndex);
 			addSettingsMessage("filter: " + filter.getName());
 			filter.preRender();
 		}
 		
 		ShapeSystem fgSys = null;
-		if (USE_FG) {
+		if (fgSysEnabled) {
 			fgSys = getForegroundSystem();
 			drawSystem(fgSys, "fgSys");
 		}
 		
-		if (USE_FILTERS) {
+		if (filtersEnabled) {
 			if (filter != null) {
 				filter.postRender();
 			}
@@ -493,8 +507,9 @@ public class Main extends PApplet {
 		boolean newFrame = frameSkipper.isNewFrame();
 		boolean snap = snapListener.isSnap();
 		if (snapMode && snap && newFrame) {  //listen for loud POPs!
+			//TODO: This is not consitent.  See PulseListener increment/decrement
 			scramble();
-		} else if (autoMode && newFrame && pulseListener.isNewPulse()) {
+		} else if (autoMode && newFrame && autoSkipPulseListener.isNewPulse()) {
 			scramble();
 		}
 	}
@@ -538,6 +553,8 @@ public class Main extends PApplet {
 		addSettingsMessage("Messages Enabled: " + messagesEnabled);
 		addSettingsMessage("Transitions Enabled: " + transitionMode);
 		addSettingsMessage("Auto: " + autoMode);
+		addSettingsMessage("Auto Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
+		addSettingsMessage("Auto Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());
 		addSettingsMessage("SnapMode: " + snapMode);
 		addSettingsMessage("Audio: " + getAudio().getScaleFactor());
 		addSettingsMessage("Color: " + getColorSystem().getName());

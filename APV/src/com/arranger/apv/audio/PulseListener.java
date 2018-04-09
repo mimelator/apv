@@ -6,7 +6,6 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.FrameFader;
 import com.arranger.apv.util.MultiFrameSkipper;
-import com.arranger.apv.util.SingleFrameSkipper;
 
 import ddf.minim.analysis.BeatDetect;
 
@@ -23,8 +22,9 @@ public class PulseListener extends APVPlugin {
 	private BeatDetect pulseDetector;
 	private int pulsesToSkip = DEFAULT_PULSES_TO_SKIP;
 	private int currentPulseSkipped;
-	private SingleFrameSkipper frameSkipper;
+	private MultiFrameSkipper frameSkipper;
 	private FrameFader frameFader;
+	
 	
 	public PulseListener(Main parent) {
 		this(parent, DEFAULT_FADE_OUT_FRAMES, DEFAULT_PULSES_TO_SKIP);
@@ -37,8 +37,8 @@ public class PulseListener extends APVPlugin {
 		
 		//need to trigger the frameFader when ever the pulseDetector returns true
 		frameFader = new FrameFader(parent, fadeOutFrames);
-		frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
 		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
+		newPulse();
 	}
 	
 	public boolean isPulse() {
@@ -82,11 +82,26 @@ public class PulseListener extends APVPlugin {
 		return result;
 	}
 	
+	public void incrementPulsesToSkip() {
+		pulsesToSkip++;
+		newPulse();
+	}
+	
+	public void deccrementPulsesToSkip() {
+		pulsesToSkip--;
+		newPulse();
+	}
+	
 	public int getPulsesToSkip() {
 		return pulsesToSkip;
 	}
 
 	public int getCurrentPulseSkipped() {
 		return currentPulseSkipped;
+	}
+	
+	private void newPulse() {
+		frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
+		frameFader.startFade();
 	}
 }
