@@ -1,19 +1,15 @@
 package com.arranger.apv.msg;
 
-import java.awt.Color;
 import java.util.logging.Logger;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.MessageSystem;
 import com.arranger.apv.util.FrameFader;
 
-import processing.core.PApplet;
-
 public class StandardMessage extends MessageSystem {
 
 	private static final Logger logger = Logger.getLogger(StandardMessage.class.getName());
 	
-	private static final int MAX_ALPHA = 255;
 	private static final int START_TEXT_SIZE = 50;
 	private static final int STROKE_WEIGHT = 5;
 	private static final int TEXT_OFFSET = 200;
@@ -32,42 +28,25 @@ public class StandardMessage extends MessageSystem {
 	}
 	
 	@Override
-	public void draw() {
-		logger.fine("frame: " + parent.getFrameCount());
-		
-		if (fadingMessage == null) {
-			return;
-		} 
-		
-		FrameFader frameFader = fadingMessage.frameFader;
-		String[] messages = fadingMessage.messages;
-		String joinMessages = String.join(",", messages);
-		if (!frameFader.isFadeActive()) {
-			logger.info("finished transition for: " + joinMessages);
-			fadingMessage = null;
-			return;
-		}
+	public void _draw(FadingMessage fadingMessage) {
 		
 		parent.strokeWeight(STROKE_WEIGHT);
 		parent.textAlign(CENTER, CENTER);
 		
-		float fadePct = frameFader.isFadeNew() ? 1 : frameFader.getFadePct();
+		FrameFader frameFader = fadingMessage.frameFader;
+		float fadePct = frameFader.getFadePct();
 		logger.info("fadePct: " + fadePct);
 		
 		float tempTextSize = textSize + (sizeMultiplier / fadePct);
 		parent.textSize(tempTextSize);
 		
-		Color textColor = parent.getColorSystem().getCurrentColor();
-		float alpha = PApplet.lerp(0, MAX_ALPHA, 1 - fadePct);
-		parent.fill(textColor.getRGB(), alpha);
+		doStandardFade(parent.getColorSystem().getCurrentColor(), fadePct);
 		
-		printMessages();
-		
-		parent.addSettingsMessage("  --messages: " + joinMessages);
+		printMessages(fadingMessage);
 		parent.addSettingsMessage("  --textSize: " + textSize);
 	}
 
-	protected void printMessages() {
+	protected void printMessages(FadingMessage fadingMessage) {
 		int width = parent.width / 2;
 		
 		String[] messages = fadingMessage.messages;

@@ -69,6 +69,6 @@ public class MultiFrameSkipperTest extends APVPluginTest {
 	@Override
 	protected void setFrameIndexes() {
 		this.frameIndexStart = 1;
-		this.frameIndexEnd = 60;
+		this.frameIndexEnd = 90;
 	}
 }

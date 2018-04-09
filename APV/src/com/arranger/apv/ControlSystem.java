@@ -10,6 +10,16 @@ public abstract class ControlSystem extends APVPlugin {
 		public CONTROL_MODES getNext() {
 			return values()[(ordinal() + 1) % values().length];
 		}
+		
+		public CONTROL_MODES getPrevious() {
+			CONTROL_MODES[] values = values();
+			int index = ordinal();
+			if (index == 0) {
+				index = values[values.length - 1].ordinal();
+				index++;
+			}
+			return values[Math.abs((index + -1)) % values.length];
+		}
 	}
 
 	public ControlSystem(Main parent) {

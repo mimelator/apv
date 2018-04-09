@@ -13,7 +13,7 @@ import com.arranger.apv.Main;
  */
 public class FrameFader extends APVPlugin {
 	
-	private static final float IS_NEW_FRAME_SIGNAL = -1;
+	private static final float IS_NEW_FRAME_SIGNAL = 1;
 	
 	private int numFramesToFade;
 	private int lastFrame = 0;

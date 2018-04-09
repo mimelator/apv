@@ -45,12 +45,6 @@ public class PulseListener extends APVPlugin {
 		
 		logger.fine("frameCount: " + parent.getFrameCount());
 		
-		if (currentPulseSkipped >= pulsesToSkip) {
-			logger.info("  Exceeded pulses to Skip");
-			currentPulseSkipped = 0;
-			return true;
-		}
-		
 		boolean onset = pulseDetector.isOnset();
 		logger.fine("isOnset: " + onset);
 		if (onset) {

@@ -45,6 +45,7 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
+import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
@@ -285,7 +286,11 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
 		commandSystem.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
-	
+		commandSystem.registerCommand('e', "Message", "Cycles through the message systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
+		commandSystem.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+		
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
@@ -295,7 +300,7 @@ public class Main extends PApplet {
 		commandSystem.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
 		commandSystem.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
 		commandSystem.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
-		commandSystem.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes", event -> cycleMode());
+		
 		
 		commandSystem.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -409,6 +414,10 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_MESSAGES) {
+			messageSystems.add(new RandomMessage(this));
+			messageSystems.add(new StandardMessage(this));
+			messageSystems.add(new StandardMessage(this));
+			messageSystems.add(new StandardMessage(this));
 			messageSystems.add(new StandardMessage(this));
 		}
 		
@@ -423,8 +432,12 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB());
 	}
 	
-	protected void cycleMode() {
-		currentControlMode = getControlSystem().getControlMode().getNext();
+	protected void cycleMode(boolean advance) {
+		if (advance) {
+			currentControlMode = getControlSystem().getControlMode().getNext();
+		} else {
+			currentControlMode = getControlSystem().getControlMode().getPrevious();
+		}
 	}
 
 	protected void setupSystems(List<? extends ShapeSystem> systems) {
@@ -446,6 +459,7 @@ public class Main extends PApplet {
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
+		messageIndex += random(messageSystems.size() - 1);
 		
 		//send out a cool message about the new system
 		if (messagesEnabled && USE_FG && USE_BG) {
