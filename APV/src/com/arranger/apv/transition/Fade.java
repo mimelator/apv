@@ -9,8 +9,8 @@ public class Fade extends TransitionSystem {
 	
 	private static final int INITIAL_ALPHA_FOR_FADE = 90;
 
-	public Fade(Main parent) {
-		super(parent);
+	public Fade(Main parent, int fadesToTransition) {
+		super(parent, fadesToTransition);
 	}
 
 	@Override

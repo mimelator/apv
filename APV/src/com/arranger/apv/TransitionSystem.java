@@ -19,15 +19,13 @@ public abstract class TransitionSystem extends ShapeSystem {
 	
 	private static final Logger logger = Logger.getLogger(TransitionSystem.class.getName());
 	
-	private static final int DEFAULT_FRAMES_TO_FADE = 20;//30;
-	
 	protected FrameFader frameFader;
 	protected PImage savedImage;
 	protected int savedImageFrame;
 	
-	public TransitionSystem(Main parent) {
+	public TransitionSystem(Main parent, int fadesToTransition) {
 		super(parent, null);
-		frameFader = new FrameFader(parent, DEFAULT_FRAMES_TO_FADE);
+		frameFader = new FrameFader(parent, fadesToTransition);
 	}
 	
 	public abstract void doTransition(float pct);
@@ -36,11 +34,25 @@ public abstract class TransitionSystem extends ShapeSystem {
 		//Do nothing
 	}
 	
+	public void incrementTransitionFrames() {
+		int numFramesToFade = frameFader.getNumFramesToFade();
+		frameFader.setNumFramesToFade(numFramesToFade++);
+	}
+	
+	public void decrementTransitionFrames() {
+		int numFramesToFade = frameFader.getNumFramesToFade();
+		frameFader.setNumFramesToFade(numFramesToFade--);
+	}
+	
+	public int getTransitionFrames() {
+		return frameFader.getNumFramesToFade();
+	}
+	
 	@Override
 	public void setup() {
 		
 	}
-
+	
 	@Override
 	public void draw() {
 		onDrawStop();

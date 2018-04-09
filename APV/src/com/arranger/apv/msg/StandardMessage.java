@@ -40,8 +40,10 @@ public class StandardMessage extends MessageSystem {
 		} 
 		
 		FrameFader frameFader = fadingMessage.frameFader;
+		String[] messages = fadingMessage.messages;
+		String joinMessages = String.join(",", messages);
 		if (!frameFader.isFadeActive()) {
-			logger.info("finished transition for: " + fadingMessage.messages);
+			logger.info("finished transition for: " + joinMessages);
 			fadingMessage = null;
 			return;
 		}
@@ -61,7 +63,7 @@ public class StandardMessage extends MessageSystem {
 		
 		printMessages();
 		
-		parent.addSettingsMessage("  --message: " + fadingMessage.messages);
+		parent.addSettingsMessage("  --messages: " + joinMessages);
 		parent.addSettingsMessage("  --textSize: " + textSize);
 	}
 

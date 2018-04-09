@@ -69,6 +69,7 @@ import processing.core.PConstants;
 public class Main extends PApplet {
 	
 	//Change these during active development
+	private static final int DEFAULT_TRANSITION_FRAMES = 30;
 	private static final int DEFAULT_PULSES_TO_SKIP_FOR_AUTO = 16;
 	private static final int DEFAULT_FRAMES_TO_SKIP_FOR_SNAP = 10;
 	private static final int PLASMA_ALPHA_LOW = 120;
@@ -150,6 +151,7 @@ public class Main extends PApplet {
 	private SnapListener snapListener;
 	private PulseListener autoSkipPulseListener;
 	private SingleFrameSkipper frameSkipper;
+	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
 	private boolean autoMode = AUTO_MODE;
 	private boolean snapMode = SNAP_MODE;
 	private boolean transitionMode = USE_TRANSITIONS;
@@ -268,6 +270,7 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
 		commandSystem.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
+	
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
@@ -282,6 +285,19 @@ public class Main extends PApplet {
 
 		commandSystem.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
 		commandSystem.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
+		
+		commandSystem.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
+				(event) -> {
+					for (TransitionSystem sys : transitionSystems) {
+						sys.incrementTransitionFrames();
+					}
+				});
+		commandSystem.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
+				(event) -> {
+					for (TransitionSystem sys : transitionSystems) {
+						sys.decrementTransitionFrames();
+					}
+				});
 		
 		
 		gravity = new Gravity(this);
@@ -371,8 +387,8 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_TRANSITIONS) {
-			transitionSystems.add(new Fade(this));
-			transitionSystems.add(new Swipe(this));
+			transitionSystems.add(new Fade(this, transitionFrames));
+			transitionSystems.add(new Swipe(this, transitionFrames));
 		}
 		
 		if (USE_MESSAGES) {
@@ -552,6 +568,7 @@ public class Main extends PApplet {
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Messages Enabled: " + messagesEnabled);
 		addSettingsMessage("Transitions Enabled: " + transitionMode);
+		addSettingsMessage("Transitions Frames : " + getTransitionSystem().getTransitionFrames());
 		addSettingsMessage("Auto: " + autoMode);
 		addSettingsMessage("Auto Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
 		addSettingsMessage("Auto Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());

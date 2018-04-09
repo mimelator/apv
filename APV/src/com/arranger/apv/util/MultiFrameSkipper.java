@@ -21,7 +21,11 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 		boolean newFrame = super.isNewFrame();
 		int frameCount = parent.getFrameCount();
 		boolean frameHasCycled = (frameCount % framesToSkip) == 0;
-		return newFrame && frameHasCycled;
+		boolean b = newFrame && frameHasCycled;
+		if (b) {
+			reset(framesToSkip);
+		}
+		return b;
 	}
 	
 	public void reset(int framesToSkip) {

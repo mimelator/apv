@@ -5,8 +5,8 @@ import com.arranger.apv.TransitionSystem;
 
 public class Swipe extends TransitionSystem {
 
-	public Swipe(Main parent) {
-		super(parent);
+	public Swipe(Main parent, int fadesToTransition) {
+		super(parent, fadesToTransition);
 	}
 
 	@Override
