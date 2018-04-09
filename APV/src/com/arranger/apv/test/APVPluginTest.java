@@ -65,11 +65,20 @@ public abstract class APVPluginTest {
         BeatInfo beatInfo = Mockito.mock(BeatInfo.class);
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
         
+        //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
         when(audio.getBeatInfo()).thenReturn(beatInfo);
+        assert(parent.getAudio().getBeatInfo() != null);
+        
+        //mock pulse detector
         when(beatInfo.getPulseDetector()).thenReturn(beatDetect);
         when(beatDetect.isOnset()).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getPulseDetector() != null);
+        
+        //mock freq detector
+        when(beatInfo.getFreqDetector()).thenReturn(beatDetect);
+        when(beatDetect.isRange(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+        assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
     }
 
 	@AfterEach
@@ -88,6 +97,7 @@ public abstract class APVPluginTest {
 	 * increments the Frame Iterator
 	 */
 	protected void advanceFrame() {
+		debug("Advancing frame: " + parent.getFrameCount());
 		frameIterator.next();
 	}
     

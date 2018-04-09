@@ -27,26 +27,40 @@ public class MultiFrameSkipperTest extends APVPluginTest {
 		assert(multiFrameSkipper != null);
 		
 		boolean foundNewFrame = false;
-		for (int index = 0; index < 20 - 1; index++) {
-			debug("Skipping frame: " + parent.getFrameCount());
+		for (int index = 0; index < 20; index++) {
 			advanceFrame();
 			if (multiFrameSkipper.isNewFrame()) {
+				debug("Found new Frame");
 				foundNewFrame = true;
-				break;
+				
+				//This should only return true once / frame
+				boolean again = multiFrameSkipper.isNewFrame();
+				assert(!again);
+			} else {
+				//this should continue to return false during this frame
+				boolean again = multiFrameSkipper.isNewFrame();
+				assert(!again);
 			}
 		}
 		assert(foundNewFrame);
 		
-		
-		//NEED TO TEST reset functionality
+
+		debug("Testing Reset");
 		multiFrameSkipper.reset(FRAMES_TO_SKIP_RESET);
 		foundNewFrame = false;
-		for (int index = 0; index < FRAMES_TO_SKIP_RESET + 3; index++) {
-			debug("Skipping frame: " + parent.getFrameCount());
+		for (int index = 0; index < 40; index++) {
 			advanceFrame();
 			if (multiFrameSkipper.isNewFrame()) {
+				debug("Found new Frame");
 				foundNewFrame = true;
-				break;
+				
+				//This should only return true once / frame
+				boolean again = multiFrameSkipper.isNewFrame();
+				assert(!again);
+			} else {
+				//this should continue to return false during this frame
+				boolean again = multiFrameSkipper.isNewFrame();
+				assert(!again);
 			}
 		}
 		assert(foundNewFrame);
@@ -55,6 +69,6 @@ public class MultiFrameSkipperTest extends APVPluginTest {
 	@Override
 	protected void setFrameIndexes() {
 		this.frameIndexStart = 1;
-		this.frameIndexEnd = 40;
+		this.frameIndexEnd = 60;
 	}
 }

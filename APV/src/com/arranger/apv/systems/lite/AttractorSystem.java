@@ -69,7 +69,7 @@ public class AttractorSystem extends LiteShapeSystem {
 			shape = factory.createShape(null);
 		}
 		
-		pulseListener = new PulseListener(parent, 1, 8); 
+		pulseListener = new PulseListener(parent, 8); 
 		frameSkipper = new SingleFrameSkipper(parent);
 	}
 

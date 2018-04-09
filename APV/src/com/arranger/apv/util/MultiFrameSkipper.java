@@ -13,23 +13,36 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 	
 	public MultiFrameSkipper(Main parent, int framesToSkip) {
 		super(parent);
-		this.framesToSkip = framesToSkip;
+		reset(framesToSkip);
+	}
+	
+	public int getFramesToSkip() {
+		return framesToSkip;
 	}
 
 	@Override
 	public boolean isNewFrame() {
-		boolean newFrame = super.isNewFrame();
 		int frameCount = parent.getFrameCount();
 		boolean frameHasCycled = (frameCount % framesToSkip) == 0;
-		boolean b = newFrame && frameHasCycled;
-		if (b) {
-			reset(framesToSkip);
+		boolean newFrame = super.isNewFrame();
+		
+		if (frameCount - lastFrameSkipped > framesToSkip) {
+			if (frameHasCycled == false) {
+				//I don't think this should happen
+				throw new IllegalStateException();
+			}
 		}
-		return b;
+		
+		if (newFrame && frameHasCycled) {
+			reset(framesToSkip);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void reset(int framesToSkip) {
-		lastPulseFrameSkipped = parent.getFrameCount();
+		lastFrameSkipped = parent.getFrameCount();
 		this.framesToSkip = framesToSkip;
 	}
 }

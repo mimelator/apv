@@ -1,12 +1,25 @@
-BRANCH: name-the-branch
+BRANCH: perlin-commands-branch
+
+Use a Perlin noise function that wanders through the 2D space of commands.
+The commands should be spaced out so the wanderer nicely walks back and
+forth over consecutive commands
+	Could be influenced by an oscilator as well
+
+
+
+Right now, I have a lot of swtiches.  It might be nice if i had a common system for these switches.
+	eg: Auto, Snap, FgSys, BgSys, filtersEnabled, messagesEnabled, etc..
+	
+
+
+TODO: Fix PulseListener 
+
+
 
 4) New Message Types:
 	Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
 		Fix bug w/Pulse Listener
 			Scramble and increment don't reset the MultiFrameSkipper
-
-
-
 	* https://www.openprocessing.org/sketch/430300
 	* https://www.openprocessing.org/sketch/166952
 

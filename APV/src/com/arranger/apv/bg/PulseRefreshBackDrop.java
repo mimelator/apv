@@ -14,15 +14,15 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 		pulse = new PulseListener(parent);
 	}
 	
-	public PulseRefreshBackDrop(Main parent, int fadeOutFrames, int pulsesToSkip) {
+	public PulseRefreshBackDrop(Main parent, int pulsesToSkip) {
 		super(parent);
-		pulse = new PulseListener(parent, fadeOutFrames, pulsesToSkip);
+		pulse = new PulseListener(parent, pulsesToSkip);
 	}
 	
 	@Override
 	public void drawBackground() {
 		
-		if (pulse.isPulse()) {
+		if (pulse.isNewPulse()) {
 			parent.background(Color.BLACK.getRGB());
 		}
 		

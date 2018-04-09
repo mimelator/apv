@@ -21,7 +21,7 @@ public class Reverser extends APVPlugin {
 	public Reverser(Main parent, int numPulses) {
 		super(parent);
 		
-		pulseListener = new PulseListener(parent, 1, numPulses); //Direction Change every numPulses
+		pulseListener = new PulseListener(parent, numPulses); //Direction Change every numPulses
 		frameSkipper = new SingleFrameSkipper(parent);
 	}
 

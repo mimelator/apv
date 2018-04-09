@@ -2,15 +2,11 @@ package com.arranger.apv;
 
 import java.awt.Color;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -18,10 +14,10 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.audio.PulseListener;
-import com.arranger.apv.audio.SnapListener;
 import com.arranger.apv.bg.BackDropSystem;
 import com.arranger.apv.bg.BlurBackDrop;
 import com.arranger.apv.bg.OscilatingBackDrop;
@@ -31,6 +27,10 @@ import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.color.RandomColor;
+import com.arranger.apv.control.Auto;
+import com.arranger.apv.control.Manual;
+import com.arranger.apv.control.Perlin;
+import com.arranger.apv.control.Snap;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -61,17 +61,18 @@ import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 import com.arranger.apv.transition.Fade;
 import com.arranger.apv.transition.Swipe;
-import com.arranger.apv.util.SingleFrameSkipper;
+import com.arranger.apv.util.Monitor;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.event.KeyEvent;
 
 public class Main extends PApplet {
 	
+	private static final Logger logger = Logger.getLogger(Main.class.getName());
+	
 	//Change these during active development
 	private static final int DEFAULT_TRANSITION_FRAMES = 30;
-	private static final int DEFAULT_PULSES_TO_SKIP_FOR_AUTO = 16;
-	private static final int DEFAULT_FRAMES_TO_SKIP_FOR_SNAP = 10;
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	public static final String RENDERER = P2D;
@@ -85,8 +86,6 @@ public class Main extends PApplet {
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
 	private static final boolean FULL_SCREEN = true;
-	private static final boolean AUTO_MODE = true;
-	private static final boolean SNAP_MODE = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
 	private static final boolean USE_MESSAGES = true;
@@ -97,14 +96,13 @@ public class Main extends PApplet {
 
 	//Don't change the following values
 	private static final String CONFIG = "/config/log.properties";
-	private static final String SONG = "03 When Things Get Strange v10.mp3";
+	private static final String SONG = "";
 	private static final String SPRITE_PNG = "sprite.png";
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 	
 	//Some default Monitoring params.  Probably don't need to change
 	private static final boolean MONITOR_FRAME_RATE = true;
-	private static final int FRAME_RATE_THRESHOLD = 30;
-	private static final int MIN_THRESHOLD_ENTRIES = 3;
+
 	private static final boolean DEBUG_LOG_CONFIG = false;
 	
 	public static class EmptyShapeFactory extends ShapeFactory {
@@ -140,29 +138,24 @@ public class Main extends PApplet {
 	protected List<Filter> filters = new ArrayList<Filter>(); 
 	protected int filterIndex = 0;
 	
+	protected List<ControlSystem> controlSystems = new ArrayList<ControlSystem>();
+	protected CONTROL_MODES currentControlMode = CONTROL_MODES.AUTO;
+	
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
+	protected Monitor monitor;
 	protected boolean showHelp = true;
 	protected boolean showSettings = SHOW_SETTINGS;
 	protected boolean scrambleMode = true;	//this is a flag to signal to the TransitionSystem for #onDrawStart
 	
-	//Auto system
-	private SnapListener snapListener;
-	private PulseListener autoSkipPulseListener;
-	private SingleFrameSkipper frameSkipper;
 	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
-	private boolean autoMode = AUTO_MODE;
-	private boolean snapMode = SNAP_MODE;
 	private boolean transitionMode = USE_TRANSITIONS;
 	private boolean messagesEnabled = USE_MESSAGES;
 	private boolean fgSysEnabled = USE_FG;
 	private boolean bgSysEnabled = USE_BG;
 	private boolean bDropEnabled = USE_BACKDROP;
 	private boolean filtersEnabled = USE_FILTERS;
-	
-	private static final Logger logger = Logger.getLogger(Main.class.getName());
-	
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -186,6 +179,10 @@ public class Main extends PApplet {
 	
 	public CommandSystem getCommandSystem() {
 		return commandSystem;
+	}
+	
+	public Monitor getMonitor() {
+		return monitor;
 	}
 
 	public ColorSystem getColorSystem() {
@@ -214,14 +211,27 @@ public class Main extends PApplet {
 	
 	public LocationSystem getLocationSystem() {
 		LocationSystem ls = null;
+		ControlSystem cs = getControlSystem();
 		while (ls == null) {
 			ls = (LocationSystem)getPlugin(locationSystems, locationIndex);
-			if (autoMode  && ls instanceof MouseLocationSystem) {
+			if (!cs.allowsMouseLocation() && ls instanceof MouseLocationSystem) {
 				locationIndex++;
 				ls = null;
 			}
 		}
 		return ls;
+	}
+	
+	public ControlSystem getControlSystem() {
+		//there is probably a more efficient way to do this 
+		for (ControlSystem cs : controlSystems) {
+			if (cs.getControlMode() == currentControlMode) {
+				return cs;
+			}
+		}
+
+		logger.warning("Unable to find current control system: " + currentControlMode);
+		return null;
 	}
 	
 	private static final int TARGET_FRAME_RATE_FOR_OSC = 30;
@@ -249,6 +259,10 @@ public class Main extends PApplet {
 	public void setup() {
 		configureLogging();
 		
+		if (MONITOR_FRAME_RATE) {
+			monitor = new Monitor(this);
+		}
+		
 		commandSystem = new CommandSystem(this);
 		
 		//add commands
@@ -272,19 +286,15 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
 	
 		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> dumpMonitorInfo());
+		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
 		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		commandSystem.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
-		commandSystem.registerCommand('a', "Auto", "Toggles between full Auto mode", event -> autoMode = !autoMode);
-		commandSystem.registerCommand('s', "Snap", "Toggles between snap (pop the mic) scramble mode", event -> snapMode = !snapMode);
 		commandSystem.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
 		commandSystem.registerCommand('1', "Enable Foregrond", "Toggles between using foregrounds", event -> fgSysEnabled = !fgSysEnabled);
 		commandSystem.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
 		commandSystem.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
 		commandSystem.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
-
-		commandSystem.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
-		commandSystem.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in Auto mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
+		commandSystem.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes", event -> cycleMode());
 		
 		commandSystem.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -298,7 +308,6 @@ public class Main extends PApplet {
 						sys.decrementTransitionFrames();
 					}
 				});
-		
 		
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
@@ -314,31 +323,36 @@ public class Main extends PApplet {
 		colorSystems.add(new OscillatingColor(this));
 		colorSystems.add(new RandomColor(this));
 		
+		controlSystems.add(new Manual(this));
+		controlSystems.add(new Auto(this));
+		controlSystems.add(new Snap(this));
+		controlSystems.add(new Perlin(this));
+		
 		//Graphics hints
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
+//			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
+//			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
-			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
-			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
-			backgroundSystems.add(new AttractorSystem(this));
-			backgroundSystems.add(new LightWormSystem(this));
-			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
-			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
-			backgroundSystems.add(new GridShapeSystem(this));
-			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
-			backgroundSystems.add(new ShowerSystem(this));
-			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
-			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
-			backgroundSystems.add(new LightWormSystem(this));
-			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
-			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
+//			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
+//			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
+//			backgroundSystems.add(new AttractorSystem(this));
+//			backgroundSystems.add(new LightWormSystem(this));
+//			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
+//			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
+//			backgroundSystems.add(new GridShapeSystem(this));
+//			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
+//			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
+//			backgroundSystems.add(new ShowerSystem(this));
+//			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
+//			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
+//			backgroundSystems.add(new LightWormSystem(this));
+//			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
+//			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
+//			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
 		}
 		
 		if (USE_FG) {
@@ -362,7 +376,7 @@ public class Main extends PApplet {
 		if (USE_BACKDROP) {
 			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK, "[White,Black]"));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
-			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_FADE_OUT_FRAMES / 2, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
+			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE, "[Black,White]"));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK, "[Green,Black]"));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker(), "[Black,DarkRed]"));
@@ -398,16 +412,16 @@ public class Main extends PApplet {
 		setupSystems(foregroundSystems);
 		setupSystems(backgroundSystems);
 		setupSystems(backDropSystems);
-		//setupSystems(filters);  Filters get left out of the setup for now (they don't extends the SYstem)
 		setupSystems(transitionSystems);
 		setupSystems(messageSystems);
-		
-		snapListener = new SnapListener(this, DEFAULT_FRAMES_TO_SKIP_FOR_SNAP);
-		autoSkipPulseListener = new PulseListener(this, 1, DEFAULT_PULSES_TO_SKIP_FOR_AUTO);
-		frameSkipper = new SingleFrameSkipper(this);
+		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
 		
 		//init background
 		background(Color.BLACK.getRGB());
+	}
+	
+	protected void cycleMode() {
+		currentControlMode = getControlSystem().getControlMode().getNext();
 	}
 
 	protected void setupSystems(List<? extends ShapeSystem> systems) {
@@ -493,7 +507,7 @@ public class Main extends PApplet {
 		}
 		
 		if (MONITOR_FRAME_RATE) {
-			doMonitorCheck(backDrop, filter, bgSys, fgSys);
+			monitor.doMonitorCheck(backDrop, filter, bgSys, fgSys);
 		}
 		
 		if (transition != null) {
@@ -516,17 +530,14 @@ public class Main extends PApplet {
 			doScramble();
 		}
 		
-		checkAutoScramble();
+		runControlMode();
 	}
-
-	protected void checkAutoScramble() {
-		boolean newFrame = frameSkipper.isNewFrame();
-		boolean snap = snapListener.isSnap();
-		if (snapMode && snap && newFrame) {  //listen for loud POPs!
-			//TODO: This is not consitent.  See PulseListener increment/decrement
-			scramble();
-		} else if (autoMode && newFrame && autoSkipPulseListener.isNewPulse()) {
-			scramble();
+	
+	protected void runControlMode() {
+		ControlSystem cs = getControlSystem();
+		KeyEvent nextCommand = cs.getNextCommand();
+		if (nextCommand != null) {
+			getCommandSystem().keyEvent(nextCommand);
 		}
 	}
 
@@ -569,15 +580,13 @@ public class Main extends PApplet {
 		addSettingsMessage("Messages Enabled: " + messagesEnabled);
 		addSettingsMessage("Transitions Enabled: " + transitionMode);
 		addSettingsMessage("Transitions Frames : " + getTransitionSystem().getTransitionFrames());
-		addSettingsMessage("Auto: " + autoMode);
-		addSettingsMessage("Auto Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
-		addSettingsMessage("Auto Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());
-		addSettingsMessage("SnapMode: " + snapMode);
 		addSettingsMessage("Audio: " + getAudio().getScaleFactor());
 		addSettingsMessage("Color: " + getColorSystem().getName());
 		addSettingsMessage("Loc: " + getLocationSystem().getName());
 		addSettingsMessage("Frame rate: " + (int)frameRate);
 		addSettingsMessage("MouseXY:  " + mouseX + " " + mouseY);
+		addSettingsMessage("Mode: " + currentControlMode.name());
+		getControlSystem().addSettingsMessages();
 		
 		addSettingsMessage(" ");
 		addSettingsMessage("---------Live Settings-------");
@@ -596,46 +605,6 @@ public class Main extends PApplet {
 		for (String s : msgs) {
 			text(s, TEXT_INDEX, offset);
 			offset += TEXT_SIZE;
-		}
-	}
-	
-	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
-	private static DecimalFormat decFormat = new DecimalFormat(".##");
-	
-	private void doMonitorCheck(APVPlugin backDrop, 
-								APVPlugin filter, 
-								APVPlugin bg, 
-								APVPlugin fg) {
-		if (frameRate < FRAME_RATE_THRESHOLD) {
-			//This is an ugly way to build a key
-			StringBuilder builder = new StringBuilder();
-			builder.append((backDrop != null) ? backDrop.getName() : "()").append(':'); 
-			builder.append((filter != null) ? filter.getName() : "()").append(':');
-			builder.append((bg != null) ? bg.getName() : "()").append(':');
-			builder.append((fg != null) ? fg.getName() : "()");
-			String key = builder.toString();
-			
-			List<Float> frames = monitorRecords.get(key);
-			if (frames == null) {
-				frames = new ArrayList<Float>();
-				monitorRecords.put(key, frames);
-			}
-			
-			frames.add(frameRate);
-		}
-	}
-	
-	private void dumpMonitorInfo() {
-		System.out.println("name, numEntries, avgTime");
-		for (Map.Entry<String, List<Float>> entry : monitorRecords.entrySet()) {
-			List<Float> counts = entry.getValue();
-			if (counts.size() < MIN_THRESHOLD_ENTRIES) {
-				continue;
-			}
-			
-			//get the average
-			OptionalDouble average = counts.stream().mapToDouble(a -> a).average();
-			System.out.println(entry.getKey() + "," + counts.size() + "," + decFormat.format(average.getAsDouble()));
 		}
 	}
 	
