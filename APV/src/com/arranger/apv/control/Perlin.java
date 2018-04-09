@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
-import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
@@ -20,7 +19,7 @@ import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 
-public class Perlin extends ControlSystem {
+public class Perlin extends PulseListeningControlSystem {
 	
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
@@ -45,12 +44,9 @@ public class Perlin extends ControlSystem {
 	
 	private static final int COMMAND_SIZE = 10;
 	private static final int DEFAULT_PULSES_TO_SKIP = 2;
-	private PulseListener autoSkipPulseListener;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;
-	
-	
 	
 	public Perlin(Main parent) {
 		super(parent);
@@ -60,42 +56,21 @@ public class Perlin extends ControlSystem {
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
 		cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode", event -> decWalker());
-		cs.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in Perlin mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
-		cs.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in Perlin mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
-		
-		initializeCommandGrid();
 	}
 	
 	@Override
 	public void addSettingsMessages() {
 		parent.addSettingsMessage("   ---Walker Size: " + walker.getScale());
-		parent.addSettingsMessage("   ---Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
-		parent.addSettingsMessage("   ---Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());
+		super.addSettingsMessages();
 	}
 	
-	public void incWalker() {
-		resetLocator(walker.getScale() + 1);
-	}
-	
-	public void decWalker() {
-		resetLocator(walker.getScale() - 1);
-	}
-	
-	protected void resetLocator(int scale) {
-		walker = new PerlinNoiseWalkerLocationSystem(parent, scale);
+	@Override
+	protected int getDefaultPulsesToSkip() {
+		return DEFAULT_PULSES_TO_SKIP;
 	}
 
 	@Override
-	public CONTROL_MODES getControlMode() {
-		return CONTROL_MODES.PERLIN;
-	}
-
-	@Override
-	public KeyEvent getNextCommand() {
-		if (!autoSkipPulseListener.isNewPulse()) {
-			return null;
-		}
-		
+	protected KeyEvent _getNextCommand() {
 		if (commandGrid == null) {
 			initializeCommandGrid();
 		}
@@ -116,7 +91,24 @@ public class Perlin extends ControlSystem {
 		debugKeyEvent(keyEvent);
 		return keyEvent;
 	}
+
+	public void incWalker() {
+		resetLocator(walker.getScale() + 1);
+	}
 	
+	public void decWalker() {
+		resetLocator(walker.getScale() - 1);
+	}
+	
+	protected void resetLocator(int scale) {
+		walker = new PerlinNoiseWalkerLocationSystem(parent, scale);
+	}
+
+	@Override
+	public CONTROL_MODES getControlMode() {
+		return CONTROL_MODES.PERLIN;
+	}
+
 	protected void initializeCommandGrid() {
 		commandGrid = new KeyEvent[COMMAND_SIZE][COMMAND_SIZE];
 		
