@@ -412,32 +412,6 @@ public class Main extends PApplet {
 	protected void initializeCommands() {
 		CommandSystem cs = commandSystem;
 		
-		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
-				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
-		cs.registerCommand('b', "Background", "Cycles through the background systems", 
-				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
-		cs.registerCommand('o', "Backdrop", "Cycles through the backdrop systems", 
-				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
-		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
-				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
-		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
-				(event) -> { foregroundIndex--; backgroundIndex--; backDropIndex--;});
-		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
-		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
-		cs.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
-		cs.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
-		cs.registerCommand('e', "Message", "Cycles through the message systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
-		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
-		
-		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
-		
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
 		
@@ -447,6 +421,55 @@ public class Main extends PApplet {
 		registerSwitchCommand(filtersSwitch, '4');
 		registerSwitchCommand(messagesSwitch, '5');
 		registerSwitchCommand(transitionSwitch, '6');
+		
+		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
+				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
+		cs.registerCommand('b', "Background", "Cycles through the background systems", 
+				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
+		cs.registerCommand('o', "Backdrop", "Cycles through the backdrop systems", 
+				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
+		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
+		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
+		cs.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
+		cs.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
+		cs.registerCommand('m', "Message", "Cycles through the message systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
+		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+		
+		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
+		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		
+		//More complex event handlers
+		
+		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
+				(event) -> {
+					if (!foreGroundSwitch.isFrozen()) {
+						foregroundIndex++; 
+					}
+					if (!backGroundSwitch.isFrozen()) {
+						backgroundIndex++; 
+					}
+					if (!backDropSwitch.isFrozen()) {
+						backDropIndex++;
+					}
+					});
+		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
+				(event) -> { 
+					if (!foreGroundSwitch.isFrozen()) {
+						foregroundIndex--; 
+					}
+					if (!backGroundSwitch.isFrozen()) {
+						backgroundIndex--; 
+					}
+					if (!backDropSwitch.isFrozen()) {
+						backDropIndex--;
+					}
+					});
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
