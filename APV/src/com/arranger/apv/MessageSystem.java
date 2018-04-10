@@ -11,7 +11,7 @@ public abstract class MessageSystem extends ShapeSystem {
 
 	private static final Logger logger = Logger.getLogger(MessageSystem.class.getName());
 	protected static final int DEFAULT_MESSAGE_DURATION_FRAMES = 100;
-	private static final int MAX_ALPHA = 255;
+	
 	
 	private FadingMessage fadingMessage;
 	
@@ -66,7 +66,7 @@ public abstract class MessageSystem extends ShapeSystem {
 	}
 	
 	protected float getAlapha(float pct) {
-		float alpha = PApplet.lerp(0, MAX_ALPHA, pct);
+		float alpha = PApplet.lerp(0, Main.MAX_ALPHA, pct);
 		return alpha;
 	}
 	

@@ -30,6 +30,7 @@ import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.factories.StarFactory;
 import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
@@ -41,9 +42,10 @@ import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.msg.CircularMessage;
 import com.arranger.apv.msg.LocationMessage;
 import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
-import com.arranger.apv.pl.SimplePulseListener;
 import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
+import com.arranger.apv.pl.SimplePL;
+import com.arranger.apv.pl.StarPL;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -78,6 +80,8 @@ public class Main extends PApplet {
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	//Change these during active development
+	public static final int MAX_ALPHA = 255;
+	
 	private static final int DEFAULT_TRANSITION_FRAMES = 30;
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
@@ -133,7 +137,7 @@ public class Main extends PApplet {
 	protected int filterIndex = 0;
 	
 	protected List<ControlSystem> controlSystems = new ArrayList<ControlSystem>();
-	protected CONTROL_MODES currentControlMode = CONTROL_MODES.AUTO;
+	protected CONTROL_MODES currentControlMode = CONTROL_MODES.MANUAL;
 	
 	//Useful helper classes
 	protected CommandSystem commandSystem;
@@ -350,6 +354,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
+			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f)));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
@@ -419,7 +424,8 @@ public class Main extends PApplet {
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
 		
 		//listeners
-		new SimplePulseListener(this);
+		new SimplePL(this);
+		new StarPL(this);
 		
 		//init background
 		background(Color.BLACK.getRGB());

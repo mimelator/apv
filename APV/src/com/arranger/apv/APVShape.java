@@ -47,6 +47,10 @@ public abstract class APVShape {
 		getShape().setFill(color);
 	}
 	
+	public void setColor(int color, float alpha) {
+		getShape().setFill(parent.color(color, alpha));
+	}
+	
 	public void centerShape() {
 		getShape().translate(parent.height / 2, parent.width / 2); 
 	}

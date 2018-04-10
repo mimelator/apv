@@ -12,6 +12,8 @@ import processing.core.PVector;
 
 /**
  * https://www.openprocessing.org/sketch/147466
+ * 
+ * I'd like to see some alpha
  */
 public class StarWebSystem extends LiteCycleShapeSystem {
 
@@ -90,6 +92,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		int dir, d = BALL_CONNECTION_DISTANCE;
 		Color ballColor;
 		Color lineColor;
+		int alpha;
 		APVShape factoryShape;
 		
 		private Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
@@ -119,6 +122,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		private void resetColor() {
 			ballColor = parent.getColorSystem().getCurrentColor();
 			lineColor = parent.getColorSystem().getCurrentColor();
+			alpha = (int)parent.random(Main.MAX_ALPHA);
 		}
 
 		@Override
@@ -141,7 +145,9 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 					
 					parent.rectMode(CENTER);
 					parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
-					factoryShape.setColor(ballColor.getRGB());
+					//drawShape.setStroke(FACTORY_SHAPE_STROKE_WEIGHT);
+					drawShape.setFill(true);
+					factoryShape.setColor(ballColor.getRGB(), alpha);
 					
 					parent.shape(drawShape, 
 							loc.x - (drawShape.width / 2), 
