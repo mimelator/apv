@@ -21,6 +21,11 @@ public class Switch extends APVPlugin {
 
 	@Override
 	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDisplayName() {
 		return name + "[" + state + "]";
 	}
 

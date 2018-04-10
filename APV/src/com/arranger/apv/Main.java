@@ -152,12 +152,15 @@ public class Main extends PApplet {
 	protected boolean showSettings = SHOW_SETTINGS;
 	public boolean transitionMode = USE_TRANSITIONS;
 	public boolean messagesEnabled = USE_MESSAGES;
-	public boolean fgSysEnabled = USE_FG;
-	public boolean bgSysEnabled = USE_BG;
-	public boolean bDropEnabled = USE_BACKDROP;
-	public boolean filtersEnabled = USE_FILTERS;
 	
-	public Switch filtersSwitch;
+	
+//	public boolean fgSysEnabled = USE_FG;
+//	public boolean bgSysEnabled = USE_BG;
+//	public boolean bDropEnabled = USE_BACKDROP;
+//	public boolean filtersEnabled = USE_FILTERS;
+	
+	private Switch foreGroundSwitch, backGroundSwitch, backDropSwitch, filtersSwitch;
+	
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -248,6 +251,12 @@ public class Main extends PApplet {
 		settingsDisplay.addSettingsMessage(msg);
 	}
 	
+	public Switch[] getSwitches() {
+		return new Switch[] {
+				foreGroundSwitch, backGroundSwitch, backDropSwitch, filtersSwitch
+		};
+	}
+	
 	public int getFrameCount() {
 		return frameCount;
 	}
@@ -261,7 +270,10 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
-		filtersSwitch = new Switch(this, "filtersSwitch", USE_FILTERS);
+		foreGroundSwitch = new Switch(this, "ForeGround", USE_FG);
+		backGroundSwitch = new Switch(this, "BackGround", USE_BG);
+		backDropSwitch = new Switch(this, "BackDrop", USE_BACKDROP);
+		filtersSwitch = new Switch(this, "Filters", USE_FILTERS);
 		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
@@ -427,20 +439,12 @@ public class Main extends PApplet {
 		cs.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		cs.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
 		cs.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
-		cs.registerCommand('1', "Enable Foregrond", "Toggles between using foregrounds", event -> fgSysEnabled = !fgSysEnabled);
-		cs.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
-		cs.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
-		//cs.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
 		
-		cs.registerCommand('4', "Toggle Filters", 
-								"Toggles between enabling or freezing filters.  Use Command-4 to Freeze/UnFreeze", 
-								(event) -> {
-									if (event.isMetaDown()) {
-										filtersSwitch.toggleFrozen();
-									} else {
-										filtersSwitch.toggleEnabled();
-									}
-								});
+		
+		registerSwitchCommand(foreGroundSwitch, '1');
+		registerSwitchCommand(backGroundSwitch, '2');
+		registerSwitchCommand(backDropSwitch, '3');
+		registerSwitchCommand(filtersSwitch, '4');
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -454,6 +458,18 @@ public class Main extends PApplet {
 						sys.decrementTransitionFrames();
 					}
 				});
+	}
+
+	protected void registerSwitchCommand(Switch s, char charCode) {
+		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
+									"Toggles between enabling or freezing " + s.getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
+									(event) -> {
+										if (event.isMetaDown()) {
+											s.toggleFrozen();
+										} else {
+											s.toggleEnabled();
+										}
+									});
 	}
 	
 	protected void cycleMode(boolean advance) {
@@ -477,15 +493,24 @@ public class Main extends PApplet {
 	
 	protected void doScramble() {
 		//mess it all up, but transitions were already scrambled
-		foregroundIndex += random(foregroundSystems.size() - 1);
-		backgroundIndex += random(backgroundSystems.size() - 1);
-		backDropIndex += random(backDropSystems.size() - 1);
-		locationIndex += random(locationSystems.size() - 1);
+		
+		if (!foreGroundSwitch.isFrozen()) {
+			foregroundIndex += random(foregroundSystems.size() - 1);
+		}
+		
+		if (!backGroundSwitch.isFrozen()) {
+			backgroundIndex += random(backgroundSystems.size() - 1);
+		}
+		
+		if (!backDropSwitch.isFrozen()) {
+			backDropIndex += random(backDropSystems.size() - 1);
+		}
 		
 		if (!filtersSwitch.isFrozen()) {
 			filterIndex += random(filters.size() - 1);
 		}
 		
+		locationIndex += random(locationSystems.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
 		messageIndex += random(messageSystems.size());
 		
@@ -521,13 +546,13 @@ public class Main extends PApplet {
 		}
 		
 		BackDropSystem backDrop = null;
-		if (bDropEnabled) {
+		if (backDropSwitch.isEnabled()) {
 			backDrop = getBackDropSystem();
 			drawSystem(backDrop, "backDrop");
 		}
 		
 		ShapeSystem bgSys = null;
-		if (bgSysEnabled) {
+		if (backDropSwitch.isEnabled()) {
 			bgSys = getBackgroundSystem();
 			drawSystem(bgSys, "bgSys");
 		}
@@ -540,12 +565,12 @@ public class Main extends PApplet {
 		}
 		
 		ShapeSystem fgSys = null;
-		if (fgSysEnabled) {
+		if (foreGroundSwitch.isEnabled()) {
 			fgSys = getForegroundSystem();
 			drawSystem(fgSys, "fgSys");
 		}
 		
-		if (filtersEnabled) {
+		if (filtersSwitch.isEnabled()) {
 			if (filter != null) {
 				filter.postRender();
 			}

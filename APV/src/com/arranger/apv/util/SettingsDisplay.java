@@ -9,6 +9,7 @@ import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.Switch;
 
 import processing.core.PApplet;
 
@@ -70,7 +71,9 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControlSystem().addSettingsMessages();
 		
-		addSettingsMessage("FilterSwitch:  " +  p.filtersSwitch.getName());
+		for (Switch s : p.getSwitches()) {
+			addSettingsMessage(s.getDisplayName());
+		}
 		
 		//Last Command
 		APVCommand lastCommand = p.getCommandSystem().getLastCommand();
