@@ -16,8 +16,7 @@ public class OscilatingBackDrop extends BackDropSystem {
 		super(parent);
 		this.c1 = c1;
 		this.c2 = c2;
-		this.displayName = displayName;
-		
+		this.displayName = displayName.replace(',', '-');; //Strip out any ',' which foo bar csv
 		oscSpeed = parent.random(SPEED_LOW, SPEED_HIGH);
 	}
 	

@@ -383,13 +383,13 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
-			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK, "[White,Black]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK, "[White-Black]"));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
 			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE, "[Black,White]"));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK, "[Green,Black]"));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker(), "[Black,DarkRed]"));
-			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE, "[Black,Blue]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.WHITE, "[Black-White]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.GREEN, Color.BLACK, "[Green-Black]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.RED.darker(), "[Black-DarkRed]"));
+			backDropSystems.add(new OscilatingBackDrop(this, Color.BLACK, Color.BLUE, "[Black-Blue]"));
 			backDropSystems.add(new BackDropSystem(this));
 			backDropSystems.add(new RefreshBackDrop(this,.95f));
 			backDropSystems.add(new BlurBackDrop(this));
