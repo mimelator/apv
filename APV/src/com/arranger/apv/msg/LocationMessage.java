@@ -5,11 +5,13 @@ import com.arranger.apv.MessageSystem;
 
 public class LocationMessage extends MessageSystem {
 	
-	private static final int TEXT_SIZE = 30;
+	private static final int TEXT_SIZE = 50;
 
-	public enum CORNER_LOCATION {UPPER_LEFT, UPPER_RIGHT, LOWER_LEFT, LOWER_RIGHT};
+	public enum CORNER_LOCATION {
+		UPPER_LEFT, UPPER_RIGHT, LOWER_LEFT, LOWER_RIGHT
+		};
 	
-	CORNER_LOCATION cornerLocation = CORNER_LOCATION.UPPER_LEFT;
+	private CORNER_LOCATION cornerLocation = CORNER_LOCATION.UPPER_LEFT;
 	
 	public LocationMessage(Main parent, CORNER_LOCATION cornerLocation) {
 		super(parent);
@@ -25,6 +27,8 @@ public class LocationMessage extends MessageSystem {
 	protected void _draw(FadingMessage fadingMessage) {
 		parent.textSize(TEXT_SIZE);
 		String message = joinMessage(fadingMessage, ":");
+		
+		doStandardFade(1.0f);
 		
 		float x = 0, y = 0;
 		switch (cornerLocation) {
