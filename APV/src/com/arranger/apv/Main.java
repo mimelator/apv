@@ -150,16 +150,14 @@ public class Main extends PApplet {
 	//TODO: Replace these with Switches
 	protected boolean showHelp = true;
 	protected boolean showSettings = SHOW_SETTINGS;
-	public boolean transitionMode = USE_TRANSITIONS;
-	public boolean messagesEnabled = USE_MESSAGES;
 	
-	
-//	public boolean fgSysEnabled = USE_FG;
-//	public boolean bgSysEnabled = USE_BG;
-//	public boolean bDropEnabled = USE_BACKDROP;
-//	public boolean filtersEnabled = USE_FILTERS;
-	
-	private Switch foreGroundSwitch, backGroundSwitch, backDropSwitch, filtersSwitch;
+	//Freezable switches
+	private Switch foreGroundSwitch, 
+					backGroundSwitch, 
+					backDropSwitch, 
+					filtersSwitch, 
+					transitionSwitch,
+					messagesSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -253,7 +251,9 @@ public class Main extends PApplet {
 	
 	public Switch[] getSwitches() {
 		return new Switch[] {
-				foreGroundSwitch, backGroundSwitch, backDropSwitch, filtersSwitch
+				foreGroundSwitch, backGroundSwitch, 
+				backDropSwitch, filtersSwitch,
+				transitionSwitch, messagesSwitch
 		};
 	}
 	
@@ -274,6 +274,8 @@ public class Main extends PApplet {
 		backGroundSwitch = new Switch(this, "BackGround", USE_BG);
 		backDropSwitch = new Switch(this, "BackDrop", USE_BACKDROP);
 		filtersSwitch = new Switch(this, "Filters", USE_FILTERS);
+		transitionSwitch = new Switch(this, "Transitions", USE_TRANSITIONS);
+		messagesSwitch = new Switch(this, "Messages", USE_MESSAGES);
 		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
@@ -438,13 +440,13 @@ public class Main extends PApplet {
 		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
 		cs.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
 		cs.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
-		cs.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
-		
 		
 		registerSwitchCommand(foreGroundSwitch, '1');
 		registerSwitchCommand(backGroundSwitch, '2');
 		registerSwitchCommand(backDropSwitch, '3');
 		registerSwitchCommand(filtersSwitch, '4');
+		registerSwitchCommand(messagesSwitch, '5');
+		registerSwitchCommand(transitionSwitch, '6');
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -488,7 +490,11 @@ public class Main extends PApplet {
 	
 	public void scramble() {
 		scrambleMode = true;
-		transitionIndex += random(transitionSystems.size() - 1); //switch transitions now
+		
+		//switch transitions now instead of in the #doScramble
+		if (!transitionSwitch.isFrozen()) {
+			transitionIndex += random(transitionSystems.size() - 1); 
+		}
 	}
 	
 	protected void doScramble() {
@@ -510,17 +516,30 @@ public class Main extends PApplet {
 			filterIndex += random(filters.size() - 1);
 		}
 		
+		if (!messagesSwitch.isFrozen()) {
+			messageIndex += random(messageSystems.size());
+		}
+		
 		locationIndex += random(locationSystems.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		messageIndex += random(messageSystems.size());
+		
 		
 		//send out a cool message about the new system
-		if (messagesEnabled && USE_FG && USE_BG) {
-			getMessageSystem().onNewMessage(new String[] {
-												getBackDropSystem().getDisplayName(),
-												getForegroundSystem().getDisplayName(),
-												getBackgroundSystem().getDisplayName()
-					});
+		if (messagesSwitch.isEnabled()) {
+			List<String> msgs = new ArrayList<String>();
+			if (backDropSwitch.isEnabled()) {
+				msgs.add(getBackDropSystem().getDisplayName());
+			}
+
+			if (backGroundSwitch.isEnabled()) {
+				msgs.add(getForegroundSystem().getDisplayName());
+			}
+			
+			if (foreGroundSwitch.isEnabled()) {
+				msgs.add(getBackgroundSystem().getDisplayName());
+			}
+			
+			getMessageSystem().onNewMessage(msgs.toArray(new String[msgs.size()]));
 		}
 		
 		//reset the flag
@@ -536,7 +555,7 @@ public class Main extends PApplet {
 		}
 		
 		TransitionSystem transition = null;
-		if (transitionMode) {
+		if (transitionSwitch.isEnabled()) {
 			transition = getTransitionSystem();
 			if (scrambleMode) {
 				transition.startTransition();
@@ -584,7 +603,7 @@ public class Main extends PApplet {
 			drawSystem(transition, "transition");
 		}
 		
-		if (messagesEnabled) {
+		if (messagesSwitch.isEnabled()) {
 			drawSystem(getMessageSystem(), "messageSystem");
 		}
 		

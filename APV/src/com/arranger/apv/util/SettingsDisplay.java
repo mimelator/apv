@@ -60,9 +60,6 @@ public class SettingsDisplay extends APVPlugin {
 		Main p = parent;
 		
 		addSettingsMessage("---------System Settings-------");
-		addSettingsMessage("Messages Enabled: " + p.messagesEnabled);
-		addSettingsMessage("Transitions Enabled: " + p.transitionMode);
-		addSettingsMessage("Transitions Frames : " + p.getTransitionSystem().getTransitionFrames());
 		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
 		addSettingsMessage("Color: " + p.getColorSystem().getName());
 		addSettingsMessage("Loc: " + p.getLocationSystem().getName());
@@ -70,6 +67,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControlSystem().addSettingsMessages();
+		addSettingsMessage("Transitions Frames : " + p.getTransitionSystem().getTransitionFrames());
 		
 		for (Switch s : p.getSwitches()) {
 			addSettingsMessage(s.getDisplayName());

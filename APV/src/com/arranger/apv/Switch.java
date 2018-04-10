@@ -31,11 +31,15 @@ public class Switch extends APVPlugin {
 
 	/**
 	 * @return true if the state is enabled or frozen
+	 * (Ignores frozen)
 	 */
 	public boolean isEnabled() {
 		return state != STATE.DISABLED;
 	}
 	
+	/**
+	 * Ignores disabled
+	 */
 	public boolean isFrozen() {
 		return state == STATE.FROZEN;
 	}
