@@ -33,22 +33,22 @@ public class LocationMessage extends MessageSystem {
 		float x = 0, y = 0;
 		switch (cornerLocation) {
 		case UPPER_LEFT:
-			parent.textMode(LEFT);
+			parent.textAlign(LEFT);
 			x = parent.width * .05f;
 			y = parent.height * .1f;
 			break;
 		case LOWER_LEFT:
-			parent.textMode(LEFT);
+			parent.textAlign(LEFT);
 			x = parent.width * .05f;
 			y = parent.height * .9f;
 			break;
 		case UPPER_RIGHT:
-			parent.textMode(RIGHT);
+			parent.textAlign(RIGHT);
 			x = parent.width * .65f;
 			y = parent.height * .1f;
 			break;
 		case LOWER_RIGHT:
-			parent.textMode(RIGHT);
+			parent.textAlign(RIGHT);
 			x = parent.width * .65f;
 			y = parent.height * .9f;
 			break;

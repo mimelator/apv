@@ -1,13 +1,12 @@
-BRANCH: optimize-grid-shape-system
+BRANCH: take-sreenshot
 https://github.com/mimelator/apv
+
+
+* Take screenshots w/the app
 
 
 *****************************************************************************
 TODO: 
-* Take screenshots w/the app
-* Investigate Twitch TV
-* Maybe record combinations that are really nice?
-	Inclusion / Exclusion System (This will require ID's and a serialization system) Not Sure is Necessary!!! Random is nice
 * Advanced Color Systems
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?

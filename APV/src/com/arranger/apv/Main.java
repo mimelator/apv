@@ -1,6 +1,7 @@
 package com.arranger.apv;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -67,6 +68,7 @@ import com.arranger.apv.util.SettingsDisplay;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PImage;
 import processing.event.KeyEvent;
 
 public class Main extends PApplet {
@@ -443,6 +445,7 @@ public class Main extends PApplet {
 		
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		
 		//More complex event handlers
 		
@@ -517,6 +520,19 @@ public class Main extends PApplet {
 		}
 	}
 	
+	public void doScreenCapture() {
+		String homeDir = System.getProperty("user.home");
+		homeDir += File.separator;
+		String fileName = String.format("%1sapv%08d.png", homeDir, getFrameCount());
+		
+		logger.info("Saving image: " + fileName);
+		
+		PImage pImage = get();
+		pImage.save(fileName);
+		
+		sendMessage(new String[] {fileName});
+	}
+	
 	public void scramble() {
 		scrambleMode = true;
 		
@@ -568,11 +584,17 @@ public class Main extends PApplet {
 				msgs.add(getBackgroundSystem().getDisplayName());
 			}
 			
-			getMessageSystem().onNewMessage(msgs.toArray(new String[msgs.size()]));
+			sendMessage(msgs.toArray(new String[msgs.size()]));
 		}
 		
 		//reset the flag
 		scrambleMode = false;
+	}
+	
+	public void sendMessage(String [] messages) {
+		if (messagesSwitch.isEnabled()) {
+			getMessageSystem().onNewMessage(messages);
+		}
 	}
 	
 	public void draw() {
