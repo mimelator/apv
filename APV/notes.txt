@@ -1,17 +1,15 @@
-BRANCH: take-sreenshot
+BRANCH: default pulse listener
 https://github.com/mimelator/apv
 
 
-* Take screenshots w/the app
+Have Main listen to pulses and allow code to register for those events
 
 
 *****************************************************************************
 TODO: 
-* Advanced Color Systems
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?
-* New Message Types:
-	Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
+* Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
 *****************************************************************************
 		
 		

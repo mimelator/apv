@@ -41,6 +41,7 @@ import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.msg.CircularMessage;
 import com.arranger.apv.msg.LocationMessage;
 import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
+import com.arranger.apv.pl.SimplePulseListener;
 import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
@@ -60,6 +61,7 @@ import com.arranger.apv.transition.Fade;
 import com.arranger.apv.transition.Shrink;
 import com.arranger.apv.transition.Swipe;
 import com.arranger.apv.transition.Twirl;
+import com.arranger.apv.util.DefaultPulseListener;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
@@ -141,7 +143,8 @@ public class Main extends PApplet {
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
 	protected HelpDisplay helpDisplay;
-	
+
+	protected DefaultPulseListener pulseListener;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -184,6 +187,10 @@ public class Main extends PApplet {
 	
 	public Monitor getMonitor() {
 		return monitor;
+	}
+	
+	public DefaultPulseListener getPulseListener() {
+		return pulseListener;
 	}
 	
 	public SettingsDisplay getSettingsDisplay() {
@@ -288,6 +295,8 @@ public class Main extends PApplet {
 		oscillator = new Oscillator(this);
 		settingsDisplay = new SettingsDisplay(this);
 		helpDisplay = new HelpDisplay(this);
+		
+		pulseListener = new DefaultPulseListener(this);
 		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
@@ -406,6 +415,9 @@ public class Main extends PApplet {
 		setupSystems(transitionSystems);
 		setupSystems(messageSystems);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
+		
+		//listeners
+		new SimplePulseListener(this);
 		
 		//init background
 		background(Color.BLACK.getRGB());
@@ -671,6 +683,8 @@ public class Main extends PApplet {
 		}
 		
 		runControlMode();
+		
+		pulseListener.checkPulse();
 	}
 	
 	protected void runControlMode() {
