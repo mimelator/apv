@@ -9,6 +9,8 @@ public class Oscillator extends APVPlugin {
 	
 	private static final int TARGET_FRAME_RATE_FOR_OSC = 30;
 
+	private int targetFrameRate = TARGET_FRAME_RATE_FOR_OSC;
+	
 	public Oscillator(Main parent) {
 		super(parent);
 	}
@@ -20,8 +22,16 @@ public class Oscillator extends APVPlugin {
 	 * @param oscSpeed the lower the number the faster the cycling.  Typically between : 4 and 20
 	 */
 	public float oscillate(float low, float high, float oscSpeed) {
-		float fr = TARGET_FRAME_RATE_FOR_OSC; //frameRate
+		float fr = targetFrameRate; //frameRate
 		float cos = PApplet.cos(PI * parent.getFrameCount() / fr / oscSpeed);
 		return PApplet.map(cos, -1, 1, low, high);
+	}
+
+	public int getTargetFrameRate() {
+		return targetFrameRate;
+	}
+
+	public void setTargetFrameRate(int targetFrameRate) {
+		this.targetFrameRate = targetFrameRate;
 	}
 }
