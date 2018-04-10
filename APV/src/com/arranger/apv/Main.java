@@ -1,19 +1,10 @@
 package com.arranger.apv;
 
 import java.awt.Color;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import com.arranger.apv.APVShape.Data;
-import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.FreqDetector;
@@ -33,6 +24,7 @@ import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
 import com.arranger.apv.factories.CircleFactory;
 import com.arranger.apv.factories.DotFactory;
+import com.arranger.apv.factories.EmptyShapeFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
@@ -47,9 +39,9 @@ import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
 import com.arranger.apv.msg.CircularMessage;
 import com.arranger.apv.msg.LocationMessage;
+import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
 import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
-import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -67,7 +59,11 @@ import com.arranger.apv.transition.Fade;
 import com.arranger.apv.transition.Shrink;
 import com.arranger.apv.transition.Swipe;
 import com.arranger.apv.transition.Twirl;
+import com.arranger.apv.util.HelpDisplay;
+import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
+import com.arranger.apv.util.Oscillator;
+import com.arranger.apv.util.SettingsDisplay;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -85,7 +81,7 @@ public class Main extends PApplet {
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
 	
-	//Features
+	//Defaults (could be intialized by env variables in the future)
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
@@ -101,23 +97,13 @@ public class Main extends PApplet {
 	private static final int NUMBER_PARTICLES = 1000;
 
 	//Don't change the following values
-	private static final String CONFIG = "/config/log.properties";
+	
 	private static final String SONG = "";
 	private static final String SPRITE_PNG = "sprite.png";
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 	
 	//Some default Monitoring params.  Probably don't need to change
 	private static final boolean MONITOR_FRAME_RATE = true;
-	private static final boolean DEBUG_LOG_CONFIG = false;
-	
-	public static class EmptyShapeFactory extends ShapeFactory {
-		public EmptyShapeFactory(Main parent) {
-			super(parent);
-		}
-		public APVShape createShape(Data data) {
-			return null;
-		}
-	}
 	
 	protected List<ShapeSystem> foregroundSystems = new ArrayList<ShapeSystem>();
 	protected int foregroundIndex = 0;
@@ -150,17 +136,28 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Gravity gravity;
 	protected Monitor monitor;
+	protected SettingsDisplay settingsDisplay;
+	protected Oscillator oscillator;
+	protected LoggingConfig loggingConfig;
+	protected HelpDisplay helpDisplay;
+	
+
+	//Internal data
+	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
+	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
+	
+	
+	//TODO: Replace these with Switches
 	protected boolean showHelp = true;
 	protected boolean showSettings = SHOW_SETTINGS;
-	protected boolean scrambleMode = true;	//this is a flag to signal to the TransitionSystem for #onDrawStart
+	public boolean transitionMode = USE_TRANSITIONS;
+	public boolean messagesEnabled = USE_MESSAGES;
+	public boolean fgSysEnabled = USE_FG;
+	public boolean bgSysEnabled = USE_BG;
+	public boolean bDropEnabled = USE_BACKDROP;
+	public boolean filtersEnabled = USE_FILTERS;
 	
-	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
-	private boolean transitionMode = USE_TRANSITIONS;
-	private boolean messagesEnabled = USE_MESSAGES;
-	private boolean fgSysEnabled = USE_FG;
-	private boolean bgSysEnabled = USE_BG;
-	private boolean bDropEnabled = USE_BACKDROP;
-	private boolean filtersEnabled = USE_FILTERS;
+	public Switch filtersSwitch;
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -188,6 +185,14 @@ public class Main extends PApplet {
 	
 	public Monitor getMonitor() {
 		return monitor;
+	}
+	
+	public SettingsDisplay getSettingsDisplay() {
+		return settingsDisplay;
+	}
+	
+	public CONTROL_MODES getCurrentControlMode() {
+		return currentControlMode;
 	}
 
 	public ColorSystem getColorSystem() {
@@ -239,18 +244,8 @@ public class Main extends PApplet {
 		return null;
 	}
 	
-	private static final int TARGET_FRAME_RATE_FOR_OSC = 30;
-	
-	/**
-	 * This little tool will keep interpolating between the low and high values based
-	 * upon the frameCount.  It should complete a circuit every
-	 * 
-	 * @param oscSpeed the lower the number the faster the cycling.  Typically between : 4 and 20
-	 */
-	public float oscillate(float low, float high, float oscSpeed) {
-		float fr = TARGET_FRAME_RATE_FOR_OSC; //frameRate
-		float cos = cos(PI * getFrameCount() / fr / oscSpeed);
-		return PApplet.map(cos, -1, 1, low, high);
+	public void addSettingsMessage(String msg) {
+		settingsDisplay.addSettingsMessage(msg);
 	}
 	
 	public int getFrameCount() {
@@ -261,62 +256,26 @@ public class Main extends PApplet {
 		return random(10) > 5;
 	}
 	
+	public float oscillate(float low, float high, float oscSpeed) {
+		return oscillator.oscillate(low, high, oscSpeed);
+	}
+	
 	public void setup() {
-		configureLogging();
+		filtersSwitch = new Switch(this, "filtersSwitch", USE_FILTERS);
+		
+		loggingConfig = new LoggingConfig(this);
+		loggingConfig.configureLogging();
 		
 		if (MONITOR_FRAME_RATE) {
 			monitor = new Monitor(this);
 		}
 		
+		oscillator = new Oscillator(this);
+		settingsDisplay = new SettingsDisplay(this);
+		helpDisplay = new HelpDisplay(this);
+		
 		commandSystem = new CommandSystem(this);
-		
-		//add commands
-		commandSystem.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
-				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
-		commandSystem.registerCommand('b', "Background", "Cycles through the background systems", 
-				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
-		commandSystem.registerCommand('o', "Backdrop", "Cycles through the backdrop systems", 
-				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
-		commandSystem.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
-				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
-		commandSystem.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
-				(event) -> { foregroundIndex--; backgroundIndex--; backDropIndex--;});
-		commandSystem.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
-		commandSystem.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
-		commandSystem.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
-		commandSystem.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
-		commandSystem.registerCommand('e', "Message", "Cycles through the message systems (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
-		commandSystem.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
-		
-		commandSystem.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		commandSystem.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
-		commandSystem.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
-		commandSystem.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
-		commandSystem.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
-		commandSystem.registerCommand('1', "Enable Foregrond", "Toggles between using foregrounds", event -> fgSysEnabled = !fgSysEnabled);
-		commandSystem.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
-		commandSystem.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
-		commandSystem.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
-		
-		
-		commandSystem.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
-				(event) -> {
-					for (TransitionSystem sys : transitionSystems) {
-						sys.incrementTransitionFrames();
-					}
-				});
-		commandSystem.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
-				(event) -> {
-					for (TransitionSystem sys : transitionSystems) {
-						sys.decrementTransitionFrames();
-					}
-				});
+		initializeCommands();
 		
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
@@ -436,6 +395,66 @@ public class Main extends PApplet {
 		//init background
 		background(Color.BLACK.getRGB());
 	}
+
+	protected void initializeCommands() {
+		CommandSystem cs = commandSystem;
+		
+		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
+				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
+		cs.registerCommand('b', "Background", "Cycles through the background systems", 
+				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
+		cs.registerCommand('o', "Backdrop", "Cycles through the backdrop systems", 
+				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
+		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
+				(event) -> { foregroundIndex++; backgroundIndex++; backDropIndex++;});
+		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
+				(event) -> { foregroundIndex--; backgroundIndex--; backDropIndex--;});
+		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
+		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
+		cs.registerCommand('c', "Colors", "Cycles through the color systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
+		cs.registerCommand('n', "Transition", "Cycles through the transition systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
+		cs.registerCommand('e', "Message", "Cycles through the message systems (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
+		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+		
+		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
+		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		cs.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
+		cs.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
+		cs.registerCommand('m', "Message", "Toggles between showing messages", event -> messagesEnabled = !messagesEnabled);
+		cs.registerCommand('1', "Enable Foregrond", "Toggles between using foregrounds", event -> fgSysEnabled = !fgSysEnabled);
+		cs.registerCommand('2', "Enable Background", "Toggles between using backgrounds", event -> bgSysEnabled = !bgSysEnabled);
+		cs.registerCommand('3', "Enable BackDrop", "Toggles between using backdrops", event -> bDropEnabled = !bDropEnabled);
+		//cs.registerCommand('4', "Enable Filters", "Toggles between using filters", event -> filtersEnabled = !filtersEnabled);
+		
+		cs.registerCommand('4', "Toggle Filters", 
+								"Toggles between enabling or freezing filters.  Use Command-4 to Freeze/UnFreeze", 
+								(event) -> {
+									if (event.isMetaDown()) {
+										filtersSwitch.toggleFrozen();
+									} else {
+										filtersSwitch.toggleEnabled();
+									}
+								});
+		
+		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
+				(event) -> {
+					for (TransitionSystem sys : transitionSystems) {
+						sys.incrementTransitionFrames();
+					}
+				});
+		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
+				(event) -> {
+					for (TransitionSystem sys : transitionSystems) {
+						sys.decrementTransitionFrames();
+					}
+				});
+	}
 	
 	protected void cycleMode(boolean advance) {
 		if (advance) {
@@ -462,7 +481,11 @@ public class Main extends PApplet {
 		backgroundIndex += random(backgroundSystems.size() - 1);
 		backDropIndex += random(backDropSystems.size() - 1);
 		locationIndex += random(locationSystems.size() - 1);
-		filterIndex += random(filters.size() - 1);
+		
+		if (!filtersSwitch.isFrozen()) {
+			filterIndex += random(filters.size() - 1);
+		}
+		
 		colorIndex += random(colorSystems.size() - 1);
 		messageIndex += random(messageSystems.size());
 		
@@ -483,8 +506,8 @@ public class Main extends PApplet {
 		logger.info("Drawing frame: " + getFrameCount());
 		
 		if (showSettings) {
-			prepareSettingsMessages();
-			addPrimarySettingsMessages();
+			settingsDisplay.prepareSettingsMessages();
+			settingsDisplay.addPrimarySettingsMessages();
 		}
 		
 		TransitionSystem transition = null;
@@ -510,9 +533,9 @@ public class Main extends PApplet {
 		}
 		
 		Filter filter = null;
-		if (filtersEnabled) {
+		if (filtersSwitch.isEnabled()) {
 			filter = (Filter)getPlugin(filters, filterIndex);
-			addSettingsMessage("filter: " + filter.getName());
+			settingsDisplay.addSettingsMessage("filter: " + filter.getName());
 			filter.preRender();
 		}
 		
@@ -541,11 +564,11 @@ public class Main extends PApplet {
 		}
 		
 		if (showSettings) {
-			drawSettingsMessages();
+			settingsDisplay.drawSettingsMessages();
 		}
 		
 		if (showHelp) {
-			showHelp();
+			helpDisplay.showHelp();
 		}
 		
 		if (scrambleMode) {
@@ -566,7 +589,7 @@ public class Main extends PApplet {
 	protected void drawSystem(ShapeSystem s, String debugName) {
 		pushStyle();
 		pushMatrix();
-		debugSystem(s, debugName);
+		settingsDisplay.debugSystem(s, debugName);
 		s.draw();
 		popMatrix();
 		popStyle();
@@ -574,126 +597,5 @@ public class Main extends PApplet {
 	
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
 		return list.get(Math.abs(index) % list.size());
-	}
-	
-	public static final int TEXT_SIZE = 16;
-	public static final int TEXT_INDEX = 10;
-	protected List<String> settingsMessages = new ArrayList<String>();
-	
-	public void addSettingsMessage(String msg) {
-		settingsMessages.add(msg);
-	}
-	
-	protected void debugSystem(ShapeSystem ss, String name) {
-		logger.fine("Drawing system [" + name + "] [" + ss.getName() +"]");
-		addSettingsMessage(name +": " + ss.getName());
-		if (ss.factory != null) {
-			addSettingsMessage("  --factory: " + ss.factory.getName());
-			addSettingsMessage("    --scale: " + ss.factory.getScale());
-		}
-	}
-	
-	protected void prepareSettingsMessages() {
-		settingsMessages.clear();
-	}
-	
-	protected void addPrimarySettingsMessages() {
-		addSettingsMessage("---------System Settings-------");
-		addSettingsMessage("Messages Enabled: " + messagesEnabled);
-		addSettingsMessage("Transitions Enabled: " + transitionMode);
-		addSettingsMessage("Transitions Frames : " + getTransitionSystem().getTransitionFrames());
-		addSettingsMessage("Audio: " + getAudio().getScaleFactor());
-		addSettingsMessage("Color: " + getColorSystem().getName());
-		addSettingsMessage("Loc: " + getLocationSystem().getName());
-		addSettingsMessage("Frame rate: " + (int)frameRate);
-		addSettingsMessage("MouseXY:  " + mouseX + " " + mouseY);
-		addSettingsMessage("Mode: " + currentControlMode.name());
-		getControlSystem().addSettingsMessages();
-		
-		//Last Command
-		APVCommand lastCommand = getCommandSystem().getLastCommand();
-		if (lastCommand != null) {
-			addSettingsMessage("Last Command: " + lastCommand.getName());
-		}
-		
-		addSettingsMessage(" ");
-		addSettingsMessage("---------Live Settings-------");
-	}
-
-	protected void drawSettingsMessages() {
-		drawText(settingsMessages);
-	}
-
-	protected void drawText(List<String> msgs) {
-		fill(255);
-		textAlign(PApplet.LEFT, PApplet.TOP);
-		textSize(TEXT_SIZE);
-		
-		int offset = TEXT_INDEX;
-		for (String s : msgs) {
-			text(s, TEXT_INDEX, offset);
-			offset += TEXT_SIZE;
-		}
-	}
-	
-	private void showHelp() {
-		Set<String> messages = new HashSet<String>();
-		commandSystem.visitCommands(true, e -> {
-			List<APVCommand> cmds = e.getValue();
-			cmds.forEach(c -> {
-				messages.add(c.getName() + ": " + c.getHelpText());
-			});
-		});
-		commandSystem.visitCommands(false, e -> {
-			List<APVCommand> cmds = e.getValue();
-			cmds.forEach(c -> {
-				messages.add(String.valueOf(c.getCharKey()).trim() + ": " + c.getName() + ": " + c.getHelpText());
-			});
-		});
-		
-		List<String> sortedMessages = new ArrayList<String>(messages);
-		sortedMessages.sort(Comparator.naturalOrder());
-		
-		translate(width / 5, height / 5);
-		drawText(new ArrayList<String>(sortedMessages));
-	}
-	
-	protected void configureLogging()  {
-		LogManager logManager = LogManager.getLogManager();
-		logManager.reset();
-		try {
-			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
-			logManager.readConfiguration(configFile);
-			configFile.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		//Dump the loggers
-		if (DEBUG_LOG_CONFIG) {
-			Enumeration<String> loggerNames = logManager.getLoggerNames();
-			while (loggerNames.hasMoreElements()) {
-				debugLogger(logManager.getLogger(loggerNames.nextElement()));
-			}
-		}
-	}
-	
-	protected void debugLogger(Logger l) {
-		Level level = l.getLevel();
-		String name = l.getName();
-		System.out.println("name: " + name + " level: " + level);
-		
-		l = l.getParent();
-		int indent = 1;
-		while (l != null) {
-			for (int index = 0; index < indent; index++) {
-				System.out.print("   ");
-			}
-			level = l.getLevel();
-			name = l.getName();
-			System.out.println("name: " + name + " level: " + level);
-			l = l.getParent();
-			indent++;
-		}
 	}
 }

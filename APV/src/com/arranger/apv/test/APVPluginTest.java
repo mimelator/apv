@@ -21,6 +21,7 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
+import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
 

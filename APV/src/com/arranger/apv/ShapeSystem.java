@@ -21,5 +21,9 @@ public abstract class ShapeSystem extends APVPlugin {
 	 * Render loop
 	 */
 	public abstract void draw();
+	
+	public ShapeFactory getFactory() {
+		return factory;
+	}
 
 }
