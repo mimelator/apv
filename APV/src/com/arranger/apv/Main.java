@@ -61,7 +61,7 @@ import com.arranger.apv.transition.Fade;
 import com.arranger.apv.transition.Shrink;
 import com.arranger.apv.transition.Swipe;
 import com.arranger.apv.transition.Twirl;
-import com.arranger.apv.util.DefaultPulseListener;
+import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
@@ -95,6 +95,7 @@ public class Main extends PApplet {
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
 	private static final boolean USE_MESSAGES = true;
+	private static final boolean USE_PULSE_LISTENER = true;
 	private static final boolean MONITOR_FRAME_RATE = true;
 
 	//This is a tradeoff between performance and precision for the audio system
@@ -143,8 +144,7 @@ public class Main extends PApplet {
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
 	protected HelpDisplay helpDisplay;
-
-	protected DefaultPulseListener pulseListener;
+	protected APVPulseListener pulseListener;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -158,7 +158,8 @@ public class Main extends PApplet {
 					transitionSwitch,
 					messagesSwitch,
 					helpSwitch,
-					showSettingsSwitch;
+					showSettingsSwitch,
+					pulseListenerSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -189,7 +190,7 @@ public class Main extends PApplet {
 		return monitor;
 	}
 	
-	public DefaultPulseListener getPulseListener() {
+	public APVPulseListener getPulseListener() {
 		return pulseListener;
 	}
 	
@@ -259,7 +260,7 @@ public class Main extends PApplet {
 				foreGroundSwitch, backGroundSwitch, 
 				backDropSwitch, filtersSwitch,
 				transitionSwitch, messagesSwitch,
-				helpSwitch, showSettingsSwitch
+				helpSwitch, showSettingsSwitch, pulseListenerSwitch
 		};
 	}
 	
@@ -282,6 +283,7 @@ public class Main extends PApplet {
 		filtersSwitch = new Switch(this, "Filters", USE_FILTERS);
 		transitionSwitch = new Switch(this, "Transitions", USE_TRANSITIONS);
 		messagesSwitch = new Switch(this, "Messages", USE_MESSAGES);
+		pulseListenerSwitch = new Switch(this, "PulseListener", USE_PULSE_LISTENER);
 		showSettingsSwitch = new Switch(this, "ShowSettings", SHOW_SETTINGS);
 		helpSwitch = new Switch(this, "Help");
 		
@@ -296,7 +298,7 @@ public class Main extends PApplet {
 		settingsDisplay = new SettingsDisplay(this);
 		helpDisplay = new HelpDisplay(this);
 		
-		pulseListener = new DefaultPulseListener(this);
+		pulseListener = new APVPulseListener(this);
 		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
@@ -435,6 +437,7 @@ public class Main extends PApplet {
 		registerSwitchCommand(filtersSwitch, '4');
 		registerSwitchCommand(messagesSwitch, '5');
 		registerSwitchCommand(transitionSwitch, '6');
+		registerSwitchCommand(pulseListenerSwitch, '7');
 		
 		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
 				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
@@ -684,7 +687,9 @@ public class Main extends PApplet {
 		
 		runControlMode();
 		
-		pulseListener.checkPulse();
+		if (pulseListenerSwitch.isEnabled()) {
+			pulseListener.checkPulse();
+		}
 	}
 	
 	protected void runControlMode() {

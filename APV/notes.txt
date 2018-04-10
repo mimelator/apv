@@ -2,7 +2,8 @@ BRANCH: default pulse listener
 https://github.com/mimelator/apv
 
 
-Have Main listen to pulses and allow code to register for those events
+Now make it easier for Pulse Listeners to skip N pulses
+:* Probably in APVPulseListener register the command handlers along with a skip counter
 
 
 *****************************************************************************

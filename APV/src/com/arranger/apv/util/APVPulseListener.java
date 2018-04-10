@@ -7,7 +7,7 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 
-public class DefaultPulseListener extends APVPlugin {
+public class APVPulseListener extends APVPlugin {
 	
 	private PulseListener pulseListener;
 	private List<PulseHandler> handlers = new ArrayList<PulseHandler>();
@@ -17,7 +17,7 @@ public class DefaultPulseListener extends APVPlugin {
 		public void onPulse();
 	}
 
-	public DefaultPulseListener(Main parent) {
+	public APVPulseListener(Main parent) {
 		super(parent);
 	}
 	
