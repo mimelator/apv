@@ -60,7 +60,6 @@ public class GridShapeSystem extends LiteShapeSystem {
 		}
 
 		parent.strokeWeight(shapeSize);
-		
 
 		float maxDistance = Float.MIN_VALUE;
 		for (int y = 0; y < height; y += space) {
@@ -79,4 +78,8 @@ public class GridShapeSystem extends LiteShapeSystem {
 		parent.addSettingsMessage("  --drawingTime: " + String.valueOf(parent.millis() - time));
 	}
 
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + String.format("[%1s-%2s]", space, shapeSize);
+	}
 }

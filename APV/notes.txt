@@ -1,14 +1,12 @@
-BRANCH: location-message
+BRANCH: optimize-grid-shape-system
 https://github.com/mimelator/apv
 
-3) New Transition Types
 
-4) New Message Types:
-	* Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
 
-5) Unit test for Main.oscillate
-	When in Auto or Snap mode, when a scramble() happens they should reset their counters?
 
+Oh, ShIT...  Certain items must be able to be frozen
+Then scramble won't affect them
+	* Change the Enable Commands 1-4 (7?) to Freeze toggle commands
 
 
 *****************************************************************************
@@ -22,6 +20,10 @@ TODO:
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?
 * Switch Refactoring for all the boolean flags in Main
+* New Message Types:
+	Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
+* Unit test for Main.oscillate
+	When in Auto or Snap mode, when a scramble() happens they should reset their counters?
 *****************************************************************************
 		
 		
