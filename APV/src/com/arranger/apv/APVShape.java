@@ -2,6 +2,9 @@ package com.arranger.apv;
 
 import processing.core.PShape;
 
+/**
+ * This class is a wrapper around a PShape
+ */
 public abstract class APVShape {
 
 	protected Main parent;

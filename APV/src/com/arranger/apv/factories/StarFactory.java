@@ -29,7 +29,6 @@ public class StarFactory extends PrimitiveShapeFactory {
 		  return star;
 	}
 	
-	private PShape star;
 
 	public StarFactory(Main parent) {
 		super(parent);
@@ -49,16 +48,8 @@ public class StarFactory extends PrimitiveShapeFactory {
 
 			@Override
 			protected PShape createNewShape() {
-				return getStar();
+				return createStar(parent);
 			}
 		};
 	}
-
-	private PShape getStar() {
-		if (star == null) {
-			star = createStar(parent);
-		}
-		return star;
-	}
-	
 }

@@ -30,8 +30,12 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	
 	private static final int STAR_WEB_FRAMES_PER_RESET = 20000;
 	
+	private static final float PCT_TO_DIE = 75;//99.75f;
+	
 	int fc, edge = NUM_EDGES;
-
+	float deatRatePct = PCT_TO_DIE;
+	boolean doRotateScale = false;
+	
 	public StarWebSystem(Main parent) {
 		super(parent, DEFAULT_NUM_BALLS);
 	}
@@ -43,6 +47,16 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects) {
 		super(parent, numNewObjects);
 		this.factory = factory;
+	}
+	
+	/**
+	 * @param deatRatePct between 0 and 1.0f
+	 */
+	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects, float deatRatePct, boolean doRotateScale) {
+		super(parent, numNewObjects);
+		this.factory = factory;
+		this.deatRatePct = deatRatePct * 100;
+		this.doRotateScale = doRotateScale;
 	}
 	
 	public StarWebSystem(Main parent, int numNewObjects) {
@@ -82,7 +96,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	
 	private class Ball extends LiteCycleObj {
 		
-		private static final float PCT_TO_DIE = 75;//99.75f;
+		
 		private static final int DEFAULT_SIZE = 10;
 		private static final int NUM_SHAPES = 5;
 		
@@ -93,6 +107,8 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		Color ballColor;
 		Color lineColor;
 		int alpha;
+		float rotate;
+		float scale;
 		APVShape factoryShape;
 		
 		private Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
@@ -112,7 +128,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		@Override
 		public boolean isDead() {
 			float random = random(100);
-			if (random > PCT_TO_DIE) {
+			if (random > deatRatePct) {
 				resetColor();
 			}
 			
@@ -123,6 +139,17 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 			ballColor = parent.getColorSystem().getCurrentColor();
 			lineColor = parent.getColorSystem().getCurrentColor();
 			alpha = (int)parent.random(Main.MAX_ALPHA);
+			
+			if (doRotateScale) {
+				rotate = PApplet.degrees(parent.random(PApplet.TWO_PI));
+				scale = parent.random(.25f, 1.3f);
+				
+				if (factory != null) {
+					PShape drawShape = factoryShape.getShape();
+					drawShape.resetMatrix();
+					drawShape.scale(scale);
+				}
+			}
 		}
 
 		@Override
@@ -148,6 +175,10 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 					//drawShape.setStroke(FACTORY_SHAPE_STROKE_WEIGHT);
 					drawShape.setFill(true);
 					factoryShape.setColor(ballColor.getRGB(), alpha);
+					
+					if (doRotateScale) {
+						drawShape.rotate(rotate);
+					}
 					
 					parent.shape(drawShape, 
 							loc.x - (drawShape.width / 2), 

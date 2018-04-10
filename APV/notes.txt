@@ -2,15 +2,13 @@ BRANCH: default pulse listener
 https://github.com/mimelator/apv
 
 
-Now make it easier for Pulse Listeners to skip N pulses
-:* Probably in APVPulseListener register the command handlers along with a skip counter
+Use global user adjustable params to change the level of influence of NUM_PARTICLES
 
 
 *****************************************************************************
 TODO: 
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?
-* Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
 *****************************************************************************
 		
 		

@@ -354,7 +354,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f)));
+			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 12, .95f, true));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
