@@ -91,19 +91,17 @@ public class Main extends PApplet {
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
 	private static final boolean USE_MESSAGES = true;
+	private static final boolean MONITOR_FRAME_RATE = true;
 
-	//This is a tradeoff between performance and precision
+	//This is a tradeoff between performance and precision for the audio system
 	private static final int BUFFER_SIZE = 512; //Default is 1024
 	private static final int NUMBER_PARTICLES = 1000;
 
 	//Don't change the following values
-	
 	private static final String SONG = "";
 	private static final String SPRITE_PNG = "sprite.png";
 	public static final char SPACE_BAR_KEY_CODE = ' ';
-	
-	//Some default Monitoring params.  Probably don't need to change
-	private static final boolean MONITOR_FRAME_RATE = true;
+
 	
 	protected List<ShapeSystem> foregroundSystems = new ArrayList<ShapeSystem>();
 	protected int foregroundIndex = 0;
@@ -132,6 +130,7 @@ public class Main extends PApplet {
 	protected List<ControlSystem> controlSystems = new ArrayList<ControlSystem>();
 	protected CONTROL_MODES currentControlMode = CONTROL_MODES.AUTO;
 	
+	//Useful helper classes
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
@@ -146,18 +145,15 @@ public class Main extends PApplet {
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
 	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
 	
-	
-	//TODO: Replace these with Switches
-	protected boolean showHelp = true;
-	protected boolean showSettings = SHOW_SETTINGS;
-	
-	//Freezable switches
+	//Switches for runtime
 	private Switch foreGroundSwitch, 
 					backGroundSwitch, 
 					backDropSwitch, 
 					filtersSwitch, 
 					transitionSwitch,
-					messagesSwitch;
+					messagesSwitch,
+					helpSwitch,
+					showSettingsSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -253,7 +249,8 @@ public class Main extends PApplet {
 		return new Switch[] {
 				foreGroundSwitch, backGroundSwitch, 
 				backDropSwitch, filtersSwitch,
-				transitionSwitch, messagesSwitch
+				transitionSwitch, messagesSwitch,
+				helpSwitch, showSettingsSwitch
 		};
 	}
 	
@@ -276,6 +273,8 @@ public class Main extends PApplet {
 		filtersSwitch = new Switch(this, "Filters", USE_FILTERS);
 		transitionSwitch = new Switch(this, "Transitions", USE_TRANSITIONS);
 		messagesSwitch = new Switch(this, "Messages", USE_MESSAGES);
+		showSettingsSwitch = new Switch(this, "ShowSettings", SHOW_SETTINGS);
+		helpSwitch = new Switch(this, "Help");
 		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
@@ -438,8 +437,9 @@ public class Main extends PApplet {
 		
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
-		cs.registerCommand('h', "Help", "Toggles the display of all the available commands", event -> showHelp = !showHelp);
-		cs.registerCommand('q', "Settings", "Toggles the display of all the debug information", event -> showSettings = !showSettings);
+		
+		registerNonFreezableSwitchCommand(helpSwitch, 'h');
+		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
 		
 		registerSwitchCommand(foreGroundSwitch, '1');
 		registerSwitchCommand(backGroundSwitch, '2');
@@ -462,6 +462,12 @@ public class Main extends PApplet {
 				});
 	}
 
+	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
+		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
+				"Toggles between enabling " + s.getName(), 
+				event -> s.toggleEnabled());
+	}
+	
 	protected void registerSwitchCommand(Switch s, char charCode) {
 		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
 									"Toggles between enabling or freezing " + s.getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
@@ -549,7 +555,7 @@ public class Main extends PApplet {
 	public void draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
-		if (showSettings) {
+		if (showSettingsSwitch.isEnabled()) {
 			settingsDisplay.prepareSettingsMessages();
 			settingsDisplay.addPrimarySettingsMessages();
 		}
@@ -607,11 +613,11 @@ public class Main extends PApplet {
 			drawSystem(getMessageSystem(), "messageSystem");
 		}
 		
-		if (showSettings) {
+		if (showSettingsSwitch.isEnabled()) {
 			settingsDisplay.drawSettingsMessages();
 		}
 		
-		if (showHelp) {
+		if (helpSwitch.isEnabled()) {
 			helpDisplay.showHelp();
 		}
 		
