@@ -70,8 +70,17 @@ public abstract class MessageSystem extends ShapeSystem {
 		return alpha;
 	}
 	
+	protected void doStandardFade(float pct) {
+		doStandardFade(parent.getColorSystem().getCurrentColor(), pct);
+	}
+	
 	protected void doStandardFade(Color c, float pct) {
 		float alpha = getAlapha(pct);
-		parent.tint(c.getRGB(), alpha);  // Display at half opacity
+		//parent.tint(c.getRGB(), alpha);  
+		parent.fill(c.getRGB(), alpha);
+	}
+	
+	protected String joinMessage(FadingMessage fadingMessage, String delimeter) {
+		return String.join(delimeter, fadingMessage.messages);
 	}
 }

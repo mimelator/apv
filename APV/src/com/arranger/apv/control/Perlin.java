@@ -43,7 +43,7 @@ public class Perlin extends PulseListeningControlSystem {
 	};
 	
 	private static final int COMMAND_SIZE = 10;
-	private static final int DEFAULT_PULSES_TO_SKIP = 2;
+	private static final int DEFAULT_PULSES_TO_SKIP = 24;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;

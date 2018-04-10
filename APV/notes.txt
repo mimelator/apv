@@ -1,16 +1,15 @@
-BRANCH: quick-refactor
-
-RandomMessage : https://www.openprocessing.org/sketch/430300
-
+BRANCH: location-message
+https://github.com/mimelator/apv
 
 3) New Transition Types
 
 4) New Message Types:
 	* Listens to a new Pulse and fires off a messsage to be displayed somewhere near the bottom
-	* https://www.openprocessing.org/sketch/430300
-	* https://www.openprocessing.org/sketch/166952
 
 5) Unit test for Main.oscillate
+	When in Auto or Snap mode, when a scramble() happens they should reset their counters?
+
+
 
 *****************************************************************************
 TODO: 

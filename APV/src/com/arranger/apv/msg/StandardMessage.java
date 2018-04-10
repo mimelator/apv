@@ -40,7 +40,7 @@ public class StandardMessage extends MessageSystem {
 		float tempTextSize = textSize + (sizeMultiplier / fadePct);
 		parent.textSize(tempTextSize);
 		
-		doStandardFade(parent.getColorSystem().getCurrentColor(), fadePct);
+		doStandardFade(fadePct);
 		
 		printMessages(fadingMessage);
 		parent.addSettingsMessage("  --textSize: " + textSize);

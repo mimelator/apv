@@ -110,8 +110,17 @@ public class Audio extends APVPlugin {
 		
 		/**
 		 * Scales in place  (not very functional)
+		 * When the sf goes below Zero, the following happens: 1 x 10^sf
+		 * 
+		 * So, -3 becomes 10^-3 or .0001
+		 * 
+		 * TODO Needs Test
 		 */
 		protected void scale(float [] samps, float sf) {
+			if (sf < 0) {
+				sf = (float)Math.pow(10, sf);
+			}
+			
 			for (int i=0; i<samps.length; i++) {
 				samps[i] *= sf;
 			}

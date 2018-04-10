@@ -45,8 +45,11 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import com.arranger.apv.loc.RectLocationSystem;
+import com.arranger.apv.msg.CircularMessage;
+import com.arranger.apv.msg.LocationMessage;
 import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
+import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -414,6 +417,8 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_MESSAGES) {
+			messageSystems.add(new LocationMessage(this, CORNER_LOCATION.UPPER_LEFT));
+			messageSystems.add(new CircularMessage(this));
 			messageSystems.add(new RandomMessage(this));
 			messageSystems.add(new StandardMessage(this));
 			messageSystems.add(new StandardMessage(this));
@@ -459,7 +464,7 @@ public class Main extends PApplet {
 		locationIndex += random(locationSystems.size() - 1);
 		filterIndex += random(filters.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		messageIndex += random(messageSystems.size() - 1);
+		messageIndex += random(messageSystems.size());
 		
 		//send out a cool message about the new system
 		if (messagesEnabled && USE_FG && USE_BG) {
