@@ -1,9 +1,8 @@
-package com.arranger.apv.systems;
+package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 import processing.core.PApplet;
 

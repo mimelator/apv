@@ -45,15 +45,16 @@ import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
-import com.arranger.apv.systems.PixelAttractor;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
+import com.arranger.apv.systems.lite.PixelAttractor;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
+import com.arranger.apv.systems.lite.Spirograph;
 import com.arranger.apv.systems.lite.cycle.BubbleShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
@@ -335,6 +336,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new Spirograph(this));
 			backgroundSystems.add(new PixelAttractor(this));
 			backgroundSystems.add(new WarpSystem(this, new SpriteFactory(this, "triangle.png", 2.5f), NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, .3f), NUMBER_PARTICLES));
