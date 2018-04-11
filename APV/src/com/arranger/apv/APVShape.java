@@ -67,10 +67,6 @@ public abstract class APVShape {
 		getShape().setFill(parent.color(color, alpha));
 	}
 	
-	public void centerShape() {
-		getShape().translate(parent.height / 2, parent.width / 2); 
-	}
-
 	protected abstract PShape createNewShape();
 
 	public static abstract class Data {

@@ -49,6 +49,7 @@ import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
+import com.arranger.apv.systems.lite.BGImage;
 import com.arranger.apv.systems.lite.BoxWaves;
 import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
@@ -337,6 +338,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "Konkrete-Breaks.png"), .75f));
 			backgroundSystems.add(new BoxWaves(this));
 			backgroundSystems.add(new Spirograph(this));
 			backgroundSystems.add(new PixelAttractor(this));

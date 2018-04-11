@@ -26,7 +26,14 @@ public class SpriteFactory extends ShapeFactory {
 		this(parent, file);
 		this.scale = scale;
 	}
+
+	public int getImageWidth() {
+		return sprite.width;
+	}
 	
+	public int getImageHeight() {
+		return sprite.height;
+	}
 
 	@Override
 	public APVShape createShape(Data data) {

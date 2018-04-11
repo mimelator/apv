@@ -1,8 +1,10 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Todo 
-Rotate Starweb nodes
+
+
+
+
 
 *****************************************************************************
 TODO: 
@@ -11,6 +13,9 @@ TODO:
 * Set up a build system (run outside of eclipse)
 * work on readme
 * test Audio#scale
+* pluggable Animations to wipe the screen clean and prepare for the next song
+* Standardize the term "Scene" which includes fg, bg, bd (filter?)
+* externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
