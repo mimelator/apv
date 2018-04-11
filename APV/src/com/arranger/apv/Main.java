@@ -336,9 +336,12 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new WarpSystem(this, new SpriteFactory(this, "triangle.png", 2.5f), NUMBER_PARTICLES));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, .3f), NUMBER_PARTICLES));
+			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
+			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, "purple.png", .3f)));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 14));
 			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
 			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
 			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 10));
@@ -347,18 +350,16 @@ public class Main extends PApplet {
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
 			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
 			backgroundSystems.add(new GridShapeSystem(this));
-			backgroundSystems.add(new NoisyShapeSystem(this, NUMBER_PARTICLES));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
 			backgroundSystems.add(new ShowerSystem(this));
 			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
 			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
 			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
 			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 2.3f), NUMBER_PARTICLES / 2));
 		}
 		
 		if (USE_FG) {
+			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 2, true));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "Emoji_Blitz_Star.png", 1.5f), NUMBER_PARTICLES, true));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "3dcube.png", 5), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "Scared_face_emoji.png"), NUMBER_PARTICLES));
@@ -372,10 +373,8 @@ public class Main extends PApplet {
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "purple.png"), NUMBER_PARTICLES / 2));
 			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
-			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES / 5));
-			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 4, true));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
@@ -385,7 +384,8 @@ public class Main extends PApplet {
 			foregroundSystems.add(new StarWebSystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f), NUMBER_PARTICLES, true));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 20));
+			//foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
+			//foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 20));
 		}
 		
 		if (USE_BACKDROP) {

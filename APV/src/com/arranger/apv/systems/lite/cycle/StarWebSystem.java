@@ -22,7 +22,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	private static final int NUM_EDGES = 100;
 	private static final int DEFAULT_NUM_BALLS = 180;
 	private static final int LINE_ALPHA = 150;
-	private static final int BALL_CONNECTION_DISTANCE = 60;
+	private static final int BALL_CONNECTION_DISTANCE = 90;//60;
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
 	
 	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;

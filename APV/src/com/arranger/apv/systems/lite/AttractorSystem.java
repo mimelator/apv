@@ -27,12 +27,12 @@ public class AttractorSystem extends LiteShapeSystem {
 	private static final int NUM_SHAPES = 1000;
 	private static final int RESET_FRAMES = 2000;
 	
-	private float[] vx = new float[NUM_SHAPES];
-	private float[] vy = new float[NUM_SHAPES];
-	private float[] x = new float[NUM_SHAPES];
-	private float[] y = new float[NUM_SHAPES];
-	private float[] ax = new float[NUM_SHAPES];
-	private float[] ay = new float[NUM_SHAPES];
+	private float[] vx = null;
+	private float[] vy = null;
+	private float[] x = null;
+	private float[] y = null;
+	private float[] ax = null;
+	private float[] ay = null;
 
 	private float magnetism;
 	private float radius;
@@ -42,6 +42,7 @@ public class AttractorSystem extends LiteShapeSystem {
 	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = true;
 	private APVShape shape = null;
+	private int numShapes = NUM_SHAPES;
 
 	public AttractorSystem(Main parent) {
 		super(parent);
@@ -51,10 +52,25 @@ public class AttractorSystem extends LiteShapeSystem {
 		super(parent);
 		this.factory = shapeFactory;
 	}
+	
+	public AttractorSystem(Main parent, ShapeFactory shapeFactory, int numShapes) {
+		super(parent);
+		this.factory = shapeFactory;
+		this.numShapes = numShapes;
+	}
 
 	@Override
 	public void setup() {
-		for (int i = 0; i < NUM_SHAPES; i++) {
+		
+		vx = new float[numShapes];
+		vy = new float[numShapes];
+		x = new float[numShapes];
+		y = new float[numShapes];
+		ax = new float[numShapes];
+		ay = new float[numShapes];
+
+		
+		for (int i = 0; i < numShapes; i++) {
 			x[i] = random(parent.width);
 			y[i] = random(parent.height);
 			vx[i] = 0;
@@ -96,7 +112,7 @@ public class AttractorSystem extends LiteShapeSystem {
 		int mouseX = (int)p.getX();
 		int mouseY = (int)p.getY();
 		
-		for (int i = 0; i < NUM_SHAPES; i++) {
+		for (int i = 0; i < numShapes; i++) {
 			float distance = PApplet.dist(mouseX, mouseY, x[i], y[i]); 
 			
 			float tempMagnetism = (reverse) ? -magnetism : magnetism;
