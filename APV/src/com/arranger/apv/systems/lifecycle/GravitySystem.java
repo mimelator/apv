@@ -105,6 +105,7 @@ public class GravitySystem extends LifecycleSystem {
 			Point2D p = parent.getLocationSystem().getCurrentPoint();
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
+				shape.rotate(PApplet.radians(parent.random(360)));
 				shape.translate((float)p.getX(), (float)p.getY());
 				isInit = true;
 			}
