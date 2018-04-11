@@ -4,6 +4,7 @@ import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.systems.lifecycle.LifecycleSystem.LifecycleData;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -31,6 +32,9 @@ public class SpriteFactory extends ShapeFactory {
 	public class SpriteShape extends APVShape {
 		public SpriteShape(Main parent, Data data) {
 			super(parent, data);
+			if (data instanceof LifecycleData) {
+				((LifecycleData)data).setAllowRespawn(false);
+			}
 		}
 		
 		@Override
@@ -43,7 +47,7 @@ public class SpriteFactory extends ShapeFactory {
 			float size = parent.random(10,60);
 			size *= getScale();
 			
-		    PShape s = parent.createShape();
+			PShape s = parent.createShape();
 		    s.beginShape(PApplet.QUAD);
 		    s.noStroke();
 		    s.texture(sprite);
@@ -53,6 +57,7 @@ public class SpriteFactory extends ShapeFactory {
 		    s.vertex(+size/2, +size/2, sprite.width, sprite.height);
 		    s.vertex(-size/2, +size/2, 0, sprite.height);
 		    s.endShape();
+		    
 		    return s;
 		}
 	}

@@ -68,6 +68,7 @@ import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
 import com.arranger.apv.util.Oscillator;
+import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.SettingsDisplay;
 
 import processing.core.PApplet;
@@ -81,6 +82,7 @@ public class Main extends PApplet {
 	
 	//Change these during active development
 	public static final int MAX_ALPHA = 255;
+	public static final int NUMBER_PARTICLES = 1000;
 	
 	private static final int DEFAULT_TRANSITION_FRAMES = 30;
 	private static final int PLASMA_ALPHA_LOW = 120;
@@ -104,7 +106,6 @@ public class Main extends PApplet {
 
 	//This is a tradeoff between performance and precision for the audio system
 	private static final int BUFFER_SIZE = 512; //Default is 1024
-	private static final int NUMBER_PARTICLES = 1000;
 
 	//Don't change the following values
 	private static final String SONG = "";
@@ -149,6 +150,7 @@ public class Main extends PApplet {
 	protected LoggingConfig loggingConfig;
 	protected HelpDisplay helpDisplay;
 	protected APVPulseListener pulseListener;
+	protected Particles particles;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -196,6 +198,10 @@ public class Main extends PApplet {
 	
 	public APVPulseListener getPulseListener() {
 		return pulseListener;
+	}
+	
+	public Particles getParticles() {
+		return particles;
 	}
 	
 	public SettingsDisplay getSettingsDisplay() {
@@ -298,15 +304,14 @@ public class Main extends PApplet {
 			monitor = new Monitor(this);
 		}
 		
-		oscillator = new Oscillator(this);
-		settingsDisplay = new SettingsDisplay(this);
-		helpDisplay = new HelpDisplay(this);
-		
-		pulseListener = new APVPulseListener(this);
-		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
 		
+		oscillator = new Oscillator(this);
+		pulseListener = new APVPulseListener(this);
+		particles = new Particles(this);
+		settingsDisplay = new SettingsDisplay(this);
+		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 		
@@ -336,7 +341,7 @@ public class Main extends PApplet {
 			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
 			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
-			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 4));
+			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 10));
 			backgroundSystems.add(new AttractorSystem(this));
 			backgroundSystems.add(new LightWormSystem(this));
 			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
@@ -354,22 +359,22 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 12, .95f, true));
+			foregroundSystems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES / 10));
+			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
+			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
+			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES / 5));
+			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 12, true));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
-			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES));			
+			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES  / 10));			
 			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .25f), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
-			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 20));
 		}
 		
 		if (USE_BACKDROP) {
@@ -643,7 +648,7 @@ public class Main extends PApplet {
 		}
 		
 		ShapeSystem bgSys = null;
-		if (backDropSwitch.isEnabled()) {
+		if (backGroundSwitch.isEnabled()) {
 			bgSys = getBackgroundSystem();
 			drawSystem(bgSys, "bgSys");
 		}

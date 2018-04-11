@@ -10,6 +10,7 @@ public abstract class APVShape {
 	protected Main parent;
 	protected Data data;
 	protected PShape shape;
+	private float translateX = 0, translateY = 0;
 	
 	public APVShape(Main parent, Data data) {
 		this.parent = parent;
@@ -30,7 +31,19 @@ public abstract class APVShape {
 		getShape().resetMatrix();
 	}
 	
+	public boolean isOffscreen() {
+		if (translateX < 0 || translateY < 0) {
+			return true;
+		} else if (translateX > parent.width || translateY > parent.height) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void translate(float x, float y) {
+		translateX += x;
+		translateY += y;
 		getShape().translate(x, y);
 	}
 	

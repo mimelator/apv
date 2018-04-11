@@ -2,6 +2,7 @@ package com.arranger.apv.systems.lifecycle;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.arranger.apv.APVShape;
@@ -22,8 +23,8 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	public static final Color DEFAULT_STROKE_COLOR = Color.BLACK;
 	
 	protected List<APVShape> particles = new ArrayList<APVShape>();
-	protected PShape groupShape;
-	protected int numParticles;
+	protected PShape groupShape = null;
+	private int numParticles;
 	
 	protected abstract LifecycleData createData();
 	
@@ -34,14 +35,15 @@ public abstract class LifecycleSystem extends ShapeSystem {
 
 	@Override
 	public void setup() {
+		
+	}
+
+	protected void _setup() {
 		groupShape = parent.createShape(PShape.GROUP);
 		for (int i = 0; i < numParticles; i++) {
 			APVShape s = factory.createShape(createData());
 			particles.add(s);
 			groupShape.addChild(s.getShape());
-			
-			//setInitialStroke(pShape);
-			
 		}
 	}
 
@@ -56,49 +58,83 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	@Override
 	public void draw() {
 		if (particles.isEmpty()) {
-			setup();
+			_setup();
+		}
+
+		int targetNumShapes = getTargetParticles();
+		
+		//remove the dead
+		Iterator<APVShape> iterator = particles.iterator();
+		while (iterator.hasNext()) {
+			APVShape next = iterator.next();
+			LifecycleData d = (LifecycleData)next.getData();
+			if (d.isDead()) {
+				
+				if (particles.size() <= targetNumShapes  && d.isAllowRespawn()) {
+					d.respawn();
+				} else {
+					//Maybe i should store the index?
+					int childIndex = next.getShape().getParent().getChildIndex(next.getShape());
+					groupShape.removeChild(childIndex);
+					iterator.remove();
+				}
+			}
 		}
 		
+		//add any missing
+		while (particles.size() <= targetNumShapes) {
+			APVShape s = factory.createShape(createData());
+			particles.add(s);
+			groupShape.addChild(s.getShape());
+		}
+		
+		//update
 		for (APVShape p : particles) {
 			((LifecycleData)p.getData()).update();
 		}
+		
 		parent.shape(groupShape);
 	}
 
-	protected class LifecycleData extends Data {
+	protected int getTargetParticles() {
+		float result = numParticles * parent.getParticles().getPct();
+		return (int)result;
+	}
+	
+	public class LifecycleData extends Data {
 		
 		public static final int LIFESPAN = 255;
 		
 		protected float lifespan = LIFESPAN;
 		protected Color color = Color.WHITE;
+		protected boolean allowRespawn = true;
 		
 		public LifecycleData() {
 			respawn();
 			lifespan = parent.random(LIFESPAN);
 		}
 		
-		/**
-		 * {@link LifecycleSystem#draw()}
-		 * Every Draw cycle will give each LifecycleData the chance to update it's attributes
-		 * This Lifecyle Data will also check for "death" and respawn
-		 */
-		public void update() {
-			lifespan--;
-			if (isDead()) {
-				respawn();
-			}
-			
-			updateColor();
+		public boolean isAllowRespawn() {
+			return allowRespawn;
+		}
+
+		public void setAllowRespawn(boolean allowRespawn) {
+			this.allowRespawn = allowRespawn;
 		}
 
 		/**
-		 * called from {@link #update()} and changes the alpha based on lifespan 
+		 * {@link LifecycleSystem#draw()}
+		 * Every Draw cycle will give each LifecycleData the chance to update it's attributes
+		 * This Lifecyle Data will also check for "death" 
 		 */
-		protected void updateColor() {
+		public void update() {
+			lifespan--;
+			
+			//update color
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
 			shape.setColor(result);
 		}
-	
+
 		/**
 		 * checks to see whether lifespan has expired
 		 * called from {@link #update()}

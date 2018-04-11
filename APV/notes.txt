@@ -1,7 +1,6 @@
 BRANCH: default pulse listener
 https://github.com/mimelator/apv
 
-
 Use global user adjustable params to change the level of influence of NUM_PARTICLES
 
 
@@ -9,6 +8,10 @@ Use global user adjustable params to change the level of influence of NUM_PARTIC
 TODO: 
 * Use global user adjustable params to change the level of influence of NUM_PARTICLES
 * Snap Listener maybe shows a flash?
+* Externalize configuration of objects in text files
+* Set up a build system (run outside of eclipse)
+* work on readme
+* test Audio#scale
 *****************************************************************************
 		
 		

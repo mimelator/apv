@@ -16,8 +16,6 @@ public class RotatorSystem extends LifecycleSystem {
 		super(parent, factory, numParticles);
 	}
 	
-	
-	
 	/**
 	 * Delegate to the LocationSystem
 	 */
@@ -25,7 +23,6 @@ public class RotatorSystem extends LifecycleSystem {
 	public String getDisplayName() {
 		return super.getDisplayName() + "[" + parent.getLocationSystem().getDisplayName() + "]";
 	}
-
 
 	@Override
 	protected LifecycleData createData() {
@@ -93,6 +90,8 @@ public class RotatorSystem extends LifecycleSystem {
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.translate((float)p.getX(), (float)p.getY());
+			} else {
+				//System.out.println("uh oh");
 			}
 		}
 	}

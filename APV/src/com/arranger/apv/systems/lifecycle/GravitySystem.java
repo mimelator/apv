@@ -46,11 +46,15 @@ public class GravitySystem extends LifecycleSystem {
 		
 		protected PVector gravity = new PVector(0, DEFAULT_GRAVITY);
 		protected PVector velocity;
-		
+		private boolean isInit = false;
+
 		/**
 		 * {@link GravitySystem#draw()}
 		 */
 		public void update() {
+			if (!isInit) {
+				setInitialLocation();
+			}
 			super.update();
 			
 			updateGravity();
@@ -62,6 +66,9 @@ public class GravitySystem extends LifecycleSystem {
 		 */
 		protected void updateLocation() {
 			shape.translate(velocity.x, velocity.y);
+			if (shape.isOffscreen()) {
+				lifespan = -1; //kill it
+			}
 		}
 
 		/**
@@ -99,6 +106,7 @@ public class GravitySystem extends LifecycleSystem {
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.translate((float)p.getX(), (float)p.getY());
+				isInit = true;
 			}
 		}
 	}

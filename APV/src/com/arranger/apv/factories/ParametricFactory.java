@@ -95,7 +95,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 
 	@Override
 	public APVShape createShape(Data data) {
-		APVShape apvShape =  new PrimitiveShape(parent, data) {
+		APVShape apvShape = new PrimitiveShape(parent, data) {
 			@Override
 			protected Shape createPrimitiveShape(float size) {
 				Point2D [] points = genPoints(size);
@@ -104,31 +104,36 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 			}
 		};
 		
-		apvShape.scale(scale);
+		float size = newShapeSize();
+		apvShape.scale(scale * size);
 		apvShape.getShape().setStroke(stroke);
 		
 		return apvShape;
 	}
 	
+//	private Point2D [] points;
+	
     private Point2D[] genPoints(float size) {
-        Point2D[] points = new Point2D[(int) (periods / precision)];
-        int index = 0;
-        double maxTheta = periods + periodOffset;
-        for (double theta = 0 + periodOffset; theta <= maxTheta && index < points.length; theta += precision) {
-            double [] shapePoint = genPoint(theta);
-            
-            double x = shapePoint[0] * size * .1;
-            double y = shapePoint[1] * size * .1;
-
-            if (x == Double.NaN || x == Double.NEGATIVE_INFINITY || x == Double.POSITIVE_INFINITY) {
-                x = X_OUT_OF_BOUNDS;
-            }
-            if (y == Double.NaN || y == Double.NEGATIVE_INFINITY || y == Double.POSITIVE_INFINITY) {
-                y = Y_OUT_OF_BOUNDS;
-            }
-
-            points[index++] = new Point2D.Double(x, y);
-        }
+//    	if (points == null) {
+    	Point2D [] points = new Point2D[(int) (periods / precision)];
+	        int index = 0;
+	        double maxTheta = periods + periodOffset;
+	        for (double theta = 0 + periodOffset; theta <= maxTheta && index < points.length; theta += precision) {
+	            double [] shapePoint = genPoint(theta);
+	            
+	            double x = shapePoint[0] * size * .1;
+	            double y = shapePoint[1] * size * .1;
+	
+	            if (x == Double.NaN || x == Double.NEGATIVE_INFINITY || x == Double.POSITIVE_INFINITY) {
+	                x = X_OUT_OF_BOUNDS;
+	            }
+	            if (y == Double.NaN || y == Double.NEGATIVE_INFINITY || y == Double.POSITIVE_INFINITY) {
+	                y = Y_OUT_OF_BOUNDS;
+	            }
+	
+	            points[index++] = new Point2D.Double(x, y);
+	        }
+//    	}
         return points;
     }
 	

@@ -9,7 +9,7 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 	private static final float PCT_TO_DIE = 99.75f;
 
 	public BubbleShapeSystem(Main parent) {
-		this(parent, DEFAULT_NUM_NEW_OBJECTS);
+		this(parent, Main.NUMBER_PARTICLES);
 	}
 
 	public BubbleShapeSystem(Main parent, int numNewObjects) {

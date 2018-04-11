@@ -8,18 +8,18 @@ import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 
-	public static final int DEFAULT_NUM_NEW_OBJECTS = 10;
-
-	protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
-	protected int numNewObjects;
+protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
+	
 	protected boolean shouldCreateSetupObjects = true;
 	protected boolean shouldCreateNewObjectsEveryDraw = true;
 	protected boolean shouldRepopulateObjectsEveryDraw = true;
 	protected int framesPerReset = Integer.MAX_VALUE;
 	
+	private int numNewObjects;
+	
 	public LiteCycleShapeSystem(Main parent) {
 		super(parent);
-		numNewObjects = DEFAULT_NUM_NEW_OBJECTS;
+		numNewObjects = Main.NUMBER_PARTICLES;
 	}
 
 	public LiteCycleShapeSystem(Main parent, int numNewObjects) {
@@ -51,7 +51,8 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 		}
 		
 		if (shouldRepopulateObjectsEveryDraw) {
-			while (lcObjects.size() < numNewObjects) {
+			int total = getNumNewObjects();
+			while (lcObjects.size() < total) {
 				lcObjects.add(createObj(lcObjects.size()  - 1));
 			}
 		}
@@ -62,8 +63,9 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 			reset();
 		} 
 		
-		for (int i = 0; i < numNewObjects; i++) {
-			lcObjects.add(createObj(i));
+		int total = getNumNewObjects();
+		while (lcObjects.size() < total) {
+			lcObjects.add(createObj(lcObjects.size()  - 1));
 		}
 	}
 	
@@ -71,6 +73,11 @@ public abstract class LiteCycleShapeSystem extends LiteShapeSystem {
 		lcObjects.clear();
 	}
 
+	protected int getNumNewObjects() {
+		float result = numNewObjects * parent.getParticles().getPct();
+		return (int)result;
+	}
+	
 	protected abstract LiteCycleObj createObj(int index);
 
 	public abstract class LiteCycleObj {

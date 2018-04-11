@@ -30,7 +30,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	
 	private static final int STAR_WEB_FRAMES_PER_RESET = 20000;
 	
-	private static final float PCT_TO_DIE = 75;//99.75f;
+	private static final float PCT_TO_DIE = 98.5f;//75;//99.75f;
 	
 	int fc, edge = NUM_EDGES;
 	float deatRatePct = PCT_TO_DIE;
@@ -52,10 +52,9 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	/**
 	 * @param deatRatePct between 0 and 1.0f
 	 */
-	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects, float deatRatePct, boolean doRotateScale) {
+	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects, boolean doRotateScale) {
 		super(parent, numNewObjects);
 		this.factory = factory;
-		this.deatRatePct = deatRatePct * 100;
 		this.doRotateScale = doRotateScale;
 	}
 	
@@ -71,34 +70,23 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	}
 	
 	@Override
-	protected void createNewObjects() {
-		int width = parent.width;
-		int height = parent.height;
-		
-		for (int i = 0; i < numNewObjects; i++) {
-			PVector org = new PVector(random(edge, width - edge), random(edge, height - edge));
-			float radius = random(SMALL_RADIUS, LARGE_RADIUS);
-			PVector loc = new PVector(org.x + radius, org.y);
-			float offSet = random(TWO_PI);
-			int dir = 1;
-			float r = random(0, 1);
-			if (r > .5) {
-				dir = -1;
-			}
-			lcObjects.add(new Ball(org, loc, radius, dir, offSet));
-		}
-	}
-
-	@Override
 	protected LiteCycleObj createObj(int index) {
-		throw new RuntimeException("StarWebSystem::createObj not implemented");
+		PVector org = new PVector(random(edge, parent.width - edge), random(edge, parent.height - edge));
+		float radius = random(SMALL_RADIUS, LARGE_RADIUS);
+		PVector loc = new PVector(org.x + radius, org.y);
+		float offSet = random(TWO_PI);
+		int dir = 1;
+		float r = random(0, 1);
+		if (r > .5) {
+			dir = -1;
+		}
+		return new StarWebObject(org, loc, radius, dir, offSet);
 	}
 	
-	private class Ball extends LiteCycleObj {
-		
+	private class StarWebObject extends LiteCycleObj {
 		
 		private static final int DEFAULT_SIZE = 10;
-		private static final int NUM_SHAPES = 5;
+		private static final int DEFAULT_DUPLICATES = 5;
 		
 		PVector org, loc;
 		float sz = DEFAULT_SIZE;
@@ -107,11 +95,13 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		Color ballColor;
 		Color lineColor;
 		int alpha;
-		float rotate;
+		float rotationRate;
 		float scale;
 		APVShape factoryShape;
 		
-		private Ball(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
+		int numDuplicates = DEFAULT_DUPLICATES;
+		
+		private StarWebObject(PVector _org, PVector _loc, float _radius, int _dir, float _offSet) {
 			org = _org;
 			loc = _loc;
 			radius = _radius;
@@ -122,32 +112,35 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 				factoryShape = factory.createShape(null);
 			}
 			
-			resetColor();
+			numDuplicates = (int)parent.random(1, DEFAULT_DUPLICATES);
+			
+			reset();
 		}
 		
 		@Override
 		public boolean isDead() {
 			float random = random(100);
-			if (random > deatRatePct) {
-				resetColor();
-			}
-			
-			return false;
+			return random > deatRatePct;
 		}
 		
-		private void resetColor() {
+		private void reset() {
 			ballColor = parent.getColorSystem().getCurrentColor();
 			lineColor = parent.getColorSystem().getCurrentColor();
 			alpha = (int)parent.random(Main.MAX_ALPHA);
 			
 			if (doRotateScale) {
-				rotate = PApplet.degrees(parent.random(PApplet.TWO_PI));
+				rotationRate = parent.random(.01f, .15f);
+				if (parent.randomBoolean()) {
+					rotationRate = -rotationRate;
+				}
+				
 				scale = parent.random(.25f, 1.3f);
 				
 				if (factory != null) {
 					PShape drawShape = factoryShape.getShape();
 					drawShape.resetMatrix();
 					drawShape.scale(scale);
+					drawShape.rotate(PApplet.degrees(parent.random(PApplet.TWO_PI))); //initial rotation
 				}
 			}
 		}
@@ -166,34 +159,38 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		}
 
 		private void drawShapes() {
-			for (int i = 0; i < NUM_SHAPES; i++) {
-				if (factoryShape != null) {
-					PShape drawShape = factoryShape.getShape();
-					
-					parent.rectMode(CENTER);
-					parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
-					//drawShape.setStroke(FACTORY_SHAPE_STROKE_WEIGHT);
-					drawShape.setFill(true);
-					factoryShape.setColor(ballColor.getRGB(), alpha);
-					
-					if (doRotateScale) {
-						drawShape.rotate(rotate);
-					}
-					
-					parent.shape(drawShape, 
-							loc.x - (drawShape.width / 2), 
-							loc.y - (drawShape.height / 2) );
-				} else {
-					parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
-					parent.fill(ballColor.getRGB(), i * 50);
-					parent.ellipse(loc.x, loc.y, sz - 2 * i, sz - 2 * i);
-				}
+			if (factoryShape == null) {
+				drawShapesWithoutFactory();
+				return;
+			}
+			
+			PShape drawShape = factoryShape.getShape();
+			
+			parent.rectMode(CENTER);
+			parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
+			drawShape.setFill(true);
+			factoryShape.setColor(ballColor.getRGB(), alpha);
+			
+			if (doRotateScale) {
+				drawShape.rotate(rotationRate);
+			}
+			
+			parent.shape(drawShape, 
+					loc.x - (drawShape.width / 2), 
+					loc.y - (drawShape.height / 2) );
+		}
+		
+		private void drawShapesWithoutFactory() {
+			for (int i = 0; i < numDuplicates; i++) {
+				parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
+				parent.fill(ballColor.getRGB(), i * 50);
+				parent.ellipse(loc.x, loc.y, sz - 2 * i, sz - 2 * i);
 			}
 		}
 		
 		private void lineBetween() {
 			for (LiteCycleObj otherObj : lcObjects) {
-				Ball otherBall = (Ball)otherObj;
+				StarWebObject otherBall = (StarWebObject)otherObj;
 				float distance = loc.dist(otherBall.loc);
 				if (distance > 0 && distance < d) {
 					parent.strokeWeight(LINE_STROKE_WEIGHT);
