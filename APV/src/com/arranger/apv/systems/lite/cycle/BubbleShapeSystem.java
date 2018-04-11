@@ -3,10 +3,16 @@ package com.arranger.apv.systems.lite.cycle;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.factories.CircleImageFactory;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PShape;
 
 public class BubbleShapeSystem extends LiteCycleShapeSystem {
 	
 	private static final float PCT_TO_DIE = 99.75f;
+	protected PImage circle;
 
 	public BubbleShapeSystem(Main parent) {
 		this(parent, Main.NUMBER_PARTICLES);
@@ -15,8 +21,9 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 	public BubbleShapeSystem(Main parent, int numNewObjects) {
 		super(parent, numNewObjects);
 		shouldCreateNewObjectsEveryDraw = false;
+		circle = parent.loadImage(CircleImageFactory.CIRCLE_PNG);
 	}
-
+	
 	@Override
 	protected LiteCycleObj createObj(int index) {
 		return new Bubble();
@@ -26,6 +33,7 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 		
 		private float x, y, vx, vy, step;
 		private Color color;
+		private PShape s;
 
 		private Bubble() {
 			this.x = random(parent.width);
@@ -34,7 +42,24 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 			this.vy = random(1, 5);
 			this.step = random(5, 20);
 			color = parent.getColorSystem().getCurrentColor();
+			createNewShape();
 		}
+		
+		protected void createNewShape() {
+			float size = parent.random(10,60);
+			
+			s = parent.createShape();
+		    s.beginShape(PApplet.QUAD);
+		    s.noStroke();
+		    s.texture(circle);
+		    s.normal(0, 0, 1);
+		    s.vertex(-size/2, -size/2, 0, 0);
+		    s.vertex(+size/2, -size/2, circle.width, 0);
+		    s.vertex(+size/2, +size/2, circle.width, circle.height);
+		    s.vertex(-size/2, +size/2, 0, circle.height);
+		    s.endShape();
+		}
+		
 		
 		@Override
 		public boolean isDead() {
@@ -48,9 +73,14 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 			parent.translate(this.x, this.y);
 			parent.noStroke();
 			for (int i = 5; i > 0; i--) {
-				//parent.fill(255, 255, 0, i * this.step);  //Just shades of Yellow
-				parent.fill(color.getRed(), color.getGreen(), color.getBlue(), i * this.step);
-				parent.ellipse(0, 0, i * this.step, i * this.step);
+				
+				int c = parent.color(color.getRed(), color.getGreen(), color.getBlue(), i * step);
+				s.setFill(c);
+				//parent.image(s, 0, 0);
+				parent.shape(s, 0, 0, i * step, i * step);
+				
+				//parent.fill(color);
+				//parent.ellipse(0, 0, i * this.step, i * this.step);
 			}
 			parent.popMatrix();
 		}

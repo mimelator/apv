@@ -31,6 +31,9 @@ import processing.core.PApplet;
 	SCREEN - opposite multiply, uses inverse values of the colors.
 	
 	REPLACE - the pixels entirely replace the others and don't utilize alpha (transparency) values
+	
+	
+	To be deleted
  */
 public class BeatTintFilter extends PulseBasedFilter {
 
@@ -40,7 +43,7 @@ public class BeatTintFilter extends PulseBasedFilter {
 	BeatColorSystem colorSystem;
 	
 	
-	public BeatTintFilter(Main parent, int blendMode) {
+	private BeatTintFilter(Main parent, int blendMode) {
 		super(parent);
 		colorSystem = new OscillatingColor(parent);
 		this.blendMode = blendMode;

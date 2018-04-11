@@ -2,7 +2,7 @@ package com.arranger.apv.factories;
 
 import com.arranger.apv.Main;
 
-public class DotFactory extends CircleFactory {
+public class DotFactory extends CircleImageFactory {
 
 	private static final float LARGE_SHAPE_SIZE = 10;
 	private static final float SMALL_SHAPE_SIZE = 2;

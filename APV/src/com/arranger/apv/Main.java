@@ -23,7 +23,7 @@ import com.arranger.apv.control.Auto;
 import com.arranger.apv.control.Manual;
 import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
-import com.arranger.apv.factories.CircleFactory;
+import com.arranger.apv.factories.CircleImageFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.EmptyShapeFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
@@ -337,6 +337,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 14));
 			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			backgroundSystems.add(new AttractorSystem(this, new HypocycloidFactory(this)));
 			backgroundSystems.add(new FreqDetector(this));
@@ -359,7 +360,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			foregroundSystems.add(new GravitySystem(this, new CircleFactory(this), NUMBER_PARTICLES / 10));
+			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES / 5));
@@ -371,7 +372,7 @@ public class Main extends PApplet {
 			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES  / 10));			
 			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new StarWebSystem(this, new CircleFactory(this), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new StarWebSystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
 			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 20));

@@ -190,68 +190,6 @@ public class CircularMessage extends MessageSystem {
 				parent.popMatrix();
 				arcLength += wdthTChar / 2;
 			}
-			// ellipse(xPos, yPos, radius*2, radius*2);
 		}
 	}
-
-//	int clr[] = { 255, 0 };
-//	PFont font;
-//	String msg[] = { "size matters ", "A maximus ad minima ", "Amor vincit omnia ", "Animam in promptu habere ",
-//			"Aqua et igni alicui interdicere ", "Aut cum scuto, aut in scuto ",
-//			"Bona opinio homini tuttior pecunia est ", "Bonus pater familias ", "Caritas humani generis ",
-//			"Cogitationum poenam nemo luit ", "Contra factum non datur argumentum  ", "Contra spem spero ",
-//			"Contraria sunt complementa ", "Credo quia absurdum ", "Dum spiro spero ",
-//			"Imperare sibi maximum imperium est ", "Post tenebras lux ", "Reti ventos venari " };
-
-	
-
-//void setup() {
-//size(700, 700);
-//font = createFont("Arial Bold", 10, true);
-//nvCirc = new CircleText(width/2, height/2, msg[int(random(msg.length))]);
-//background(clr[0]);  fill(clr[1]);
-//noLoop();
-//}
-
-//void draw() {
-//if (mousePressed) {
-//textFont(font, random(10, 40));
-//translate (mouseX, mouseY);
-//rotate(random(TWO_PI));
-//nvCirc.drawTextRing(0, 0, msg[int(random(msg.length))]);
-//}
-//}
-
-//	void mousePressed() {
-//		redraw();
-//	}
-
-//	void keyPressed() {
-//		switch (key) {
-//		case 's':
-//		case 'S': {
-//			saveFrame("img-###" + (int) random(100, 800) + ".jpg");
-//			break;
-//		}
-//		case 'i':
-//		case 'I': {
-//			clr[0] = clr[0] ^ clr[1];
-//			clr[1] = clr[1] ^ clr[0];
-//			clr[0] = clr[0] ^ clr[1];
-//		}
-//		default: {
-//			background(clr[0]);
-//			fill(clr[1]);
-//			redraw();
-//		}
-//		}
-//	}
-
-	// quick helper class by Manoylov AC
-	// drawing text on circle with different modes
-	// not perfect. WIP.
-	// correctly works with textAlign(CENTER);
-
-
-
 }

@@ -39,7 +39,8 @@ public class SpriteFactory extends ShapeFactory {
 		
 		@Override
 		public void setColor(int color) {
-			getShape().setTint(color);
+			PShape s = getShape();
+			s.setTint(color);
 		}
 
 		@Override
