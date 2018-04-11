@@ -92,7 +92,7 @@ public class Main extends PApplet {
 	public static final int MAX_ALPHA = 255;
 	
 	//Defaults 
-	private static final boolean FULL_SCREEN = false;
+	private static final boolean FULL_SCREEN = true;
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
@@ -359,6 +359,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "rain.jpg"), NUMBER_PARTICLES / 5));
 			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
