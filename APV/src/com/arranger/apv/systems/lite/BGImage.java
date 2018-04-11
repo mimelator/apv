@@ -10,6 +10,8 @@ public class BGImage extends LiteShapeSystem {
 	
 	private APVShape shape;
 	private float alpha = 1f;
+	
+	private float scaleX = 1, scaleY = 1;
 
 	public BGImage(Main parent, SpriteFactory factory) {
 		super(parent);
@@ -21,22 +23,27 @@ public class BGImage extends LiteShapeSystem {
 		this.factory = factory;
 		this.alpha = alpha;
 	}
+	
+	public BGImage(Main parent, SpriteFactory factory, float alpha, float scaleX, float scaleY) {
+		super(parent);
+		this.factory = factory;
+		this.alpha = alpha;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+	}
 
 	@Override
 	public void setup() {
 		
 	}
 
-	float scaleX = 1, scaleY = 1;
-	
 	@Override
 	public void draw() {
 		
 		if (shape == null) {
 			SpriteFactory sf = (SpriteFactory)factory;
 			shape = sf.createShape(null);
-			scaleX = parent.width / sf.getImageWidth();
-			scaleY = parent.height / sf.getImageHeight();
+			
 		}
 		
 		float a = PApplet.lerp(0, Main.MAX_ALPHA, alpha);

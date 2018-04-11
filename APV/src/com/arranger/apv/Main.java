@@ -338,7 +338,9 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
-			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "Konkrete-Breaks.png"), .75f));
+			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "test.jpg"), .5f, 2, 2)); 
+			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "blur.png"), .5f, 2, 2)); 
+			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "Konkrete-Breaks.png"), .75f, 2, 2));
 			backgroundSystems.add(new BoxWaves(this));
 			backgroundSystems.add(new Spirograph(this));
 			backgroundSystems.add(new PixelAttractor(this));
