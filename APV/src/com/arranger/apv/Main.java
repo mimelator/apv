@@ -10,11 +10,11 @@ import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.audio.PulseListener;
-import com.arranger.apv.bg.BackDropSystem;
-import com.arranger.apv.bg.BlurBackDrop;
-import com.arranger.apv.bg.OscilatingBackDrop;
-import com.arranger.apv.bg.PulseRefreshBackDrop;
-import com.arranger.apv.bg.RefreshBackDrop;
+import com.arranger.apv.back.BackDropSystem;
+import com.arranger.apv.back.BlurBackDrop;
+import com.arranger.apv.back.OscilatingBackDrop;
+import com.arranger.apv.back.PulseRefreshBackDrop;
+import com.arranger.apv.back.RefreshBackDrop;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
@@ -27,7 +27,6 @@ import com.arranger.apv.factories.CircleImageFactory;
 import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.EmptyShapeFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
-import com.arranger.apv.factories.ParametricFactory.InvoluteFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.factories.StarFactory;
@@ -46,6 +45,7 @@ import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
+import com.arranger.apv.systems.PixelAttractor;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -56,7 +56,6 @@ import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.cycle.BubbleShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
-import com.arranger.apv.systems.lite.cycle.NoisyShapeSystem;
 import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 import com.arranger.apv.transition.Fade;
@@ -336,6 +335,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new PixelAttractor(this));
 			backgroundSystems.add(new WarpSystem(this, new SpriteFactory(this, "triangle.png", 2.5f), NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, .3f), NUMBER_PARTICLES));
 			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
