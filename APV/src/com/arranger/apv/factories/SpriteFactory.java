@@ -1,5 +1,7 @@
 package com.arranger.apv.factories;
 
+import java.awt.Color;
+
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
@@ -13,6 +15,7 @@ import processing.core.PShape;
 public class SpriteFactory extends ShapeFactory {
 	
 	protected PImage sprite;  
+	protected float alpha;
 	
 	public SpriteFactory(Main parent, String file) {
 		super(parent);
@@ -23,6 +26,7 @@ public class SpriteFactory extends ShapeFactory {
 		this(parent, file);
 		this.scale = scale;
 	}
+	
 
 	@Override
 	public APVShape createShape(Data data) {
@@ -40,6 +44,16 @@ public class SpriteFactory extends ShapeFactory {
 		@Override
 		public void setColor(int color) {
 			PShape s = getShape();
+			s.setTint(color);
+		}
+		
+		@Override
+		public void setColor(int color, float alpha) {
+			PShape s = getShape();
+			
+			Color c = new Color(color); 
+			color = parent.color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+			
 			s.setTint(color);
 		}
 

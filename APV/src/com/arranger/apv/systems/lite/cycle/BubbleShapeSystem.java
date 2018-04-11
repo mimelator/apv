@@ -73,14 +73,9 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 			parent.translate(this.x, this.y);
 			parent.noStroke();
 			for (int i = 5; i > 0; i--) {
-				
 				int c = parent.color(color.getRed(), color.getGreen(), color.getBlue(), i * step);
-				s.setFill(c);
-				//parent.image(s, 0, 0);
+				s.setTint(c);
 				parent.shape(s, 0, 0, i * step, i * step);
-				
-				//parent.fill(color);
-				//parent.ellipse(0, 0, i * this.step, i * this.step);
 			}
 			parent.popMatrix();
 		}

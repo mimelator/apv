@@ -91,7 +91,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		float sz = DEFAULT_SIZE;
 		float theta, radius, offSet;
 		int dir, d = BALL_CONNECTION_DISTANCE;
-		Color ballColor;
+		Color nodeColor;
 		Color lineColor;
 		int alpha;
 		float rotationRate;
@@ -123,7 +123,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		}
 		
 		private void reset() {
-			ballColor = parent.getColorSystem().getCurrentColor();
+			nodeColor = parent.getColorSystem().getCurrentColor();
 			lineColor = parent.getColorSystem().getCurrentColor();
 			alpha = (int)parent.random(Main.MAX_ALPHA);
 			
@@ -168,7 +168,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 			parent.rectMode(CENTER);
 			parent.stroke(FACTORY_SHAPE_STROKE_WEIGHT);
 			drawShape.setFill(true);
-			factoryShape.setColor(ballColor.getRGB(), alpha);
+			factoryShape.setColor(nodeColor.getRGB(), alpha);
 			
 			if (doRotateScale) {
 				drawShape.rotate(rotationRate);
@@ -182,7 +182,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		private void drawShapesWithoutFactory() {
 			for (int i = 1; i < numDuplicates + 1; i++) {
 				parent.strokeWeight(sz);
-				parent.stroke(ballColor.getRGB());
+				parent.stroke(nodeColor.getRGB());
 				parent.point(loc.x, loc.y);
 				
 			}

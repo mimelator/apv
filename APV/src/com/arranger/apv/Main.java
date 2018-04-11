@@ -314,9 +314,9 @@ public class Main extends PApplet {
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
 		
+		locationSystems.add(new CircularLocationSystem(this, false));
 		locationSystems.add(new PerlinNoiseWalkerLocationSystem(this));
 		locationSystems.add(new MouseLocationSystem(this));
-		locationSystems.add(new CircularLocationSystem(this, false));
 		locationSystems.add(new CircularLocationSystem(this, true));
 		locationSystems.add(new RectLocationSystem(this, false));
 		locationSystems.add(new RectLocationSystem(this, true));
@@ -359,13 +359,23 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "rain.jpg"), NUMBER_PARTICLES / 5));
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "3dcube.png", 5), NUMBER_PARTICLES / 2));
+			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "Emoji_Blitz_Star.png", 1.5f)));
+			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "Scared_face_emoji.png"), NUMBER_PARTICLES));
+			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "emoji-island.png", .5f)));
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "Silly_Emoji.png", 3.0f), NUMBER_PARTICLES / 4));
+			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "gradient-triangle.png", 2.5f), NUMBER_PARTICLES / 2));
+			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "warning.png", 2.5f), NUMBER_PARTICLES / 2));
+			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "triangle.png"), NUMBER_PARTICLES));
+			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "swirl.png")));
+			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "swirl.png", 2.5f), NUMBER_PARTICLES));
+			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "purple.png"), NUMBER_PARTICLES / 2));
 			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES / 5));
-			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 12, true));
+			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 4, true));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));

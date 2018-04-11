@@ -1,7 +1,9 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
+Todo 
+Rotate Starweb nodes
+Rotate Gravity shapes
 
 *****************************************************************************
 TODO: 
