@@ -27,14 +27,16 @@ Forked by:
 public class BoxWaves extends LiteShapeSystem {
 
 	//Tune these
-	private static final float SCALE_FACTOR = 3.0f;
-	private static final int LOOP = 100;
+	private static final float SCALE_FACTOR = 1.5f;
+	private static final int LOOP_EVERY_N_FRAMES = 100;
+	private static final int RESET_EVERY_N_PULSES = 32;
+	private static final float ROTATION_RATE = .001f;
 	
 	//Could change, but not as important
-	private static final int NUM_BLOCKS_PER_ROW = 30;
-	private static final int SPACE_BETWEEN_BLOCKS = 15;
-	private static final int WHOLE_BOX_SCREEN_HEIGHT_OFFSET = 50;
-	private static final int MAX_BLOCK_WIDTH = 10;
+	private static final float NUM_BLOCKS_PER_ROW = 30 / SCALE_FACTOR;
+	private static final float SPACE_BETWEEN_BLOCKS = 15 * SCALE_FACTOR;
+	private static final float WHOLE_BOX_SCREEN_HEIGHT_OFFSET = 50 * SCALE_FACTOR;
+	private static final float MAX_BLOCK_WIDTH = 10 * SCALE_FACTOR;
 	
 	
 	//Don't bother changing these yet
@@ -42,6 +44,7 @@ public class BoxWaves extends LiteShapeSystem {
 	float heightMult = 3;
 	int lowColor = new Color(0, 200, 255).getRGB();
 	int highColor = new Color(150, 220, 255).getRGB();
+	float rotationStep = 0;
 
 	ArrayList<Block> blocks;
 
@@ -50,14 +53,14 @@ public class BoxWaves extends LiteShapeSystem {
 		
 		parent.getPulseListener().registerPulseListener(()->{
 			updateLocation();
-		}, 16); //skip every 16 pulses
+		}, RESET_EVERY_N_PULSES); //skip every 16 pulses
 	}
 
 	@Override
 	public void setup() {
 		blocks = new ArrayList<Block>();
 		float gap = SPACE_BETWEEN_BLOCKS;//15;
-		int num = NUM_BLOCKS_PER_ROW;
+		int num = (int)NUM_BLOCKS_PER_ROW;
 		for (int y = 0; y <= num; y++) {
 			for (int x = 0; x <= num; x++) {
 				PVector loc = new PVector(x * gap - num * gap / 2, y * gap - num * gap / 2, 0.0f);
@@ -68,8 +71,14 @@ public class BoxWaves extends LiteShapeSystem {
 
 	@Override
 	public void draw() {
-		//parent.stroke(0, 100);
-		parent.translate(parent.width / 2, parent.height / 2, -WHOLE_BOX_SCREEN_HEIGHT_OFFSET);
+		rotationStep += ROTATION_RATE;
+		int transX = parent.width / 2;
+		int transY = parent.height / 2;
+		parent.translate(transX, transY);
+		parent.rotateY(rotationStep);
+		parent.translate(-transX, -transY);
+		
+		parent.translate(transX, transY, -WHOLE_BOX_SCREEN_HEIGHT_OFFSET);
 		parent.rotateX(HALF_PI / 2);
 		parent.rotateZ(HALF_PI / 3);
 		
@@ -103,33 +112,33 @@ public class BoxWaves extends LiteShapeSystem {
 
 			int loopOffset = (int) (index * mult);
 			parent.pushMatrix();
-			float time = (parent.getFrameCount() + loopOffset) % LOOP;
+			float time = (parent.getFrameCount() + loopOffset) % LOOP_EVERY_N_FRAMES;
 			float bx, by, bz;
 			float lx, ly, lz;
-			if (time < LOOP / 4.0) {
+			if (time < LOOP_EVERY_N_FRAMES / 4.0) {
 				bx = MAX_BLOCK_WIDTH;
 				by = MAX_BLOCK_WIDTH;
-				bz = PApplet.map(time, 0, LOOP / 4.0f, MAX_BLOCK_WIDTH, MAX_BLOCK_WIDTH / 5.0f);
+				bz = PApplet.map(time, 0, LOOP_EVERY_N_FRAMES / 4.0f, MAX_BLOCK_WIDTH, MAX_BLOCK_WIDTH / 5.0f);
 				lx = 0.0f;
 				ly = 0.0f;
 				lz = bz / 2;
-			} else if (time < LOOP / 4.0f * 2) {
+			} else if (time < LOOP_EVERY_N_FRAMES / 4.0f * 2) {
 				bx = MAX_BLOCK_WIDTH;
-				by = PApplet.map(time, LOOP / 4.0f, LOOP / 4.0f * 2, MAX_BLOCK_WIDTH, MAX_BLOCK_WIDTH / 5.0f);
+				by = PApplet.map(time, LOOP_EVERY_N_FRAMES / 4.0f, LOOP_EVERY_N_FRAMES / 4.0f * 2, MAX_BLOCK_WIDTH, MAX_BLOCK_WIDTH / 5.0f);
 				bz = MAX_BLOCK_WIDTH / 5.0f;
 				lx = 0.0f;
 				ly = MAX_BLOCK_WIDTH / 2 - by / 2;
 				lz = bz / 2;
-			} else if (time < LOOP / 4.0f * 3) {
+			} else if (time < LOOP_EVERY_N_FRAMES / 4.0f * 3) {
 				bx = MAX_BLOCK_WIDTH;
 				by = MAX_BLOCK_WIDTH / 5.0f;
-				bz = PApplet.map(time, LOOP / 4.0f * 2, LOOP / 4.0f * 3, MAX_BLOCK_WIDTH / 5.0f, MAX_BLOCK_WIDTH);
+				bz = PApplet.map(time, LOOP_EVERY_N_FRAMES / 4.0f * 2, LOOP_EVERY_N_FRAMES / 4.0f * 3, MAX_BLOCK_WIDTH / 5.0f, MAX_BLOCK_WIDTH);
 				lx = 0.0f;
 				ly = MAX_BLOCK_WIDTH / 2 - by / 2;
 				lz = bz / 2;
 			} else {
 				bx = MAX_BLOCK_WIDTH;
-				by = PApplet.map(time, LOOP / 4.0f * 3, LOOP / 4.0f * 4, MAX_BLOCK_WIDTH / 5.0f, MAX_BLOCK_WIDTH);
+				by = PApplet.map(time, LOOP_EVERY_N_FRAMES / 4.0f * 3, LOOP_EVERY_N_FRAMES / 4.0f * 4, MAX_BLOCK_WIDTH / 5.0f, MAX_BLOCK_WIDTH);
 				bz = MAX_BLOCK_WIDTH;
 				lx = 0.0f;
 				ly = MAX_BLOCK_WIDTH / 2 - by / 2;
@@ -143,7 +152,5 @@ public class BoxWaves extends LiteShapeSystem {
 			parent.box(bx, by, bz * heightMult);
 			parent.popMatrix();
 		}
-
 	}
-
 }
