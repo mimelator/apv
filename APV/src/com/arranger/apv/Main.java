@@ -81,31 +81,30 @@ public class Main extends PApplet {
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	//Change these during active development
-	public static final int MAX_ALPHA = 255;
-	public static final int NUMBER_PARTICLES = 1000;
-	
-	private static final int DEFAULT_TRANSITION_FRAMES = 30;
-	private static final int PLASMA_ALPHA_LOW = 120;
-	private static final int PLASMA_ALPHA_HIGH = 255;
+	public static final int NUMBER_PARTICLES = 200;//1000;
 	public static final String RENDERER = P2D;
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
+	private static final int BUFFER_SIZE = 512;
+	private static final int DEFAULT_TRANSITION_FRAMES = 30;
+	private static final int PLASMA_ALPHA_LOW = 120;
+	private static final int PLASMA_ALPHA_HIGH = 255;
+	public static final int MAX_ALPHA = 255;
 	
-	//Defaults (could be intialized by env variables in the future)
+	//Defaults 
+	private static final boolean FULL_SCREEN = false;
 	public static final boolean AUDIO_IN = true;
 	private static final boolean USE_BACKDROP = true;
 	private static final boolean USE_BG = true;
 	private static final boolean USE_FG = true;
 	private static final boolean USE_FILTERS = true;
-	private static final boolean FULL_SCREEN = true;
 	private static final boolean USE_TRANSITIONS = true;
 	private static final boolean SHOW_SETTINGS = true;
 	private static final boolean USE_MESSAGES = true;
 	private static final boolean USE_PULSE_LISTENER = true;
 	private static final boolean MONITOR_FRAME_RATE = true;
 
-	//This is a tradeoff between performance and precision for the audio system
-	private static final int BUFFER_SIZE = 512; //Default is 1024
+	
 
 	//Don't change the following values
 	private static final String SONG = "";
@@ -360,6 +359,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FG) {
+			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
 			foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
@@ -370,7 +370,6 @@ public class Main extends PApplet {
 			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
 			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
 			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES  / 10));			
-			foregroundSystems.add(new StarWebSystem(this));
 			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
 			foregroundSystems.add(new StarWebSystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f)));
@@ -379,6 +378,7 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_BACKDROP) {
+			backDropSystems.add(new BackDropSystem(this));
 			backDropSystems.add(new OscilatingBackDrop(this, Color.WHITE, Color.BLACK, "[White-Black]"));
 			backDropSystems.add(new PulseRefreshBackDrop(this));
 			backDropSystems.add(new PulseRefreshBackDrop(this, PulseListener.DEFAULT_PULSES_TO_SKIP / 2));
@@ -392,16 +392,17 @@ public class Main extends PApplet {
 		}
 		
 		if (USE_FILTERS) {
-			filters.add(new PulseShakeFilter(this));
-			filters.add(new PulseShakeFilter(this));
+			filters.add(new Filter(this));
 			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
+			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
+			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
+			filters.add(new PulseShakeFilter(this));
 			filters.add(new Filter(this));
 			filters.add(new Filter(this));
 			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.EXCLUSION));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
 			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
 		}
 		
@@ -695,6 +696,7 @@ public class Main extends PApplet {
 		
 		if (scrambleMode) {
 			doScramble();
+			//System.gc();
 		}
 		
 		runControlMode();

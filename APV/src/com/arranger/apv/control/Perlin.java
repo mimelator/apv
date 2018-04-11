@@ -147,6 +147,8 @@ public class Perlin extends PulseListeningControlSystem {
 			}
 		}
 		
+		//TODO add more scrambles
+		
 		if (logger.isLoggable(Level.FINE)) {
 			for (KeyEvent [] row : commandGrid) {
 				for (KeyEvent cmd : row) {

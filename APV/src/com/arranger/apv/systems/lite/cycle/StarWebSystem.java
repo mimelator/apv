@@ -25,7 +25,6 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	private static final int BALL_CONNECTION_DISTANCE = 60;
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
 	
-	private static final int DEFAULT_ELLIPSE_STROKE_WEIGHT = 1;
 	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;
 	
 	private static final int STAR_WEB_FRAMES_PER_RESET = 20000;
@@ -181,10 +180,11 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		}
 		
 		private void drawShapesWithoutFactory() {
-			for (int i = 0; i < numDuplicates; i++) {
-				parent.stroke(DEFAULT_ELLIPSE_STROKE_WEIGHT);
-				parent.fill(ballColor.getRGB(), i * 50);
-				parent.ellipse(loc.x, loc.y, sz - 2 * i, sz - 2 * i);
+			for (int i = 1; i < numDuplicates + 1; i++) {
+				parent.strokeWeight(sz);
+				parent.stroke(ballColor.getRGB());
+				parent.point(loc.x, loc.y);
+				
 			}
 		}
 		
