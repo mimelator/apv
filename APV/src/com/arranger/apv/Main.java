@@ -49,6 +49,7 @@ import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
+import com.arranger.apv.systems.lite.BoxWaves;
 import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PixelAttractor;
@@ -82,7 +83,7 @@ public class Main extends PApplet {
 	
 	//Change these during active development
 	public static final int NUMBER_PARTICLES = 200;//1000;
-	public static final String RENDERER = P2D;
+	public static final String RENDERER = P3D;//P2D;
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
 	private static final int BUFFER_SIZE = 512;
@@ -336,6 +337,7 @@ public class Main extends PApplet {
 		
 		//Create Shape Factories and Shape Systems
 		if (USE_BG) {
+			backgroundSystems.add(new BoxWaves(this));
 			backgroundSystems.add(new Spirograph(this));
 			backgroundSystems.add(new PixelAttractor(this));
 			backgroundSystems.add(new WarpSystem(this, new SpriteFactory(this, "triangle.png", 2.5f), NUMBER_PARTICLES));
