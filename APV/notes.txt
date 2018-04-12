@@ -34,3 +34,4 @@ Dependencies:
 	Minim: http://code.compartmental.net/tools/minim/
 	Processing: http://processing.org/
 	TestNG
+	Config

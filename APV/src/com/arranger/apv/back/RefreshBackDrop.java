@@ -3,6 +3,7 @@ package com.arranger.apv.back;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -20,6 +21,10 @@ public class RefreshBackDrop extends BackDropSystem {
 	public RefreshBackDrop(Main parent, float bgRefreshPct) {
 		super(parent);
 		this.bgRefreshPct = bgRefreshPct;
+	}
+	
+	public RefreshBackDrop(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getFloat(0, PCT_BG_REFRESH));
 	}
 	
 	/**

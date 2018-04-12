@@ -1,6 +1,8 @@
 package com.arranger.apv.util;
 
+import java.awt.Color;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -193,6 +195,26 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			}
 		}
 		
+		public Color getColor(int index, Color defaultVal) {
+			if (argList.size() > index) {
+				String colorString = argList.get(index).unwrapped().toString();
+				Color c = decode(colorString);
+				if (c != null) {
+					return c;
+				}
+			}
+			return defaultVal;
+		}
+		
+		private Color decode(String colorName) {
+			try {
+			    Field field = Color.class.getField(colorName);
+			    return (Color)field.get(null);
+			} catch (Exception e) {
+			    return null;
+			}
+		}
+		
 		public APVPlugin loadPlugin(int index) {
 			if (argList.size() > index) {
 				ConfigValue cv = argList.get(index); 
@@ -220,7 +242,6 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		
 		conf = ConfigFactory.load();
 	}
-	
 	
 	public List<? extends APVPlugin> loadShapeSytems(String name) {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();

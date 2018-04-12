@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
+import com.arranger.apv.util.Configurator;
 
 public class PulseRefreshBackDrop extends BackDropSystem {
 
@@ -17,6 +18,10 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 	public PulseRefreshBackDrop(Main parent, int pulsesToSkip) {
 		super(parent);
 		pulse = new PulseListener(parent, pulsesToSkip);
+	}
+	
+	public PulseRefreshBackDrop(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, PulseListener.DEFAULT_PULSES_TO_SKIP));
 	}
 	
 	@Override

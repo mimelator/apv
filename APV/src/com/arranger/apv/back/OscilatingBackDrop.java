@@ -3,6 +3,7 @@ package com.arranger.apv.back;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 public class OscilatingBackDrop extends BackDropSystem {
 	
@@ -12,12 +13,19 @@ public class OscilatingBackDrop extends BackDropSystem {
 	private float oscSpeed;
 	private String displayName;
 
-	public OscilatingBackDrop(Main parent, Color c1, Color c2, String displayName) {
+	public OscilatingBackDrop(Main parent, Color c1, Color c2) {
 		super(parent);
 		this.c1 = c1;
 		this.c2 = c2;
-		this.displayName = displayName.replace(',', '-');; //Strip out any ',' which foo bar csv
+		
+		displayName = format(c1) + " " + format(c2);
 		oscSpeed = parent.random(SPEED_LOW, SPEED_HIGH);
+	}
+	
+	public OscilatingBackDrop(Configurator.Context ctx) {
+		this(ctx.getParent(),
+				ctx.getColor(0, Color.BLACK),
+				ctx.getColor(1, Color.BLACK));
 	}
 	
 	@Override
