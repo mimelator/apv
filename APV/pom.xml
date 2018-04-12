@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Audio Processing Visualizer</name>
 
+
 	<repositories>
 		<repository>
 			<id>clojars</id>
@@ -26,6 +27,28 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+			    <artifactId>maven-assembly-plugin</artifactId>
+			    <executions>
+			      <execution>
+			        <phase>package</phase>
+			        <goals>
+			          <goal>single</goal>
+			        </goals>
+			      </execution>
+			    </executions>
+			    <configuration>
+			      <archive>
+			        <manifest>
+			          <addClasspath>true</addClasspath>
+			          <mainClass>com.arranger.apv.Main</mainClass>
+			        </manifest>
+			      </archive>
+			      <descriptorRefs>
+			        <descriptorRef>jar-with-dependencies</descriptorRef>
+			      </descriptorRefs>
+			    </configuration>
+			  </plugin> 
 		</plugins>
 	</build>
 	<url>https://github.com/mimelator/apv</url>
@@ -120,4 +143,6 @@
 		
 		
   </dependencies>
+  
+
 </project>
