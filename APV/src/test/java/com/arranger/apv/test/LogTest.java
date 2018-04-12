@@ -12,12 +12,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.util.LoggingConfig;
-
 /**
  * Experimenting with logging
- * @author markimel
- *
  */
 public class LogTest {
 	
@@ -33,7 +29,7 @@ public class LogTest {
 		LogManager logManager = LogManager.getLogManager();
 		try {
 			System.out.println("Loading log properties");
-		    InputStream configFile = LoggingConfig.class.getClassLoader().getResourceAsStream(CONFIG);
+		    InputStream configFile = LogTest.class.getClassLoader().getResourceAsStream(CONFIG);
 		    assert(configFile != null);
 			logManager.readConfiguration(configFile);
 			
