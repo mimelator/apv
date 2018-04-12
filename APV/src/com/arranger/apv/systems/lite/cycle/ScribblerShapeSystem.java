@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -25,6 +26,10 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 
 	public ScribblerShapeSystem(Main parent, int numNewObjects) {
 		super(parent, numNewObjects);
+	}
+	
+	public ScribblerShapeSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, Main.NUMBER_PARTICLES));
 	}
 
 	@Override

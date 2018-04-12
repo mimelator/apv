@@ -1,6 +1,7 @@
 package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PImage;
 
@@ -33,6 +34,10 @@ public class PlasmaSystem extends LiteShapeSystem {
 	public PlasmaSystem(Main parent, int alpha) {
 		super(parent);
 		this.alpha = alpha;
+	}
+	
+	public PlasmaSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, DEFAULT_ALPHA));
 	}
 
 	@Override
