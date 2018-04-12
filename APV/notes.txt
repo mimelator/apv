@@ -1,7 +1,6 @@
 BRANCH: maven-build-folder-migration
 https://github.com/mimelator/apv
 
-need to include the data files
 configure tests to run in mvn test
 
 
@@ -27,9 +26,10 @@ I'm currently setting the default Sound Output Device to Soundflower
 Then i'm running SoundFlowerBed and "monitoring" the default output device
 *****************************************************************************
 
+*****************************************************************************
+When applying a custom application.conf, ensure a script named application.conf is in the same directory
+as the APV jar
+eg: java -cp .:APV-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.arranger.apv.Main
 
-Dependencies: 
-	Minim: http://code.compartmental.net/tools/minim/
-	Processing: http://processing.org/
-	TestNG
-	Config
+the '.' at the beginning of the classpath tells the class loader to look in the current directory for resources.
+*****************************************************************************

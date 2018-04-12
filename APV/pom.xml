@@ -28,27 +28,38 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			    <artifactId>maven-assembly-plugin</artifactId>
-			    <executions>
-			      <execution>
-			        <phase>package</phase>
-			        <goals>
-			          <goal>single</goal>
-			        </goals>
-			      </execution>
-			    </executions>
-			    <configuration>
-			      <archive>
-			        <manifest>
-			          <addClasspath>true</addClasspath>
-			          <mainClass>com.arranger.apv.Main</mainClass>
-			        </manifest>
-			      </archive>
-			      <descriptorRefs>
-			        <descriptorRef>jar-with-dependencies</descriptorRef>
-			      </descriptorRefs>
-			    </configuration>
-			  </plugin> 
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.arranger.apv.Main</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>1.1.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 	<url>https://github.com/mimelator/apv</url>
@@ -69,9 +80,9 @@
 			<version>1.3.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>net.compartmental.code</groupId>
-		    <artifactId>minim</artifactId>
-		    <version>2.2.2</version>
+			<groupId>net.compartmental.code</groupId>
+			<artifactId>minim</artifactId>
+			<version>2.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.clojars.automata</groupId>
@@ -94,55 +105,69 @@
 			<version>1.9.4</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.processing</groupId>
-		    <artifactId>core</artifactId>
-		    <version>3.3.7</version>
+			<groupId>org.processing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.3.7</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-api</artifactId>
-		    <version>5.1.1</version>
-		    <scope>test</scope>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.1.1</version>
+			<scope>test</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.1.1</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl -->
-<dependency>
-    <groupId>org.jogamp.jogl</groupId>
-    <artifactId>jogl</artifactId>
-    <version>2.3.2</version>
-</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl</artifactId>
+			<version>2.3.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main -->
-<dependency>
-    <groupId>org.jogamp.jogl</groupId>
-    <artifactId>jogl-all-main</artifactId>
-    <version>2.3.2</version>
-</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-main</artifactId>
+			<version>2.3.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/nativewindow-main -->
-<dependency>
-    <groupId>org.jogamp.jogl</groupId>
-    <artifactId>nativewindow-main</artifactId>
-    <version>2.3.2</version>
-</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>nativewindow-main</artifactId>
+			<version>2.3.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/newt-main -->
-<dependency>
-    <groupId>org.jogamp.jogl</groupId>
-    <artifactId>newt-main</artifactId>
-    <version>2.3.2</version>
-</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>newt-main</artifactId>
+			<version>2.3.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jogamp.gluegen/gluegen-rt-main -->
-<dependency>
-    <groupId>org.jogamp.gluegen</groupId>
-    <artifactId>gluegen-rt-main</artifactId>
-    <version>2.3.2</version>
-</dependency>
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-main</artifactId>
+			<version>2.3.2</version>
+		</dependency>
 
-		
-		
-  </dependencies>
-  
+
+
+	</dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.21.0</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>
