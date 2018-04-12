@@ -1,6 +1,19 @@
-BRANCH: maven-build-folder-migration
+BRANCH: portable
 https://github.com/mimelator/apv
 
+Change Defaults:
+DONE	--> Default Start Control Mode
+	--> Disabled Help & Live Settings
+	--> Full screen vs dimensions
+	--> Perlin should have default frames to skip
+	--> Windows audio seems to need the Perlin pulses to skip lower: 10
+
+
+Create a switch for the emoji messages (really any text set of messages)
+	--> Move the emojis into the conf file
+	
+	
+The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 
 *****************************************************************************
 TODO: 

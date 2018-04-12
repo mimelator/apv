@@ -85,7 +85,9 @@ public class Main extends PApplet {
 	protected int filterIndex = 0;
 	
 	protected List<ControlSystem> controlSystems;
-	protected CONTROL_MODES currentControlMode = CONTROL_MODES.MANUAL;
+	
+	//TODO initialize this from the Configurator
+	protected CONTROL_MODES currentControlMode; // = CONTROL_MODES.MANUAL;
 	
 	//Useful helper classes
 	protected Configurator configurator;
@@ -279,6 +281,9 @@ public class Main extends PApplet {
 		filterSystems = (List<Filter>)configurator.loadShapeSytems("filterSystems");
 		transitionSystems = (List<TransitionSystem>)configurator.loadShapeSytems("transitionSystems");
 		messageSystems = (List<MessageSystem>)configurator.loadShapeSytems("messageSystems");	
+		
+		//currentControlMode
+		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
 
 		setupSystems(foregroundSystems);
 		setupSystems(backgroundSystems);

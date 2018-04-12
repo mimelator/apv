@@ -245,6 +245,10 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		conf = ConfigFactory.load();
 	}
 	
+	public Config getRootConfig() {
+		return conf;
+	}
+	
 	public List<? extends APVPlugin> loadShapeSytems(String name) {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
