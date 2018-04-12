@@ -12,7 +12,7 @@ import com.arranger.apv.Main;
 public class LoggingConfig extends APVPlugin {
 
 	private static final boolean DEBUG_LOG_CONFIG = false;
-	private static final String CONFIG = "/config/log.properties";
+	private static final String CONFIG = "/log.properties";
 	
 	public LoggingConfig(Main parent) {
 		super(parent);

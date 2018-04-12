@@ -16,6 +16,7 @@ TODO:
 * pluggable Animations to wipe the screen clean and prepare for the next song
 * Standardize the term "Scene" which includes fg, bg, bd (filter?)
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
+* Slow mode would be nice.  Once it isn't forced upon me by garbage collction
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
