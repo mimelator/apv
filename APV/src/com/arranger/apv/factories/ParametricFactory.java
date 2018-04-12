@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.Main;
 
 public abstract class ParametricFactory extends PrimitiveShapeFactory {
@@ -18,9 +19,13 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 		public HypocycloidFactory(Main parent) {
 			super(parent, DEFAULT_SCALE, true, false, 20, 0, 2);
 		}
-
+		
 		public HypocycloidFactory(Main parent, float scale) {
 			super(parent, scale, true, false, 20, 0, 2);
+		}
+		
+		public HypocycloidFactory(Configurator.Context ctx) {
+			super(ctx.getParent(), ctx.getFloat(0, DEFAULT_SCALE), true, false, 20, 0, 2);
 		}
 		
 		/**
@@ -47,6 +52,10 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 		
 		public InvoluteFactory(Main parent, float scale) {
 			super(parent, scale, true, true, 15, 0, .5);
+		}
+		
+		public InvoluteFactory(Configurator.Context ctx) {
+			super(ctx.getParent(), ctx.getFloat(0, DEFAULT_SCALE), true, false, 20, 0, 2);
 		}
 
 		/**
@@ -92,7 +101,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 		this.periods = periods;
 		this.periodOffset = periodOffset;
 	}
-
+	
 	@Override
 	public APVShape createShape(Data data) {
 		APVShape apvShape = new PrimitiveShape(parent, data) {

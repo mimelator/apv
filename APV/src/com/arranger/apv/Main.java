@@ -8,28 +8,13 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
-import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.back.BackDropSystem;
-import com.arranger.apv.back.BlurBackDrop;
-import com.arranger.apv.back.OscilatingBackDrop;
-import com.arranger.apv.back.PulseRefreshBackDrop;
-import com.arranger.apv.back.RefreshBackDrop;
 import com.arranger.apv.color.ColorSystem;
-import com.arranger.apv.factories.CircleImageFactory;
-import com.arranger.apv.factories.EmptyShapeFactory;
-import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
-import com.arranger.apv.factories.SpriteFactory;
-import com.arranger.apv.factories.SquareFactory;
-import com.arranger.apv.factories.StarFactory;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
-import com.arranger.apv.systems.lifecycle.GravitySystem;
-import com.arranger.apv.systems.lifecycle.RotatorSystem;
-import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
-import com.arranger.apv.systems.lite.cycle.StarWebSystem;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.HelpDisplay;
@@ -55,8 +40,6 @@ public class Main extends PApplet {
 	private static final int HEIGHT = 768;
 	private static final int BUFFER_SIZE = 512;
 	public static final int DEFAULT_TRANSITION_FRAMES = 30;
-	private static final int PLASMA_ALPHA_LOW = 120;
-	private static final int PLASMA_ALPHA_HIGH = 255;
 	public static final int MAX_ALPHA = 255;
 	
 	//Defaults 
@@ -72,21 +55,18 @@ public class Main extends PApplet {
 	private static final boolean USE_PULSE_LISTENER = true;
 	private static final boolean MONITOR_FRAME_RATE = true;
 
-	
 
 	//Don't change the following values
-	private static final String SONG = "";
-	private static final String SPRITE_PNG = "sprite.png";
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
 	
-	protected List<ShapeSystem> foregroundSystems = new ArrayList<ShapeSystem>();
+	protected List<ShapeSystem> foregroundSystems;
 	protected int foregroundIndex = 0;
 	
-	protected List<ShapeSystem> backgroundSystems = new ArrayList<ShapeSystem>();
+	protected List<ShapeSystem> backgroundSystems;
 	protected int backgroundIndex = 0;
 	
-	protected List<BackDropSystem> backDropSystems = new ArrayList<BackDropSystem>();
+	protected List<BackDropSystem> backDropSystems;
 	protected int backDropIndex = 0;
 
 	protected List<LocationSystem> locationSystems; 
@@ -134,7 +114,8 @@ public class Main extends PApplet {
 					messagesSwitch,
 					helpSwitch,
 					showSettingsSwitch,
-					pulseListenerSwitch;
+					pulseListenerSwitch,
+					monitorSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -243,7 +224,8 @@ public class Main extends PApplet {
 				foreGroundSwitch, backGroundSwitch, 
 				backDropSwitch, filtersSwitch,
 				transitionSwitch, messagesSwitch,
-				helpSwitch, showSettingsSwitch, pulseListenerSwitch
+				helpSwitch, showSettingsSwitch, pulseListenerSwitch,
+				monitorSwitch
 		};
 	}
 	
@@ -270,13 +252,10 @@ public class Main extends PApplet {
 		pulseListenerSwitch = new Switch(this, "PulseListener", USE_PULSE_LISTENER);
 		showSettingsSwitch = new Switch(this, "ShowSettings", SHOW_SETTINGS);
 		helpSwitch = new Switch(this, "Help");
+		monitorSwitch = new Switch(this, "Monitor", MONITOR_FRAME_RATE);
 		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
-		
-		if (MONITOR_FRAME_RATE) {
-			monitor = new Monitor(this);
-		}
 		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
@@ -287,8 +266,9 @@ public class Main extends PApplet {
 		settingsDisplay = new SettingsDisplay(this);
 		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
-		audio = new Audio(this, SONG, BUFFER_SIZE);
+		audio = new Audio(this, BUFFER_SIZE);
 		configurator = new Configurator(this);
+		monitor = new Monitor(this);
 		
 		locationSystems = (List<LocationSystem>)configurator.loadShapeSytems("locationSystems");
 		colorSystems = (List<ColorSystem>)configurator.loadShapeSytems("colorSystems");
@@ -299,39 +279,8 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 
 		backgroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("backgroundSystems");
-		
-
-		
-		if (USE_FG) {
-			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 2, true));
-			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "Emoji_Blitz_Star.png", 1.5f), NUMBER_PARTICLES, true));
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "3dcube.png", 5), NUMBER_PARTICLES / 10));
-			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "Scared_face_emoji.png"), NUMBER_PARTICLES));
-			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "emoji-island.png", .5f), NUMBER_PARTICLES, true));
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "Silly_Emoji.png", 3.0f), NUMBER_PARTICLES / 4));
-			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "gradient-triangle.png", 2.5f), NUMBER_PARTICLES / 2));
-			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "warning.png", 2.5f), NUMBER_PARTICLES / 2));
-			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "triangle.png"), NUMBER_PARTICLES));
-			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, "swirl.png"), NUMBER_PARTICLES, true));
-			foregroundSystems.add(new RotatorSystem(this, new SpriteFactory(this, "swirl.png", 2.5f), NUMBER_PARTICLES));
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, "purple.png"), NUMBER_PARTICLES / 2));
-			foregroundSystems.add(new StarWebSystem(this));
-			foregroundSystems.add(new GravitySystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 10));
-			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this, 2.5f), NUMBER_PARTICLES / 10));
-			foregroundSystems.add(new RotatorSystem(this, new SquareFactory(this), NUMBER_PARTICLES / 5));
-			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this)));
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG), NUMBER_PARTICLES));
-			foregroundSystems.add(new StarWebSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			foregroundSystems.add(new CarnivalShapeSystem(this, new EmptyShapeFactory(this), true));
-			foregroundSystems.add(new GravitySystem(this, new SquareFactory(this, 2.5f), NUMBER_PARTICLES  / 10));			
-			foregroundSystems.add(new RotatorSystem(this, new HypocycloidFactory(this), NUMBER_PARTICLES));
-			foregroundSystems.add(new StarWebSystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 4));
-			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f), NUMBER_PARTICLES, true));
-			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-		}
-		
-
 		backDropSystems = (List<BackDropSystem>)configurator.loadShapeSytems("backDropSystems");
+		foregroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("foregroundSystems");
 		filterSystems = (List<Filter>)configurator.loadShapeSytems("filterSystems");
 		transitionSystems = (List<TransitionSystem>)configurator.loadShapeSytems("transitionSystems");
 		messageSystems = (List<MessageSystem>)configurator.loadShapeSytems("messageSystems");	
@@ -357,6 +306,7 @@ public class Main extends PApplet {
 		
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
+		registerNonFreezableSwitchCommand(monitorSwitch, 'm');
 		
 		registerSwitchCommand(foreGroundSwitch, '1');
 		registerSwitchCommand(backGroundSwitch, '2');
@@ -588,7 +538,7 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (MONITOR_FRAME_RATE) {
+		if (monitorSwitch.isEnabled()) {
 			monitor.doMonitorCheck(backDrop, filter, bgSys, fgSys);
 		}
 		
@@ -610,7 +560,6 @@ public class Main extends PApplet {
 		
 		if (scrambleMode) {
 			doScramble();
-			//System.gc();
 		}
 		
 		runControlMode();

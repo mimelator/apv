@@ -29,6 +29,7 @@ import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
 import com.arranger.apv.factories.CircleImageFactory;
 import com.arranger.apv.factories.DotFactory;
+import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.factories.StarFactory;
@@ -105,6 +106,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		SpriteFactory.class,
 		DotFactory.class,
 		StarFactory.class,
+		HypocycloidFactory.class,
 		
 		//BackDrop Systems
 		BackDropSystem.class,
@@ -254,10 +256,13 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			ConfigList argList = (ConfigList)configObj.getValue();
 			
 			if (key == null || key.length() == 0) {
-				System.out.println("uh oh");
+				throw new RuntimeException("Unable to load plugin: " + name);
 			}
 			
 			APVPlugin plugin = loadPlugin(key, argList);
+			if (plugin == null) {
+				throw new RuntimeException("Unable to load plugin: " + name);
+			}
 			systems.add(plugin);
 		}
 		
@@ -273,6 +278,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		logger.info(className);
 		try {
 			Class<?> pluginClass = CLASS_MAP.get(className);
+			if (pluginClass == null) {
+				throw new RuntimeException("Plugin not registered with Configurator: " + className);
+			}
 			
 			//look for an official constructor
 			Constructor<?> ctor = findConstructor(pluginClass, Context.class);

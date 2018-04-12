@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -14,6 +15,12 @@ public class RotatorSystem extends LifecycleSystem {
 	
 	public RotatorSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
+	}
+	
+	public RotatorSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), 
+				(ShapeFactory)ctx.loadPlugin(0), 
+				ctx.getInt(1, Main.NUMBER_PARTICLES));
 	}
 	
 	/**

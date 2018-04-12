@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -19,6 +20,13 @@ public class GravitySystem extends LifecycleSystem {
 	public GravitySystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
 	}
+	
+	public GravitySystem(Configurator.Context ctx) {
+		this(ctx.getParent(), 
+				(ShapeFactory)ctx.loadPlugin(0), 
+				ctx.getInt(1, Main.NUMBER_PARTICLES));
+	}
+	
 	
 	@Override
 	public void draw() {

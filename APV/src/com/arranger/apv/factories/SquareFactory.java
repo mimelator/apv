@@ -6,8 +6,9 @@ import java.awt.geom.Rectangle2D;
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
-public class SquareFactory  extends PrimitiveShapeFactory {
+public class SquareFactory extends PrimitiveShapeFactory {
 
 	public SquareFactory(Main parent) {
 		super(parent);
@@ -15,6 +16,10 @@ public class SquareFactory  extends PrimitiveShapeFactory {
 	
 	public SquareFactory(Main parent, float scale) {
 		super(parent, scale);
+	}
+	
+	public SquareFactory(Configurator.Context ctx) {
+		super(ctx);
 	}
 
 	@Override

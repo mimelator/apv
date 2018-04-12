@@ -23,10 +23,10 @@ public class Audio extends APVPlugin {
 	protected BeatInfo beatInfo;
 	public float scaleFactor = DEFAULT_PULSE_DECTECT_SCALAR;
 	
-	public Audio(Main parent, String file, int bufferSize) {
+	public Audio(Main parent, int bufferSize) {
 		super(parent);
 		Minim minim = new Minim(parent);
-		AudioSource source = (Main.AUDIO_IN) ? minim.getLineIn() : minim.loadFile(file, bufferSize);
+		AudioSource source = minim.getLineIn(Minim.MONO, bufferSize);
 		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {

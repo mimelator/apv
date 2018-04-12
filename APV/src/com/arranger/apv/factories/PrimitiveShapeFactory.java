@@ -9,6 +9,7 @@ import java.util.List;
 import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PShape;
 
@@ -24,7 +25,11 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 	public PrimitiveShapeFactory(Main parent, float scale) {
 		super(parent, scale);
 	}
-
+	
+	public PrimitiveShapeFactory(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getFloat(0, DEFAULT_SCALE));
+	}
+	
 	protected float newShapeSize() {
 		float size = parent.random(SMALL_SHAPE_SIZE, LARGE_SHAPE_SIZE);
 		size *= scale;

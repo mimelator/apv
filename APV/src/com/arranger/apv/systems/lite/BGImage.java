@@ -34,13 +34,12 @@ public class BGImage extends LiteShapeSystem {
 	}
 	
 	public BGImage(Configurator.Context ctx) {
-		super(ctx.getParent());
+		this(ctx.getParent(), 
+				(SpriteFactory)ctx.loadPlugin(0), 
+				ctx.getFloat(1, 1),
+				ctx.getFloat(2, 1),
+				ctx.getFloat(3, 1));
 		
-		//look for factory, alpha, scaleX, scaleY
-		this.factory = (SpriteFactory)ctx.loadPlugin(0);
-		this.alpha = ctx.getFloat(1, 1);
-		this.scaleX = ctx.getFloat(2, 1);
-		this.scaleY = ctx.getFloat(3, 1);
 	}
 	
 	@Override
