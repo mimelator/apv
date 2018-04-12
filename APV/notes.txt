@@ -1,16 +1,13 @@
-BRANCH: config-branch
+BRANCH: maven-build
 https://github.com/mimelator/apv
 
-
-* Filter, munge the background
 
 
 
 *****************************************************************************
 TODO: 
 * Snap Listener maybe shows a flash?
-* Externalize configuration of objects in text files
-* Set up a build system (run outside of eclipse)
+* Filter, munge the background
 * work on readme
 * test Audio#scale
 * pluggable Animations to wipe the screen clean and prepare for the next song
