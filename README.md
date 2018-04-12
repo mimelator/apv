@@ -72,7 +72,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Mark Imel** - *Initial work* - [MarkIme](https://github.com/mimelator)
+* **Mark Imel** - *Initial work* - [MarkImel](https://github.com/mimelator)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
