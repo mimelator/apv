@@ -34,7 +34,7 @@ public class Main extends PApplet {
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	//Change these during active development
-	public static final int NUMBER_PARTICLES = 200;//1000;
+	public static final int NUMBER_PARTICLES = 1000;
 	public static final String RENDERER = P3D;//P2D;
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
@@ -256,7 +256,7 @@ public class Main extends PApplet {
 		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
-		
+
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
 		
@@ -273,11 +273,6 @@ public class Main extends PApplet {
 		locationSystems = (List<LocationSystem>)configurator.loadShapeSytems("locationSystems");
 		colorSystems = (List<ColorSystem>)configurator.loadShapeSytems("colorSystems");
 		controlSystems = (List<ControlSystem>)configurator.loadShapeSytems("controlSystems");
-		
-		//Graphics hints
-		orientation(LANDSCAPE);
-		hint(DISABLE_DEPTH_MASK);
-
 		backgroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("backgroundSystems");
 		backDropSystems = (List<BackDropSystem>)configurator.loadShapeSytems("backDropSystems");
 		foregroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("foregroundSystems");
@@ -285,7 +280,6 @@ public class Main extends PApplet {
 		transitionSystems = (List<TransitionSystem>)configurator.loadShapeSytems("transitionSystems");
 		messageSystems = (List<MessageSystem>)configurator.loadShapeSytems("messageSystems");	
 
-		
 		setupSystems(foregroundSystems);
 		setupSystems(backgroundSystems);
 		setupSystems(backDropSystems);
@@ -297,7 +291,9 @@ public class Main extends PApplet {
 		new SimplePL(this);
 		new StarPL(this);
 		
-		//init background
+		//processing hints
+		orientation(LANDSCAPE);
+		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
 	}
 
@@ -435,7 +431,7 @@ public class Main extends PApplet {
 	}
 	
 	protected void doScramble() {
-		//mess it all up, but transitions were already scrambled
+		//mess it all up, except for transitions which were already scrambled
 		
 		if (!foreGroundSwitch.isFrozen()) {
 			foregroundIndex += random(foregroundSystems.size() - 1);
@@ -459,7 +455,6 @@ public class Main extends PApplet {
 		
 		locationIndex += random(locationSystems.size() - 1);
 		colorIndex += random(colorSystems.size() - 1);
-		
 		
 		//send out a cool message about the new system
 		if (messagesSwitch.isEnabled()) {
