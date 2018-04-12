@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 public class CircularLocationSystem extends PathLocationSystem {
 	
@@ -14,6 +15,10 @@ public class CircularLocationSystem extends PathLocationSystem {
 		super(parent, LOOP_IN_SECONDS, splitter);
 	}
 
+	public CircularLocationSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getBoolean(0, false));
+	}
+	
 	@Override
 	protected Shape createPath() {
 		float width = parent.width * SCALE;

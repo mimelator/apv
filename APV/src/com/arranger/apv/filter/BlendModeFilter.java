@@ -3,6 +3,7 @@ package com.arranger.apv.filter;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -34,6 +35,11 @@ public class BlendModeFilter extends Filter {
 	public BlendModeFilter(Main parent, BLEND_MODE blendMode) {
 		super(parent);
 		this.blendMode = blendMode;
+	}
+	
+	public BlendModeFilter(Configurator.Context ctx) {
+		this(ctx.getParent(), BLEND_MODE.valueOf(ctx.getString(0, BLEND_MODE.BLEND.name())));
+		
 	}
 
 	@Override

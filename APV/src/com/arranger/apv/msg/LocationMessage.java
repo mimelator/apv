@@ -2,6 +2,7 @@ package com.arranger.apv.msg;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.MessageSystem;
+import com.arranger.apv.util.Configurator;
 
 public class LocationMessage extends MessageSystem {
 	
@@ -16,6 +17,12 @@ public class LocationMessage extends MessageSystem {
 	public LocationMessage(Main parent, CORNER_LOCATION cornerLocation) {
 		super(parent);
 		this.cornerLocation = cornerLocation;
+	}
+	
+	public LocationMessage(Configurator.Context ctx) {
+		this(ctx.getParent(), 
+				CORNER_LOCATION.valueOf(
+						ctx.getString(0, CORNER_LOCATION.UPPER_LEFT.name())));
 	}
 
 	@Override

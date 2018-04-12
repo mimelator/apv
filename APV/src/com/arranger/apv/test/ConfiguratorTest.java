@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.systems.lite.BGImage;
 import com.arranger.apv.util.Configurator;
@@ -39,9 +38,21 @@ public class ConfiguratorTest extends APVPluginTest {
 			break; //only want to test the first one really
 		}
 		
-		List<ShapeSystem> ss = cfg.loadShapeSytems("backgroundSystems");
+		List<? extends APVPlugin> ss = cfg.loadShapeSytems("backgroundSystems");
 		assert(ss != null);
 		assert(ss.size() > 3);
+		
+		ss = cfg.loadShapeSytems("colorSystems");
+		assert(ss != null);
+		assert(ss.size() > 2);
+		
+		ss = cfg.loadShapeSytems("controlSystems");
+		assert(ss != null);
+		assert(ss.size() > 3);
+		
+		ss = cfg.loadShapeSytems("locationSystems");
+		assert(ss != null);
+		assert(ss.size() > 4);
 	}
 	
 	

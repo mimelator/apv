@@ -8,64 +8,30 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
-import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.back.BlurBackDrop;
 import com.arranger.apv.back.OscilatingBackDrop;
 import com.arranger.apv.back.PulseRefreshBackDrop;
 import com.arranger.apv.back.RefreshBackDrop;
-import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.ColorSystem;
-import com.arranger.apv.color.OscillatingColor;
-import com.arranger.apv.color.RandomColor;
-import com.arranger.apv.control.Auto;
-import com.arranger.apv.control.Manual;
-import com.arranger.apv.control.Perlin;
-import com.arranger.apv.control.Snap;
 import com.arranger.apv.factories.CircleImageFactory;
-import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.EmptyShapeFactory;
 import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factories.SpriteFactory;
 import com.arranger.apv.factories.SquareFactory;
 import com.arranger.apv.factories.StarFactory;
-import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
-import com.arranger.apv.filter.PulseShakeFilter;
-import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
-import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
-import com.arranger.apv.loc.RectLocationSystem;
-import com.arranger.apv.msg.CircularMessage;
-import com.arranger.apv.msg.LocationMessage;
-import com.arranger.apv.msg.LocationMessage.CORNER_LOCATION;
-import com.arranger.apv.msg.RandomMessage;
-import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
-import com.arranger.apv.systems.lifecycle.WarpSystem;
-import com.arranger.apv.systems.lite.AttractorSystem;
-import com.arranger.apv.systems.lite.BGImage;
-import com.arranger.apv.systems.lite.BoxWaves;
-import com.arranger.apv.systems.lite.GridShapeSystem;
-import com.arranger.apv.systems.lite.LightWormSystem;
-import com.arranger.apv.systems.lite.PixelAttractor;
-import com.arranger.apv.systems.lite.PlasmaSystem;
-import com.arranger.apv.systems.lite.ShowerSystem;
-import com.arranger.apv.systems.lite.Spirograph;
-import com.arranger.apv.systems.lite.cycle.BubbleShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
-import com.arranger.apv.systems.lite.cycle.ScribblerShapeSystem;
 import com.arranger.apv.systems.lite.cycle.StarWebSystem;
-import com.arranger.apv.transition.Fade;
-import com.arranger.apv.transition.Shrink;
-import com.arranger.apv.transition.Swipe;
-import com.arranger.apv.transition.Twirl;
 import com.arranger.apv.util.APVPulseListener;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
@@ -88,7 +54,7 @@ public class Main extends PApplet {
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
 	private static final int BUFFER_SIZE = 512;
-	private static final int DEFAULT_TRANSITION_FRAMES = 30;
+	public static final int DEFAULT_TRANSITION_FRAMES = 30;
 	private static final int PLASMA_ALPHA_LOW = 120;
 	private static final int PLASMA_ALPHA_HIGH = 255;
 	public static final int MAX_ALPHA = 255;
@@ -123,25 +89,26 @@ public class Main extends PApplet {
 	protected List<BackDropSystem> backDropSystems = new ArrayList<BackDropSystem>();
 	protected int backDropIndex = 0;
 
-	protected List<LocationSystem> locationSystems = new ArrayList<LocationSystem>(); 
+	protected List<LocationSystem> locationSystems; 
 	protected int locationIndex = 0;
 	
-	protected List<ColorSystem> colorSystems = new ArrayList<ColorSystem>(); 
+	protected List<ColorSystem> colorSystems; 
 	protected int colorIndex = 0;
 	
-	protected List<TransitionSystem> transitionSystems = new ArrayList<TransitionSystem>();
+	protected List<TransitionSystem> transitionSystems;
 	protected int transitionIndex = 0;
 	
-	protected List<MessageSystem> messageSystems = new ArrayList<MessageSystem>();
+	protected List<MessageSystem> messageSystems;
 	protected int messageIndex = 0;
 	
-	protected List<Filter> filters = new ArrayList<Filter>(); 
+	protected List<Filter> filterSystems; 
 	protected int filterIndex = 0;
 	
-	protected List<ControlSystem> controlSystems = new ArrayList<ControlSystem>();
+	protected List<ControlSystem> controlSystems;
 	protected CONTROL_MODES currentControlMode = CONTROL_MODES.MANUAL;
 	
 	//Useful helper classes
+	protected Configurator configurator;
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
@@ -152,10 +119,11 @@ public class Main extends PApplet {
 	protected HelpDisplay helpDisplay;
 	protected APVPulseListener pulseListener;
 	protected Particles particles;
+	
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
-	private int transitionFrames = DEFAULT_TRANSITION_FRAMES;
+	
 	
 	//Switches for runtime
 	private Switch foreGroundSwitch, 
@@ -187,6 +155,10 @@ public class Main extends PApplet {
 	
 	public Gravity getGravity() {
 		return gravity;
+	}
+	
+	public Configurator getConfigurator() {
+		return configurator;
 	}
 	
 	public CommandSystem getCommandSystem() {
@@ -287,6 +259,7 @@ public class Main extends PApplet {
 		return oscillator.oscillate(low, high, oscSpeed);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setup() {
 		foreGroundSwitch = new Switch(this, "ForeGround", USE_FG);
 		backGroundSwitch = new Switch(this, "BackGround", USE_BG);
@@ -315,58 +288,20 @@ public class Main extends PApplet {
 		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, SONG, BUFFER_SIZE);
+		configurator = new Configurator(this);
 		
-		locationSystems.add(new CircularLocationSystem(this, false));
-		locationSystems.add(new PerlinNoiseWalkerLocationSystem(this));
-		locationSystems.add(new MouseLocationSystem(this));
-		locationSystems.add(new CircularLocationSystem(this, true));
-		locationSystems.add(new RectLocationSystem(this, false));
-		locationSystems.add(new RectLocationSystem(this, true));
-		
-		colorSystems.add(new BeatColorSystem(this));
-		colorSystems.add(new OscillatingColor(this));
-		colorSystems.add(new RandomColor(this));
-		
-		controlSystems.add(new Manual(this));
-		controlSystems.add(new Auto(this));
-		controlSystems.add(new Snap(this));
-		controlSystems.add(new Perlin(this));
+		locationSystems = (List<LocationSystem>)configurator.loadShapeSytems("locationSystems");
+		colorSystems = (List<ColorSystem>)configurator.loadShapeSytems("colorSystems");
+		controlSystems = (List<ControlSystem>)configurator.loadShapeSytems("controlSystems");
+
 		
 		//Graphics hints
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
+
+		backgroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("backgroundSystems");
 		
-		//Create Shape Factories and Shape Systems
-		if (USE_BG) {
-			//Need better pictures and some sort of filters
-			
-			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "test.jpg"), .5f, 2, 2)); 
-//			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "blur.png"), .5f, 2, 2)); 
-//			backgroundSystems.add(new BGImage(this, new SpriteFactory(this, "Konkrete-Breaks.png"), .75f, 2, 2));
-			backgroundSystems.add(new BoxWaves(this));
-			backgroundSystems.add(new Spirograph(this));
-			backgroundSystems.add(new PixelAttractor(this));
-			backgroundSystems.add(new WarpSystem(this, new SpriteFactory(this, "triangle.png", 2.5f), NUMBER_PARTICLES));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, .3f), NUMBER_PARTICLES));
-			backgroundSystems.add(new WarpSystem(this, new DotFactory(this, 7.3f), NUMBER_PARTICLES / 4));
-			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, "purple.png", .3f)));
-			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 14));
-			backgroundSystems.add(new AttractorSystem(this, new SpriteFactory(this, SPRITE_PNG)));
-			backgroundSystems.add(new FreqDetector(this));
-			backgroundSystems.add(new GridShapeSystem(this, 30, 10));
-			backgroundSystems.add(new BubbleShapeSystem(this, NUMBER_PARTICLES / 10));
-			backgroundSystems.add(new AttractorSystem(this));
-			backgroundSystems.add(new LightWormSystem(this));
-			backgroundSystems.add(new LightWormSystem(this, false, 4, 16));
-			backgroundSystems.add(new ScribblerShapeSystem(this, NUMBER_PARTICLES / 5));
-			backgroundSystems.add(new GridShapeSystem(this));
-			backgroundSystems.add(new ShowerSystem(this));
-			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_HIGH));
-			backgroundSystems.add(new GridShapeSystem(this, 200, 300));
-			backgroundSystems.add(new LightWormSystem(this));
-			backgroundSystems.add(new GridShapeSystem(this, 20, 30));
-			backgroundSystems.add(new PlasmaSystem(this, PLASMA_ALPHA_LOW));
-		}
+
 		
 		if (USE_FG) {
 			foregroundSystems.add(new StarWebSystem(this, new StarFactory(this, .5f), NUMBER_PARTICLES / 2, true));
@@ -394,8 +329,6 @@ public class Main extends PApplet {
 			foregroundSystems.add(new StarWebSystem(this, new CircleImageFactory(this), NUMBER_PARTICLES / 4));
 			foregroundSystems.add(new StarWebSystem(this, new SquareFactory(this, .5f), NUMBER_PARTICLES, true));
 			foregroundSystems.add(new GravitySystem(this, new SpriteFactory(this, SPRITE_PNG, 2.5f), NUMBER_PARTICLES));
-			//foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this, .5f), NUMBER_PARTICLES / 20));
-			//foregroundSystems.add(new RotatorSystem(this, new InvoluteFactory(this), NUMBER_PARTICLES / 20));
 		}
 		
 		if (USE_BACKDROP) {
@@ -412,37 +345,10 @@ public class Main extends PApplet {
 			backDropSystems.add(new BlurBackDrop(this));
 		}
 		
-		if (USE_FILTERS) {
-			filters.add(new Filter(this));
-			filters.add(new PulseShakeFilter(this));
-			filters.add(new Filter(this));
-			filters.add(new Filter(this));
-			filters.add(new PulseShakeFilter(this));
-			filters.add(new Filter(this));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.ADD));
-			filters.add(new PulseShakeFilter(this));
-			filters.add(new Filter(this));
-			filters.add(new Filter(this));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.EXCLUSION));
-			filters.add(new BlendModeFilter(this, BlendModeFilter.BLEND_MODE.SUBTRACT));
-		}
-		
-		if (USE_TRANSITIONS) {
-			transitionSystems.add(new Twirl(this, transitionFrames));
-			transitionSystems.add(new Shrink(this, transitionFrames));
-			transitionSystems.add(new Fade(this, transitionFrames));
-			transitionSystems.add(new Swipe(this, transitionFrames));
-		}
-		
-		if (USE_MESSAGES) {
-			messageSystems.add(new LocationMessage(this, CORNER_LOCATION.UPPER_LEFT));
-			messageSystems.add(new CircularMessage(this));
-			messageSystems.add(new RandomMessage(this));
-			messageSystems.add(new StandardMessage(this));
-			messageSystems.add(new StandardMessage(this));
-			messageSystems.add(new StandardMessage(this));
-			messageSystems.add(new StandardMessage(this));
-		}
+		filterSystems = (List<Filter>)configurator.loadShapeSytems("filterSystems");
+		transitionSystems = (List<TransitionSystem>)configurator.loadShapeSytems("transitionSystems");
+		messageSystems = (List<MessageSystem>)configurator.loadShapeSytems("messageSystems");	
+
 		
 		setupSystems(foregroundSystems);
 		setupSystems(backgroundSystems);
@@ -607,7 +513,7 @@ public class Main extends PApplet {
 		}
 		
 		if (!filtersSwitch.isFrozen()) {
-			filterIndex += random(filters.size() - 1);
+			filterIndex += random(filterSystems.size() - 1);
 		}
 		
 		if (!messagesSwitch.isFrozen()) {
@@ -678,7 +584,7 @@ public class Main extends PApplet {
 		
 		Filter filter = null;
 		if (filtersSwitch.isEnabled()) {
-			filter = (Filter)getPlugin(filters, filterIndex);
+			filter = (Filter)getPlugin(filterSystems, filterIndex);
 			settingsDisplay.addSettingsMessage("filter: " + filter.getName());
 			filter.preRender();
 		}

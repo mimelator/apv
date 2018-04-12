@@ -2,11 +2,16 @@ package com.arranger.apv.transition;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.TransitionSystem;
+import com.arranger.apv.util.Configurator;
 
 public class Shrink extends TransitionSystem {
 
 	public Shrink(Main parent, int fadesToTransition) {
 		super(parent, fadesToTransition);
+	}
+	
+	public Shrink(Configurator.Context ctx) {
+		super(ctx);
 	}
 
 	@Override

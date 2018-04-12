@@ -2,6 +2,7 @@ package com.arranger.apv;
 
 import java.util.logging.Logger;
 
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FrameFader;
 
 import processing.core.PApplet;
@@ -29,6 +30,10 @@ public abstract class TransitionSystem extends ShapeSystem {
 	public TransitionSystem(Main parent, int fadesToTransition) {
 		super(parent, null);
 		frameFader = new FrameFader(parent, fadesToTransition);
+	}
+	
+	public TransitionSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, Main.DEFAULT_TRANSITION_FRAMES));
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 public class RectLocationSystem extends PathLocationSystem {
 	
@@ -12,6 +13,10 @@ public class RectLocationSystem extends PathLocationSystem {
 	
 	public RectLocationSystem(Main parent, boolean splitter) {
 		super(parent, LOOP_IN_SECONDS, splitter);
+	}
+	
+	public RectLocationSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getBoolean(0, false));
 	}
 
 	@Override

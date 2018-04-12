@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.back.BlurBackDrop;
@@ -223,22 +222,22 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	}
 	
 	
-	public List<ShapeSystem> loadShapeSytems(String name) {
-		List<ShapeSystem> systems = new ArrayList<ShapeSystem>();
+	public List<? extends APVPlugin> loadShapeSytems(String name) {
+		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
 		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
 			Config wrapperObj = it.next();
-			Entry<String, ConfigValue> shapeConfigObj = wrapperObj.entrySet().iterator().next();
-			String key = shapeConfigObj.getKey();
-			ConfigList argList = (ConfigList)shapeConfigObj.getValue();
+			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next();
+			String key = configObj.getKey();
+			ConfigList argList = (ConfigList)configObj.getValue();
 			
 			if (key == null || key.length() == 0) {
 				System.out.println("uh oh");
 			}
 			
-			ShapeSystem system = (ShapeSystem)loadPlugin(key, argList);
-			systems.add(system);
+			APVPlugin plugin = loadPlugin(key, argList);
+			systems.add(plugin);
 		}
 		
 		return systems;
