@@ -1,4 +1,4 @@
-# Project Title
+# Audio Processing Visualizer
 
 A java based visualizer that uses Processing, Minim and many samples from OpenProcessing to create visuals based on audio input or selected mp3s.
 
@@ -12,44 +12,6 @@ TODO: What things you need to install the software and how to install them
 
 ```
 Give examples
-```
-
-### Installing
-
-TODO: A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-TODO: Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-TODO: Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-TODO: Explain what these tests test and why
-
-```
-Give an example
 ```
 
 ## Deployment
