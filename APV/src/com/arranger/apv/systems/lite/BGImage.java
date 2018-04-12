@@ -3,6 +3,7 @@ package com.arranger.apv.systems.lite;
 import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.factories.SpriteFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -31,7 +32,17 @@ public class BGImage extends LiteShapeSystem {
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 	}
-
+	
+	public BGImage(Configurator.Context ctx) {
+		super(ctx.getParent());
+		
+		//look for factory, alpha, scaleX, scaleY
+		this.factory = (SpriteFactory)ctx.loadPlugin(0);
+		this.alpha = ctx.getFloat(1, 1);
+		this.scaleX = ctx.getFloat(2, 1);
+		this.scaleY = ctx.getFloat(3, 1);
+	}
+	
 	@Override
 	public void setup() {
 		

@@ -21,6 +21,7 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
+import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
@@ -65,21 +66,25 @@ public abstract class APVPluginTest {
         Audio audio = Mockito.mock(Audio.class);
         BeatInfo beatInfo = Mockito.mock(BeatInfo.class);
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
+        APVPulseListener apvPulseListener = Mockito.mock(APVPulseListener.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
         when(audio.getBeatInfo()).thenReturn(beatInfo);
         assert(parent.getAudio().getBeatInfo() != null);
         
-        //mock pulse detector
+        //mock audio's pulse detector and more
         when(beatInfo.getPulseDetector()).thenReturn(beatDetect);
         when(beatDetect.isOnset()).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getPulseDetector() != null);
         
-        //mock freq detector
+        //mock audio's freq detector
         when(beatInfo.getFreqDetector()).thenReturn(beatDetect);
         when(beatDetect.isRange(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
+        
+        //mock Main's default pulse listener
+        when(parent.getPulseListener()).thenReturn(apvPulseListener);
     }
 
 	@AfterEach

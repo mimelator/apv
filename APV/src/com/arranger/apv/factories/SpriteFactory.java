@@ -7,6 +7,7 @@ import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.systems.lifecycle.LifecycleSystem.LifecycleData;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -25,6 +26,16 @@ public class SpriteFactory extends ShapeFactory {
 	public SpriteFactory(Main parent, String file, float scale) {
 		this(parent, file);
 		this.scale = scale;
+	}
+	
+	public SpriteFactory(Configurator.Context ctx) {
+		super(ctx.getParent());
+		
+		//look for file, scale 
+		String file = ctx.getString(0, null);
+		sprite = parent.loadImage(file);
+		this.alpha = ctx.getFloat(1, 0);
+		
 	}
 
 	public int getImageWidth() {
