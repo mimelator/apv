@@ -41,7 +41,7 @@ public class ConfiguratorTest extends APVPluginTest {
 		
 		List<ShapeSystem> ss = cfg.loadShapeSytems("backgroundSystems");
 		assert(ss != null);
-		assert(ss.size() > 1);
+		assert(ss.size() > 3);
 	}
 	
 	

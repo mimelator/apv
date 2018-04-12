@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.Reverser;
 
 /**
@@ -61,7 +62,13 @@ public class LightWormSystem extends LiteShapeSystem {
 				colorSystems[index] = new OscillatingColor(parent, random(LOW_COLOR_OSC_SCALAR, HIGH_COLOR_OSC_SCALAR));
 			}
 		}
-		
+	}
+	
+	public LightWormSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), 
+				ctx.getBoolean(0, USE_ORIG_COLORS_DEFAULT),
+				ctx.getInt(1, DEFAULT_NUM_DRAGONS),
+				ctx.getFloat(2, DEFAULT_COLOR_SPEED));
 	}
 
 	private static final int TOTAL_OFFSET_VALS = 8; //Hard coded for the offset table

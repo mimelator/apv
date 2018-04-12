@@ -1,6 +1,7 @@
 package com.arranger.apv.factories;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 public class DotFactory extends CircleImageFactory {
 
@@ -13,6 +14,10 @@ public class DotFactory extends CircleImageFactory {
 	
 	public DotFactory(Main parent, float scale) {
 		super(parent, scale);
+	}
+	
+	public DotFactory(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getFloat(0, 1));
 	}
 
 	protected float newShapeSize() {

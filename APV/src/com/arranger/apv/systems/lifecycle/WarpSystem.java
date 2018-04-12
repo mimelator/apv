@@ -2,6 +2,7 @@ package com.arranger.apv.systems.lifecycle;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -21,6 +22,10 @@ public class WarpSystem extends DirectLifecycleSystem {
 	
 	public WarpSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
+	}
+	
+	public WarpSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), (ShapeFactory) ctx.loadPlugin(0), ctx.getInt(1, (int) Main.NUMBER_PARTICLES));
 	}
 	
 	@Override

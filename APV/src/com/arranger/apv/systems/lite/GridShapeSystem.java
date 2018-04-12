@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -32,6 +33,10 @@ public class GridShapeSystem extends LiteShapeSystem {
 		super(parent);
 		this.space = space; 
 		this.shapeSize = shapeSize;
+	}
+	
+	public GridShapeSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, SPACER), ctx.getInt(1, LARGE_STROKE_WEIGHT));
 	}
 	
 	@Override

@@ -26,7 +26,11 @@ import com.arranger.apv.control.Auto;
 import com.arranger.apv.control.Manual;
 import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
+import com.arranger.apv.factories.CircleImageFactory;
+import com.arranger.apv.factories.DotFactory;
 import com.arranger.apv.factories.SpriteFactory;
+import com.arranger.apv.factories.SquareFactory;
+import com.arranger.apv.factories.StarFactory;
 import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
@@ -92,7 +96,14 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		GravitySystem.class,
 		RotatorSystem.class,
 		CarnivalShapeSystem.class,
+		
+		
+		//factories
+		SquareFactory.class,
+		CircleImageFactory.class,
 		SpriteFactory.class,
+		DotFactory.class,
+		StarFactory.class,
 		
 		//BackDrop Systems
 		BackDropSystem.class,
@@ -159,7 +170,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			}
 		}
 		
-		public float getInt(int index, int defaultVal) {
+		public int getInt(int index, int defaultVal) {
 			if (argList.size() > index) {
 				return Integer.parseInt(argList.get(index).unwrapped().toString());
 			} else {
@@ -170,6 +181,14 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		public String getString(int index, String defaultVal) {
 			if (argList.size() > index) {
 				return argList.get(index).unwrapped().toString();
+			} else {
+				return defaultVal;
+			}
+		}
+		
+		public boolean getBoolean(int index, boolean defaultVal) {
+			if (argList.size() > index) {
+				return Boolean.valueOf(argList.get(index).unwrapped().toString()).booleanValue();
 			} else {
 				return defaultVal;
 			}
@@ -211,7 +230,14 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
 			Config wrapperObj = it.next();
 			Entry<String, ConfigValue> shapeConfigObj = wrapperObj.entrySet().iterator().next();
-			ShapeSystem system = (ShapeSystem)loadPlugin(shapeConfigObj.getKey(), (ConfigList)shapeConfigObj.getValue());
+			String key = shapeConfigObj.getKey();
+			ConfigList argList = (ConfigList)shapeConfigObj.getValue();
+			
+			if (key == null || key.length() == 0) {
+				System.out.println("uh oh");
+			}
+			
+			ShapeSystem system = (ShapeSystem)loadPlugin(key, argList);
 			systems.add(system);
 		}
 		
@@ -224,6 +250,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	}
 	
 	public APVPlugin loadPlugin(String className, ConfigList argList) {
+		logger.info(className);
 		try {
 			Class<?> pluginClass = CLASS_MAP.get(className);
 			

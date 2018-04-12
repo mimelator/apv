@@ -7,6 +7,7 @@ import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.audio.PulseListener;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
@@ -59,6 +60,10 @@ public class AttractorSystem extends LiteShapeSystem {
 		this.numShapes = numShapes;
 	}
 
+	public AttractorSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), (ShapeFactory) ctx.loadPlugin(0), ctx.getInt(1, NUM_SHAPES));
+	}
+	
 	@Override
 	public void setup() {
 		

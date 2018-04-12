@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.factories.CircleImageFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -22,6 +23,10 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 		super(parent, numNewObjects);
 		shouldCreateNewObjectsEveryDraw = false;
 		circle = parent.loadImage(CircleImageFactory.CIRCLE_PNG);
+	}
+	
+	public BubbleShapeSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, Main.NUMBER_PARTICLES));
 	}
 	
 	@Override
