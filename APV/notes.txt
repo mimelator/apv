@@ -1,8 +1,6 @@
 BRANCH: maven-build-folder-migration
 https://github.com/mimelator/apv
 
-configure tests to run in mvn test
-
 
 *****************************************************************************
 TODO: 
@@ -17,14 +15,6 @@ TODO:
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
-		
-*****************************************************************************
-Audio Line In Notes
-
-When wanting to analyze to iTunes
-I'm currently setting the default Sound Output Device to Soundflower
-Then i'm running SoundFlowerBed and "monitoring" the default output device
-*****************************************************************************
 
 *****************************************************************************
 When applying a custom application.conf, ensure a script named application.conf is in the same directory
