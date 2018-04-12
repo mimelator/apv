@@ -17,15 +17,6 @@
 
 	<description>A processing based program that generates automated audio visualizations</description>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -54,17 +45,11 @@
 			<artifactId>config</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/ddf.minim/ddf.minim -->
-<!-- https://mvnrepository.com/artifact/net.compartmental.code/minim -->
-<dependency>
-    <groupId>net.compartmental.code</groupId>
-    <artifactId>minim</artifactId>
-    <version>2.2.2</version>
-</dependency>
-
-
-
-
+		<dependency>
+		    <groupId>net.compartmental.code</groupId>
+		    <artifactId>minim</artifactId>
+		    <version>2.2.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.clojars.automata</groupId>
 			<artifactId>tritonus-aos</artifactId>
@@ -85,30 +70,54 @@
 			<artifactId>mp3spi</artifactId>
 			<version>1.9.4</version>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.processing/core -->
+		<dependency>
+		    <groupId>org.processing</groupId>
+		    <artifactId>core</artifactId>
+		    <version>3.3.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <version>5.1.1</version>
+		    <scope>test</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl -->
 <dependency>
-    <groupId>org.processing</groupId>
-    <artifactId>core</artifactId>
-    <version>3.3.7</version>
+    <groupId>org.jogamp.jogl</groupId>
+    <artifactId>jogl</artifactId>
+    <version>2.3.2</version>
 </dependency>
 
-
-	
-
-<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main -->
 <dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <version>5.1.1</version>
-    <scope>test</scope>
+    <groupId>org.jogamp.jogl</groupId>
+    <artifactId>jogl-all-main</artifactId>
+    <version>2.3.2</version>
 </dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/nativewindow-main -->
+<dependency>
+    <groupId>org.jogamp.jogl</groupId>
+    <artifactId>nativewindow-main</artifactId>
+    <version>2.3.2</version>
+</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/newt-main -->
+<dependency>
+    <groupId>org.jogamp.jogl</groupId>
+    <artifactId>newt-main</artifactId>
+    <version>2.3.2</version>
+</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.jogamp.gluegen/gluegen-rt-main -->
+<dependency>
+    <groupId>org.jogamp.gluegen</groupId>
+    <artifactId>gluegen-rt-main</artifactId>
+    <version>2.3.2</version>
+</dependency>
 
-
-	
-
-  	
+		
+		
   </dependencies>
 </project>

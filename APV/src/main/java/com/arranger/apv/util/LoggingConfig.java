@@ -12,7 +12,7 @@ import com.arranger.apv.Main;
 public class LoggingConfig extends APVPlugin {
 
 	private static final boolean DEBUG_LOG_CONFIG = false;
-	private static final String CONFIG = "/log.properties";
+	private static final String CONFIG = "log.properties";
 	
 	public LoggingConfig(Main parent) {
 		super(parent);
@@ -22,7 +22,7 @@ public class LoggingConfig extends APVPlugin {
 		LogManager logManager = LogManager.getLogManager();
 		logManager.reset();
 		try {
-			InputStream configFile = Main.class.getResourceAsStream(CONFIG);
+			InputStream configFile = LoggingConfig.class.getClassLoader().getResourceAsStream(CONFIG);
 			logManager.readConfiguration(configFile);
 			configFile.close();
 		} catch (Exception e) {

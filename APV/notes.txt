@@ -1,7 +1,8 @@
-BRANCH: maven-build
+BRANCH: maven-build-folder-migration
 https://github.com/mimelator/apv
 
 need to include the config files
+configure tests to run in mvn test
 
 
 *****************************************************************************

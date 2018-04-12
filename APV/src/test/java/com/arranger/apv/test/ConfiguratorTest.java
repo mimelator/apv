@@ -1,5 +1,7 @@
 package com.arranger.apv.test;
 
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -16,6 +18,15 @@ import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigValue;
 
 public class ConfiguratorTest extends APVPluginTest {
+	
+	@Test
+	public void testClassResourcs() throws Exception {
+		Enumeration<URL> resources = ConfiguratorTest.class.getClassLoader().getResources("reference.conf");
+		while (resources.hasMoreElements()) {
+			URL nextElement = resources.nextElement();
+			debug(nextElement.toString());
+		}
+	}
 	
 	
 	@Test
