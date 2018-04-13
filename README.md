@@ -2,6 +2,12 @@
 
 A java based visualizer that uses Processing, Minim and many samples from OpenProcessing to create visuals based on audio input or selected mp3s.
 
+
+<img src = "https://media.giphy.com/media/X8m8Fo7RsFvXiwEWUS/giphy.gif"></img>
+
+
+
+
 ## Getting Started
 
 TODO: These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
