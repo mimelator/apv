@@ -15,12 +15,15 @@ import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 
 public class Perlin extends PulseListeningControlSystem {
 	
+	private static final int DEF_PULSES_BETWEEN_COMMANDS = 16;
+
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
 	private static final Character [] AUTO_CHAR_COMMANDS = {
@@ -43,19 +46,22 @@ public class Perlin extends PulseListeningControlSystem {
 	};
 	
 	private static final int COMMAND_SIZE = 10;
-	private static final int DEFAULT_PULSES_TO_SKIP = 24;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;
 	
-	public Perlin(Main parent) {
+	public Perlin(Main parent, int pulsesToSkip) {
 		super(parent);
 		resetLocator(1);
-		autoSkipPulseListener = new PulseListener(parent, DEFAULT_PULSES_TO_SKIP);
+		autoSkipPulseListener = new PulseListener(parent, pulsesToSkip);
 		
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
 		cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode", event -> decWalker());
+	}
+	
+	public Perlin(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, DEF_PULSES_BETWEEN_COMMANDS));
 	}
 	
 	@Override
@@ -66,7 +72,7 @@ public class Perlin extends PulseListeningControlSystem {
 	
 	@Override
 	protected int getDefaultPulsesToSkip() {
-		return DEFAULT_PULSES_TO_SKIP;
+		return autoSkipPulseListener.getPulsesToSkip();
 	}
 
 	@Override

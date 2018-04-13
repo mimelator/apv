@@ -3,7 +3,7 @@ https://github.com/mimelator/apv
 
 Change Defaults:
 DONE	--> Default Start Control Mode
-	--> Disabled Help & Live Settings
+DONE	--> Disabled Help & Live Settings
 	--> Full screen vs dimensions
 	--> Perlin should have default frames to skip
 	--> Windows audio seems to need the Perlin pulses to skip lower: 8
