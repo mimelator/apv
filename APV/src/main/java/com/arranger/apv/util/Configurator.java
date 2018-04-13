@@ -1,6 +1,9 @@
 package com.arranger.apv.util;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -269,8 +272,14 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	
 	public Configurator(Main parent) {
 		super(parent);
-		
 		conf = ConfigFactory.load();
+	}
+	
+	public Configurator(Main parent, InputStream inputStream) {
+		super(parent);
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		conf = ConfigFactory.parseReader(reader);
 	}
 	
 	public Config getRootConfig() {

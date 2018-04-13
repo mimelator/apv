@@ -1,7 +1,5 @@
 package com.arranger.apv.test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -15,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Experimenting with logging
  */
-public class LogTest {
+public class LogTest extends APVPluginTest {
 	
 	private static final Logger LOG = Logger.getLogger(LogTest.class.getName());
 	private static final boolean DEBUG_LOG_CONFIG = false;
@@ -27,16 +25,9 @@ public class LogTest {
 	@BeforeEach
 	public void configLogger() {
 		LogManager logManager = LogManager.getLogManager();
-		try {
-			System.out.println("Loading log properties");
-		    InputStream configFile = LogTest.class.getClassLoader().getResourceAsStream(CONFIG);
-		    assert(configFile != null);
-			logManager.readConfiguration(configFile);
-			
-		} catch (IOException ex) {
-		    System.out.println(ex.getMessage());
-		    ex.printStackTrace();
-		}
+		getInputStream(CONFIG, inputStream -> {
+			logManager.readConfiguration(inputStream);
+		});
 		
 		//Dump the loggers
 		if (DEBUG_LOG_CONFIG) {
@@ -46,6 +37,8 @@ public class LogTest {
 			}
 		}
 	}
+
+
 	
 	protected void debugLogger(Logger l) {
 		Level level = l.getLevel();
@@ -95,6 +88,11 @@ public class LogTest {
 			OTHER_LOGGER.log(Level.SEVERE, "message starts with text: SEVERE");
 			OTHER_LOGGER.log(Level.CONFIG, "message starts with text: CONFIG");
 		}
+		
+	}
+
+	@Override
+	protected void setFrameIndexes() {
 		
 	}
 }

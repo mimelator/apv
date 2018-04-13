@@ -1,5 +1,6 @@
 package com.arranger.apv.test;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -17,18 +18,31 @@ import com.typesafe.config.ConfigValue;
 
 public class ConfiguratorTest extends APVPluginTest {
 	
+	private static final String CONFIG = "alt.properties";
+	
 	@Test
 	public void testClassResources() throws Exception {
 		testClassResource("reference.conf");
 		testClassResource("application.conf");
 	}
 	
-	public void testClassResource(String resource) throws Exception {
-		Enumeration<URL> resources = ConfiguratorTest.class.getClassLoader().getResources(resource);
-		while (resources.hasMoreElements()) {
-			URL nextElement = resources.nextElement();
-			debug(nextElement.toString());
-		}
+	Configurator cfg;
+	
+	@Test
+	public void testLoadOtherConfig() throws Exception {
+		
+		getInputStream(CONFIG, inputStream -> {
+			loadConfigurator(inputStream);
+		});
+		
+		assert(cfg != null);
+		Config rootConfig = cfg.getRootConfig();
+		assert(rootConfig != null);
+		debug(rootConfig.toString());
+	}
+	
+	protected void loadConfigurator(InputStream is) throws Exception {
+		cfg = new Configurator(parent, is);
 	}
 	
 	
@@ -61,6 +75,14 @@ public class ConfiguratorTest extends APVPluginTest {
 		ss = cfg.loadAVPPlugins("locationSystems");
 		assert(ss != null);
 		assert(ss.size() > 4);
+	}
+	
+	public void testClassResource(String resource) throws Exception {
+		Enumeration<URL> resources = ConfiguratorTest.class.getClassLoader().getResources(resource);
+		while (resources.hasMoreElements()) {
+			URL nextElement = resources.nextElement();
+			debug(nextElement.toString());
+		}
 	}
 	
 	

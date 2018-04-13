@@ -12,7 +12,6 @@ import ddf.minim.AudioSource;
 import ddf.minim.Minim;
 import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;
-import ddf.minim.analysis.FourierTransform;
 
 /**
  * http://code.compartmental.net/tools/minim/
@@ -73,7 +72,7 @@ public class Audio extends APVPlugin {
 		protected void createFFT() {
 			fft = new FFT(source.bufferSize(), source.sampleRate());
 			fft.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
-			fft.window(FourierTransform.COSINE);
+			//fft.window(FourierTransform.COSINE);
 		}
 		
 		public AudioSource getSource() {
