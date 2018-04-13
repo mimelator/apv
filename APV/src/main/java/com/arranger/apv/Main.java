@@ -19,6 +19,8 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FrameStrober;
+import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
@@ -36,14 +38,10 @@ public class Main extends PApplet {
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
-	//Change these during active development
 	public static final int NUMBER_PARTICLES = 1000;
 	public static final String RENDERER = P3D;
 	private static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
-	
-	
-	//Don't change the following values
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
 	protected List<ShapeSystem> foregroundSystems;
@@ -80,6 +78,7 @@ public class Main extends PApplet {
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
+	protected FrameStrober frameStrober;
 	protected Monitor monitor;
 	protected SettingsDisplay settingsDisplay;
 	protected Oscillator oscillator;
@@ -103,7 +102,8 @@ public class Main extends PApplet {
 					helpSwitch,
 					showSettingsSwitch,
 					pulseListenerSwitch,
-					monitorSwitch;
+					monitorSwitch, 
+					frameStroberSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -135,6 +135,10 @@ public class Main extends PApplet {
 	
 	public Gravity getGravity() {
 		return gravity;
+	}
+	
+	public FrameStrober getFrameStrober() {
+		return frameStrober;
 	}
 	
 	public Configurator getConfigurator() {
@@ -214,8 +218,7 @@ public class Main extends PApplet {
 			}
 		}
 
-		logger.warning("Unable to find current control system: " + currentControlMode);
-		return null;
+		throw new RuntimeException("Unable to find current control system: " + currentControlMode);
 	}
 	
 	public void addSettingsMessage(String msg) {
@@ -224,6 +227,10 @@ public class Main extends PApplet {
 
 	public Collection<Switch> getSwitches() {
 		return switches.values();
+	}
+	
+	public Switch getSwitch(String name) {
+		return switches.get(name);
 	}
 	
 	public int getFrameCount() {
@@ -251,6 +258,7 @@ public class Main extends PApplet {
 		gravity = new Gravity(this);
 		audio = new Audio(this, BUFFER_SIZE);
 		monitor = new Monitor(this);
+		frameStrober = new FrameStrober(this);
 		
 		locationSystems = (List<LocationSystem>)configurator.loadAVPPlugins("locationSystems");
 		colorSystems = (List<ColorSystem>)configurator.loadAVPPlugins("colorSystems");
@@ -293,6 +301,7 @@ public class Main extends PApplet {
 		registerSwitchCommand(messagesSwitch, '5');
 		registerSwitchCommand(transitionSwitch, '6');
 		registerSwitchCommand(pulseListenerSwitch, '7');
+		registerSwitchCommand(frameStroberSwitch, '8');
 		
 		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
 				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
@@ -469,6 +478,12 @@ public class Main extends PApplet {
 	public void draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
+		if (frameStroberSwitch.isEnabled()) {
+			if (frameStrober.isSkippingFrames()) {
+				return;
+			}
+		}
+		
 		if (showSettingsSwitch.isEnabled()) {
 			settingsDisplay.prepareSettingsMessages();
 			settingsDisplay.addPrimarySettingsMessages();
@@ -584,5 +599,6 @@ public class Main extends PApplet {
 		showSettingsSwitch = switches.get("ShowSettings");
 		pulseListenerSwitch = switches.get("PulseListener");
 		monitorSwitch = switches.get("Monitor");
+		frameStroberSwitch = switches.get("FrameStrober");
 	}
 }

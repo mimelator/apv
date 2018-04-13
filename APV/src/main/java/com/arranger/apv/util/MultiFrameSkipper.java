@@ -6,6 +6,8 @@ import com.arranger.apv.Main;
  * This class is very stateful, and shouldn't be shared by any other client
  * 
  * It doesn't need to be reset, it just keeps cycling
+ * 
+ * Use this class when you want to perform an action just once every few frames
  */
 public class MultiFrameSkipper extends SingleFrameSkipper {
 

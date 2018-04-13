@@ -83,7 +83,10 @@ public abstract class TransitionSystem extends ShapeSystem {
 				doTransition(fadePct);
 				logger.fine("fadePct: " + fadePct);
 			} else {
-				savedImage = null;
+				if (savedImage != null) {
+					onTransitionComplete();
+					savedImage = null;
+				}
 			}
 		}
 	}
@@ -96,6 +99,10 @@ public abstract class TransitionSystem extends ShapeSystem {
 	public void startTransition() {
 		frameFader.startFade();
 		captureCurrentImage();
+	}
+	
+	protected void onTransitionComplete() {
+		
 	}
 	
 	protected float getAlapha(float pct) {
