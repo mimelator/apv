@@ -20,6 +20,7 @@ import processing.core.PImage;
 public abstract class TransitionSystem extends ShapeSystem {
 	
 	private static final int INITIAL_ALPHA_FOR_FADE = 90;
+	private static final int DEFAULT_TRANSITION_FRAMES = 30;
 	
 	private static final Logger logger = Logger.getLogger(TransitionSystem.class.getName());
 	
@@ -33,7 +34,7 @@ public abstract class TransitionSystem extends ShapeSystem {
 	}
 	
 	public TransitionSystem(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getInt(0, Main.DEFAULT_TRANSITION_FRAMES));
+		this(ctx.getParent(), ctx.getInt(0, DEFAULT_TRANSITION_FRAMES));
 	}
 	
 	/**

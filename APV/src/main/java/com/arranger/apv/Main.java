@@ -27,6 +27,7 @@ import com.arranger.apv.util.Monitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.SettingsDisplay;
+import com.typesafe.config.Config;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -39,16 +40,11 @@ public class Main extends PApplet {
 	
 	//Change these during active development
 	public static final int NUMBER_PARTICLES = 1000;
-	public static final String RENDERER = P3D;//P2D;
-	private static final int WIDTH = 1024;
-	private static final int HEIGHT = 768;
+	public static final String RENDERER = P3D;
 	private static final int BUFFER_SIZE = 512;
-	public static final int DEFAULT_TRANSITION_FRAMES = 30;
 	public static final int MAX_ALPHA = 255;
 	
-	//Defaults 
-	private static final boolean FULL_SCREEN = true;
-
+	
 	//Don't change the following values
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
@@ -115,11 +111,22 @@ public class Main extends PApplet {
 		PApplet.main(new String[] {Main.class.getName()});
 	}
 
+	@SuppressWarnings("unchecked")
 	public void settings() {
-		if (FULL_SCREEN) {
+		//can't load the settings until i load the configurator
+		//don't want to load the configurator until i load the logging
+		loggingConfig = new LoggingConfig(this);
+		loggingConfig.configureLogging();
+		
+		configurator = new Configurator(this);
+		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
+		
+		Config rootConfig = configurator.getRootConfig();
+		boolean isFullScreen = rootConfig.getBoolean("apv.fullScreen");
+		if (isFullScreen) {
 			fullScreen(RENDERER);
 		} else {
-			size(WIDTH, HEIGHT, RENDERER);
+			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
 	}
 	
@@ -227,18 +234,9 @@ public class Main extends PApplet {
 	public float oscillate(float low, float high, float oscSpeed) {
 		return oscillator.oscillate(low, high, oscSpeed);
 	}
-	
-
-	
 
 	@SuppressWarnings("unchecked")
 	public void setup() {
-		loggingConfig = new LoggingConfig(this);
-		loggingConfig.configureLogging();
-		
-		configurator = new Configurator(this);
-		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
-
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
 		
