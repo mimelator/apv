@@ -45,6 +45,8 @@ import com.arranger.apv.msg.CircularMessage;
 import com.arranger.apv.msg.LocationMessage;
 import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
+import com.arranger.apv.pl.SimplePL;
+import com.arranger.apv.pl.StarPL;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -154,6 +156,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		//Switches
 		Switch.class,
 		
+		//Listeners
+		SimplePL.class,
+		StarPL.class, 
 	};
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }
@@ -188,6 +193,25 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		public String getString(int index, String defaultVal) {
 			if (argList.size() > index) {
 				return argList.get(index).unwrapped().toString();
+			} else {
+				return defaultVal;
+			}
+		}
+		
+		public String [] getStringArray(int index, String [] defaultVal) {
+			if (argList.size() > index) {
+				ConfigValue configValue = argList.get(index);
+				ConfigList configList = (ConfigList)configValue;
+				
+				List<String> sa = new ArrayList<String>();
+				
+				for (Iterator<ConfigValue> it = configList.iterator(); it.hasNext();) {
+					ConfigValue cv = it.next();
+					sa.add(cv.unwrapped().toString());
+				}
+				
+				return sa.toArray(new String[sa.size()]);	
+				
 			} else {
 				return defaultVal;
 			}

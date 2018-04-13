@@ -44,6 +44,9 @@ public class FreqDetector extends LiteShapeSystem {
 		float minAmp = Float.MAX_VALUE;
 		float maxAmp = Float.MIN_VALUE;
 
+		//I'd like to skip a few of the lowest bands
+		//need to change the for loop as well as the pctComplete below
+		
 		for (int index = 0; index < bounds; index++) {
 			float leftX = index * frequencyWidth;
 			float rightX = index * frequencyWidth + frequencyWidth;

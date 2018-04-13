@@ -1,17 +1,15 @@
 BRANCH: portable
 https://github.com/mimelator/apv
 
-Change Defaults:
-DONE	--> Default Start Control Mode
-DONE	--> Disabled Help & Live Settings
-DONE	--> Full screen vs dimensions
-DONE	--> Perlin should have default frames to skip
-DONE	--> Windows audio seems to need the Perlin pulses to skip lower: 8
-
-
 Create a switch for the emoji messages (really any text set of messages)
 	--> Move the emojis into the conf file
-	
+
+Make listeners configurable
+Pass params to Listeners
+
+
+
+Done adjust the freq detector background to skip some of the lower bands
 	
 The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 

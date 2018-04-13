@@ -17,8 +17,6 @@ import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
-import com.arranger.apv.pl.SimplePL;
-import com.arranger.apv.pl.StarPL;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.HelpDisplay;
@@ -75,6 +73,7 @@ public class Main extends PApplet {
 	protected Map<String, Switch> switches;
 	protected List<ControlSystem> controlSystems;
 	protected CONTROL_MODES currentControlMode;
+	protected List<APVPlugin> listeners;
 	
 	//Useful helper classes
 	protected Configurator configurator;
@@ -166,6 +165,10 @@ public class Main extends PApplet {
 		return currentControlMode;
 	}
 
+	public List<APVPlugin> getListeners() {
+		return listeners;
+	}
+	
 	public ColorSystem getColorSystem() {
 		return (ColorSystem)getPlugin(colorSystems, colorIndex);
 	}
@@ -258,6 +261,7 @@ public class Main extends PApplet {
 		filterSystems = (List<Filter>)configurator.loadAVPPlugins("filterSystems");
 		transitionSystems = (List<TransitionSystem>)configurator.loadAVPPlugins("transitionSystems");
 		messageSystems = (List<MessageSystem>)configurator.loadAVPPlugins("messageSystems");	
+		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
 		
 		//currentControlMode
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
@@ -268,10 +272,6 @@ public class Main extends PApplet {
 		setupSystems(transitionSystems);
 		setupSystems(messageSystems);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
-		
-		//listeners
-		new SimplePL(this);
-		new StarPL(this);
 		
 		//processing hints
 		orientation(LANDSCAPE);
