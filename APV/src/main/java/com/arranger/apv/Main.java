@@ -103,7 +103,8 @@ public class Main extends PApplet {
 					showSettingsSwitch,
 					pulseListenerSwitch,
 					monitorSwitch, 
-					frameStroberSwitch;
+					frameStroberSwitch,
+					videoCaptureSwitch;
 	
 	
 	public static void main(String[] args) {
@@ -302,6 +303,7 @@ public class Main extends PApplet {
 		registerSwitchCommand(transitionSwitch, '6');
 		registerSwitchCommand(pulseListenerSwitch, '7');
 		registerSwitchCommand(frameStroberSwitch, '8');
+		registerSwitchCommand(videoCaptureSwitch, '9');
 		
 		cs.registerCommand('f', "Foreground", "Cycles through the foreground systems", 
 				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
@@ -559,6 +561,10 @@ public class Main extends PApplet {
 		if (pulseListenerSwitch.isEnabled()) {
 			pulseListener.checkPulse();
 		}
+		
+		if (videoCaptureSwitch.isEnabled()) {
+			doScreenCapture();
+		}
 	}
 	
 	protected void runControlMode() {
@@ -600,5 +606,6 @@ public class Main extends PApplet {
 		pulseListenerSwitch = switches.get("PulseListener");
 		monitorSwitch = switches.get("Monitor");
 		frameStroberSwitch = switches.get("FrameStrober");
+		videoCaptureSwitch = switches.get("VideoCapture");
 	}
 }

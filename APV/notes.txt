@@ -1,7 +1,5 @@
-BRANCH: frame-rate
+BRANCH: master
 https://github.com/mimelator/apv
-
-* Slow mode would be nice.  Once it isn't forced upon me by garbage collction
 
 
 
