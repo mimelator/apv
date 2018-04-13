@@ -1,16 +1,10 @@
 BRANCH: portable
 https://github.com/mimelator/apv
 
-Create a switch for the emoji messages (really any text set of messages)
-	--> Move the emojis into the conf file
+Figure out how to override "special" properties that are resolved in rerference.conf
+  Might need to merge trees, rename overrides...
+  Could be a gateway to having different visual packs
 
-Make listeners configurable
-Pass params to Listeners
-
-
-
-Done adjust the freq detector background to skip some of the lower bands
-	
 The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 
 *****************************************************************************

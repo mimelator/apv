@@ -18,8 +18,13 @@ import com.typesafe.config.ConfigValue;
 public class ConfiguratorTest extends APVPluginTest {
 	
 	@Test
-	public void testClassResourcs() throws Exception {
-		Enumeration<URL> resources = ConfiguratorTest.class.getClassLoader().getResources("reference.conf");
+	public void testClassResources() throws Exception {
+		testClassResource("reference.conf");
+		testClassResource("application.conf");
+	}
+	
+	public void testClassResource(String resource) throws Exception {
+		Enumeration<URL> resources = ConfiguratorTest.class.getClassLoader().getResources(resource);
 		while (resources.hasMoreElements()) {
 			URL nextElement = resources.nextElement();
 			debug(nextElement.toString());
