@@ -20,11 +20,13 @@ public class ConfiguratorTest extends APVPluginTest {
 	
 	private static final String CONFIG = "alt.properties";
 	
+	
 	@Test
 	public void testClassResources() throws Exception {
 		testClassResource("reference.conf");
 		testClassResource("application.conf");
 	}
+	
 	
 	Configurator cfg;
 	

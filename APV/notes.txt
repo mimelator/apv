@@ -1,9 +1,6 @@
 BRANCH: portable
 https://github.com/mimelator/apv
 
-Figure out how to override "special" properties that are resolved in rerference.conf
-  Might need to merge trees, rename overrides...
-  Could be a gateway to having different visual packs
 
 The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 
