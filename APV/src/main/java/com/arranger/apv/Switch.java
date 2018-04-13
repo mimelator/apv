@@ -1,5 +1,7 @@
 package com.arranger.apv;
 
+import com.arranger.apv.util.Configurator;
+
 public class Switch extends APVPlugin {
 	
 	public enum STATE {FROZEN, ENABLED, DISABLED};
@@ -17,6 +19,10 @@ public class Switch extends APVPlugin {
 		super(parent);
 		this.name = name;
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
+	}
+	
+	public Switch(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getString(0, ""), ctx.getBoolean(1, true));
 	}
 
 	@Override

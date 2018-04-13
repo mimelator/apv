@@ -41,19 +41,19 @@ public class ConfiguratorTest extends APVPluginTest {
 			assert(plugin instanceof ShapeSystem);
 		}
 		
-		List<? extends APVPlugin> ss = cfg.loadShapeSytems("backgroundSystems");
+		List<? extends APVPlugin> ss = cfg.loadAVPPlugins("backgroundSystems");
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadShapeSytems("colorSystems");
+		ss = cfg.loadAVPPlugins("colorSystems");
 		assert(ss != null);
 		assert(ss.size() > 2);
 		
-		ss = cfg.loadShapeSytems("controlSystems");
+		ss = cfg.loadAVPPlugins("controlSystems");
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadShapeSytems("locationSystems");
+		ss = cfg.loadAVPPlugins("locationSystems");
 		assert(ss != null);
 		assert(ss.size() > 4);
 	}

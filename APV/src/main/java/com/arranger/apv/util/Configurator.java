@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.Switch;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.back.BlurBackDrop;
@@ -150,6 +151,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		Snap.class,
 		Perlin.class,
 		
+		//Switches
+		Switch.class,
+		
 	};
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }
@@ -249,7 +253,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		return conf;
 	}
 	
-	public List<? extends APVPlugin> loadShapeSytems(String name) {
+	public List<? extends APVPlugin> loadAVPPlugins(String name) {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);

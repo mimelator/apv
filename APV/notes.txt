@@ -6,7 +6,7 @@ DONE	--> Default Start Control Mode
 	--> Disabled Help & Live Settings
 	--> Full screen vs dimensions
 	--> Perlin should have default frames to skip
-	--> Windows audio seems to need the Perlin pulses to skip lower: 10
+	--> Windows audio seems to need the Perlin pulses to skip lower: 8
 
 
 Create a switch for the emoji messages (really any text set of messages)
@@ -17,6 +17,7 @@ The ScenePack will be a bunch of files and file names for the configured systems
 
 *****************************************************************************
 TODO: 
+* Bug in Perlin where the number of skipped pulses far outnumbers the numbers of pulses
 * Snap Listener maybe shows a flash?
 * Filter, munge the background
 * work on readme
@@ -25,6 +26,7 @@ TODO:
 * Standardize the term "Scene" which includes fg, bg, bd (filter?)
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 * Slow mode would be nice.  Once it isn't forced upon me by garbage collction
+* number of particles could ebb and flow with the intensity of the music
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
@@ -37,3 +39,9 @@ eg: java -cp .:APV-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.arranger.apv.Mai
 the '.' at the beginning of the classpath tells the class loader to look in the current directory for resources.
 *****************************************************************************
 
+
+*****************************************************************************
+Running on windows:
+Install Java 8
+Intel?  https://www.drivereasy.com/knowledge/solved-cant-find-the-name-of-intel-icd-opengl-driver/
+*****************************************************************************

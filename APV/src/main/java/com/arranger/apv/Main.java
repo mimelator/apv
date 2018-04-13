@@ -3,7 +3,11 @@ package com.arranger.apv;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
@@ -44,22 +48,10 @@ public class Main extends PApplet {
 	
 	//Defaults 
 	private static final boolean FULL_SCREEN = true;
-	public static final boolean AUDIO_IN = true;
-	private static final boolean USE_BACKDROP = true;
-	private static final boolean USE_BG = true;
-	private static final boolean USE_FG = true;
-	private static final boolean USE_FILTERS = true;
-	private static final boolean USE_TRANSITIONS = true;
-	private static final boolean SHOW_SETTINGS = true;
-	private static final boolean USE_MESSAGES = true;
-	private static final boolean USE_PULSE_LISTENER = true;
-	private static final boolean MONITOR_FRAME_RATE = true;
-
 
 	//Don't change the following values
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
-	
 	protected List<ShapeSystem> foregroundSystems;
 	protected int foregroundIndex = 0;
 	
@@ -84,10 +76,9 @@ public class Main extends PApplet {
 	protected List<Filter> filterSystems; 
 	protected int filterIndex = 0;
 	
+	protected Map<String, Switch> switches;
 	protected List<ControlSystem> controlSystems;
-	
-	//TODO initialize this from the Configurator
-	protected CONTROL_MODES currentControlMode; // = CONTROL_MODES.MANUAL;
+	protected CONTROL_MODES currentControlMode;
 	
 	//Useful helper classes
 	protected Configurator configurator;
@@ -220,15 +211,9 @@ public class Main extends PApplet {
 	public void addSettingsMessage(String msg) {
 		settingsDisplay.addSettingsMessage(msg);
 	}
-	
-	public Switch[] getSwitches() {
-		return new Switch[] {
-				foreGroundSwitch, backGroundSwitch, 
-				backDropSwitch, filtersSwitch,
-				transitionSwitch, messagesSwitch,
-				helpSwitch, showSettingsSwitch, pulseListenerSwitch,
-				monitorSwitch
-		};
+
+	public Collection<Switch> getSwitches() {
+		return switches.values();
 	}
 	
 	public int getFrameCount() {
@@ -243,21 +228,16 @@ public class Main extends PApplet {
 		return oscillator.oscillate(low, high, oscSpeed);
 	}
 	
+
+	
+
 	@SuppressWarnings("unchecked")
 	public void setup() {
-		foreGroundSwitch = new Switch(this, "ForeGround", USE_FG);
-		backGroundSwitch = new Switch(this, "BackGround", USE_BG);
-		backDropSwitch = new Switch(this, "BackDrop", USE_BACKDROP);
-		filtersSwitch = new Switch(this, "Filters", USE_FILTERS);
-		transitionSwitch = new Switch(this, "Transitions", USE_TRANSITIONS);
-		messagesSwitch = new Switch(this, "Messages", USE_MESSAGES);
-		pulseListenerSwitch = new Switch(this, "PulseListener", USE_PULSE_LISTENER);
-		showSettingsSwitch = new Switch(this, "ShowSettings", SHOW_SETTINGS);
-		helpSwitch = new Switch(this, "Help");
-		monitorSwitch = new Switch(this, "Monitor", MONITOR_FRAME_RATE);
-		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
+		
+		configurator = new Configurator(this);
+		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
 
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
@@ -269,18 +249,17 @@ public class Main extends PApplet {
 		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		configurator = new Configurator(this);
 		monitor = new Monitor(this);
 		
-		locationSystems = (List<LocationSystem>)configurator.loadShapeSytems("locationSystems");
-		colorSystems = (List<ColorSystem>)configurator.loadShapeSytems("colorSystems");
-		controlSystems = (List<ControlSystem>)configurator.loadShapeSytems("controlSystems");
-		backgroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("backgroundSystems");
-		backDropSystems = (List<BackDropSystem>)configurator.loadShapeSytems("backDropSystems");
-		foregroundSystems = (List<ShapeSystem>)configurator.loadShapeSytems("foregroundSystems");
-		filterSystems = (List<Filter>)configurator.loadShapeSytems("filterSystems");
-		transitionSystems = (List<TransitionSystem>)configurator.loadShapeSytems("transitionSystems");
-		messageSystems = (List<MessageSystem>)configurator.loadShapeSytems("messageSystems");	
+		locationSystems = (List<LocationSystem>)configurator.loadAVPPlugins("locationSystems");
+		colorSystems = (List<ColorSystem>)configurator.loadAVPPlugins("colorSystems");
+		controlSystems = (List<ControlSystem>)configurator.loadAVPPlugins("controlSystems");
+		backgroundSystems = (List<ShapeSystem>)configurator.loadAVPPlugins("backgroundSystems");
+		backDropSystems = (List<BackDropSystem>)configurator.loadAVPPlugins("backDropSystems");
+		foregroundSystems = (List<ShapeSystem>)configurator.loadAVPPlugins("foregroundSystems");
+		filterSystems = (List<Filter>)configurator.loadAVPPlugins("filterSystems");
+		transitionSystems = (List<TransitionSystem>)configurator.loadAVPPlugins("transitionSystems");
+		messageSystems = (List<MessageSystem>)configurator.loadAVPPlugins("messageSystems");	
 		
 		//currentControlMode
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
@@ -588,5 +567,24 @@ public class Main extends PApplet {
 	
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
 		return list.get(Math.abs(index) % list.size());
+	}
+	
+	protected void configureSwitches(List<Switch> ss) {
+		switches = new HashMap<String, Switch>(ss.size());
+		for (Iterator<Switch> it = ss.iterator(); it.hasNext();) {
+			Switch nextSwitch = it.next();
+			switches.put(nextSwitch.name, nextSwitch);
+		}
+		
+		foreGroundSwitch = switches.get("ForeGround"); 
+		backGroundSwitch = switches.get("BackGround");
+		backDropSwitch = switches.get("ForeGround");
+		filtersSwitch = switches.get("Filters");
+		transitionSwitch = switches.get("Transitions");
+		messagesSwitch = switches.get("Messages");
+		helpSwitch = switches.get("Help");
+		showSettingsSwitch = switches.get("ShowSettings");
+		pulseListenerSwitch = switches.get("PulseListener");
+		monitorSwitch = switches.get("Monitor");
 	}
 }
