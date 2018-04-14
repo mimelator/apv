@@ -20,6 +20,15 @@ public class ConfiguratorTest extends APVPluginTest {
 	
 	private static final String CONFIG = "alt.properties";
 	
+	@Test
+	public void testConfigOverride() throws Exception {
+		Configurator cfg = new Configurator(parent);
+		
+		String string = cfg.getRootConfig().getString("apv.fullScreen");
+		debug("apv.fullScreen: " + string);
+		debug("apv.fullScreen [sysProp]: " + System.getProperty("apv.fullScreen"));
+	}
+	
 	
 	@Test
 	public void testClassResources() throws Exception {
