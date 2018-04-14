@@ -18,8 +18,8 @@
 	<distributionManagement>
 	    <repository>
 	        <id>localhost</id>
-	        <name>local-releases</name>
-	        <url>http://localhost:8081/artifactory/libs-release</url>
+	        <name>libs-release-local</name>
+	        <url>http://localhost:8081/artifactory/libs-release-local</url>
 	    </repository>
 	</distributionManagement>
 
