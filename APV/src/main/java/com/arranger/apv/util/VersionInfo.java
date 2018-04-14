@@ -14,7 +14,7 @@ public class VersionInfo extends APVPlugin {
 		super(parent);
 		
 		try {
-			URL resource = getClass().getClassLoader().getResource("META-INF/maven/APV/APV/pom.properties");
+			URL resource = getClass().getClassLoader().getResource("data/apv.properties");
 			Properties props = new Properties();
 			props.load(resource.openStream());
 			version = props.getProperty("version");

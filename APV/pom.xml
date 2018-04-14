@@ -7,6 +7,7 @@
 	
 	<properties>
 	    <maven.javadoc.skip>true</maven.javadoc.skip>
+	    <version>${version}</version>
 	</properties>
 
 	<scm>
@@ -54,6 +55,7 @@
 				</executions>
 				<configuration>
 					<archive>
+						<addMavenDescriptor>true</addMavenDescriptor>
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<mainClass>com.arranger.apv.Main</mainClass>
@@ -77,6 +79,24 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>write-project-properties</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.build.outputDirectory}/data/apv.properties</outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+			
 		</plugins>
 	</build>
 	<url>https://github.com/mimelator/apv</url>
