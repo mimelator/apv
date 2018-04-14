@@ -5,8 +5,8 @@ import java.awt.geom.Ellipse2D;
 
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.factory.PrimitiveShapeFactory;
 import com.arranger.apv.Main;
-import com.arranger.apv.factories.PrimitiveShapeFactory;
 
 /**
  * To be deleted

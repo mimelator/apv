@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
-import com.arranger.apv.factories.PrimitiveShapeFactory;
+import com.arranger.apv.factory.PrimitiveShapeFactory;
 import com.arranger.apv.util.Reverser;
 
 import processing.core.PApplet;

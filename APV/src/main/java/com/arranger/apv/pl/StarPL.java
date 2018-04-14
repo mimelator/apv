@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.factories.StarFactory;
+import com.arranger.apv.factory.StarFactory;
 import com.arranger.apv.util.Configurator;
 
 import processing.core.PShape;

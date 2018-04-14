@@ -32,12 +32,12 @@ import com.arranger.apv.control.Auto;
 import com.arranger.apv.control.Manual;
 import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
-import com.arranger.apv.factories.CircleImageFactory;
-import com.arranger.apv.factories.DotFactory;
-import com.arranger.apv.factories.ParametricFactory.HypocycloidFactory;
-import com.arranger.apv.factories.SpriteFactory;
-import com.arranger.apv.factories.SquareFactory;
-import com.arranger.apv.factories.StarFactory;
+import com.arranger.apv.factory.CircleImageFactory;
+import com.arranger.apv.factory.DotFactory;
+import com.arranger.apv.factory.SpriteFactory;
+import com.arranger.apv.factory.SquareFactory;
+import com.arranger.apv.factory.StarFactory;
+import com.arranger.apv.factory.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
@@ -52,6 +52,7 @@ import com.arranger.apv.msg.RandomMessage;
 import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
+import com.arranger.apv.scene.Marquee;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -168,6 +169,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		
 		//Scenes
 		Scene.class,
+		Marquee.class,
 	};
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }

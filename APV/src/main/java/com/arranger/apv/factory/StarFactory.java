@@ -1,4 +1,4 @@
-package com.arranger.apv.factories;
+package com.arranger.apv.factory;
 
 import java.awt.Shape;
 

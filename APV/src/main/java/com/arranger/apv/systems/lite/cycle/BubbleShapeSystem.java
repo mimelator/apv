@@ -3,7 +3,7 @@ package com.arranger.apv.systems.lite.cycle;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.factories.CircleImageFactory;
+import com.arranger.apv.factory.CircleImageFactory;
 import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
