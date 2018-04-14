@@ -27,6 +27,7 @@ import com.arranger.apv.util.Monitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.SettingsDisplay;
+import com.arranger.apv.util.VersionInfo;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
@@ -86,6 +87,7 @@ public class Main extends PApplet {
 	protected HelpDisplay helpDisplay;
 	protected APVPulseListener pulseListener;
 	protected Particles particles;
+	protected VersionInfo versionInfo;
 	
 
 	//Internal data
@@ -105,7 +107,7 @@ public class Main extends PApplet {
 					monitorSwitch, 
 					frameStroberSwitch,
 					videoCaptureSwitch;
-	
+
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -128,6 +130,10 @@ public class Main extends PApplet {
 		} else {
 			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
+	}
+	
+	public VersionInfo getVersionInfo() {
+		return versionInfo;
 	}
 	
 	public Audio getAudio() {
@@ -248,6 +254,8 @@ public class Main extends PApplet {
 
 	@SuppressWarnings("unchecked")
 	public void setup() {
+		versionInfo = new VersionInfo(this);
+		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
 		

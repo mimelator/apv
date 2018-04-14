@@ -60,6 +60,7 @@ public class SettingsDisplay extends APVPlugin {
 		Main p = parent;
 		
 		addSettingsMessage("---------System Settings-------");
+		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
 		addSettingsMessage("Color: " + p.getColorSystem().getDisplayName());
 		addSettingsMessage("Loc: " + p.getLocationSystem().getDisplayName());

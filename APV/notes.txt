@@ -1,12 +1,9 @@
-BRANCH: strober
+BRANCH: master
 https://github.com/mimelator/apv
-
-
 
 
 *****************************************************************************
 TODO: 
-* Automatic build info: 
 * Marquee message with live typing (maybe a large framed message with a solid background)
 * Snap Listener maybe shows a flash?
 * Filter, munge the background (when BGImage is in use)
@@ -17,21 +14,17 @@ TODO:
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 * number of particles could ebb and flow with the intensity of the music
-* at startup show the version number
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
 
 *****************************************************************************
-Build & Release to local .m2 repository and GitHub
-Note: before release:prepare all local changes must be pushed to GitHub
-
+Build & Release to local artifactory and github
 mvn clean
 mvn package
-mvn release:clean
 mvn release:prepare
+mvn release:perform
 *****************************************************************************
-
 
 *****************************************************************************
 When applying a custom application.conf, ensure a script named application.conf is in the same directory
