@@ -9,6 +9,7 @@ import java.util.OptionalDouble;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.Scene;
 
 public class Monitor extends APVPlugin {
 
@@ -22,11 +23,14 @@ public class Monitor extends APVPlugin {
 	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
 	private static DecimalFormat decFormat = new DecimalFormat(".##");
 	
-	public void doMonitorCheck(APVPlugin backDrop, 
-								APVPlugin filter, 
-								APVPlugin bg, 
-								APVPlugin fg) {
+	public void doMonitorCheck(Scene scene) {
 		if (parent.frameRate < FRAME_RATE_THRESHOLD) {
+			
+			APVPlugin backDrop = scene.getBackDrop();
+			APVPlugin filter = scene.getFilter();
+			APVPlugin bg = scene.getBgSys();
+			APVPlugin fg = scene.getFgSys();
+			
 			//This is an ugly way to build a key
 			StringBuilder builder = new StringBuilder();
 			builder.append((backDrop != null) ? backDrop.getDisplayName() : "()").append(':'); 

@@ -282,6 +282,7 @@ public class Main extends PApplet {
 		transitions = (List<TransitionSystem>)configurator.loadAVPPlugins("transitions");
 		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
 		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
+		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes");
 		
 		//currentControlMode
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
@@ -512,33 +513,35 @@ public class Main extends PApplet {
 			transition.onDrawStart();
 		}
 		
-		//SCENE-START
-		BackDropSystem backDrop = null;
-		if (backDropSwitch.isEnabled()) {
-			backDrop = getBackDrop();
+		Scene scene = (Scene)getPlugin(scenes, sceneIndex);
+		if (scene.isNormal()) {
+			BackDropSystem backDrop = null;
+			if (backDropSwitch.isEnabled()) {
+				backDrop = getBackDrop();
+			}
+
+			ShapeSystem bgSys = null;
+			if (backGroundSwitch.isEnabled()) {
+				bgSys = getBackground();
+			}
+
+			Filter filter = null;
+			if (filtersSwitch.isEnabled()) {
+				filter = (Filter) getPlugin(filters, filterIndex);
+			}
+
+			ShapeSystem fgSys = null;
+			if (foreGroundSwitch.isEnabled()) {
+				fgSys = getForeground();
+			}
+
+			scene.setSystems(backDrop, bgSys, fgSys, filter);
 		}
 		
-		ShapeSystem bgSys = null;
-		if (backGroundSwitch.isEnabled()) {
-			bgSys = getBackground();
-		}
-		
-		Filter filter = null;
-		if (filtersSwitch.isEnabled()) {
-			filter = (Filter)getPlugin(filters, filterIndex);
-		}
-		
-		ShapeSystem fgSys = null;
-		if (foreGroundSwitch.isEnabled()) {
-			fgSys = getForeground();
-		}
-		
-		Scene scene = new Scene(this, backDrop, bgSys, fgSys, filter);
 		scene.drawScene();
-		//SCENE-END
 		
 		if (monitorSwitch.isEnabled()) {
-			monitor.doMonitorCheck(backDrop, filter, bgSys, fgSys);
+			monitor.doMonitorCheck(scene);
 		}
 		
 		if (transition != null) {

@@ -61,7 +61,7 @@ public class ConfiguratorTest extends APVPluginTest {
 	public void testClassLoading() throws Exception {
 		Configurator cfg = new Configurator(parent);
 		
-		List<? extends Config> scl = cfg.getSystemConfigList("backgroundSystems");
+		List<? extends Config> scl = cfg.getSystemConfigList("backgrounds");
 		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
 			Config wrapperObj = it.next();
 			Entry<String, ConfigValue> shapeConfigObj = wrapperObj.entrySet().iterator().next();
@@ -71,19 +71,19 @@ public class ConfiguratorTest extends APVPluginTest {
 			assert(plugin instanceof ShapeSystem);
 		}
 		
-		List<? extends APVPlugin> ss = cfg.loadAVPPlugins("backgroundSystems");
+		List<? extends APVPlugin> ss = cfg.loadAVPPlugins("backgrounds");
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadAVPPlugins("colorSystems");
+		ss = cfg.loadAVPPlugins("colors");
 		assert(ss != null);
 		assert(ss.size() > 2);
 		
-		ss = cfg.loadAVPPlugins("controlSystems");
+		ss = cfg.loadAVPPlugins("controls");
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadAVPPlugins("locationSystems");
+		ss = cfg.loadAVPPlugins("locations");
 		assert(ss != null);
 		assert(ss.size() > 4);
 	}

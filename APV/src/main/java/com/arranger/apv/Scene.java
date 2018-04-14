@@ -10,17 +10,19 @@ public class Scene extends APVPlugin {
 	protected ShapeSystem fgSys;
 	protected Filter filter;
 	
-	
 	public Scene(Main parent) {
 		super(parent);
 	}
 	
-	public Scene(Main parent, BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
-		super(parent);
+	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
 		this.backDrop = backDrop;
 		this.bgSys = bgSys;
 		this.fgSys = fgSys;
 		this.filter = filter;
+	}
+	
+	public boolean isNormal() {
+		return true;
 	}
 
 	public void drawScene() {
@@ -46,6 +48,20 @@ public class Scene extends APVPlugin {
 			filter.postRender();
 		}
 	}
-	
 
+	public BackDropSystem getBackDrop() {
+		return backDrop;
+	}
+
+	public ShapeSystem getBgSys() {
+		return bgSys;
+	}
+
+	public ShapeSystem getFgSys() {
+		return fgSys;
+	}
+
+	public Filter getFilter() {
+		return filter;
+	}
 }

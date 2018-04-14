@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.Scene;
 import com.arranger.apv.Switch;
 import com.arranger.apv.audio.FreqDetector;
 import com.arranger.apv.back.BackDropSystem;
@@ -164,6 +165,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		//Listeners
 		SimplePL.class,
 		StarPL.class, 
+		
+		//Scenes
+		Scene.class,
 	};
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }
