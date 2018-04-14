@@ -7,6 +7,11 @@
 	<version>0.0.3-SNAPSHOT</version>
 	<name>Audio Processing Visualizer</name>
 
+	<scm>
+		<url>https://github.com/mimelator/apv</url>
+		<connection>scm:git:https://github.com/mimelator/apv.git</connection>
+		<tag>HEAD</tag>
+	</scm>
 
 	<repositories>
 		<repository>

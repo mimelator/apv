@@ -6,7 +6,7 @@ https://github.com/mimelator/apv
 
 *****************************************************************************
 TODO: 
-* Automatic build info: https://stackoverflow.com/questions/2973802/maven-trigger-custom-command-when-build-is-finished-dependent-on-outcome-succ
+* Automatic build info: 
 * Marquee message with live typing (maybe a large framed message with a solid background)
 * Snap Listener maybe shows a flash?
 * Filter, munge the background (when BGImage is in use)
