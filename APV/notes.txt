@@ -23,8 +23,13 @@ TODO:
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
 
 *****************************************************************************
-mvn release:prepare -DreleaseVersion=0.1 -DdevelopmentVersion=0.2-HEAD
-mvn release:prepare -DdryRun=true -DreleaseVersion=0.1 -DdevelopmentVersion=0.2-HEAD
+Build & Release to local .m2 repository and GitHub
+Note: before release:prepare all local changes must be pushed to GitHub
+
+mvn clean
+mvn package
+mvn release:clean
+mvn release:prepare
 *****************************************************************************
 
 

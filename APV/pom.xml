@@ -12,8 +12,16 @@
 	<scm>
 		<url>https://github.com/mimelator/apv</url>
 		<connection>scm:git:https://github.com/mimelator/apv.git</connection>
-		<tag>APV-0.3</tag>
+		<tag>APV-0.5</tag>
 	</scm>
+	
+	<distributionManagement>
+	    <snapshotRepository>
+	        <id>snapshots</id>
+	        <name>local-snapshots</name>
+	        <url>http://localhost:8081/artifactory/libs-snapshot</url>
+	    </snapshotRepository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>
