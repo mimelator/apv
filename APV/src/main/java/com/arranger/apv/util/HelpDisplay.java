@@ -38,8 +38,8 @@ public class HelpDisplay extends APVPlugin {
 		List<String> sortedMessages = new ArrayList<String>(messages);
 		sortedMessages.sort(Comparator.naturalOrder());
 		
-		int x = p.width / 5;
-		int y = p.height / 5;
+		int x = p.width / 4;
+		int y = p.height / 8;
 		p.translate(x, y);
 		p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
 		p.translate(-x, -y);
