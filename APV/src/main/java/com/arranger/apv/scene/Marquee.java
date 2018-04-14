@@ -6,7 +6,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
 import com.arranger.apv.util.Configurator;
 
-import processing.core.PFont;
 import processing.core.PGraphics;
 
 /**
@@ -15,7 +14,10 @@ import processing.core.PGraphics;
 public class Marquee extends Scene {
 
 	private String text;
-	private boolean isInit = false;
+	private int characterColor;
+	private PGraphics pg;
+	private ArrayList<OneChr> chrs;
+	private int initFrame = 0;
 
 	public Marquee(Main parent, String text) {
 		super(parent);
@@ -32,40 +34,24 @@ public class Marquee extends Scene {
 	}
 
 	@Override
-	public void drawScene() {
-		if (!isInit) {
-			setup();
+	public boolean isNew() {
+		int currentFrame = parent.getFrameCount();
+		if (currentFrame > initFrame + 200) {
+			pg = null;
+			initFrame = 0;
 		}
-		draw();
+		
+		return pg == null;
 	}
 
-	int ELLIPSE_COLOR;
-	int LINE_COLOR;
-	int PGRAPHICS_COLOR;
-	int LINE_LENGTH = 25;
-	boolean reverseDrawing = false;
+	@Override
+	public void drawScene() {
+		if (pg == null) {
+			init();
+		}
 
-	PGraphics pg;
-	PFont font;
-	ArrayList<OneChr> chrs = new ArrayList<OneChr>();
-
-	protected void setup() {
-		ELLIPSE_COLOR = parent.color(0);
-		LINE_COLOR = parent.color(0, 125);
-		PGRAPHICS_COLOR = parent.color(0);
-
-		// create and draw to PPraphics (see Getting Started > UsingPGraphics example)
-		pg = parent.createGraphics(parent.width, parent.height, JAVA2D);
-		pg.beginDraw();
-		pg.textSize(200);
-		pg.textAlign(CENTER, CENTER);
-		pg.fill(PGRAPHICS_COLOR);
-		pg.text(text, pg.width / 2, pg.height / 2);
-		pg.endDraw();
-		isInit = true;
-	}
-
-	protected void draw() {
+		characterColor = parent.color(0);
+		
 		parent.fill(255);
 		parent.stroke(0);
 		parent.textAlign(CENTER, CENTER);
@@ -75,14 +61,29 @@ public class Marquee extends Scene {
 				float x = parent.random(parent.width);
 				float y = parent.random(parent.height);
 				int c = pg.get((int) x, (int) y);
-				if (c == PGRAPHICS_COLOR) {
+				if (c == characterColor) {
 					chrs.add(new OneChr(x, y, 1));
 				}
 			}
 		}
+		
 		for (OneChr oc : chrs) {
 			oc.updateMe();
 		}
+	}
+	
+	protected void init() {
+		// create and draw to PPraphics (see Getting Started > UsingPGraphics example)
+		chrs = new ArrayList<OneChr>();
+		pg = parent.createGraphics(parent.width, parent.height, JAVA2D);
+		pg.beginDraw();
+		pg.textSize(200);
+		pg.textAlign(CENTER, CENTER);
+		pg.fill(characterColor);
+		pg.text(text, pg.width / 2, pg.height / 2);
+		pg.endDraw();
+		
+		initFrame = parent.getFrameCount();
 	}
 
 	class OneChr {

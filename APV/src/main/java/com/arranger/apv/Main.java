@@ -292,6 +292,7 @@ public class Main extends PApplet {
 		setupSystems(backDrops);
 		setupSystems(transitions);
 		setupSystems(messages);
+		setupSystems(scenes);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
 		
 		//processing hints
@@ -505,15 +506,7 @@ public class Main extends PApplet {
 			settingsDisplay.addPrimarySettingsMessages();
 		}
 		
-		TransitionSystem transition = null;
-		if (transitionSwitch.isEnabled()) {
-			transition = getTransition();
-			if (scrambleMode) {
-				transition.startTransition();
-			}
-			
-			transition.onDrawStart();
-		}
+		TransitionSystem transition = prepareTransition(false);
 		
 		Scene scene = (Scene)getPlugin(scenes, sceneIndex);
 		if (scene.isNormal()) {
@@ -538,9 +531,15 @@ public class Main extends PApplet {
 			}
 
 			scene.setSystems(backDrop, bgSys, fgSys, filter);
+		} else {
+			//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
+			if (scene.isNew()) {
+				transition = prepareTransition(true);
+			}
 		}
 		
-		scene.drawScene();
+		//drawSystem(scene, "scene");
+		scene.draw();
 		
 		if (monitorSwitch.isEnabled()) {
 			monitor.doMonitorCheck(scene);
@@ -551,7 +550,7 @@ public class Main extends PApplet {
 		}
 		
 		if (messagesSwitch.isEnabled()) {
-			drawSystem(getMessage(), "messageSystem");
+			drawSystem(getMessage(), "message");
 		}
 		
 		if (showSettingsSwitch.isEnabled()) {
@@ -575,6 +574,19 @@ public class Main extends PApplet {
 		if (videoCaptureSwitch.isEnabled()) {
 			doScreenCapture();
 		}
+	}
+	
+	protected TransitionSystem prepareTransition(boolean forceStart) {
+		TransitionSystem transition = null;
+		if (transitionSwitch.isEnabled()) {
+			transition = getTransition();
+			if (scrambleMode || forceStart) {
+				transition.startTransition();
+			}
+			
+			transition.onDrawStart();
+		}
+		return transition;
 	}
 	
 	protected void runControlMode() {

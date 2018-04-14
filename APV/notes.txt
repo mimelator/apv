@@ -2,27 +2,20 @@ BRANCH: scene
 https://github.com/mimelator/apv
 
 * Standardize the term "Scene" which includes fg, bg, bd (filter?)
-
-	Need a mechanism to swap out the standard scene with a custom scene
-
-
-Scenes can:
-	Be saved to a list and iterated back and forth through
-	Could be prebuilt from a list?
-	Can be replaced by Special Types of Scenes like a Marquee
+* Scenes can:
 	* pluggable Animations to wipe the screen clean and prepare for the next song
 	* Marquee message with live typing (maybe a large framed message with a solid background)
 
 
 *****************************************************************************
 TODO: 
-* Snap Listener maybe shows a flash?
-* Filter, munge the background (when BGImage is in use)
 * User Guide (in the readme)
+* Filter, munge the background (Espeically when BGImage is in use)
 * test Audio#scale
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 * number of particles could ebb and flow with the intensity of the music
+* Snap Listener maybe shows a flash?
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		

@@ -3,7 +3,7 @@ package com.arranger.apv;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.filter.Filter;
 
-public class Scene extends APVPlugin {
+public class Scene extends ShapeSystem {
 
 	protected BackDropSystem backDrop;
 	protected ShapeSystem bgSys;
@@ -11,7 +11,7 @@ public class Scene extends APVPlugin {
 	protected Filter filter;
 	
 	public Scene(Main parent) {
-		super(parent);
+		super(parent, null);
 	}
 	
 	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
@@ -21,12 +21,25 @@ public class Scene extends APVPlugin {
 		this.filter = filter;
 	}
 	
+	@Override
+	public void draw() {
+		drawScene();
+	}
+	
+	@Override
+	public void setup() {
+		//Do nothing.  This is called during application startup.
+	}
+
+	public boolean isNew() {
+		return false;
+	}
+	
 	public boolean isNormal() {
 		return true;
 	}
 
 	public void drawScene() {
-		
 		if (backDrop != null) {
 			parent.drawSystem(backDrop, "backDrop");
 		}
