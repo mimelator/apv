@@ -67,7 +67,7 @@ public class NoisyShapeSystem extends LiteCycleShapeSystem {
 			prevPos = new PVector(random(width), random(height));
 			curPos = prevPos.copy();
 			alpha = (int) parent.random(LOW_ALPHA, HIGH_ALPHA);
-			color = parent.getColorSystem().getCurrentColor();
+			color = parent.getColor().getCurrentColor();
 		}
 
 		public void update() {

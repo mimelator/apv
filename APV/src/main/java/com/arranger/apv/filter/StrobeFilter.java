@@ -1,8 +1,8 @@
 package com.arranger.apv.filter;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.SavedImage;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.SavedImage;
 
 public class StrobeFilter extends Filter {
 	

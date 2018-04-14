@@ -29,7 +29,7 @@ public class RandomMessage extends MessageSystem {
 		
 		p.textAlign(CENTER, CENTER);
 		p.rotate(random(-1, +1)); // rotate text 
-		p.fill(p.getColorSystem().getCurrentColor().getRGB());
+		p.fill(p.getColor().getCurrentColor().getRGB());
 		p.textSize(random(MAX_TEXT_SIZE));
 		
 		for (String msg : fadingMessage.messages) {

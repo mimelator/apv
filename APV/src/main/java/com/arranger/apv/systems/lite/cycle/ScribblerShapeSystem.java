@@ -68,7 +68,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 		}
 
 		public Scribbler() {
-			Point2D currentPoint = parent.getLocationSystem().getCurrentPoint();
+			Point2D currentPoint = parent.getLocation().getCurrentPoint();
 			prevX = (float)currentPoint.getX();
 			prevY = (float)currentPoint.getY();
 			anchorX = prevX;
@@ -78,7 +78,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 			
 			theta = random(TWO_PI);
 			strokeWeight = PApplet.round(1 + random(MAX_STROKE_WEIGHT));
-			strokeColor = parent.getColorSystem().getCurrentColor();
+			strokeColor = parent.getColor().getCurrentColor();
 		}
 
 		@Override

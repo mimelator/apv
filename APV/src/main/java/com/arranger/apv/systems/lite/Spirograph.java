@@ -100,7 +100,7 @@ public class Spirograph extends LiteShapeSystem {
 		final static float maxSpeed = .8f;
 
 		MyColor() {
-			Color currentColor = parent.getColorSystem().getCurrentColor();
+			Color currentColor = parent.getColor().getCurrentColor();
 			R = currentColor.getRed();
 			G = currentColor.getGreen();
 			B = currentColor.getBlue();

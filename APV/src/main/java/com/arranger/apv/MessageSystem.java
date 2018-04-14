@@ -71,7 +71,7 @@ public abstract class MessageSystem extends ShapeSystem {
 	}
 	
 	protected void doStandardFade(float pct) {
-		doStandardFade(parent.getColorSystem().getCurrentColor(), pct);
+		doStandardFade(parent.getColor().getCurrentColor(), pct);
 	}
 	
 	protected void doStandardFade(Color c, float pct) {

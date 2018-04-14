@@ -44,7 +44,7 @@ public class PixelAttractor extends LiteShapeSystem {
 		}
 
 		//using color, but not location system
-		Color col = parent.getColorSystem().getCurrentColor();
+		Color col = parent.getColor().getCurrentColor();
 		
 		for (int i = 0; i < NUM_PIXELS; i++) {
 

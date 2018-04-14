@@ -49,7 +49,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 	@Override
 	protected LiteCycleObj createObj(int index) {
-		Point2D point = parent.getLocationSystem().getCurrentPoint();
+		Point2D point = parent.getLocation().getCurrentPoint();
 		float x = (float)point.getX();
 		float y = (float)point.getY();
 		int curSize = lcObjects.size();
@@ -74,7 +74,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 			lifeSpan = (int) (parent.random(30, 90));
 			decay = parent.random(0.75f, 0.9f);
 			
-			ColorSystem cs = (useCustomColor) ? colorSystem : parent.getColorSystem();
+			ColorSystem cs = (useCustomColor) ? colorSystem : parent.getColor();
 			c = cs.getCurrentColor().getRGB();
 
 			//Original color scheme

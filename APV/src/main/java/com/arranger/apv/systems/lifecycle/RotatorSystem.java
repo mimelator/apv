@@ -28,7 +28,7 @@ public class RotatorSystem extends LifecycleSystem {
 	 */
 	@Override
 	public String getDisplayName() {
-		return super.getDisplayName() + "[" + parent.getLocationSystem().getDisplayName() + "]";
+		return super.getDisplayName() + "[" + parent.getLocation().getDisplayName() + "]";
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class RotatorSystem extends LifecycleSystem {
 		 * called during {@link #respawn()}
 		 */
 		protected void setInitialLocation() {
-			p = parent.getLocationSystem().getCurrentPoint();
+			p = parent.getLocation().getCurrentPoint();
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.translate((float)p.getX(), (float)p.getY());

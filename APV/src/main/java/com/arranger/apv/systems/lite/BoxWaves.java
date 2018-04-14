@@ -90,7 +90,7 @@ public class BoxWaves extends LiteShapeSystem {
 	}
 
 	void updateLocation() {
-		Point2D point = parent.getLocationSystem().getCurrentPoint();
+		Point2D point = parent.getLocation().getCurrentPoint();
 		
 		mult = PApplet.map((float)point.getX(), 0, parent.width, 1, 6);
 		heightMult = PApplet.map((float)point.getY(), 0, parent.height, 5, 0.1f);
@@ -108,7 +108,7 @@ public class BoxWaves extends LiteShapeSystem {
 
 		void display() {
 
-			Color apvColor = parent.getColorSystem().getCurrentColor();
+			Color apvColor = parent.getColor().getCurrentColor();
 
 			int loopOffset = (int) (index * mult);
 			parent.pushMatrix();

@@ -114,8 +114,8 @@ public class AttractorSystem extends LiteShapeSystem {
 		
 		parent.noStroke();
 
-		Color c = parent.getColorSystem().getCurrentColor();
-		Point2D p = parent.getLocationSystem().getCurrentPoint();
+		Color c = parent.getColor().getCurrentColor();
+		Point2D p = parent.getLocation().getCurrentPoint();
 		int mouseX = (int)p.getX();
 		int mouseY = (int)p.getY();
 		

@@ -44,7 +44,7 @@ public class GravitySystem extends LifecycleSystem {
 	 */
 	@Override
 	public String getDisplayName() {
-		return super.getDisplayName() + "[" + parent.getLocationSystem().getDisplayName() + "]";
+		return super.getDisplayName() + "[" + parent.getLocation().getDisplayName() + "]";
 	}
 
 	protected class GravityData extends LifecycleData {
@@ -110,7 +110,7 @@ public class GravitySystem extends LifecycleSystem {
 		 * called during {@link #respawn()}
 		 */
 		protected void setInitialLocation() {
-			Point2D p = parent.getLocationSystem().getCurrentPoint();
+			Point2D p = parent.getLocation().getCurrentPoint();
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.rotate(PApplet.radians(parent.random(360)));

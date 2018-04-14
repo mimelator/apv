@@ -149,7 +149,7 @@ public abstract class LifecycleSystem extends ShapeSystem {
 		 */
 		protected void respawn() {
 			lifespan = LIFESPAN;
-			color = parent.getColorSystem().getCurrentColor();
+			color = parent.getColor().getCurrentColor();
 		}
 	}
 }

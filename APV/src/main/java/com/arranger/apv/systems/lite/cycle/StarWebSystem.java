@@ -123,8 +123,8 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		}
 		
 		private void reset() {
-			nodeColor = parent.getColorSystem().getCurrentColor();
-			lineColor = parent.getColorSystem().getCurrentColor();
+			nodeColor = parent.getColor().getCurrentColor();
+			lineColor = parent.getColor().getCurrentColor();
 			alpha = (int)parent.random(Main.MAX_ALPHA);
 			
 			if (doRotateScale) {

@@ -45,32 +45,35 @@ public class Main extends PApplet {
 	public static final int MAX_ALPHA = 255;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
-	protected List<ShapeSystem> foregroundSystems;
+	protected List<ShapeSystem> foregrounds;
 	protected int foregroundIndex = 0;
 	
-	protected List<ShapeSystem> backgroundSystems;
+	protected List<ShapeSystem> backgrounds;
 	protected int backgroundIndex = 0;
 	
-	protected List<BackDropSystem> backDropSystems;
+	protected List<BackDropSystem> backDrops;
 	protected int backDropIndex = 0;
 
-	protected List<LocationSystem> locationSystems; 
+	protected List<LocationSystem> locations; 
 	protected int locationIndex = 0;
 	
-	protected List<ColorSystem> colorSystems; 
+	protected List<ColorSystem> colors; 
 	protected int colorIndex = 0;
 	
-	protected List<TransitionSystem> transitionSystems;
+	protected List<TransitionSystem> transitions;
 	protected int transitionIndex = 0;
 	
-	protected List<MessageSystem> messageSystems;
+	protected List<MessageSystem> messages;
 	protected int messageIndex = 0;
 	
-	protected List<Filter> filterSystems; 
+	protected List<Filter> filters; 
 	protected int filterIndex = 0;
 	
+	protected List<Scene> scenes;
+	protected int sceneIndex;
+	
 	protected Map<String, Switch> switches;
-	protected List<ControlSystem> controlSystems;
+	protected List<ControlSystem> controls;
 	protected CONTROL_MODES currentControlMode;
 	protected List<APVPlugin> listeners;
 	
@@ -180,35 +183,35 @@ public class Main extends PApplet {
 		return listeners;
 	}
 	
-	public ColorSystem getColorSystem() {
-		return (ColorSystem)getPlugin(colorSystems, colorIndex);
+	public ColorSystem getColor() {
+		return (ColorSystem)getPlugin(colors, colorIndex);
 	}
 	
-	public ShapeSystem getForegroundSystem() {
-		return (ShapeSystem)getPlugin(foregroundSystems, foregroundIndex);
+	public ShapeSystem getForeground() {
+		return (ShapeSystem)getPlugin(foregrounds, foregroundIndex);
 	}
 
-	public ShapeSystem getBackgroundSystem() {
-		return (ShapeSystem)getPlugin(backgroundSystems, backgroundIndex);
+	public ShapeSystem getBackground() {
+		return (ShapeSystem)getPlugin(backgrounds, backgroundIndex);
 	}
 
-	public BackDropSystem getBackDropSystem() {
-		return (BackDropSystem)getPlugin(backDropSystems, backDropIndex);
+	public BackDropSystem getBackDrop() {
+		return (BackDropSystem)getPlugin(backDrops, backDropIndex);
 	}
 	
-	public TransitionSystem getTransitionSystem() {
-		return (TransitionSystem)getPlugin(transitionSystems, transitionIndex);
+	public TransitionSystem getTransition() {
+		return (TransitionSystem)getPlugin(transitions, transitionIndex);
 	}
 	
-	public MessageSystem getMessageSystem() {
-		return (MessageSystem)getPlugin(messageSystems, messageIndex);
+	public MessageSystem getMessage() {
+		return (MessageSystem)getPlugin(messages, messageIndex);
 	}
 	
-	public LocationSystem getLocationSystem() {
+	public LocationSystem getLocation() {
 		LocationSystem ls = null;
-		ControlSystem cs = getControlSystem();
+		ControlSystem cs = getControl();
 		while (ls == null) {
-			ls = (LocationSystem)getPlugin(locationSystems, locationIndex);
+			ls = (LocationSystem)getPlugin(locations, locationIndex);
 			if (!cs.allowsMouseLocation() && ls instanceof MouseLocationSystem) {
 				locationIndex++;
 				ls = null;
@@ -217,9 +220,9 @@ public class Main extends PApplet {
 		return ls;
 	}
 	
-	public ControlSystem getControlSystem() {
+	public ControlSystem getControl() {
 		//there is probably a more efficient way to do this 
-		for (ControlSystem cs : controlSystems) {
+		for (ControlSystem cs : controls) {
 			if (cs.getControlMode() == currentControlMode) {
 				return cs;
 			}
@@ -269,25 +272,25 @@ public class Main extends PApplet {
 		monitor = new Monitor(this);
 		frameStrober = new FrameStrober(this);
 		
-		locationSystems = (List<LocationSystem>)configurator.loadAVPPlugins("locationSystems");
-		colorSystems = (List<ColorSystem>)configurator.loadAVPPlugins("colorSystems");
-		controlSystems = (List<ControlSystem>)configurator.loadAVPPlugins("controlSystems");
-		backgroundSystems = (List<ShapeSystem>)configurator.loadAVPPlugins("backgroundSystems");
-		backDropSystems = (List<BackDropSystem>)configurator.loadAVPPlugins("backDropSystems");
-		foregroundSystems = (List<ShapeSystem>)configurator.loadAVPPlugins("foregroundSystems");
-		filterSystems = (List<Filter>)configurator.loadAVPPlugins("filterSystems");
-		transitionSystems = (List<TransitionSystem>)configurator.loadAVPPlugins("transitionSystems");
-		messageSystems = (List<MessageSystem>)configurator.loadAVPPlugins("messageSystems");	
+		locations = (List<LocationSystem>)configurator.loadAVPPlugins("locations");
+		colors = (List<ColorSystem>)configurator.loadAVPPlugins("colors");
+		controls = (List<ControlSystem>)configurator.loadAVPPlugins("controls");
+		backgrounds = (List<ShapeSystem>)configurator.loadAVPPlugins("backgrounds");
+		backDrops = (List<BackDropSystem>)configurator.loadAVPPlugins("backDrops");
+		foregrounds = (List<ShapeSystem>)configurator.loadAVPPlugins("foregrounds");
+		filters = (List<Filter>)configurator.loadAVPPlugins("filters");
+		transitions = (List<TransitionSystem>)configurator.loadAVPPlugins("transitions");
+		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
 		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
 		
 		//currentControlMode
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
 
-		setupSystems(foregroundSystems);
-		setupSystems(backgroundSystems);
-		setupSystems(backDropSystems);
-		setupSystems(transitionSystems);
-		setupSystems(messageSystems);
+		setupSystems(foregrounds);
+		setupSystems(backgrounds);
+		setupSystems(backDrops);
+		setupSystems(transitions);
+		setupSystems(messages);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
 		
 		//processing hints
@@ -365,13 +368,13 @@ public class Main extends PApplet {
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
-					for (TransitionSystem sys : transitionSystems) {
+					for (TransitionSystem sys : transitions) {
 						sys.incrementTransitionFrames();
 					}
 				});
 		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
 				(event) -> {
-					for (TransitionSystem sys : transitionSystems) {
+					for (TransitionSystem sys : transitions) {
 						sys.decrementTransitionFrames();
 					}
 				});
@@ -397,9 +400,9 @@ public class Main extends PApplet {
 	
 	protected void cycleMode(boolean advance) {
 		if (advance) {
-			currentControlMode = getControlSystem().getControlMode().getNext();
+			currentControlMode = getControl().getControlMode().getNext();
 		} else {
-			currentControlMode = getControlSystem().getControlMode().getPrevious();
+			currentControlMode = getControl().getControlMode().getPrevious();
 		}
 	}
 
@@ -427,7 +430,7 @@ public class Main extends PApplet {
 		
 		//switch transitions now instead of in the #doScramble
 		if (!transitionSwitch.isFrozen()) {
-			transitionIndex += random(transitionSystems.size() - 1); 
+			transitionIndex += random(transitions.size() - 1); 
 		}
 	}
 	
@@ -435,41 +438,41 @@ public class Main extends PApplet {
 		//mess it all up, except for transitions which were already scrambled
 		
 		if (!foreGroundSwitch.isFrozen()) {
-			foregroundIndex += random(foregroundSystems.size() - 1);
+			foregroundIndex += random(foregrounds.size() - 1);
 		}
 		
 		if (!backGroundSwitch.isFrozen()) {
-			backgroundIndex += random(backgroundSystems.size() - 1);
+			backgroundIndex += random(backgrounds.size() - 1);
 		}
 		
 		if (!backDropSwitch.isFrozen()) {
-			backDropIndex += random(backDropSystems.size() - 1);
+			backDropIndex += random(backDrops.size() - 1);
 		}
 		
 		if (!filtersSwitch.isFrozen()) {
-			filterIndex += random(filterSystems.size() - 1);
+			filterIndex += random(filters.size() - 1);
 		}
 		
 		if (!messagesSwitch.isFrozen()) {
-			messageIndex += random(messageSystems.size());
+			messageIndex += random(messages.size());
 		}
 		
-		locationIndex += random(locationSystems.size() - 1);
-		colorIndex += random(colorSystems.size() - 1);
+		locationIndex += random(locations.size() - 1);
+		colorIndex += random(colors.size() - 1);
 		
 		//send out a cool message about the new system
 		if (messagesSwitch.isEnabled()) {
 			List<String> msgs = new ArrayList<String>();
 			if (backDropSwitch.isEnabled()) {
-				msgs.add(getBackDropSystem().getDisplayName());
+				msgs.add(getBackDrop().getDisplayName());
 			}
 
 			if (backGroundSwitch.isEnabled()) {
-				msgs.add(getForegroundSystem().getDisplayName());
+				msgs.add(getForeground().getDisplayName());
 			}
 			
 			if (foreGroundSwitch.isEnabled()) {
-				msgs.add(getBackgroundSystem().getDisplayName());
+				msgs.add(getBackground().getDisplayName());
 			}
 			
 			sendMessage(msgs.toArray(new String[msgs.size()]));
@@ -481,7 +484,7 @@ public class Main extends PApplet {
 	
 	public void sendMessage(String [] messages) {
 		if (messagesSwitch.isEnabled()) {
-			getMessageSystem().onNewMessage(messages);
+			getMessage().onNewMessage(messages);
 		}
 	}
 	
@@ -501,7 +504,7 @@ public class Main extends PApplet {
 		
 		TransitionSystem transition = null;
 		if (transitionSwitch.isEnabled()) {
-			transition = getTransitionSystem();
+			transition = getTransition();
 			if (scrambleMode) {
 				transition.startTransition();
 			}
@@ -509,36 +512,30 @@ public class Main extends PApplet {
 			transition.onDrawStart();
 		}
 		
+		//SCENE-START
 		BackDropSystem backDrop = null;
 		if (backDropSwitch.isEnabled()) {
-			backDrop = getBackDropSystem();
-			drawSystem(backDrop, "backDrop");
+			backDrop = getBackDrop();
 		}
 		
 		ShapeSystem bgSys = null;
 		if (backGroundSwitch.isEnabled()) {
-			bgSys = getBackgroundSystem();
-			drawSystem(bgSys, "bgSys");
+			bgSys = getBackground();
 		}
 		
 		Filter filter = null;
 		if (filtersSwitch.isEnabled()) {
-			filter = (Filter)getPlugin(filterSystems, filterIndex);
-			settingsDisplay.addSettingsMessage("filter: " + filter.getName());
-			filter.preRender();
+			filter = (Filter)getPlugin(filters, filterIndex);
 		}
 		
 		ShapeSystem fgSys = null;
 		if (foreGroundSwitch.isEnabled()) {
-			fgSys = getForegroundSystem();
-			drawSystem(fgSys, "fgSys");
+			fgSys = getForeground();
 		}
 		
-		if (filtersSwitch.isEnabled()) {
-			if (filter != null) {
-				filter.postRender();
-			}
-		}
+		Scene scene = new Scene(this, backDrop, bgSys, fgSys, filter);
+		scene.drawScene();
+		//SCENE-END
 		
 		if (monitorSwitch.isEnabled()) {
 			monitor.doMonitorCheck(backDrop, filter, bgSys, fgSys);
@@ -549,7 +546,7 @@ public class Main extends PApplet {
 		}
 		
 		if (messagesSwitch.isEnabled()) {
-			drawSystem(getMessageSystem(), "messageSystem");
+			drawSystem(getMessage(), "messageSystem");
 		}
 		
 		if (showSettingsSwitch.isEnabled()) {
@@ -576,14 +573,14 @@ public class Main extends PApplet {
 	}
 	
 	protected void runControlMode() {
-		ControlSystem cs = getControlSystem();
+		ControlSystem cs = getControl();
 		KeyEvent nextCommand = cs.getNextCommand();
 		if (nextCommand != null) {
 			getCommandSystem().keyEvent(nextCommand);
 		}
 	}
-
-	protected void drawSystem(ShapeSystem s, String debugName) {
+	
+	public void drawSystem(ShapeSystem s, String debugName) {
 		pushStyle();
 		pushMatrix();
 		settingsDisplay.debugSystem(s, debugName);
@@ -591,7 +588,7 @@ public class Main extends PApplet {
 		popMatrix();
 		popStyle();
 	}
-	
+
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
 		return list.get(Math.abs(index) % list.size());
 	}

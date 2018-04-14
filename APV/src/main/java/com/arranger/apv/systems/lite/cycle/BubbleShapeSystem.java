@@ -46,7 +46,7 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 			this.vx = random(1, 5);
 			this.vy = random(1, 5);
 			this.step = random(5, 20);
-			color = parent.getColorSystem().getCurrentColor();
+			color = parent.getColor().getCurrentColor();
 			createNewShape();
 		}
 		

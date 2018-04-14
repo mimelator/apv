@@ -49,7 +49,7 @@ public class GridShapeSystem extends LiteShapeSystem {
 		int time = parent.millis();
 		parent.stroke(255);
 		col = new OscillatingColor(parent, COLOR_OSC_SCALAR).getCurrentColor();
-		Point2D pt = parent.getLocationSystem().getCurrentPoint();
+		Point2D pt = parent.getLocation().getCurrentPoint();
 		float ptX = (float)pt.getX(); 
 		float ptY = (float)pt.getY(); 
 		int width = parent.width;

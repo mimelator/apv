@@ -62,15 +62,15 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
-		addSettingsMessage("Color: " + p.getColorSystem().getDisplayName());
-		addSettingsMessage("Loc: " + p.getLocationSystem().getDisplayName());
+		addSettingsMessage("Color: " + p.getColor().getDisplayName());
+		addSettingsMessage("Loc: " + p.getLocation().getDisplayName());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
 		addSettingsMessage("Skip Frame rate: " + p.getFrameStrober().getSkipNFrames());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
-		p.getControlSystem().addSettingsMessages();
-		addSettingsMessage("Transitions Frames : " + p.getTransitionSystem().getTransitionFrames());
+		p.getControl().addSettingsMessages();
+		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
 		p.getPulseListener().addSettingsMessages();
 		
 		for (Switch s : p.getSwitches()) {

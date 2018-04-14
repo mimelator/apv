@@ -31,8 +31,8 @@ public class ShowerSystem extends LiteShapeSystem {
 
 	@Override
 	public void setup() {
-		curStrokeColor = prevStrokeColor = parent.getColorSystem().getCurrentColor().getRGB();
-		curFillColor = prevFillColor = parent.getColorSystem().getCurrentColor().getRGB();
+		curStrokeColor = prevStrokeColor = parent.getColor().getCurrentColor().getRGB();
+		curFillColor = prevFillColor = parent.getColor().getCurrentColor().getRGB();
 	}
 
 	@Override
@@ -41,13 +41,13 @@ public class ShowerSystem extends LiteShapeSystem {
 		int curFillFrame = parent.getFrameCount() % FILL_CHANGE_RATE;
 		if (curFillFrame == 0) {
 			prevFillColor = curFillColor;
-			curFillColor = parent.getColorSystem().getCurrentColor().getRGB();
+			curFillColor = parent.getColor().getCurrentColor().getRGB();
 		}
 		
 		int curStrokeFrame = parent.getFrameCount() % STROKE_CHANGE_RATE;
 		if (curStrokeFrame == 0) {
 			prevStrokeColor = curStrokeColor;
-			curStrokeColor = parent.getColorSystem().getCurrentColor().getRGB();
+			curStrokeColor = parent.getColor().getCurrentColor().getRGB();
 		}
 		
 		float n = parent.getFrameCount() * 0.01f;
@@ -70,7 +70,7 @@ public class ShowerSystem extends LiteShapeSystem {
 		parent.stroke(useStrokeColor);
 		parent.beginShape();
 		
-		Point2D point = parent.getLocationSystem().getCurrentPoint();
+		Point2D point = parent.getLocation().getCurrentPoint();
 		int mouseX = (int)point.getX();
 		int mouseY = (int)point.getY();
 		

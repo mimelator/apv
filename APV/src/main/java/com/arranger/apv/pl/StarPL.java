@@ -38,12 +38,12 @@ public class StarPL extends APVPlugin {
 	protected void registerListener(Main parent) {
 		parent.getPulseListener().registerPulseListener( ()-> { 
 				//location
-				Point2D point = parent.getLocationSystem().getCurrentPoint();
+				Point2D point = parent.getLocation().getCurrentPoint();
 				int x = (int)point.getX();
 				int y = (int)point.getY();
 				
 				//color
-				Color c = parent.getColorSystem().getCurrentColor();
+				Color c = parent.getColor().getCurrentColor();
 				star.setFill(c.getRGB());
 				
 				//scale

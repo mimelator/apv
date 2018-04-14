@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FrameFader;
+import com.arranger.apv.util.SavedImage;
 
 import processing.core.PApplet;
 
