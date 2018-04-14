@@ -19,7 +19,7 @@ public class Swipe extends TransitionSystem {
 		doStandardFade(pct);
 		
 		pct = 1 - pct;
-		parent.image(savedImage, pct * parent.width, pct * parent.height);
+		parent.image(savedImage.getSavedImage(), pct * parent.width, pct * parent.height);
 	}
 
 }

@@ -44,6 +44,11 @@ public class PulseListener extends APVPlugin {
 		}
 	}
 	
+	public void addSettingsMessages() {
+		parent.addSettingsMessage("   ---Pulses to Skip: " + getPulsesToSkip());
+		parent.addSettingsMessage("   ---Pulses Skipped: " + getCurrentPulseSkipped());
+	}
+	
 	public boolean isNewPulse() {
 		if (hasExceededPulsesToSkip()) {
 			return true;

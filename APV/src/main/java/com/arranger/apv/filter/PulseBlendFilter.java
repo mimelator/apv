@@ -35,18 +35,19 @@ public class PulseBlendFilter extends PulseBasedFilter {
 			SCREEN(PApplet.SCREEN),
 			REPLACE(PApplet.REPLACE);
 	
-			private int mode;
+			protected int mode;
 			
 			MODES(int mode) {
 				this.mode = mode;
 			}
 	};
 
-	private static final MODES DEFAULT_BLEND_MODE = MODES.BLEND;
+	protected static final MODES DEFAULT_BLEND_MODE = MODES.BLEND;
 	private static final int FADE_OUT_FRAMES = 40;
 	
-	MODES blendMode = DEFAULT_BLEND_MODE;
-	int lastFrameCount = 0;
+	protected int backgroundColor = Color.BLACK.getRGB();
+	protected MODES blendMode = DEFAULT_BLEND_MODE;
+	protected int lastFrameCount = 0;
 	
 	public PulseBlendFilter(Main parent) {
 		super(parent);
@@ -57,16 +58,29 @@ public class PulseBlendFilter extends PulseBasedFilter {
 		super.preRender();
 		
 		if (pulseDetector.isOnset()) {
-			lastFrameCount = parent.getFrameCount();
+			onNewPulse();
 		}
 	
-		if (parent.getFrameCount() - lastFrameCount < FADE_OUT_FRAMES) {
+		int fof = getFadeOutFrames();
+		if (parent.getFrameCount() - lastFrameCount < fof) {
 			doBlend();
 		} else {
 			parent.colorMode(DEFAULT_BLEND_MODE.mode);
 			blendMode = DEFAULT_BLEND_MODE;
 		}
 		
+		addSettingsMsg();
+	}
+
+	protected int getFadeOutFrames() {
+		return FADE_OUT_FRAMES;
+	}
+	
+	protected void onNewPulse() {
+		lastFrameCount = parent.getFrameCount();
+	}
+	
+	protected void addSettingsMsg() {
 		parent.addSettingsMessage("  --blendMode: " + blendMode);
 	}
 
@@ -81,12 +95,11 @@ public class PulseBlendFilter extends PulseBasedFilter {
 			parent.colorMode(blendMode.mode);
 		}
 		
-		int currentFrame = (parent.getFrameCount() - lastFrameCount) % FADE_OUT_FRAMES;
-		float alpha = PApplet.map(currentFrame, 0, FADE_OUT_FRAMES, 0, 255);
+		int currentFrame = (parent.getFrameCount() - lastFrameCount) % getFadeOutFrames();
+		float alpha = PApplet.map(currentFrame, 0, getFadeOutFrames(), 0, Main.MAX_ALPHA);
 		
-		int color = Color.BLACK.getRGB();
-		parent.tint(color, alpha);
-		parent.background(color, alpha);
+		parent.tint(backgroundColor, alpha);
+		parent.background(backgroundColor, alpha);
 		
 		parent.addSettingsMessage("  --alpha: " + alpha);
 	}

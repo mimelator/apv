@@ -18,6 +18,6 @@ public class Fade extends TransitionSystem {
 	@Override
 	public void doTransition(float pct) {
 		doStandardFade(pct);
-		parent.image(savedImage,  0,  0);
+		parent.image(savedImage.getSavedImage(),  0,  0);
 	}
 }

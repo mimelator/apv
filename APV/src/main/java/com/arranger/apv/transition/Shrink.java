@@ -23,7 +23,7 @@ public class Shrink extends TransitionSystem {
 		
 		int transX = (parent.width / 2) - (targetDimensionX / 2);
 		int transY = (parent.height / 2) - (targteDimensionY / 2);
-		parent.image(savedImage, transX, transY, targetDimensionX, targteDimensionY);
+		parent.image(savedImage.getSavedImage(), transX, transY, targetDimensionX, targteDimensionY);
 		
 	}
 

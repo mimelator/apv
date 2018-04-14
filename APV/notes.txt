@@ -2,20 +2,11 @@ BRANCH: strober
 https://github.com/mimelator/apv
 
 
-BUG:
-PulseListeningControlSystem 
-	//This abstract class (more than 1 instance, keeps registering new commands.  Not good)
-	//do we still need to convert #getDefaultPulsesToSkip to non-abstract?
-	
-Perlin:
-		protected int getDefaultPulsesToSkip() {
-		return autoSkipPulseListener.getPulsesToSkip();  //called from the constructor and null at that moment
-	}
-	
 
 
 *****************************************************************************
 TODO: 
+* Add a sh script that can add the simple overrides via cmd line args (ENV Variables).  Obviously larger overrides should be done in application.conf
 * Automatic build info: https://stackoverflow.com/questions/2973802/maven-trigger-custom-command-when-build-is-finished-dependent-on-outcome-succ
 * A slower perlin walker
 * Marquee message with live typing (maybe a large framed message with a solid background)

@@ -22,6 +22,6 @@ public class Twirl extends TransitionSystem {
 		parent.imageMode(CENTER);
 		parent.translate(parent.width / 2, parent.height / 2);
 		parent.rotate(parent.oscillate(0, TWO_PI, 3));
-		parent.image(savedImage,  0,  0);
+		parent.image(savedImage.getSavedImage(),  0,  0);
 	}
 }

@@ -70,6 +70,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControlSystem().addSettingsMessages();
 		addSettingsMessage("Transitions Frames : " + p.getTransitionSystem().getTransitionFrames());
+		p.getPulseListener().addSettingsMessages();
 		
 		for (Switch s : p.getSwitches()) {
 			addSettingsMessage(s.getDisplayName());

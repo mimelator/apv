@@ -32,7 +32,6 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 		}
 		
 		parent.addSettingsMessage("  --newPulse: " + newPulse);
-		parent.addSettingsMessage("  --currentPulseSkipped: " + pulse.getCurrentPulseSkipped());
-		parent.addSettingsMessage("  --pulsesToSkip: " + pulse.getPulsesToSkip());
+		pulse.addSettingsMessages();
 	}
 }

@@ -110,6 +110,8 @@ public class AttractorSystem extends LiteShapeSystem {
 		parent.addSettingsMessage("  --magnetism: " + magnetism);
 		parent.addSettingsMessage("  --radius: " + radius);
 		parent.addSettingsMessage("  --reverse: " + reverse);
+		pulseListener.addSettingsMessages();
+		
 		parent.noStroke();
 
 		Color c = parent.getColorSystem().getCurrentColor();

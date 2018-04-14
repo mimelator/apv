@@ -32,8 +32,7 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 	@Override
 	public void addSettingsMessages() {
 		super.addSettingsMessages();
-		parent.addSettingsMessage("   ---Pulses to Skip: " + autoSkipPulseListener.getPulsesToSkip());
-		parent.addSettingsMessage("   ---Pulses Skipped: " + autoSkipPulseListener.getCurrentPulseSkipped());
+		autoSkipPulseListener.addSettingsMessages();
 	}
 	
 	@Override

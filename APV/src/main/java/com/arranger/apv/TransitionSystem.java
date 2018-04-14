@@ -6,7 +6,6 @@ import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FrameFader;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 
 /**
  * Right now, i think this class is supposed to:
@@ -25,9 +24,8 @@ public abstract class TransitionSystem extends ShapeSystem {
 	private static final Logger logger = Logger.getLogger(TransitionSystem.class.getName());
 	
 	protected FrameFader frameFader;
-	protected PImage savedImage;
-	protected int savedImageFrame;
-	
+	protected SavedImage savedImage;
+
 	public TransitionSystem(Main parent, int fadesToTransition) {
 		super(parent, null);
 		frameFader = new FrameFader(parent, fadesToTransition);
@@ -73,27 +71,32 @@ public abstract class TransitionSystem extends ShapeSystem {
 
 	public void onDrawStop() {
 		logger.fine("frame: " + parent.getFrameCount());
+
+		
 		if (frameFader.isFadeNew()) {
 			logger.info("newFade at frame: " + parent.getFrameCount());
 			captureCurrentImage();
 		} else {
-			if (frameFader.isFadeActive() && savedImage != null) {
-				//fade it out
-				float fadePct = frameFader.getFadePct();
-				doTransition(fadePct);
-				logger.fine("fadePct: " + fadePct);
-			} else {
-				if (savedImage != null) {
-					onTransitionComplete();
-					savedImage = null;
+			//we can't fade if we don't have a saved image
+			if (savedImage != null) {
+				//this is where we are actively fading
+				if (frameFader.isFadeActive() && savedImage.getSavedImage() != null) {
+					//fade it out
+					float fadePct = frameFader.getFadePct();
+					doTransition(fadePct);
+					logger.fine("fadePct: " + fadePct);
+				} else {
+					if (savedImage.getSavedImage() != null) {
+						onTransitionComplete();
+						savedImage.setSavedImage(null);
+					}
 				}
 			}
 		}
 	}
 
 	public void captureCurrentImage() {
-		savedImage = parent.get();
-		savedImageFrame = parent.getFrameCount();
+		savedImage = new SavedImage(parent); //captures the immediate frame
 	}
 	
 	public void startTransition() {

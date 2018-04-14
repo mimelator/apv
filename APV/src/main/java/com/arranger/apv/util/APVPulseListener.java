@@ -21,6 +21,10 @@ public class APVPulseListener extends APVPlugin {
 		super(parent);
 	}
 	
+	public void addSettingsMessages() {
+		pulseListener.addSettingsMessages();
+	}
+	
 	public void registerPulseListener(PulseHandler pulseHandler) {
 		registerPulseListener(pulseHandler, 1);
 	}

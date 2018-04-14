@@ -597,7 +597,7 @@ public class Main extends PApplet {
 		
 		foreGroundSwitch = switches.get("ForeGround"); 
 		backGroundSwitch = switches.get("BackGround");
-		backDropSwitch = switches.get("ForeGround");
+		backDropSwitch = switches.get("BackDrop");
 		filtersSwitch = switches.get("Filters");
 		transitionSwitch = switches.get("Transitions");
 		messagesSwitch = switches.get("Messages");

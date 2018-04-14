@@ -40,6 +40,7 @@ import com.arranger.apv.factories.StarFactory;
 import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
+import com.arranger.apv.filter.StrobeFilter;
 import com.arranger.apv.loc.CircularLocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
@@ -126,6 +127,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		Filter.class,
 		PulseShakeFilter.class,
 		BlendModeFilter.class,
+		StrobeFilter.class,
 		
 		//Transitions
 		Twirl.class,
