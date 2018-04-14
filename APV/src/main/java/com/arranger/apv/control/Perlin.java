@@ -132,7 +132,6 @@ public class Perlin extends PulseListeningControlSystem {
 				}
 				char next = charIterator.next();
 				KeyEvent event = createKeyEvent(next, charCommands.get(next), parent.randomBoolean());
-				
 				row[index] = event;
 			}
 		}

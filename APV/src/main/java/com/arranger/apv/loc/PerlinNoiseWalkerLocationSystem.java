@@ -3,6 +3,7 @@ package com.arranger.apv.loc;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.PerlinNoiseWalker;
 
 /**
@@ -25,6 +26,10 @@ public class PerlinNoiseWalkerLocationSystem extends LocationSystem {
 		super(parent);
 		this.scale = scale;
 		walker = new PerlinNoiseWalker(parent);
+	}
+	
+	public PerlinNoiseWalkerLocationSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getInt(0, SCALE));
 	}
 	
 	@Override
