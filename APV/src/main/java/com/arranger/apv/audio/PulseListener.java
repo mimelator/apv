@@ -39,6 +39,10 @@ public class PulseListener extends APVPlugin {
 	}
 	
 	public boolean isNewPulse() {
+		if (hasExceededPulsesToSkip()) {
+			return true;
+		}
+		
 		if (frameSkipper == null) {
 			return false;
 		}
@@ -82,11 +86,20 @@ public class PulseListener extends APVPlugin {
 		return currentPulseSkipped;
 	}
 	
+	private boolean hasExceededPulsesToSkip() {
+		boolean b = currentPulseSkipped > pulsesToSkip;
+		if (b) {
+			newPulse();
+		}
+		return b; 
+	}
+	
 	private void newPulse() {
 		if (frameSkipper != null) {
 			frameSkipper.reset(pulsesToSkip);
 		} else {
 			frameSkipper = new MultiFrameSkipper(parent, pulsesToSkip);
 		}
+		currentPulseSkipped = 0;
 	}
 }

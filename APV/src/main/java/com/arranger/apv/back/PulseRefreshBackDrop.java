@@ -26,11 +26,12 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 	
 	@Override
 	public void drawBackground() {
-		
-		if (pulse.isNewPulse()) {
+		boolean newPulse = pulse.isNewPulse();
+		if (newPulse) {
 			parent.background(Color.BLACK.getRGB());
 		}
 		
+		parent.addSettingsMessage("  --newPulse: " + newPulse);
 		parent.addSettingsMessage("  --currentPulseSkipped: " + pulse.getCurrentPulseSkipped());
 		parent.addSettingsMessage("  --pulsesToSkip: " + pulse.getPulsesToSkip());
 	}

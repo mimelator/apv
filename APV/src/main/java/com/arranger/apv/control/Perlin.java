@@ -28,6 +28,10 @@ public class Perlin extends PulseListeningControlSystem {
 	
 	private static final Character [] AUTO_CHAR_COMMANDS = {
 			Main.SPACE_BAR_KEY_CODE,
+			Main.SPACE_BAR_KEY_CODE,
+			Main.SPACE_BAR_KEY_CODE,
+			Main.SPACE_BAR_KEY_CODE,
+			Main.SPACE_BAR_KEY_CODE,
 			'r',
 			'f', 
 			'b',
@@ -36,13 +40,6 @@ public class Perlin extends PulseListeningControlSystem {
 			'c',
 			'n',
 			PApplet.ENTER,
-	};
-	
-	private static final Integer [] AUTO_KEY_COMMANDS = {
-			PApplet.UP,
-			PApplet.DOWN,
-			PApplet.RIGHT,
-			PApplet.LEFT,
 	};
 	
 	private static final int COMMAND_SIZE = 10;
@@ -119,41 +116,24 @@ public class Perlin extends PulseListeningControlSystem {
 		commandGrid = new KeyEvent[COMMAND_SIZE][COMMAND_SIZE];
 		
 		CommandSystem cs = parent.getCommandSystem();
-		Map<Integer, List<APVCommand>> keyCommands = cs.getKeyCommands();
 		Map<Character, List<APVCommand>> charCommands = cs.getCharCommands();
-		
 		List<Character> charList = Arrays.asList(AUTO_CHAR_COMMANDS);
-		List<Integer> intList = Arrays.asList(AUTO_KEY_COMMANDS);
-		
 		Collections.shuffle(charList);
-		Collections.shuffle(intList);
 		
 		Iterator<Character> charIterator = charList.iterator();
-		Iterator<Integer> intIterator = intList.iterator();
 		
 		//create a grid of commands for the walker to walk over
 		for (KeyEvent [] row : commandGrid) {
 			for (int index = 0; index < row.length; index++) {
-				KeyEvent event = null;
-				if (parent.randomBoolean()) {
-					if (!intIterator.hasNext()) {
-						intIterator = intList.iterator();
-					}
-					Integer next = intIterator.next();
-					event = createKeyEvent(next, keyCommands.get(next));
-				} else {
-					if (!charIterator.hasNext()) {
-						charIterator = charList.iterator();
-					}
-					char next = charIterator.next();
-					event = createKeyEvent(next, charCommands.get(next), parent.randomBoolean());
+				if (!charIterator.hasNext()) {
+					charIterator = charList.iterator();
 				}
+				char next = charIterator.next();
+				KeyEvent event = createKeyEvent(next, charCommands.get(next), parent.randomBoolean());
 				
 				row[index] = event;
 			}
 		}
-		
-		//TODO add more scrambles
 		
 		if (logger.isLoggable(Level.FINE)) {
 			for (KeyEvent [] row : commandGrid) {
