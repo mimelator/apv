@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.Main;
-import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 import com.arranger.apv.util.Configurator;
 
@@ -50,7 +49,6 @@ public class Perlin extends PulseListeningControlSystem {
 	public Perlin(Main parent, int pulsesToSkip) {
 		super(parent);
 		resetLocator(1);
-		autoSkipPulseListener = new PulseListener(parent, pulsesToSkip);
 		
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
@@ -69,7 +67,11 @@ public class Perlin extends PulseListeningControlSystem {
 	
 	@Override
 	protected int getDefaultPulsesToSkip() {
-		return autoSkipPulseListener.getPulsesToSkip();
+		if (autoSkipPulseListener == null) {	//called from the constructor in order to create the autoSkipPulseListener
+			return DEF_PULSES_BETWEEN_COMMANDS;
+		} else {
+			return autoSkipPulseListener.getPulsesToSkip();
+		}
 	}
 
 	@Override
@@ -151,5 +153,4 @@ public class Perlin extends PulseListeningControlSystem {
 			logger.fine("Command: " + commandList.get(0).getName() + " [shift=" + keyEvent.isShiftDown() + "]");
 		}
 	}
-
 }

@@ -74,7 +74,7 @@ public class PulseBlendFilter extends PulseBasedFilter {
 	 * the greater the currentFrame is to the FADE_OUT_FRAMES
 	 * the more opaque the effect should be
 	 */
-	private void doBlend() {
+	protected void doBlend() {
 		if (blendMode == DEFAULT_BLEND_MODE) {
 			int index = (int)parent.random(MODES.values().length - 1);
 			blendMode = MODES.values()[index];

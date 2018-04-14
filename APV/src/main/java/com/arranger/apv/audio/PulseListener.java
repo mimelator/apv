@@ -29,13 +29,19 @@ public class PulseListener extends APVPlugin {
 	}
 	
 	public PulseListener(Main parent, int pulsesToSkip) {
+		this(parent, pulsesToSkip, true);
+	}
+	
+	public PulseListener(Main parent, int pulsesToSkip, boolean startPulse) {
 		super(parent);
 		this.pulsesToSkip = pulsesToSkip;
 		currentPulseSkipped = 0;
 		
 		//need to trigger the frameFader when ever the pulseDetector returns true
 		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
-		newPulse();
+		if (startPulse) {
+			newPulse();
+		}
 	}
 	
 	public boolean isNewPulse() {

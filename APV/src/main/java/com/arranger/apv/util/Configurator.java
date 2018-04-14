@@ -300,7 +300,13 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
 			
-			APVPlugin plugin = loadPlugin(key, argList);
+			APVPlugin plugin = null;
+			try {
+				plugin = loadPlugin(key, argList);
+			} catch (Exception e) {
+				System.out.println(e);
+				e.printStackTrace();
+			}
 			if (plugin == null) {
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
