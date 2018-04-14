@@ -4,6 +4,10 @@
 	<artifactId>APV</artifactId>
 	<version>0.3-SNAPSHOT</version>
 	<name>Audio Processing Visualizer</name>
+	
+	<properties>
+	    <maven.javadoc.skip>true</maven.javadoc.skip>
+	</properties>
 
 	<scm>
 		<url>https://github.com/mimelator/apv</url>
@@ -65,13 +69,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			  <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-javadoc-plugin</artifactId>
-			    <configuration>
-			      <additionalparam>-Xdoclint:none</additionalparam>
-			    </configuration>
-			  </plugin>
 		</plugins>
 	</build>
 	<url>https://github.com/mimelator/apv</url>
