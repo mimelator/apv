@@ -7,7 +7,7 @@
 	
 	<properties>
 	    <maven.javadoc.skip>true</maven.javadoc.skip>
-	    <version>${version}</version>
+	    <version>${project.version}</version>
 	</properties>
 
 	<scm>
