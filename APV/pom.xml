@@ -16,11 +16,11 @@
 	</scm>
 	
 	<distributionManagement>
-	    <snapshotRepository>
-	        <id>snapshots</id>
-	        <name>local-snapshots</name>
-	        <url>http://localhost:8081/artifactory/libs-snapshot</url>
-	    </snapshotRepository>
+	    <repository>
+	        <id>localhost</id>
+	        <name>local-releases</name>
+	        <url>http://localhost:8081/artifactory/libs-release</url>
+	    </repository>
 	</distributionManagement>
 
 	<repositories>
