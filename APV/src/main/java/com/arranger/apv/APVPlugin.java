@@ -32,4 +32,9 @@ public class APVPlugin implements PConstants {
 		}
 		return n;
 	}
+	
+	public String getConfig() {
+		String name = getName();
+		return String.format("{%1s : []}", name);
+	}
 }

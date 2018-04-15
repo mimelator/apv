@@ -1,7 +1,6 @@
 package com.arranger.apv;
 
 import java.awt.Color;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
@@ -91,7 +91,7 @@ public class Main extends PApplet {
 	protected APVPulseListener pulseListener;
 	protected Particles particles;
 	protected VersionInfo versionInfo;
-	
+	protected FileHelper fileHelper;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -137,6 +137,10 @@ public class Main extends PApplet {
 	
 	public VersionInfo getVersionInfo() {
 		return versionInfo;
+	}
+	
+	public FileHelper getFileHelper() {
+		return fileHelper;
 	}
 	
 	public Audio getAudio() {
@@ -258,6 +262,7 @@ public class Main extends PApplet {
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		versionInfo = new VersionInfo(this);
+		fileHelper = new FileHelper(this);
 		
 		commandSystem = new CommandSystem(this);
 		initializeCommands();
@@ -417,12 +422,9 @@ public class Main extends PApplet {
 	}
 	
 	public void doScreenCapture() {
-		String homeDir = System.getProperty("user.home");
-		homeDir += File.separator;
-		String fileName = String.format("%1sapv%08d.png", homeDir, getFrameCount());
-		
+		String fileName = String.format("apv%08d.png", getFrameCount());
+		fileHelper.getFullPath(fileName);
 		logger.info("Saving image: " + fileName);
-		
 		PImage pImage = get();
 		pImage.save(fileName);
 		

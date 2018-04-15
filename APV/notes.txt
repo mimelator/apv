@@ -1,10 +1,29 @@
-BRANCH: scene
+BRANCH: user-guide-generate-config
 https://github.com/mimelator/apv
 
 
 *****************************************************************************
 TODO: 
-* User Guide (in the readme)
+* Start the User Guide (in the readme)
+
+* Generate a current Config which can be specified at runtime
+
+
+
+* Configure multipliers of frequency for labeled systems
+* Scene will record all the liked scenes to a properties file that can be added to application.conf done on exit
+* Scenes can cycle through the liked list
+* Need a dislike button
+
+* Deault Perlin to 12
+* Make apv dir in home directory
+* Separate screen shots by version/date of start
+* More animations like light worm 
+
+
+
+
+
 * Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)
 * test Audio#scale
