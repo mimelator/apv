@@ -25,6 +25,13 @@ public class PulseRefreshBackDrop extends BackDropSystem {
 	}
 	
 	@Override
+	public String getConfig() {
+		//{PulseRefreshBackDrop : [${50_PCT_DEFAULT_PULSES_TO_SKIP}]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, pulse.getPulsesToSkip());
+	}
+	
+	@Override
 	public void drawBackground() {
 		boolean newPulse = pulse.isNewPulse();
 		if (newPulse) {

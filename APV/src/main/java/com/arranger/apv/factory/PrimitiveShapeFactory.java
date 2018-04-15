@@ -30,6 +30,13 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 		this(ctx.getParent(), ctx.getFloat(0, DEFAULT_SCALE));
 	}
 	
+	@Override
+	public String getConfig() {
+		//{SquareFactory : [.5]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, scale);
+	}
+	
 	protected float newShapeSize() {
 		float size = parent.random(SMALL_SHAPE_SIZE, LARGE_SHAPE_SIZE);
 		size *= scale;

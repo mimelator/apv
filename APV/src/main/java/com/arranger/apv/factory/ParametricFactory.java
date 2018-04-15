@@ -28,6 +28,14 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 			super(ctx.getParent(), ctx.getFloat(0, DEFAULT_SCALE), true, false, 20, 0, 2);
 		}
 		
+
+		@Override
+		public String getConfig() {
+			//{HypocycloidFactory : [2.5]}
+			String name = getName();
+			return String.format("{%1s : [%2s]}", name, scale);
+		}
+		
 		/**
 		 * http://www-groups.dcs.st-and.ac.uk/history/Curves/Hypocycloid.html
 		 * x = (a - b) cos(t) + b cos((a/b - 1)t), y = (a - b) sin(t) - b sin((a/b - 1)t)

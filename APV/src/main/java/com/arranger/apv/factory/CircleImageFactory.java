@@ -20,4 +20,10 @@ public class CircleImageFactory extends SpriteFactory {
 		super(parent, CIRCLE_PNG, scale);
 	}
 
+	@Override
+	public String getConfig() {
+		//{CircleImageFactory : []}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, scale);
+	}
 }

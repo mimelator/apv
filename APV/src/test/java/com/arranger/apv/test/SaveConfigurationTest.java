@@ -66,7 +66,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 		
 		String result = systems.stream().collect(Collectors.joining(System.lineSeparator()));
 		buffer.append(result);
-		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator());
+		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator()).append(System.lineSeparator());
 		return buffer.toString();
 	}
 	

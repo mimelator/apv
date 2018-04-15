@@ -15,7 +15,7 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	protected boolean shouldRepopulateObjectsEveryDraw = true;
 	protected int framesPerReset = Integer.MAX_VALUE;
 	
-	private int numNewObjects;
+	protected int numNewObjects;
 	
 	public LiteCycleShapeSystem(Main parent) {
 		super(parent);
@@ -29,9 +29,16 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	
 	@Override
 	public String getConfig() {
-		//{BubbleShapeSystem : [${10_PCT_PARTICLES}]}
+		//{AttractorSystem : [{SpriteFactory : [purple.png, .3]}]}
+		String result = null;
 		String name = getName();
-		return String.format("{%1s : [%2s]}", name, numNewObjects);
+		if (factory != null) {
+			String childConfig = factory.getConfig();
+			result = String.format("{%1s : [%2s, %3s]}", name, childConfig, numNewObjects);
+		} else {
+			result = String.format("{%1s : [%2s]}", name, numNewObjects);
+		}
+		return result;
 	}
 	
 	@Override

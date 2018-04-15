@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -25,6 +26,17 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	public CarnivalShapeSystem(Main parent, boolean useCustomColor) {
 		super(parent);
 		this.useCustomColor = useCustomColor;
+	}
+	
+	public CarnivalShapeSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getBoolean(0, false));
+	}
+
+	@Override
+	public String getConfig() {
+		//{CarnivalShapeSystem : [true]}
+		String name = getName();
+		return String.format("{%1s : [%2b]}", name, useCustomColor);
 	}
 
 	@Override

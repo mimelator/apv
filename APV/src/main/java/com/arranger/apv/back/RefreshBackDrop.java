@@ -27,6 +27,14 @@ public class RefreshBackDrop extends BackDropSystem {
 		this(ctx.getParent(), ctx.getFloat(0, PCT_BG_REFRESH));
 	}
 	
+	
+	@Override
+	public String getConfig() {
+		//{RefreshBackDrop : [.95]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, bgRefreshPct);
+	}
+	
 	/**
 	 * Don't draw background bgRefreshPct of the time.
 	 */

@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.core.PShape;
@@ -36,7 +37,11 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	boolean doRotateScale = false;
 	
 	public StarWebSystem(Main parent) {
-		super(parent, DEFAULT_NUM_BALLS);
+		this(parent, null, DEFAULT_NUM_BALLS);
+	}
+	
+	public StarWebSystem(Main parent, int numNewObjects) {
+		this(parent, null, numNewObjects);
 	}
 	
 	public StarWebSystem(Main parent, ShapeFactory factory) {
@@ -44,8 +49,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	}
 	
 	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects) {
-		super(parent, numNewObjects);
-		this.factory = factory;
+		this(parent, factory, numNewObjects, false);
 	}
 	
 	/**
@@ -57,10 +61,40 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		this.doRotateScale = doRotateScale;
 	}
 	
-	public StarWebSystem(Main parent, int numNewObjects) {
-		super(parent, numNewObjects);
+	public StarWebSystem(Configurator.Context ctx) {
+		this(ctx.getParent());
+		
+		int size = ctx.argList.size();
+		switch (size) {
+		case 0:
+			break;
+		case 1:
+			factory = (ShapeFactory)ctx.loadPlugin(0);
+			break;
+		case 3:
+			factory = (ShapeFactory)ctx.loadPlugin(0);
+			numNewObjects = ctx.getInt(1, DEFAULT_NUM_BALLS);
+			doRotateScale =  ctx.getBoolean(2, false);
+			break;
+			default:
+				throw new RuntimeException("Unknown number of args: " + ctx.toString());
+		}
 	}
 	
+	@Override
+	public String getConfig() {
+		//{StarWebSystem : [{SpriteFactory : [Emoji_Blitz_Star.png, 1.5]}, ${ALL_PARTICLES}, true]}
+		String result = null;
+		String name = getName();
+		if (factory != null) {
+			String childConfig = factory.getConfig();
+			result = String.format("{%1s : [%2s, %3s, %4b]}", name, childConfig, numNewObjects, doRotateScale);
+		} else {
+			result = String.format("{%1s : [%2s, %3b]}", name, numNewObjects, doRotateScale);
+		}
+		return result;
+	}
+
 	@Override
 	public void setup() {
 		shouldCreateNewObjectsEveryDraw = false;

@@ -28,6 +28,14 @@ public class OscilatingBackDrop extends BackDropSystem {
 				ctx.getColor(1, Color.BLACK));
 	}
 	
+
+	@Override
+	public String getConfig() {
+		//{OscilatingBackDrop: [WHITE, BLACK, White-Black]}
+		String name = getName();
+		return String.format("{%1s : [%2s, %3s, %4s]}", name, format(c1), format(c2), displayName);
+	}	
+	
 	@Override
 	public String getDisplayName() {
 		return displayName;
