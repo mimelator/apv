@@ -62,6 +62,7 @@ import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.BGImage;
 import com.arranger.apv.systems.lite.BoxWaves;
+import com.arranger.apv.systems.lite.FloatingGeometry;
 import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PixelAttractor;
@@ -110,6 +111,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		GravitySystem.class,
 		RotatorSystem.class,
 		CarnivalShapeSystem.class,
+		FloatingGeometry.class,
 		
 		//factories
 		SquareFactory.class,
