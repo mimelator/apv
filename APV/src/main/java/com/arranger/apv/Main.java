@@ -73,6 +73,9 @@ public class Main extends PApplet {
 	protected List<Scene> scenes;
 	protected int sceneIndex;
 	
+	protected List<Scene> likedScenes;
+	protected int likedSceneIndex = 0;
+	
 	protected Map<String, Switch> switches;
 	protected List<ControlSystem> controls;
 	protected CONTROL_MODES currentControlMode;
@@ -111,6 +114,9 @@ public class Main extends PApplet {
 					monitorSwitch, 
 					frameStroberSwitch,
 					videoCaptureSwitch;
+
+
+	private Scene currentScene;
 
 	
 	public static void main(String[] args) {
@@ -236,6 +242,18 @@ public class Main extends PApplet {
 		throw new RuntimeException("Unable to find current control system: " + currentControlMode);
 	}
 	
+	public void likeCurrentScene() {
+		likedScenes.add(currentScene);
+	}
+	
+	public void disLikeCurrentScene() {
+		likedScenes.remove(currentScene);
+	}
+	
+	public List<Scene> getLikedScenes() {
+		return likedScenes;
+	}	
+	
 	public void addSettingsMessage(String msg) {
 		settingsDisplay.addSettingsMessage(msg);
 	}
@@ -289,6 +307,7 @@ public class Main extends PApplet {
 		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
 		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
 		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes");
+		likedScenes = (List<Scene>)configurator.loadAVPPlugins("liked-scenes");
 		
 		//currentControlMode
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
@@ -348,33 +367,15 @@ public class Main extends PApplet {
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
+		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
 		
 		//More complex event handlers
 		
-		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the plugins", 
-				(event) -> {
-					if (!foreGroundSwitch.isFrozen()) {
-						foregroundIndex++; 
-					}
-					if (!backGroundSwitch.isFrozen()) {
-						backgroundIndex++; 
-					}
-					if (!backDropSwitch.isFrozen()) {
-						backDropIndex++;
-					}
-					});
-		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the plugins in reverse", 
-				(event) -> { 
-					if (!foreGroundSwitch.isFrozen()) {
-						foregroundIndex--; 
-					}
-					if (!backGroundSwitch.isFrozen()) {
-						backgroundIndex--; 
-					}
-					if (!backDropSwitch.isFrozen()) {
-						backDropIndex--;
-					}
-					});
+		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", event -> likedSceneIndex++);
+		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", event -> likedSceneIndex--);
+		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
+		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
+		
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -511,8 +512,10 @@ public class Main extends PApplet {
 		
 		TransitionSystem transition = prepareTransition(false);
 		
-		Scene scene = (Scene)getPlugin(scenes, sceneIndex);
-		if (scene.isNormal()) {
+		//TODO: Are we using 'liked' scenes
+		
+		currentScene = (Scene)getPlugin(scenes, sceneIndex);
+		if (currentScene.isNormal()) {
 			BackDropSystem backDrop = null;
 			if (backDropSwitch.isEnabled()) {
 				backDrop = getBackDrop();
@@ -533,18 +536,18 @@ public class Main extends PApplet {
 				fgSys = getForeground();
 			}
 
-			scene.setSystems(backDrop, bgSys, fgSys, filter);
+			currentScene.setSystems(backDrop, bgSys, fgSys, filter);
 		} else {
 			//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
-			if (scene.isNew()) {
+			if (currentScene.isNew()) {
 				transition = prepareTransition(true);
 			}
 		}
 		
-		drawSystem(scene, "scene");
+		drawSystem(currentScene, "scene");
 		
 		if (monitorSwitch.isEnabled()) {
-			monitor.doMonitorCheck(scene);
+			monitor.doMonitorCheck(currentScene);
 		}
 		
 		if (transition != null) {

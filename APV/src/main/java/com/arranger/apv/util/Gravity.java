@@ -4,8 +4,6 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
-import processing.core.PApplet;
-
 public class Gravity extends APVPlugin {
 	
 
@@ -17,8 +15,8 @@ public class Gravity extends APVPlugin {
 		super(parent);
 		
 		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand(PApplet.UP, "Gravity++", "Increases Gravity", event -> gravityIndex++);
-		cs.registerCommand(PApplet.DOWN, "Gravity--", "Decreases Gravity", event -> gravityIndex--);
+		cs.registerCommand('g', "Gravity", "Increases/Decreases Gravity",
+				(event) -> {if (event.isShiftDown()) gravityIndex--; else gravityIndex++;});
 		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> gravityIndex = (int)parent.random(GRAVITY.length - 1));
 	}
 	

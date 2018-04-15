@@ -2,6 +2,7 @@ package com.arranger.apv;
 
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.filter.Filter;
+import com.arranger.apv.util.Configurator;
 
 public class Scene extends ShapeSystem {
 
@@ -14,11 +15,42 @@ public class Scene extends ShapeSystem {
 		super(parent, null);
 	}
 	
+	public Scene(Configurator.Context ctx) {
+		this(ctx.getParent());
+		
+		if (ctx.argList.size() == 0) {
+			return;
+		}
+		
+		setSystems((BackDropSystem)ctx.loadPlugin(0),
+				(ShapeSystem)ctx.loadPlugin(1),
+				(ShapeSystem)ctx.loadPlugin(2),
+				(Filter)ctx.loadPlugin(3));
+	}
+	
 	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
 		this.backDrop = backDrop;
 		this.bgSys = bgSys;
 		this.fgSys = fgSys;
 		this.filter = filter;
+	}
+	
+	@Override
+	public String getConfig() {
+		return String.format("{%1s : [%2s, %3s, %4s, %5s]}", getName(),
+					getConfig(backDrop),
+					getConfig(bgSys),
+					getConfig(fgSys),
+					getConfig(filter)
+				);
+	}
+	
+	private String getConfig(APVPlugin plugin) {
+		if (plugin != null) {
+			return plugin.getConfig();
+		} else {
+			return "{}"; //Object notation
+		}
 	}
 	
 	@Override

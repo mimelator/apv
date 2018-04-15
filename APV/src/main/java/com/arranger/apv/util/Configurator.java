@@ -262,6 +262,10 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			if (argList.size() > index) {
 				ConfigValue cv = argList.get(index); 
 				ConfigObject obj = (ConfigObject)cv;
+				if (obj.entrySet().isEmpty()) {
+					return null; //No Plugins listed.  Just an empty object like: {}
+				}
+				
 				Entry<String, ConfigValue> next = obj.entrySet().iterator().next();
 				return loadPlugin(next.getKey(), (ConfigList)next.getValue());
 			} else {
@@ -367,6 +371,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		
 		results.append(parent.getConfig()); //Constants
 		
+		results.append(getConfigForPlugins("liked-scenes", parent.getLikedScenes()));
 		results.append(getConfigForSystem("scenes"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));
@@ -383,12 +388,12 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
 	}
 
-	private String getConfigForSystem(String systemName) {
-		List<? extends APVPlugin> ss = loadAVPPlugins(systemName);
+	private String getConfigForPlugins(String systemName, List<? extends APVPlugin> pluginList) {
+		
 		StringBuffer buffer = new StringBuffer();
 		List<String> systems = new ArrayList<String>();
 		buffer.append(systemName + " : [").append(System.lineSeparator());
-		for (Iterator<? extends APVPlugin> it = ss.iterator(); it.hasNext();) {
+		for (Iterator<? extends APVPlugin> it = pluginList.iterator(); it.hasNext();) {
 			APVPlugin next = it.next();
 			systems.add("     " + next.getConfig());
 		}
@@ -400,6 +405,10 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		buffer.append(result);
 		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator()).append(System.lineSeparator());
 		return buffer.toString();
+	}
+	
+	private String getConfigForSystem(String systemName) {
+		return getConfigForPlugins(systemName, loadAVPPlugins(systemName));
 	}
 	
 	private Constructor<?> findConstructor(Class<?> targetClass, Class<?> targetParamType) {

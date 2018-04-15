@@ -37,6 +37,7 @@ public class Perlin extends PulseListeningControlSystem {
 			't',
 			'c',
 			'n',
+			'g',
 			PApplet.ENTER,
 	};
 	

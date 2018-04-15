@@ -27,14 +27,14 @@ public class Spirograph extends LiteShapeSystem {
 
 	@Override
 	public void setup() {
-		rMax = PApplet.min(parent.width, parent.height) / 2;
-		dMin = PApplet.max(parent.width, parent.height) / 3.5f;
-		circles = new Circle[nbCircles];
 		initialize(false);
-
 	}
 
 	void initialize(boolean random) {
+		rMax = PApplet.min(parent.width, parent.height) / 2;
+		dMin = PApplet.max(parent.width, parent.height) / 3.5f;
+		circles = new Circle[nbCircles];
+		
 		for (int i = 0; i < nbCircles; i++) {
 			circles[i] = new Circle(random(rMax), random ? random(-parent.width / 3, parent.width / 3) : 0,
 					random ? random(-parent.height / 3, parent.height / 3) : 0);
