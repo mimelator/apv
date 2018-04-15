@@ -248,9 +248,7 @@ public class Main extends PApplet {
 	}
 	
 	public void disLikeCurrentScene() {
-		if (!likedScenes.remove(currentScene)) {
-			System.out.println("Unable to find current scene to delete");
-		}
+		likedScenes.remove(currentScene);
 		sendMessage(new String[] {"Disliked :("});
 	}
 	
