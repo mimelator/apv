@@ -11,6 +11,8 @@ public class Scene extends ShapeSystem {
 	protected ShapeSystem fgSys;
 	protected Filter filter;
 	
+	private boolean loadedFromConfig = false;
+	
 	public Scene(Main parent) {
 		super(parent, null);
 	}
@@ -26,6 +28,13 @@ public class Scene extends ShapeSystem {
 				(ShapeSystem)ctx.loadPlugin(1),
 				(ShapeSystem)ctx.loadPlugin(2),
 				(Filter)ctx.loadPlugin(3));
+		loadedFromConfig = true;
+	}
+	
+	public Scene(Scene o) {
+		super(o.parent, null);
+		
+		setSystems(o.getBackDrop(), o.getBgSys(), o.getFgSys(), o.getFilter());
 	}
 	
 	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
@@ -60,7 +69,19 @@ public class Scene extends ShapeSystem {
 	
 	@Override
 	public void setup() {
-		//Do nothing.  This is called during application startup.
+		//If this Scene has been loaded from disk then it's children will not have been setup
+		if (loadedFromConfig) {
+			setup(backDrop);
+			setup(bgSys);
+			setup(fgSys);
+			//setup(filter); Filters don't get any setup?
+		}
+	}
+	
+	private void setup(ShapeSystem ss) {
+		if (ss != null) {
+			ss.setup();
+		}
 	}
 
 	public boolean isNew() {

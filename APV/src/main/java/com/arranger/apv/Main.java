@@ -111,7 +111,7 @@ public class Main extends PApplet {
 					helpSwitch,
 					showSettingsSwitch,
 					pulseListenerSwitch,
-					monitorSwitch, 
+					likedScenesSwitch, 
 					frameStroberSwitch,
 					videoCaptureSwitch;
 
@@ -243,11 +243,15 @@ public class Main extends PApplet {
 	}
 	
 	public void likeCurrentScene() {
-		likedScenes.add(currentScene);
+		likedScenes.add(new Scene(currentScene));
+		sendMessage(new String[] {"Liked :)"});
 	}
 	
 	public void disLikeCurrentScene() {
-		likedScenes.remove(currentScene);
+		if (!likedScenes.remove(currentScene)) {
+			System.out.println("Unable to find current scene to delete");
+		}
+		sendMessage(new String[] {"Disliked :("});
 	}
 	
 	public List<Scene> getLikedScenes() {
@@ -318,6 +322,7 @@ public class Main extends PApplet {
 		setupSystems(transitions);
 		setupSystems(messages);
 		setupSystems(scenes);
+		setupSystems(likedScenes);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
 		
 		//processing hints
@@ -331,7 +336,7 @@ public class Main extends PApplet {
 		
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
-		registerNonFreezableSwitchCommand(monitorSwitch, 'm');
+		registerNonFreezableSwitchCommand(likedScenesSwitch, 'l');
 		
 		registerSwitchCommand(foreGroundSwitch, '1');
 		registerSwitchCommand(backGroundSwitch, '2');
@@ -365,17 +370,14 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) sceneIndex--; else sceneIndex++;});
 		
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		cs.registerCommand('p', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
-		
-		//More complex event handlers
 		
 		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", event -> likedSceneIndex++);
 		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", event -> likedSceneIndex--);
 		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
 		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
-		
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
 				(event) -> {
@@ -512,43 +514,43 @@ public class Main extends PApplet {
 		
 		TransitionSystem transition = prepareTransition(false);
 		
-		//TODO: Are we using 'liked' scenes
-		
-		currentScene = (Scene)getPlugin(scenes, sceneIndex);
-		if (currentScene.isNormal()) {
-			BackDropSystem backDrop = null;
-			if (backDropSwitch.isEnabled()) {
-				backDrop = getBackDrop();
-			}
-
-			ShapeSystem bgSys = null;
-			if (backGroundSwitch.isEnabled()) {
-				bgSys = getBackground();
-			}
-
-			Filter filter = null;
-			if (filtersSwitch.isEnabled()) {
-				filter = (Filter) getPlugin(filters, filterIndex);
-			}
-
-			ShapeSystem fgSys = null;
-			if (foreGroundSwitch.isEnabled()) {
-				fgSys = getForeground();
-			}
-
-			currentScene.setSystems(backDrop, bgSys, fgSys, filter);
+		if (likedScenesSwitch.isEnabled() && !likedScenes.isEmpty()) {
+			currentScene = (Scene)getPlugin(likedScenes, likedSceneIndex);
 		} else {
-			//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
-			if (currentScene.isNew()) {
-				transition = prepareTransition(true);
+			currentScene = (Scene)getPlugin(scenes, sceneIndex);
+			if (currentScene.isNormal()) {
+				BackDropSystem backDrop = null;
+				if (backDropSwitch.isEnabled()) {
+					backDrop = getBackDrop();
+				}
+	
+				ShapeSystem bgSys = null;
+				if (backGroundSwitch.isEnabled()) {
+					bgSys = getBackground();
+				}
+	
+				Filter filter = null;
+				if (filtersSwitch.isEnabled()) {
+					filter = (Filter) getPlugin(filters, filterIndex);
+				}
+	
+				ShapeSystem fgSys = null;
+				if (foreGroundSwitch.isEnabled()) {
+					fgSys = getForeground();
+				}
+	
+				currentScene.setSystems(backDrop, bgSys, fgSys, filter);
+			} else {
+				//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
+				if (currentScene.isNew()) {
+					transition = prepareTransition(true);
+				}
 			}
 		}
 		
 		drawSystem(currentScene, "scene");
 		
-		if (monitorSwitch.isEnabled()) {
-			monitor.doMonitorCheck(currentScene);
-		}
+		monitor.doMonitorCheck(currentScene);
 		
 		if (transition != null) {
 			drawSystem(transition, "transition");
@@ -631,7 +633,7 @@ public class Main extends PApplet {
 		helpSwitch = switches.get("Help");
 		showSettingsSwitch = switches.get("ShowSettings");
 		pulseListenerSwitch = switches.get("PulseListener");
-		monitorSwitch = switches.get("Monitor");
+		likedScenesSwitch = switches.get("LikedScenes");
 		frameStroberSwitch = switches.get("FrameStrober");
 		videoCaptureSwitch = switches.get("VideoCapture");
 	}

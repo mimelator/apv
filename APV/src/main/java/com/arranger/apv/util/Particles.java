@@ -4,8 +4,6 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
-import processing.core.PApplet;
-
 public class Particles extends APVPlugin {
 	
 	private static final float INCREMENT_SIZE = .05f;
@@ -16,8 +14,8 @@ public class Particles extends APVPlugin {
 		super(parent);
 		
 		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand(PApplet.UP, "Up Arrow", "Increases Number Particles", event -> increment());
-		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Decreases Number Particles", event -> decrement());
+		cs.registerCommand('p', "Particles", "Increases/Decreases Number Particles",  
+				(event) -> {if (event.isShiftDown()) decrement(); else increment();});
 	}
 
 	public float getPct() {
