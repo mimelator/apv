@@ -22,6 +22,7 @@ import org.mockito.stubbing.Answer;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
 import com.arranger.apv.util.APVPulseListener;
@@ -93,6 +94,7 @@ public abstract class APVPluginTest {
         when(parent.getCommandSystem()).thenReturn(commandSystem);
         when(parent.getConfig()).thenCallRealMethod();
         when(parent.createShape()).thenReturn(new PShape());
+        when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
     }
 
 	@AfterEach

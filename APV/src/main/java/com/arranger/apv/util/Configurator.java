@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -107,7 +110,6 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		GravitySystem.class,
 		RotatorSystem.class,
 		CarnivalShapeSystem.class,
-		
 		
 		//factories
 		SquareFactory.class,
@@ -356,7 +358,50 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			return null;
 		}
 	}
+	
+	public void saveCurrentConfig() {
+		StringBuffer results = new StringBuffer();
+		
+		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
+		results.append(System.lineSeparator()).append(System.lineSeparator());
+		
+		results.append(parent.getConfig()); //Constants
+		
+		results.append(getConfigForSystem("scenes"));
+		results.append(getConfigForSystem("backgrounds"));
+		results.append(getConfigForSystem("backDrops"));
+		results.append(getConfigForSystem("foregrounds"));
+		results.append(getConfigForSystem("locations"));
+		results.append(getConfigForSystem("colors"));
+		results.append(getConfigForSystem("controls"));
+		results.append(getConfigForSystem("filters"));
+		results.append(getConfigForSystem("transitions"));
+		results.append(getConfigForSystem("messages"));
+		results.append(getConfigForSystem("switches"));
+		results.append(getConfigForSystem("pulse-listeners"));
+		
+		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
+	}
 
+	private String getConfigForSystem(String systemName) {
+		List<? extends APVPlugin> ss = loadAVPPlugins(systemName);
+		StringBuffer buffer = new StringBuffer();
+		List<String> systems = new ArrayList<String>();
+		buffer.append(systemName + " : [").append(System.lineSeparator());
+		for (Iterator<? extends APVPlugin> it = ss.iterator(); it.hasNext();) {
+			APVPlugin next = it.next();
+			systems.add("     " + next.getConfig());
+		}
+		
+		//sort the lines
+		systems.sort(Comparator.naturalOrder());
+		
+		String result = systems.stream().collect(Collectors.joining(System.lineSeparator()));
+		buffer.append(result);
+		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator()).append(System.lineSeparator());
+		return buffer.toString();
+	}
+	
 	private Constructor<?> findConstructor(Class<?> targetClass, Class<?> targetParamType) {
 		
 		for (Constructor<?> ctor : targetClass.getConstructors()) {

@@ -15,8 +15,6 @@ TODO:
 * Scenes can cycle through the liked list
 * Need a dislike button
 
-* Deault Perlin to 12
-* Make apv dir in home directory
 * Separate screen shots by version/date of start
 * More animations like light worm 
 

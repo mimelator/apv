@@ -1,5 +1,7 @@
 package com.arranger.apv.test;
 
+import static org.mockito.Mockito.when;
+
 import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 	@BeforeEach
 	public void setupConfigurator() {
 		cfg = new Configurator(parent);
+		when(parent.getConfigurator()).thenReturn(cfg);
 	}
 	
 	@Override
@@ -33,6 +36,11 @@ public class SaveConfigurationTest extends APVPluginTest {
 
 	}
 
+	@Test
+	public void testConfiguratorSaveConfiguration() {
+		cfg.saveCurrentConfig();
+	}
+	
 	@Test
 	public void testGettingGlobalConfig() throws Exception {
 		StringBuffer results = new StringBuffer();
