@@ -32,6 +32,14 @@ public class PerlinNoiseWalkerLocationSystem extends LocationSystem {
 		this(ctx.getParent(), ctx.getInt(0, SCALE));
 	}
 	
+
+	@Override
+	public String getConfig() {
+		//{PerlinNoiseWalkerLocationSystem : [2]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, scale);
+	}
+	
 	@Override
 	public Point2D getCurrentPoint() {
 		while (lastFrameChecked < parent.getFrameCount()) {

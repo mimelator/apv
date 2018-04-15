@@ -12,11 +12,15 @@ public class CircularLocationSystem extends PathLocationSystem {
 	private static final float SCALE = .75f;
 	
 	public CircularLocationSystem(Main parent, boolean splitter) {
-		super(parent, LOOP_IN_SECONDS, splitter);
+		super(parent, splitter);
 	}
 
 	public CircularLocationSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getBoolean(0, false));
+	}
+	
+	public int getLoopInSeconds() {
+		return LOOP_IN_SECONDS;
 	}
 	
 	@Override

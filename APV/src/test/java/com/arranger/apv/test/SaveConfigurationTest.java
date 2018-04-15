@@ -1,6 +1,7 @@
 package com.arranger.apv.test;
 
 import java.io.FileInputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -35,6 +36,10 @@ public class SaveConfigurationTest extends APVPluginTest {
 	@Test
 	public void testGettingGlobalConfig() throws Exception {
 		StringBuffer results = new StringBuffer();
+		
+		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
+		results.append(System.lineSeparator()).append(System.lineSeparator());
+		
 		results.append(getConfigForSystem("scenes"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));

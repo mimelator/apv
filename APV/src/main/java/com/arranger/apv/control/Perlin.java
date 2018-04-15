@@ -46,7 +46,7 @@ public class Perlin extends PulseListeningControlSystem {
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;
 	
-	public Perlin(Main parent, int pulsesToSkip) {
+	public Perlin(Main parent) {
 		super(parent);
 		resetLocator(1);
 		
@@ -54,10 +54,7 @@ public class Perlin extends PulseListeningControlSystem {
 		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
 		cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode", event -> decWalker());
 	}
-	
-	public Perlin(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getInt(0, DEF_PULSES_BETWEEN_COMMANDS));
-	}
+
 	
 	@Override
 	public void addSettingsMessages() {

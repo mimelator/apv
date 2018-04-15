@@ -12,13 +12,17 @@ public class RectLocationSystem extends PathLocationSystem {
 	private static final float SCALE = .75f;
 	
 	public RectLocationSystem(Main parent, boolean splitter) {
-		super(parent, LOOP_IN_SECONDS, splitter);
+		super(parent, splitter);
 	}
 	
 	public RectLocationSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getBoolean(0, false));
 	}
 
+	public int getLoopInSeconds() {
+		return LOOP_IN_SECONDS;
+	}
+	
 	@Override
 	protected Shape createPath() {
 		float width = parent.width * SCALE;

@@ -20,20 +20,28 @@ public abstract class PathLocationSystem extends LocationSystem {
 	private Reverser reverser;
 	private boolean splitter = true;
 	
-	public PathLocationSystem(Main parent, int secondsPerPath, boolean splitter) {
+	public PathLocationSystem(Main parent, boolean splitter) {
 		super(parent);
-		this.secondsPerPath = secondsPerPath;
+		this.secondsPerPath = getLoopInSeconds();
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
 		
 		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE); 
 		this.splitter = splitter;
 		
-		
 		CommandSystem cs = parent.getCommandSystem();
 		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
 		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> reverser.reverse());
 	}
+	
+	@Override
+	public String getConfig() {
+		//{CircularLocationSystem : [true]}
+		String name = getName();
+		return String.format("{%1s : [%2b]}", name, splitter);
+	}
+	
+	public abstract int getLoopInSeconds();
 	
 	protected abstract Shape createPath();
 	

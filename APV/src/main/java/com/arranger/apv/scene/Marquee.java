@@ -14,8 +14,6 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Scene {
 
-	//TODO Register onMessage Listener
-	
 	private static final int TEXT_SIZE = 200;
 	private String text;
 	private int characterColor;
@@ -35,6 +33,14 @@ public class Marquee extends Scene {
 			text = msg.trim();
 			reset();
 		});
+	}
+	
+
+	@Override
+	public String getConfig() {
+		//{Marquee: ["He's trying!!!"]}
+		String name = getName();
+		return String.format("{%1s : [\"%2s\"]}", name, text);
 	}
 
 	@Override
