@@ -14,6 +14,8 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Scene {
 
+	//TODO Register onMessage Listener
+	
 	private static final int TEXT_SIZE = 200;
 	private String text;
 	private int characterColor;
@@ -28,6 +30,11 @@ public class Marquee extends Scene {
 
 	public Marquee(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, "Hello World"));
+		
+		parent.getCommandSystem().registerMessageListeners(msg -> {
+			text = msg.trim();
+			reset();
+		});
 	}
 
 	@Override
@@ -39,11 +46,15 @@ public class Marquee extends Scene {
 	public boolean isNew() {
 		int currentFrame = parent.getFrameCount();
 		if (currentFrame > lastFrameDrawn + 60) {
-			pg = null;
-			lastFrameDrawn = 0;
+			reset();
 		}
 		
 		return pg == null;
+	}
+
+	protected void reset() {
+		pg = null;
+		lastFrameDrawn = 0;
 	}
 
 	@Override
@@ -90,7 +101,7 @@ public class Marquee extends Scene {
 		pg.textSize(TEXT_SIZE);
 		pg.textAlign(CENTER, CENTER);
 		pg.fill(characterColor);
-		pg.text(text, pg.width / 2, pg.height / 2);
+		pg.text(text.trim(), pg.width / 2, pg.height / 2);
 		pg.endDraw();
 		
 		characterColor = parent.color(0);

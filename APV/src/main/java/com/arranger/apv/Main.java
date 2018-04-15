@@ -538,8 +538,7 @@ public class Main extends PApplet {
 			}
 		}
 		
-		//drawSystem(scene, "scene");
-		scene.draw();
+		drawSystem(scene, "scene");
 		
 		if (monitorSwitch.isEnabled()) {
 			monitor.doMonitorCheck(scene);

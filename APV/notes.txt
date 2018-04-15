@@ -1,15 +1,11 @@
 BRANCH: scene
 https://github.com/mimelator/apv
 
-* Standardize the term "Scene" which includes fg, bg, bd (filter?)
-* Scenes can:
-	* pluggable Animations to wipe the screen clean and prepare for the next song
-	* Marquee message with live typing (maybe a large framed message with a solid background)
-
 
 *****************************************************************************
 TODO: 
 * User Guide (in the readme)
+* Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)
 * test Audio#scale
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
