@@ -5,8 +5,8 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.factory.StarFactory;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.StarMaker;
 
 import processing.core.PShape;
 
@@ -27,7 +27,7 @@ public class StarPL extends APVPlugin {
 		this.scaleSmall = scaleSmall;
 		this.scaleLarge = scaleLarge;
 		
-		star = StarFactory.createStar(parent);
+		star = new StarMaker(parent).createStar();
 		registerListener(parent);	
 	}
 	

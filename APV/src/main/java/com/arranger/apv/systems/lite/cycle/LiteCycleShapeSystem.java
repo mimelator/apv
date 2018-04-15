@@ -28,6 +28,13 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	}
 	
 	@Override
+	public String getConfig() {
+		//{BubbleShapeSystem : [${10_PCT_PARTICLES}]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, numNewObjects);
+	}
+	
+	@Override
 	public void setup() {
 		if (shouldCreateSetupObjects) {
 			createNewObjects();

@@ -70,6 +70,13 @@ public class LightWormSystem extends LiteShapeSystem {
 				ctx.getInt(1, DEFAULT_NUM_DRAGONS),
 				ctx.getFloat(2, DEFAULT_COLOR_SPEED));
 	}
+	
+	@Override
+	public String getConfig() {
+		//{LightWormSystem : [false, 4, 16]}
+		String name = getName();
+		return String.format("{%1s : [%2b, %3s, %4s]}", name, useOrigColors, numDragons, colorSpeed);
+	}
 
 	private static final int TOTAL_OFFSET_VALS = 8; //Hard coded for the offset table
 	

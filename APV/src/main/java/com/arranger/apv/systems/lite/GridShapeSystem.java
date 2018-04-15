@@ -40,6 +40,13 @@ public class GridShapeSystem extends LiteShapeSystem {
 	}
 	
 	@Override
+	public String getConfig() {
+		//{GridShapeSystem : [200, 300]}
+		String name = getName();
+		return String.format("{%1s : [%2s, %3s]}", name, space, shapeSize);
+	}
+	
+	@Override
 	public void setup() {
 		distances = new float[parent.width][parent.height];
 	}

@@ -39,6 +39,13 @@ public class PlasmaSystem extends LiteShapeSystem {
 	public PlasmaSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getInt(0, DEFAULT_ALPHA));
 	}
+	
+	@Override
+	public String getConfig() {
+		//{PlasmaSystem : [${PLASMA_ALPHA_HIGH}]}
+		String name = getName();
+		return String.format("{%1s : [%2s]}", name, alpha);
+	}
 
 	@Override
 	public void setup() {

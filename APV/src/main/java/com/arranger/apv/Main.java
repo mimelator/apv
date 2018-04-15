@@ -3,11 +3,13 @@ package com.arranger.apv;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.audio.Audio;
@@ -39,9 +41,10 @@ public class Main extends PApplet {
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
+	
 	public static final int NUMBER_PARTICLES = 1000;
 	public static final String RENDERER = P3D;
-	private static final int BUFFER_SIZE = 512;
+	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
@@ -630,5 +633,21 @@ public class Main extends PApplet {
 		monitorSwitch = switches.get("Monitor");
 		frameStroberSwitch = switches.get("FrameStrober");
 		videoCaptureSwitch = switches.get("VideoCapture");
+	}
+	
+	/**
+	 * collect:
+	 * Constants, scenes, backgrounds, backDrops, foregrounds
+	 * locations, colors, controls, filters, transitions
+	 * messages, switches, emoji.messages, pulse-listeners
+	 */
+	public String getConfig() {
+		StringBuffer buffer = new StringBuffer();
+		
+		//Constants
+		
+
+		
+		return buffer.toString();
 	}
 }

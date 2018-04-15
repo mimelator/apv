@@ -28,6 +28,7 @@ import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
+import processing.core.PShape;
 
 public abstract class APVPluginTest {
 	
@@ -90,6 +91,8 @@ public abstract class APVPluginTest {
         //mock Main's default pulse listener and command listener
         when(parent.getPulseListener()).thenReturn(apvPulseListener);
         when(parent.getCommandSystem()).thenReturn(commandSystem);
+        when(parent.getConfig()).thenCallRealMethod();
+        when(parent.createShape()).thenReturn(new PShape());
     }
 
 	@AfterEach

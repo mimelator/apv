@@ -1,6 +1,8 @@
 package com.arranger.apv.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
@@ -21,8 +23,7 @@ public class FileHelper extends APVPlugin {
 			rootFolder = new File(APV_DIR);
 			rootFolder.mkdirs();
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.severe(e.getMessage());
+			debug(e);
 		}
 	}
 
@@ -30,9 +31,27 @@ public class FileHelper extends APVPlugin {
 		try {
 			return rootFolder.getCanonicalPath() + File.separator + fileName;
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.severe(e.getMessage());
+			debug(e);
 			return fileName;
 		}
+	}
+	
+	public boolean saveFile(String fileName, String text) {
+		try {
+			String fullPath = getFullPath(fileName);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fullPath));
+			writer.write(text);
+			writer.close();
+		} catch (Exception e) {
+			debug(e);
+			return false;
+		}
+		return true;
+		
+	}
+	
+	private void debug(Exception e) {
+		e.printStackTrace();
+		logger.severe(e.getMessage());
 	}
 }

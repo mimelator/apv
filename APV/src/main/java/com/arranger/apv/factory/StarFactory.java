@@ -5,37 +5,22 @@ import java.awt.Shape;
 import com.arranger.apv.APVShape;
 import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
+import com.arranger.apv.util.StarMaker;
 
 import processing.core.PShape;
 
 public class StarFactory extends PrimitiveShapeFactory {
 	
-	public static PShape createStar(Main parent) {
-		  PShape star = parent.createShape();
-		  star.beginShape();
-		  star.stroke(255);
-		  star.strokeWeight(2);
-		  star.vertex(0, -50);
-		  star.vertex(14, -20);
-		  star.vertex(47, -15);
-		  star.vertex(23, 7);
-		  star.vertex(29, 40);
-		  star.vertex(0, 25);
-		  star.vertex(-29, 40);
-		  star.vertex(-23, 7);
-		  star.vertex(-47, -15);
-		  star.vertex(-14, -20);
-		  star.endShape(CLOSE);
-		  return star;
-	}
+	private StarMaker maker;
 	
-
 	public StarFactory(Main parent) {
 		super(parent);
+		maker = new StarMaker(parent);
 	}
 
 	public StarFactory(Main parent, float scale) {
 		super(parent, scale);
+		maker = new StarMaker(parent);
 	}
 
 	@Override
@@ -48,7 +33,7 @@ public class StarFactory extends PrimitiveShapeFactory {
 
 			@Override
 			protected PShape createNewShape() {
-				return createStar(parent);
+				return maker.createStar();
 			}
 		};
 	}

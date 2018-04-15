@@ -12,4 +12,6 @@ public abstract class ColorSystem extends APVPlugin {
 	}
 
 	public abstract Color getCurrentColor();
+
+
 }

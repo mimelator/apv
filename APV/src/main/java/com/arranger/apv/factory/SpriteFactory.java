@@ -17,9 +17,11 @@ public class SpriteFactory extends ShapeFactory {
 	
 	protected PImage sprite;  
 	protected float alpha;
+	protected String file;
 	
 	public SpriteFactory(Main parent, String file) {
 		super(parent);
+		this.file = file;
 		sprite = parent.loadImage(file);
 	}
 	
@@ -32,10 +34,16 @@ public class SpriteFactory extends ShapeFactory {
 		super(ctx.getParent());
 		
 		//look for file, scale 
-		String file = ctx.getString(0, null);
+		this.file = ctx.getString(0, null);
 		sprite = parent.loadImage(file);
 		this.alpha = ctx.getFloat(1, 0);
-		
+	}
+	
+	@Override
+	public String getConfig() {
+		//{SpriteFactory : [triangle.png, 2.5]}
+		String name = getName();
+		return String.format("{%1s : [%2s, %3s]}", name, file, alpha);
 	}
 
 	public int getImageWidth() {

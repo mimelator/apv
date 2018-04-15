@@ -26,4 +26,15 @@ public abstract class ShapeSystem extends APVPlugin {
 		return factory;
 	}
 
+	@Override
+	public String getConfig() {
+		if (factory == null) {
+			return super.getConfig();
+		}
+		
+		String name = getName();
+		String childConfig = factory.getConfig();
+		
+		return String.format("{%1s : [%2s]}", name, childConfig);
+	}
 }
