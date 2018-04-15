@@ -1,11 +1,10 @@
 # Audio Processing Visualizer
 
-A java based visualizer that uses Processing, Minim and many samples from OpenProcessing to create visuals based on audio input or selected mp3s.
-
+A java based visualizer that uses Processing, Minim and many samples from OpenProcessing to create visuals based on whatever your computer is "listening" to.
 
 <img src = "https://media.giphy.com/media/X8m8Fo7RsFvXiwEWUS/giphy.gif"></img>
 
-For more information please see the [APV Wiki](wiki/Home)
+For more information please see the [APV Wiki](/wiki/Home)
 
 ## Built With
 
