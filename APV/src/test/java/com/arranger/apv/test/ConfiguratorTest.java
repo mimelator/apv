@@ -19,6 +19,7 @@ import com.typesafe.config.ConfigValue;
 public class ConfiguratorTest extends APVPluginTest {
 	
 	private static final String CONFIG = "alt.properties";
+	Configurator cfg;
 	
 	@Test
 	public void testConfigOverride() throws Exception {
@@ -36,9 +37,6 @@ public class ConfiguratorTest extends APVPluginTest {
 		testClassResource("application.conf");
 	}
 	
-	
-	Configurator cfg;
-	
 	@Test
 	public void testLoadOtherConfig() throws Exception {
 		
@@ -55,7 +53,6 @@ public class ConfiguratorTest extends APVPluginTest {
 	protected void loadConfigurator(InputStream is) throws Exception {
 		cfg = new Configurator(parent, is);
 	}
-	
 	
 	@Test
 	public void testClassLoading() throws Exception {

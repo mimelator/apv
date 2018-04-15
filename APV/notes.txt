@@ -1,11 +1,10 @@
-BRANCH: user-guide-generate-config
+BRANCH: master
 https://github.com/mimelator/apv
 
 
 *****************************************************************************
 TODO: 
 
-* Configure multipliers of frequency for labeled systems
 * More animations like light worm
 * Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)
