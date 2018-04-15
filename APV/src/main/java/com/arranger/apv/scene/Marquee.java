@@ -1,5 +1,6 @@
 package com.arranger.apv.scene;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import com.arranger.apv.Main;
@@ -13,11 +14,12 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Scene {
 
+	private static final int TEXT_SIZE = 200;
 	private String text;
 	private int characterColor;
 	private PGraphics pg;
 	private ArrayList<OneChr> chrs;
-	private int initFrame = 0;
+	private int lastFrameDrawn = 0;
 
 	public Marquee(Main parent, String text) {
 		super(parent);
@@ -36,9 +38,9 @@ public class Marquee extends Scene {
 	@Override
 	public boolean isNew() {
 		int currentFrame = parent.getFrameCount();
-		if (currentFrame > initFrame + 200) {
+		if (currentFrame > lastFrameDrawn + 60) {
 			pg = null;
-			initFrame = 0;
+			lastFrameDrawn = 0;
 		}
 		
 		return pg == null;
@@ -49,9 +51,18 @@ public class Marquee extends Scene {
 		if (pg == null) {
 			init();
 		}
-
-		characterColor = parent.color(0);
+		lastFrameDrawn++;
 		
+		//draw background frame
+		int insetY = parent.height / 3;
+		parent.fill(0, 50);
+		parent.stroke(255);
+		parent.strokeWeight(10);
+		parent.rectMode(CENTER);
+		parent.rect(parent.width / 2, (parent.height / 2) + TEXT_SIZE / 4, parent.width, insetY);
+		
+
+		//draw text
 		parent.fill(255);
 		parent.stroke(0);
 		parent.textAlign(CENTER, CENTER);
@@ -73,43 +84,42 @@ public class Marquee extends Scene {
 	}
 	
 	protected void init() {
-		// create and draw to PPraphics (see Getting Started > UsingPGraphics example)
 		chrs = new ArrayList<OneChr>();
 		pg = parent.createGraphics(parent.width, parent.height, JAVA2D);
 		pg.beginDraw();
-		pg.textSize(200);
+		pg.textSize(TEXT_SIZE);
 		pg.textAlign(CENTER, CENTER);
 		pg.fill(characterColor);
 		pg.text(text, pg.width / 2, pg.height / 2);
 		pg.endDraw();
 		
-		initFrame = parent.getFrameCount();
+		characterColor = parent.color(0);
+		lastFrameDrawn = parent.getFrameCount();
 	}
 
 	class OneChr {
 		float x, y;
 		float myRotate;
-		float myBrightness, glowSpeed, glowOffs;
 		int mySize;
 		char myChr;
-
+		int color;
+		
 		OneChr(float _x, float _y, float gS) {
 			x = _x;
 			y = _y;
-			glowSpeed = gS;
-			myBrightness = 0;
-			glowOffs = parent.random(40) * -1;
 
 			int radi = (int) Math.floor(parent.random(4));
 			myRotate = (HALF_PI * radi);
 			float sizeFactor = parent.random(2);
 			mySize = (int) Math.max(10, Math.pow(sizeFactor, 5));
 			myChr = (char) parent.random(33, 126);
+			Color clr = parent.getColor().getCurrentColor();
+			color = parent.color(clr.getRed(), clr.getGreen(), clr.getBlue());
 		}
 
 		void updateMe() {
 			parent.noStroke();
-			parent.fill(255, Math.max(myBrightness + glowOffs, 0));
+			parent.fill(color);
 			parent.pushMatrix();
 			parent.translate(x, y);
 			parent.rotate(myRotate);
@@ -117,9 +127,6 @@ public class Marquee extends Scene {
 
 			parent.text(myChr, 0, 0);
 			parent.popMatrix();
-
-			myBrightness += glowSpeed;
-			myBrightness = Math.min(myBrightness, (255 + (-1 * glowOffs)));
 		}
 	}
 }
