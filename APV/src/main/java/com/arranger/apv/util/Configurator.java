@@ -69,6 +69,7 @@ import com.arranger.apv.systems.lite.PixelAttractor;
 import com.arranger.apv.systems.lite.PlasmaSystem;
 import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.Spirograph;
+import com.arranger.apv.systems.lite.SpraySpark;
 import com.arranger.apv.systems.lite.TwistedLines;
 import com.arranger.apv.systems.lite.cycle.BubbleShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
@@ -114,6 +115,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		CarnivalShapeSystem.class,
 		FloatingGeometry.class,
 		TwistedLines.class,
+		SpraySpark.class,
 		
 		//factories
 		SquareFactory.class,

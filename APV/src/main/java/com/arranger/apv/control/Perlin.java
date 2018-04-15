@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,22 +23,32 @@ public class Perlin extends PulseListeningControlSystem {
 
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
-	private static final Character [] AUTO_CHAR_COMMANDS = {
-			Main.SPACE_BAR_KEY_CODE,
-			Main.SPACE_BAR_KEY_CODE,
-			Main.SPACE_BAR_KEY_CODE,
-			Main.SPACE_BAR_KEY_CODE,
-			Main.SPACE_BAR_KEY_CODE,
-			'r',
-			'f', 
-			'b',
-			'o',
-			't',
-			'c',
-			'n',
-			'g',
-			PApplet.ENTER,
+	private static final CommandHolder [] AUTO_CHAR_COMMANDS = {
+			new CommandHolder(Main.SPACE_BAR_KEY_CODE, null),
+			new CommandHolder(Main.SPACE_BAR_KEY_CODE, null),
+			new CommandHolder(Main.SPACE_BAR_KEY_CODE, null),
+			new CommandHolder(Main.SPACE_BAR_KEY_CODE, null),
+			new CommandHolder(Main.SPACE_BAR_KEY_CODE, null),
+			new CommandHolder('r', null),
+			new CommandHolder('f', "ForeGround"),  
+			new CommandHolder('b', "BackGround"),
+			new CommandHolder('o', "BackDrop"),
+			new CommandHolder('t', "Filters"),
+			new CommandHolder('c', null),
+			new CommandHolder('n', "Transitions"),
+			new CommandHolder('g', null),
+			new CommandHolder(PApplet.ENTER, null)
 	};
+	
+	private static class CommandHolder {
+		private char c;
+		private String switchName;
+		
+		public CommandHolder(char c, String switchName) {
+			this.c = c;
+			this.switchName = switchName;
+		}
+	}
 	
 	private static final int COMMAND_SIZE = 10;
 	
@@ -77,10 +86,27 @@ public class Perlin extends PulseListeningControlSystem {
 			initializeCommandGrid();
 		}
 
+		//Don't issue a command that is frozen
+		int offset = 0;
+		KeyEvent keyEvent = null;
+		while (keyEvent == null) {
+			keyEvent = getKeyEvent(offset);
+			String switchName = (String)keyEvent.getNative();
+			if (switchName != null && parent.getSwitch(switchName).isFrozen()) {
+				keyEvent = null;
+				offset++;
+			}
+		}
+		
+		debugKeyEvent(keyEvent);
+		return keyEvent;
+	}
+	
+	private KeyEvent getKeyEvent(int offset) {
 		//Get the point at scale it to our grid
 		Point2D currentPoint = walker.getCurrentPoint();
-		int x = (int)currentPoint.getX() % COMMAND_SIZE;
-		int y = (int)currentPoint.getY() % COMMAND_SIZE;
+		int x = (int)(currentPoint.getX() + offset) % COMMAND_SIZE;
+		int y = (int)(currentPoint.getY() + offset) % COMMAND_SIZE;
 		
 		if (logger.isLoggable(Level.FINE)) {
 			DecimalFormat df2 = new DecimalFormat(".##");
@@ -89,9 +115,7 @@ public class Perlin extends PulseListeningControlSystem {
 			logger.fine(format);
 		}
 		
-		KeyEvent keyEvent = commandGrid[x][y];
-		debugKeyEvent(keyEvent);
-		return keyEvent;
+		return commandGrid[x][y];
 	}
 
 	public void incWalker() {
@@ -114,12 +138,10 @@ public class Perlin extends PulseListeningControlSystem {
 	protected void initializeCommandGrid() {
 		commandGrid = new KeyEvent[COMMAND_SIZE][COMMAND_SIZE];
 		
-		CommandSystem cs = parent.getCommandSystem();
-		Map<Character, List<APVCommand>> charCommands = cs.getCharCommands();
-		List<Character> charList = Arrays.asList(AUTO_CHAR_COMMANDS);
+		List<CommandHolder> charList = Arrays.asList(AUTO_CHAR_COMMANDS);
 		Collections.shuffle(charList);
 		
-		Iterator<Character> charIterator = charList.iterator();
+		Iterator<CommandHolder> charIterator = charList.iterator();
 		
 		//create a grid of commands for the walker to walk over
 		for (KeyEvent [] row : commandGrid) {
@@ -127,8 +149,9 @@ public class Perlin extends PulseListeningControlSystem {
 				if (!charIterator.hasNext()) {
 					charIterator = charList.iterator();
 				}
-				char next = charIterator.next();
-				KeyEvent event = createKeyEvent(next, charCommands.get(next), parent.randomBoolean());
+				CommandHolder ch = charIterator.next();
+				
+				KeyEvent event = createKeyEvent(ch.c, ch.switchName, parent.randomBoolean());
 				row[index] = event;
 			}
 		}

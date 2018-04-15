@@ -475,11 +475,11 @@ public class Main extends PApplet {
 				msgs.add(getBackDrop().getDisplayName());
 			}
 
-			if (backGroundSwitch.isEnabled()) {
+			if (foreGroundSwitch.isEnabled()) {
 				msgs.add(getForeground().getDisplayName());
 			}
 			
-			if (foreGroundSwitch.isEnabled()) {
+			if (backGroundSwitch.isEnabled()) {
 				msgs.add(getBackground().getDisplayName());
 			}
 			
