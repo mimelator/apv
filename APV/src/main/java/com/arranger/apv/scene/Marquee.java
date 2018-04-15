@@ -14,12 +14,12 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Scene {
 
+	private static final int FRAMES_REQUIRED_TO_RESET = 60;
 	private static final int TEXT_SIZE = 200;
 	private String text;
 	private int characterColor;
 	private PGraphics pg;
 	private ArrayList<OneChr> chrs;
-	private int lastFrameDrawn = 0;
 
 	public Marquee(Main parent, String text) {
 		super(parent);
@@ -50,7 +50,7 @@ public class Marquee extends Scene {
 	@Override
 	public boolean isNew() {
 		int currentFrame = parent.getFrameCount();
-		if (currentFrame > lastFrameDrawn + 60) {
+		if (currentFrame > lastFrameDrawn + FRAMES_REQUIRED_TO_RESET) {
 			reset();
 		}
 		
@@ -67,7 +67,6 @@ public class Marquee extends Scene {
 		if (pg == null) {
 			init();
 		}
-		lastFrameDrawn++;
 		
 		//draw background frame
 		int insetY = parent.height / 3;

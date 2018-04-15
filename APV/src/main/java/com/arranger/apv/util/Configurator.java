@@ -56,6 +56,7 @@ import com.arranger.apv.msg.StandardMessage;
 import com.arranger.apv.pl.SimplePL;
 import com.arranger.apv.pl.StarPL;
 import com.arranger.apv.scene.Marquee;
+import com.arranger.apv.scene.Tree;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
@@ -116,6 +117,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		FloatingGeometry.class,
 		TwistedLines.class,
 		SpraySpark.class,
+		
 		
 		//factories
 		SquareFactory.class,
@@ -178,6 +180,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		//Scenes
 		Scene.class,
 		Marquee.class,
+		Tree.class,
 	};
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }

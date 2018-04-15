@@ -10,6 +10,7 @@ public class Scene extends ShapeSystem {
 	protected ShapeSystem bgSys;
 	protected ShapeSystem fgSys;
 	protected Filter filter;
+	protected int lastFrameDrawn = 0;
 	
 	private boolean loadedFromConfig = false;
 	
@@ -64,6 +65,7 @@ public class Scene extends ShapeSystem {
 	
 	@Override
 	public void draw() {
+		lastFrameDrawn = parent.getFrameCount();
 		drawScene();
 	}
 	

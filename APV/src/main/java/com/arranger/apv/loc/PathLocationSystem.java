@@ -3,6 +3,7 @@ package com.arranger.apv.loc;
 
 import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.util.logging.Logger;
 
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
@@ -12,6 +13,8 @@ import com.arranger.apv.util.Reverser;
 import processing.core.PApplet;
 
 public abstract class PathLocationSystem extends LocationSystem {
+	
+	private static final Logger logger = Logger.getLogger(PathLocationSystem.class.getName());
 
 	private static final int DEFAULT_PULSES_TO_REVERSE = 2; //Direction Change every two pulses
 	protected Point2D[] points;
@@ -74,7 +77,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 		secEllapsed %= secondsPerPath; 
 		float result = secEllapsed / secondsPerPath;
 		if (result < 0.0f || result > 1.0f) {
-			throw new RuntimeException("Illegal value for pct: " + result);
+			logger.warning("Illegal value for pct: " + result);
+			result = PApplet.constrain(result, 0, 1);
 		}
 		
 		if (reverser.isReverse()) {
