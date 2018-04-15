@@ -37,8 +37,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 	@Override
 	public String getConfig() {
 		//{CircularLocationSystem : [true]}
-		String name = getName();
-		return String.format("{%1s : [%2b]}", name, splitter);
+		return String.format("{%1s : [%2b]}", getName(), splitter);
 	}
 	
 	public abstract int getLoopInSeconds();

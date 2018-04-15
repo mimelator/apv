@@ -85,12 +85,11 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	public String getConfig() {
 		//{StarWebSystem : [{SpriteFactory : [Emoji_Blitz_Star.png, 1.5]}, ${ALL_PARTICLES}, true]}
 		String result = null;
-		String name = getName();
 		if (factory != null) {
 			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s, %4b]}", name, childConfig, numNewObjects, doRotateScale);
+			result = String.format("{%1s : [%2s, %3s, %4b]}", getName(), childConfig, numNewObjects, doRotateScale);
 		} else {
-			result = String.format("{%1s : [%2s, %3b]}", name, numNewObjects, doRotateScale);
+			result = String.format("{%1s : [%2s, %3b]}", getName(), numNewObjects, doRotateScale);
 		}
 		return result;
 	}

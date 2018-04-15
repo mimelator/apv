@@ -43,8 +43,7 @@ public class PlasmaSystem extends LiteShapeSystem {
 	@Override
 	public String getConfig() {
 		//{PlasmaSystem : [${PLASMA_ALPHA_HIGH}]}
-		String name = getName();
-		return String.format("{%1s : [%2s]}", name, alpha);
+		return String.format("{%1s : [%2s]}", getName(), alpha);
 	}
 
 	@Override

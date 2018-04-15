@@ -14,7 +14,6 @@ import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.Main;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
-import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 import processing.event.KeyEvent;

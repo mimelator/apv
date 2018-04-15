@@ -32,8 +32,7 @@ public abstract class ParametricFactory extends PrimitiveShapeFactory {
 		@Override
 		public String getConfig() {
 			//{HypocycloidFactory : [2.5]}
-			String name = getName();
-			return String.format("{%1s : [%2s]}", name, scale);
+			return String.format("{%1s : [%2s]}", getName(), scale);
 		}
 		
 		/**

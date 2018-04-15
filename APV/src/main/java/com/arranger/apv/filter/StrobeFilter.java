@@ -29,6 +29,12 @@ public class StrobeFilter extends Filter {
 		this(ctx.getParent(), ctx.getInt(0, DEFAULT_STROBE_DURATION), ctx.getInt(1, DEFAULT_STROBE_BLINK));
 	}
 
+	@Override
+	public String getConfig() {
+		//{StrobeFilter :[150, 10]}
+		return String.format("{%1s : [%2s, %3s]}", getName(), strobeDuration, flashDuration);
+	}
+	
 	protected void onNewPulse() {
 		//Called late in the rendering process
 		savedImage = new SavedImage(parent);

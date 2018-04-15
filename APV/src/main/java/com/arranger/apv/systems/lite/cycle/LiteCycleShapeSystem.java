@@ -31,12 +31,11 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	public String getConfig() {
 		//{AttractorSystem : [{SpriteFactory : [purple.png, .3]}]}
 		String result = null;
-		String name = getName();
 		if (factory != null) {
 			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s]}", name, childConfig, numNewObjects);
+			result = String.format("{%1s : [%2s, %3s]}", getName(), childConfig, numNewObjects);
 		} else {
-			result = String.format("{%1s : [%2s]}", name, numNewObjects);
+			result = String.format("{%1s : [%2s]}", getName(), numNewObjects);
 		}
 		return result;
 	}

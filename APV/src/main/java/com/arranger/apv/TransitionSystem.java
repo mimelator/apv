@@ -36,6 +36,13 @@ public abstract class TransitionSystem extends ShapeSystem {
 		this(ctx.getParent(), ctx.getInt(0, DEFAULT_TRANSITION_FRAMES));
 	}
 	
+
+	@Override
+	public String getConfig() {
+		//{Fade :[${TRANSITION_FRAMES}]}
+		return String.format("{%1s : [%2s]}", getName(), frameFader.getNumFramesToFade());
+	}
+	
 	/**
 	 * Pct will decrease from 1.0f to 0 
 	 * @see FrameFader#getFadePct()

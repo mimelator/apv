@@ -32,8 +32,7 @@ public class OscilatingBackDrop extends BackDropSystem {
 	@Override
 	public String getConfig() {
 		//{OscilatingBackDrop: [WHITE, BLACK, White-Black]}
-		String name = getName();
-		return String.format("{%1s : [%2s, %3s, %4s]}", name, format(c1), format(c2), displayName);
+		return String.format("{%1s : [%2s, %3s, %4s]}", getName(), format(c1), format(c2), displayName);
 	}	
 	
 	@Override

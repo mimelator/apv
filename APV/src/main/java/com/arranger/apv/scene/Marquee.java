@@ -39,8 +39,7 @@ public class Marquee extends Scene {
 	@Override
 	public String getConfig() {
 		//{Marquee: ["He's trying!!!"]}
-		String name = getName();
-		return String.format("{%1s : [\"%2s\"]}", name, text);
+		return String.format("{%1s : [\"%2s\"]}", getName(), text); //quote the text
 	}
 
 	@Override

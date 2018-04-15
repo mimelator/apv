@@ -37,12 +37,11 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	public String getConfig() {
 		//{WarpSystem : [{SpriteFactory : [triangle.png, 2.5]}, ${ALL_PARTICLES}]}
 		String result = null;
-		String name = getName();
 		if (factory != null) {
 			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s]}", name, childConfig, numParticles);
+			result = String.format("{%1s : [%2s, %3s]}", getName(), childConfig, numParticles);
 		} else {
-			result = String.format("{%1s : [%2s]}", name, numParticles);
+			result = String.format("{%1s : [%2s]}", getName(), numParticles);
 		}
 		return result;
 	}

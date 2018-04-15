@@ -39,7 +39,12 @@ public class BlendModeFilter extends Filter {
 	
 	public BlendModeFilter(Configurator.Context ctx) {
 		this(ctx.getParent(), BLEND_MODE.valueOf(ctx.getString(0, BLEND_MODE.BLEND.name())));
-		
+	}
+	
+	@Override
+	public String getConfig() {
+		//{BlendModeFilter : [ADD]}
+		return String.format("{%1s : [%2s]}", getName(), blendMode.name());
 	}
 
 	@Override
