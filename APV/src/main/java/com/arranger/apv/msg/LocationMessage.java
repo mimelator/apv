@@ -26,8 +26,14 @@ public class LocationMessage extends MessageSystem {
 	}
 
 	@Override
+	public String getConfig() {
+		//{LocationMessage : [UPPER_LEFT]}
+		return String.format("{%1s : [%2s]}", getName(), cornerLocation.name());
+	}
+	
+	@Override
 	public String getDisplayName() {
-		return super.getDisplayName() + "[" + cornerLocation.name() + "]";
+		return String.format("%1s[%2s]", super.getDisplayName(), cornerLocation.name());
 	}
 
 	@Override
