@@ -63,6 +63,7 @@ import com.arranger.apv.systems.lifecycle.RotatorSystem;
 import com.arranger.apv.systems.lifecycle.WarpSystem;
 import com.arranger.apv.systems.lite.AttractorSystem;
 import com.arranger.apv.systems.lite.BGImage;
+import com.arranger.apv.systems.lite.BlockStep;
 import com.arranger.apv.systems.lite.BoxWaves;
 import com.arranger.apv.systems.lite.FloatingGeometry;
 import com.arranger.apv.systems.lite.GridShapeSystem;
@@ -118,6 +119,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		FloatingGeometry.class,
 		TwistedLines.class,
 		SpraySpark.class,
+		BlockStep.class,
 		
 		
 		//factories
