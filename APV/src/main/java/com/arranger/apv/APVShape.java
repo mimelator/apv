@@ -20,6 +20,16 @@ public abstract class APVShape {
 		}
 	}
 	
+	public float getWidth() {
+		PShape s = getShape();
+		return s.getWidth();
+	}
+	
+	public float getHeight() {
+		PShape s = getShape();
+		return s.getHeight();
+	}
+	
 	public PShape getShape() {
 		if (shape == null) {
 			shape = createNewShape();

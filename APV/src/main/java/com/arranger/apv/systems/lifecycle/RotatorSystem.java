@@ -12,8 +12,8 @@ import processing.core.PVector;
 
 public class RotatorSystem extends LifecycleSystem {
 
-	private static final int MAX_ROTATION_SCALAR = 3;
-	private static final float RANGE_RANDOM = .03f;
+	private static final float MAX_ROTATION_SCALAR = 1.15f;
+	private static final float RANGE_RANDOM = .2f;
 	public static final int ROTATION_SPEED = 1;
 	
 	private FFTAnalysis fftAnalysis;
@@ -36,7 +36,7 @@ public class RotatorSystem extends LifecycleSystem {
 	public String getDisplayName() {
 		return super.getDisplayName() + "[" + parent.getLocation().getDisplayName() + "]";
 	}
-
+	
 	@Override
 	protected LifecycleData createData() {
 		return new RotData();
@@ -46,7 +46,6 @@ public class RotatorSystem extends LifecycleSystem {
 		
 		private static final int HIGH_SPEED_RANGE = 4;
 		private static final float LOW_SPEED_RANGE = 0.5f;
-		
 		
 		protected float heading; 
 		protected PVector dist; //distance from center of the screen
@@ -73,6 +72,9 @@ public class RotatorSystem extends LifecycleSystem {
 			//augment the rotation speed with the FFT amp and RotData random
 			float rotationScalar = fftAnalysis.getMappedAmpInv(0, 1, 1, MAX_ROTATION_SCALAR);
 			heading += ROTATION_SPEED * rotationScalar * uniqueOffset;
+			
+//			float width = shape.getWidth();
+//			float height = shape.getHeight();
 			
 			shape.rotate(PApplet.radians(heading));
 			shape.translate((float)p.getX(), (float)p.getY()); //Starting point
