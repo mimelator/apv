@@ -337,7 +337,7 @@ public class Main extends PApplet {
 		transitions = (List<TransitionSystem>)configurator.loadAVPPlugins("transitions");
 		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
 		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
-		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes");
+		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes", false);
 		likedScenes = (List<Scene>)configurator.loadAVPPlugins("liked-scenes");
 		
 		//currentControlMode

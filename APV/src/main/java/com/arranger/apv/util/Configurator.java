@@ -315,6 +315,10 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	}
 	
 	public List<? extends APVPlugin> loadAVPPlugins(String name) {
+		return loadAVPPlugins(name, true);
+	}
+	
+	public List<? extends APVPlugin> loadAVPPlugins(String name, boolean allowScramble) {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
@@ -341,7 +345,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 			systems.add(plugin);
 		}
 		
-		if (shouldScrambleInitialSystems) {
+		if (shouldScrambleInitialSystems && allowScramble) {
 			Collections.shuffle(systems);
 		}
 		

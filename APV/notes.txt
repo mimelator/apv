@@ -1,6 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Don't scramble the scenes
 
 
 *****************************************************************************
@@ -22,6 +23,7 @@ TODO:
 Build & Release to local artifactory and github
 mvn clean
 mvn package
+mvn release:clean
 mvn release:prepare
 mvn release:perform
 *****************************************************************************
