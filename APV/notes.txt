@@ -1,11 +1,11 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Can the S background flucuate w/the amplitude from FFTAnalyzer
+Spin of the Rotary System can flucuate w/the amplitude from FFTAnalyzer
 
 *****************************************************************************
 TODO: 
-
+* Surfs Up and Watch your Step Sketches
 * More animations like light worm
 * Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)

@@ -5,16 +5,22 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FFTAnalysis;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class RotatorSystem extends LifecycleSystem {
 
+	private static final int MAX_ROTATION_SCALAR = 3;
+	private static final float RANGE_RANDOM = .03f;
 	public static final int ROTATION_SPEED = 1;
+	
+	private FFTAnalysis fftAnalysis;
 	
 	public RotatorSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory, numParticles);
+		fftAnalysis = new FFTAnalysis(parent);
 	}
 	
 	public RotatorSystem(Configurator.Context ctx) {
@@ -41,13 +47,16 @@ public class RotatorSystem extends LifecycleSystem {
 		private static final int HIGH_SPEED_RANGE = 4;
 		private static final float LOW_SPEED_RANGE = 0.5f;
 		
+		
 		protected float heading; 
 		protected PVector dist; //distance from center of the screen
 		protected PVector velocity;
 		protected Point2D p; //initial location
+		protected float uniqueOffset;
 		
 		public RotData() {
 			super();
+			uniqueOffset = parent.random(1 - RANGE_RANDOM, 1 + RANGE_RANDOM);
 		}
 
 		/**
@@ -60,7 +69,12 @@ public class RotatorSystem extends LifecycleSystem {
 			shape.resetMatrix();
 			
 			dist.add(velocity);
-			heading += ROTATION_SPEED;
+			
+			//augment the rotation speed with the FFT amp and RotData random
+			float maxAmp = fftAnalysis.getMaxAmp();
+			float rotationScalar = PApplet.map(maxAmp, 0, 1, 1, MAX_ROTATION_SCALAR);
+			
+			heading += ROTATION_SPEED * rotationScalar * uniqueOffset;
 			
 			shape.rotate(PApplet.radians(heading));
 			shape.translate((float)p.getX(), (float)p.getY()); //Starting point
