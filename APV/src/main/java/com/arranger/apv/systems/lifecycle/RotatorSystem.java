@@ -13,7 +13,7 @@ import processing.core.PVector;
 public class RotatorSystem extends LifecycleSystem {
 
 	private static final float MAX_ROTATION_SCALAR = 1.15f;
-	private static final float RANGE_RANDOM = .2f;
+	private static final float RANGE_RANDOM = .05f;
 	public static final int ROTATION_SPEED = 1;
 	
 	private FFTAnalysis fftAnalysis;
@@ -52,6 +52,8 @@ public class RotatorSystem extends LifecycleSystem {
 		protected PVector velocity;
 		protected Point2D p; //initial location
 		protected float uniqueOffset;
+		protected float rotationSpeed = ROTATION_SPEED;
+		protected boolean isReverse = parent.randomBoolean();
 		
 		public RotData() {
 			super();
@@ -70,8 +72,12 @@ public class RotatorSystem extends LifecycleSystem {
 			dist.add(velocity);
 			
 			//augment the rotation speed with the FFT amp and RotData random
-			float rotationScalar = fftAnalysis.getMappedAmpInv(0, 1, 1, MAX_ROTATION_SCALAR);
-			heading += ROTATION_SPEED * rotationScalar * uniqueOffset;
+			float rotationScalar = fftAnalysis.getMappedAmp(0, 1, 1, MAX_ROTATION_SCALAR);
+			if (isReverse) {
+				rotationScalar = -rotationScalar;
+			}
+			rotationSpeed += rotationScalar;
+			heading += rotationSpeed * uniqueOffset;
 			
 //			float width = shape.getWidth();
 //			float height = shape.getHeight();
