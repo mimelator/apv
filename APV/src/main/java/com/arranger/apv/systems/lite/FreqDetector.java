@@ -1,10 +1,9 @@
-package com.arranger.apv.audio;
+package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 import ddf.minim.analysis.FFT;
 import processing.core.PApplet;

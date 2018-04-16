@@ -1,12 +1,15 @@
-BRANCH: master
+BRANCH: annotation-class-loading
 https://github.com/mimelator/apv
 
 Document the rendering process and how they interact with the objects
 
 
+New Dependency:
+google reflections at: https://code.google.com/archive/p/reflections/
+
 *****************************************************************************
 TODO: 
-* Surfs Up and Watch your Step Sketches
+* Surfs Up Sketche
 * More animations like light worm
 * Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)
