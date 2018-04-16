@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
+import com.arranger.apv.Switch.STATE;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.color.ColorSystem;
@@ -44,6 +45,7 @@ public class Main extends PApplet {
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
+	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
 	protected List<ShapeSystem> foregrounds;
@@ -99,6 +101,7 @@ public class Main extends PApplet {
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
+	private int lastScrambleFrame = 0;
 	
 	
 	//Switches for runtime
@@ -113,7 +116,8 @@ public class Main extends PApplet {
 					pulseListenerSwitch,
 					likedScenesSwitch, 
 					frameStroberSwitch,
-					videoCaptureSwitch;
+					videoCaptureSwitch,
+					scrambleModeSwitch;
 
 
 	private Scene currentScene;
@@ -364,6 +368,7 @@ public class Main extends PApplet {
 		registerSwitchCommand(pulseListenerSwitch, '7');
 		registerSwitchCommand(frameStroberSwitch, '8');
 		registerSwitchCommand(videoCaptureSwitch, '9');
+		//not registering scrambleModeSwitch  It is a synthetic switch
 		
 		cs.registerCommand('f', "Foreground", "Cycles through the foregrounds", 
 				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
@@ -450,7 +455,16 @@ public class Main extends PApplet {
 		sendMessage(new String[] {fileName});
 	}
 	
+	public boolean isScrambleModeAvailable() {
+		if (lastScrambleFrame + SCRAMBLE_QUIET_WINDOW > getFrameCount()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	public void scramble() {
+		lastScrambleFrame = getFrameCount();
 		scrambleMode = true;
 		
 		//switch transitions now instead of in the #doScramble
@@ -516,6 +530,7 @@ public class Main extends PApplet {
 	public void draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
+		scrambleModeSwitch.setState(isScrambleModeAvailable() ? STATE.ENABLED : STATE.DISABLED);
 		if (frameStroberSwitch.isEnabled()) {
 			if (frameStrober.isSkippingFrames()) {
 				return;
@@ -651,6 +666,7 @@ public class Main extends PApplet {
 		likedScenesSwitch = switches.get("LikedScenes");
 		frameStroberSwitch = switches.get("FrameStrober");
 		videoCaptureSwitch = switches.get("VideoCapture");
+		scrambleModeSwitch = switches.get("Scramble");
 	}
 	
 	/**

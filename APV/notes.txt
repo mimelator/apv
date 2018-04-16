@@ -1,6 +1,8 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+put a quiet window in for scrambleMode
+
 
 *****************************************************************************
 TODO: 

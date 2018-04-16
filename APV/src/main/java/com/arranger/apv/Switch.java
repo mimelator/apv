@@ -56,6 +56,10 @@ public class Switch extends APVPlugin {
 		return state == STATE.FROZEN;
 	}
 	
+	public void setState(STATE state) {
+		this.state = state;
+	}
+	
 	/**
 	 * If frozen, set to enabled, otherwise set to Frozen
 	 */
