@@ -1,8 +1,12 @@
 package com.arranger.apv;
 
+import com.arranger.apv.util.KeyEventHelper;
+
 import processing.event.KeyEvent;
 
 public abstract class ControlSystem extends APVPlugin {
+	
+	protected KeyEventHelper keyEventHelper;
 	
 	public static enum CONTROL_MODES {
 		AUTO, SNAP, MANUAL, PERLIN;
@@ -24,6 +28,7 @@ public abstract class ControlSystem extends APVPlugin {
 
 	public ControlSystem(Main parent) {
 		super(parent);
+		keyEventHelper = new KeyEventHelper(parent);
 	}
 	
 	public boolean allowsMouseLocation() {
@@ -40,21 +45,4 @@ public abstract class ControlSystem extends APVPlugin {
 	 * Returns null if no command needed
 	 */
 	public abstract KeyEvent getNextCommand();
-	
-	protected KeyEvent createScramble() {
-		return createKeyEvent(Main.SPACE_BAR_KEY_CODE, this);
-	}
-	
-	protected KeyEvent createKeyEvent(int keyCode, Object obj) {
-		return new KeyEvent(obj, 0, KeyEvent.RELEASE, 0, (char)0, keyCode);
-	}
-
-	protected KeyEvent createKeyEvent(char character, Object obj) {
-		return createKeyEvent(character, obj, false);
-	}
-	
-	protected KeyEvent createKeyEvent(char character, Object obj, boolean hasShift) {
-		int modifiers = hasShift ? KeyEvent.SHIFT : 0;
-		return new KeyEvent(obj, 0, KeyEvent.RELEASE, modifiers, character, 0);
-	}
 }

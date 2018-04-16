@@ -1,7 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Don't scramble the scenes
+Document the rendering process and how they interact with the objects
 
 
 *****************************************************************************

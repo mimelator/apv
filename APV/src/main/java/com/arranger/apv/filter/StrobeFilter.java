@@ -9,6 +9,7 @@ public class StrobeFilter extends Filter {
 	private static final int DEFAULT_STROBE_DURATION = 60;
 	private static final int DEFAULT_STROBE_BLINK = 4;
 	private static final int PULSES_TO_SKIP = 2;
+	private static final boolean AUTO_CHANGE_FILTER_ON_COMPLETE = true;
 
 	protected SavedImage savedImage;
 	protected int strobeDuration;
@@ -68,6 +69,11 @@ public class StrobeFilter extends Filter {
 			if (savedImageFrame + fof < frameCount) {
 				//expired
 				savedImage = null;
+				if (AUTO_CHANGE_FILTER_ON_COMPLETE) {
+					//issue command to change the filter
+					parent.getCommandSystem().invokeCommand('t'); //t for filters
+				}
+				
 				return false;
 			}
 		}

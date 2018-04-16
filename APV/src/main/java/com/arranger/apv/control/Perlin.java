@@ -150,7 +150,7 @@ public class Perlin extends PulseListeningControlSystem {
 					charIterator = charList.iterator();
 				}
 				CommandHolder ch = charIterator.next();
-				KeyEvent event = createKeyEvent(ch.c, ch.switchName, parent.randomBoolean());
+				KeyEvent event = keyEventHelper.createKeyEvent(ch.c, ch.switchName, parent.randomBoolean());
 				row[index] = event;
 			}
 		}

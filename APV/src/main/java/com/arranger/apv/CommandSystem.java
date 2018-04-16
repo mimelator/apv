@@ -7,39 +7,28 @@ import java.util.Map;
 
 import com.arranger.apv.cmd.MessageModeInterceptor;
 import com.arranger.apv.cmd.SceneSelectInterceptor;
+import com.arranger.apv.util.KeyEventHelper;
 
 import processing.event.KeyEvent;
 
 public class CommandSystem extends APVPlugin {
 	
-	
 	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
 	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
 	
+	private KeyEventHelper keyEventHelper;
 	private MessageModeInterceptor messageModeInterceptor;
 	private SceneSelectInterceptor sceneSelectInterceptor;
 	private APVCommand lastCommand;
 	
-	@FunctionalInterface
-	public static interface IVisitor {
-		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
-	}
-	
-	public void visitCommands(boolean isKeyCommands, IVisitor visitor) {
-		if (isKeyCommands) {
-			keyCommands.entrySet().forEach(e -> visitor.visit(e));
-		} else {
-			charCommands.entrySet().forEach(e -> visitor.visit(e));
-		}
-	}
-
 	public CommandSystem(Main parent) {
 		super(parent);
 		messageModeInterceptor = new MessageModeInterceptor(parent);
 		sceneSelectInterceptor = new SceneSelectInterceptor(parent);
+		keyEventHelper = new KeyEventHelper(parent);
 		parent.registerMethod("keyEvent", this);
 	}
-	
+
 	public MessageModeInterceptor getMessageModeInterceptor() {
 		return messageModeInterceptor;
 	}
@@ -48,14 +37,10 @@ public class CommandSystem extends APVPlugin {
 		return sceneSelectInterceptor;
 	}
 	
-	public String [] getInterceptorHelpMessages() {
-		String [] results = new String[] {
-			messageModeInterceptor.getHelpText(),
-			sceneSelectInterceptor.getHelpText(),	
-		};
-		return results;
+	public void invokeCommand(char cmdKey) {
+		keyEvent(keyEventHelper.createKeyEvent(cmdKey, null));
 	}
-
+	
 	public void registerCommand(int key, String name, String helpText, CommandHandler handler) {
 		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
 		List<APVCommand> list = keyCommands.get(key);
@@ -75,6 +60,14 @@ public class CommandSystem extends APVPlugin {
 			charCommands.put(key, list);
 		}
 		list.add(apvCommand);
+	}
+	
+	public void visitCommands(boolean isKeyCommands, IVisitor visitor) {
+		if (isKeyCommands) {
+			keyCommands.entrySet().forEach(e -> visitor.visit(e));
+		} else {
+			charCommands.entrySet().forEach(e -> visitor.visit(e));
+		}
 	}
 	
 	public void keyEvent(KeyEvent keyEvent) {
@@ -106,6 +99,10 @@ public class CommandSystem extends APVPlugin {
 		}
 	}
 	
+	@FunctionalInterface
+	public static interface IVisitor {
+		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
+	}
 	
 	@FunctionalInterface
 	public static interface CommandHandler {
@@ -115,6 +112,14 @@ public class CommandSystem extends APVPlugin {
 	@FunctionalInterface
 	public static interface MessageHandler {
 		public void onMessage(String msg);
+	}
+	
+	public String [] getInterceptorHelpMessages() {
+		String [] results = new String[] {
+			messageModeInterceptor.getHelpText(),
+			sceneSelectInterceptor.getHelpText(),	
+		};
+		return results;
 	}
 	
 	public Map<Integer, List<APVCommand>> getKeyCommands() {
