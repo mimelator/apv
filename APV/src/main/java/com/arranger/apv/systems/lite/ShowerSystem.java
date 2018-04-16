@@ -3,6 +3,7 @@ package com.arranger.apv.systems.lite;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.FFTAnalysis;
 
 import processing.core.PApplet;
 
@@ -11,9 +12,13 @@ import processing.core.PApplet;
  */
 public class ShowerSystem extends LiteShapeSystem {
 	
-	private static final int OSCILLATION_SCALAR = 4;
+	
+	private static final float AMP_SCALE = 3.5f;
+	
+	private static final int OSCILLATION_SCALAR = 2;
 	private static final int HIGH_FILL_VAL = 55;
 	private static final int LOW_FILL_VAL = 15;
+	
 	private static final float STROKE_WEIGHT_LOW = .5f; //15 was fun
 	private static final float STROKE_WEIGHT_HIGH = 5;
 	private static int NUM_LINES = 20;
@@ -25,8 +30,11 @@ public class ShowerSystem extends LiteShapeSystem {
 	private int prevFillColor;
 	private int curFillColor;
 	
+	private FFTAnalysis fftAnalysis;
+	
 	public ShowerSystem(Main parent) {
 		super(parent);
+		fftAnalysis = new FFTAnalysis(parent);
 	}
 
 	@Override
@@ -37,6 +45,7 @@ public class ShowerSystem extends LiteShapeSystem {
 
 	@Override
 	public void draw() {
+		int speed = 3; //Not sure
 		
 		int curFillFrame = parent.getFrameCount() % FILL_CHANGE_RATE;
 		if (curFillFrame == 0) {
@@ -51,7 +60,7 @@ public class ShowerSystem extends LiteShapeSystem {
 		}
 		
 		float n = parent.getFrameCount() * 0.01f;
-		float s = parent.width / 3 + parent.width / 3 * sin(n);
+		float s = parent.width / speed + parent.width / speed * sin(n);
 		float r = parent.width / NUM_LINES;
 		
 		//oscilate the alpha
@@ -62,7 +71,10 @@ public class ShowerSystem extends LiteShapeSystem {
 		parent.addSettingsMessage("  --useFillColor: " + useFillColor);
 		
 		//change up the stroke
-		float stroke = parent.oscillate(STROKE_WEIGHT_LOW, STROKE_WEIGHT_HIGH, OSCILLATION_SCALAR / 3.0f);
+		float strokeWeightLow = STROKE_WEIGHT_LOW * (fftAnalysis.getMaxAmp() * AMP_SCALE);
+		
+		
+		float stroke = parent.oscillate(strokeWeightLow, STROKE_WEIGHT_HIGH, OSCILLATION_SCALAR / 3.0f);
 		parent.strokeWeight(stroke);
 		
 		//interpolate the color

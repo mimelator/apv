@@ -78,7 +78,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		float result = secEllapsed / secondsPerPath;
 		if (result < 0.0f || result > 1.0f) {
 			logger.warning("Illegal value for pct: " + result);
-			result = PApplet.constrain(result, 0, 1);
+			result = PApplet.constrain(result, 0.1f, .9f);
 		}
 		
 		if (reverser.isReverse()) {

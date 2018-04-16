@@ -1,8 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-put a quiet window in for scrambleMode
-
+Can the S background flucuate w/the amplitude from FFTAnalyzer
 
 *****************************************************************************
 TODO: 
