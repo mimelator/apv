@@ -1,7 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Transition length is Buggy
+Scramble all the systems in "Show" mode
 
 *****************************************************************************
 TODO: 

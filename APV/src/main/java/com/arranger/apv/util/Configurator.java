@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -183,6 +184,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	
 	static { for (Class<?> cls : CLASSES) {CLASS_MAP.put(cls.getSimpleName(), cls);} }
 	
+	private Config conf;
+	private boolean shouldScrambleInitialSystems;
+	
 	public class Context {
 		public ConfigList argList;
 		
@@ -289,18 +293,22 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		}
 	}
 	
-	private Config conf;
+	
+	
 	
 	public Configurator(Main parent) {
 		super(parent);
 		conf = ConfigFactory.load();
+		initScramble();
 	}
-	
+
+
 	public Configurator(Main parent, InputStream inputStream) {
 		super(parent);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		conf = ConfigFactory.parseReader(reader);
+		initScramble();
 	}
 	
 	public Config getRootConfig() {
@@ -332,6 +340,10 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
 			systems.add(plugin);
+		}
+		
+		if (shouldScrambleInitialSystems) {
+			Collections.shuffle(systems);
 		}
 		
 		return systems;
@@ -436,6 +448,7 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		return null;
 	}
 	
-	
-	
+	protected void initScramble() {
+		shouldScrambleInitialSystems = getRootConfig().getBoolean("apv.scramble-systems");
+	}
 }
