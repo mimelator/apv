@@ -1,7 +1,9 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Spin of the Rotary System can flucuate w/the amplitude from FFTAnalyzer
+
+FloatGeometry should ripple to the amplitude
+Rewrite PApplet.map to something that uses an easing algorithm.  That might help a lot of things looks smoother.
 
 *****************************************************************************
 TODO: 

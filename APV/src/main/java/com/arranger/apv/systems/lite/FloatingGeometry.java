@@ -3,6 +3,7 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.FFTAnalysis;
 
 import processing.core.PApplet;
 
@@ -11,8 +12,16 @@ import processing.core.PApplet;
  */
 public class FloatingGeometry extends LiteShapeSystem {
 
+	private static final float MAX_AMP_SCALAR = 1.12f;
+	private static final float ALPHA_SCALAR = .8f;
+	private static final float RADIUS = 20;
+	private static final float SPACE = 40;
+	
+	private FFTAnalysis fftAnalysis;
+	
 	public FloatingGeometry(Main parent) {
 		super(parent);
+		this.fftAnalysis = new FFTAnalysis(parent);
 	}
 
 	@Override
@@ -24,28 +33,30 @@ public class FloatingGeometry extends LiteShapeSystem {
 	public void draw() {
 		Color currentColor = parent.getColor().getCurrentColor();
 		
-		float yOffset = radius * 2;
-		for (float y = space; y <= parent.height - space; y += yOffset) {
-			for (float x = space; x < parent.width - space; x += radius * 2) {
+		float yOffset = RADIUS * 2;
+		for (float y = SPACE; y <= parent.height - SPACE; y += yOffset) {
+			for (float x = SPACE; x < parent.width - SPACE; x += RADIUS * 2) {
 				float xOffset = 0;
 				if ((y % (yOffset * 2) == 0)) {
-					xOffset = radius;
+					xOffset = RADIUS;
 				} else {
 					xOffset = 0;
 				}
-				shape(x + xOffset, y, radius * .85f, currentColor);
+				shape(x + xOffset, y, RADIUS * .85f, currentColor);
 			}
 		}
 	}
-
-	float radius = 20;
-	float space = 40;
 
 	void shape(float x, float y, float r, Color currentColor) {
 		
 		int width = parent.width;
 		int height = parent.height;
-		float a = PApplet.dist(x, y, width / 2, height / 2) - parent.getFrameCount() * .8f;
+		
+		float maxAmp = fftAnalysis.getMaxAmp();
+		float ampScalar = PApplet.map(maxAmp, 0, 3, 1, MAX_AMP_SCALAR);
+		
+		float alphaScalar = parent.getFrameCount() * ALPHA_SCALAR * ampScalar;
+		float a = PApplet.dist(x, y, width / 2, height / 2) - alphaScalar;
 		float r2 = PApplet.map(sin(PApplet.radians(a)), 0, 1, 0, r);
 		float col = PApplet.map(PApplet.dist(x, y, width / 2, height / 2), 0, 
 								PApplet.dist(0, 0, width / 2, height / 2), 200, -30);
