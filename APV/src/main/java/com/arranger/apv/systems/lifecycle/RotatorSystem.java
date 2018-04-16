@@ -71,7 +71,7 @@ public class RotatorSystem extends LifecycleSystem {
 			dist.add(velocity);
 			
 			//augment the rotation speed with the FFT amp and RotData random
-			float rotationScalar = fftAnalysis.getMappedAmp(0, 1, 1, MAX_ROTATION_SCALAR);
+			float rotationScalar = fftAnalysis.getMappedAmpInv(0, 1, 1, MAX_ROTATION_SCALAR);
 			heading += ROTATION_SPEED * rotationScalar * uniqueOffset;
 			
 			shape.rotate(PApplet.radians(heading));

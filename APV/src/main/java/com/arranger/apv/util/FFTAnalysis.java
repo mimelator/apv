@@ -11,6 +11,18 @@ public class FFTAnalysis extends APVPlugin {
 		super(parent);
 	}
 
+	boolean invert = false;
+	
+	public float getMappedAmpInv(float start, float end, float start1, float end1) {
+		float mappedAmp = getMappedAmp(start, end, start1, end1);
+		if (invert) {
+			mappedAmp = -mappedAmp;
+		}
+		invert = !invert;
+		return mappedAmp;
+	}
+	
+	
 	public float getMappedAmp(float start, float end, float start1, float end1) {
 		SplineInterpolator si = new SplineInterpolator(start, end, start1, end1);
 		return (float)si.interpolate(getMaxAmp());

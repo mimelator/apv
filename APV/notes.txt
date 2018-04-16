@@ -2,7 +2,7 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-FloatGeometry should ripple to the amplitude
+Rotator is a little hurky jerky
 Rewrite PApplet.map to something that uses an easing algorithm.  That might help a lot of things looks smoother.
 
 *****************************************************************************

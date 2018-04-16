@@ -481,25 +481,26 @@ public class Main extends PApplet {
 	
 	protected void doScramble() {
 		//mess it all up, except for transitions which were already scrambled
-		
-		if (!foreGroundSwitch.isFrozen()) {
-			foregroundIndex += random(foregrounds.size() - 1);
-		}
-		
-		if (!backGroundSwitch.isFrozen()) {
-			backgroundIndex += random(backgrounds.size() - 1);
-		}
-		
-		if (!backDropSwitch.isFrozen()) {
-			backDropIndex += random(backDrops.size() - 1);
-		}
-		
-		if (!filtersSwitch.isFrozen()) {
-			filterIndex += random(filters.size() - 1);
-		}
-		
-		if (!messagesSwitch.isFrozen()) {
-			messageIndex += random(messages.size());
+		if (!likedScenesSwitch.isEnabled()) {
+			if (!foreGroundSwitch.isFrozen()) {
+				foregroundIndex += random(foregrounds.size() - 1);
+			}
+			
+			if (!backGroundSwitch.isFrozen()) {
+				backgroundIndex += random(backgrounds.size() - 1);
+			}
+			
+			if (!backDropSwitch.isFrozen()) {
+				backDropIndex += random(backDrops.size() - 1);
+			}
+			
+			if (!filtersSwitch.isFrozen()) {
+				filterIndex += random(filters.size() - 1);
+			}
+			
+			if (!messagesSwitch.isFrozen()) {
+				messageIndex += random(messages.size());
+			}
 		}
 		
 		locationIndex += random(locations.size() - 1);

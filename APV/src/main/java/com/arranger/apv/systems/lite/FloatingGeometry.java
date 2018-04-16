@@ -52,7 +52,7 @@ public class FloatingGeometry extends LiteShapeSystem {
 		int width = parent.width;
 		int height = parent.height;
 		
-		float ampScalar = fftAnalysis.getMappedAmp(0, 3, 1, MAX_AMP_SCALAR);
+		float ampScalar = fftAnalysis.getMappedAmpInv(0, 3, 1, MAX_AMP_SCALAR);
 		float alphaScalar = parent.getFrameCount() * ALPHA_SCALAR * ampScalar;
 		float a = PApplet.dist(x, y, width / 2, height / 2) - alphaScalar;
 		float r2 = PApplet.map(sin(PApplet.radians(a)), 0, 1, 0, r);

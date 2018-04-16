@@ -109,8 +109,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 
 			//Adjust the line width using the FFT
 			float lineWidth = distance * strokeWeight * 0.01f;
-			float maxAmp = fftAnalysis.getMaxAmp();
-			float ampScalar = PApplet.map(maxAmp, 0, 1, 1, maxLineWidth);
+			float ampScalar = fftAnalysis.getMappedAmpInv(0, 1, 1, maxLineWidth);
 			lineWidth *= ampScalar;
 			
 			parent.pushStyle();

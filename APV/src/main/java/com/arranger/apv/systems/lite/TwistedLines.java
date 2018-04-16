@@ -37,8 +37,7 @@ public class TwistedLines extends LiteShapeSystem {
 	@Override
 	public void draw() {
 		//Dynamic amplitude based on audio
-		float maxAmp = fftAnalysis.getMaxAmp();
-		int heightScalar = (int)PApplet.map(maxAmp, QUIET_AMP, LOUD_AMP, SMALL_HEIGHT, LARGE_HEIGHT);
+		int heightScalar = (int)fftAnalysis.getMappedAmpInv(QUIET_AMP, LOUD_AMP, SMALL_HEIGHT, LARGE_HEIGHT);
 		
 		//get array of colors  Just three for now
 		ColorSystem c = parent.getColor();
