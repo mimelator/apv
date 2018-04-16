@@ -1,7 +1,5 @@
-BRANCH: scene-selector
+BRANCH: master
 https://github.com/mimelator/apv
-
-add a Scene selction feature
 
 
 *****************************************************************************
