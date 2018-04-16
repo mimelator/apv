@@ -109,6 +109,10 @@ public class SpraySpark extends LiteShapeSystem {
 	 * @author Gregory Bush
 	 */
 	public void spark() {
+		if (canvas == null) {
+			setup();
+		}
+		
 		
 		float prevOffset = PREV_LOC_OFFSET;
 		

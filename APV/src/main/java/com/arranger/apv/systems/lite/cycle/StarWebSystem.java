@@ -6,6 +6,7 @@ import com.arranger.apv.APVShape;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FFTAnalysis;
 
 import processing.core.PApplet;
 import processing.core.PShape;
@@ -18,6 +19,8 @@ import processing.core.PVector;
  */
 public class StarWebSystem extends LiteCycleShapeSystem {
 
+	private static final float MAX_AMP_SCALAR = 1.1f;
+	
 	private static final int LARGE_RADIUS = 150;
 	private static final int SMALL_RADIUS = 50;
 	private static final int NUM_EDGES = 100;
@@ -27,14 +30,13 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
 	
 	private static final int FACTORY_SHAPE_STROKE_WEIGHT = 4;
-	
 	private static final int STAR_WEB_FRAMES_PER_RESET = 20000;
-	
 	private static final float PCT_TO_DIE = 98.5f;//75;//99.75f;
 	
 	int fc, edge = NUM_EDGES;
 	float deatRatePct = PCT_TO_DIE;
 	boolean doRotateScale = false;
+	FFTAnalysis fftAnalysis;
 	
 	public StarWebSystem(Main parent) {
 		this(parent, null, DEFAULT_NUM_BALLS);
@@ -59,6 +61,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 		super(parent, numNewObjects);
 		this.factory = factory;
 		this.doRotateScale = doRotateScale;
+		fftAnalysis = new FFTAnalysis(parent);
 	}
 	
 	public StarWebSystem(Configurator.Context ctx) {
@@ -116,6 +119,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	}
 	
 	private class StarWebObject extends LiteCycleObj {
+		
 		
 		private static final int DEFAULT_SIZE = 10;
 		private static final int DEFAULT_DUPLICATES = 5;
@@ -204,7 +208,8 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 			factoryShape.setColor(nodeColor.getRGB(), alpha);
 			
 			if (doRotateScale) {
-				drawShape.rotate(rotationRate);
+				float ampScalar = fftAnalysis.getMappedAmp(0, 1, 1, MAX_AMP_SCALAR);
+				drawShape.rotate(rotationRate * ampScalar);
 			}
 			
 			parent.shape(drawShape, 
