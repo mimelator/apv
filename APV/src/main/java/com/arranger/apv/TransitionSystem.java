@@ -55,12 +55,12 @@ public abstract class TransitionSystem extends ShapeSystem {
 	
 	public void incrementTransitionFrames() {
 		int numFramesToFade = frameFader.getNumFramesToFade();
-		frameFader.setNumFramesToFade(numFramesToFade++);
+		frameFader.setNumFramesToFade(++numFramesToFade);
 	}
 	
 	public void decrementTransitionFrames() {
 		int numFramesToFade = frameFader.getNumFramesToFade();
-		frameFader.setNumFramesToFade(numFramesToFade--);
+		frameFader.setNumFramesToFade(--numFramesToFade);
 	}
 	
 	public int getTransitionFrames() {
