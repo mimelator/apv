@@ -11,6 +11,11 @@ public class FFTAnalysis extends APVPlugin {
 		super(parent);
 	}
 
+	public float getMappedAmp(float start, float end, float start1, float end1) {
+		SplineInterpolator si = new SplineInterpolator(start, end, start1, end1);
+		return (float)si.interpolate(getMaxAmp());
+	}
+	
 	public float getMaxAmp() {
 		FFT fft = parent.getAudio().getBeatInfo().getFFT();
 		float bounds = fft.avgSize();

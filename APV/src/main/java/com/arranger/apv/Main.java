@@ -28,6 +28,7 @@ import com.arranger.apv.util.Monitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.SettingsDisplay;
+import com.arranger.apv.util.SplineInterpolator;
 import com.arranger.apv.util.VersionInfo;
 import com.typesafe.config.Config;
 
@@ -297,6 +298,11 @@ public class Main extends PApplet {
 	
 	public boolean randomBoolean() {
 		return random(10) > 5;
+	}
+	
+	public float mapEx(float value, float start, float end, float start1, float end1) {
+		SplineInterpolator si = new SplineInterpolator(start, end, start1, end1);
+		return (float)si.interpolate(value);
 	}
 	
 	public float oscillate(float low, float high, float oscSpeed) {

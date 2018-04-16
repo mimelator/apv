@@ -12,8 +12,8 @@ import processing.core.PApplet;
  */
 public class FloatingGeometry extends LiteShapeSystem {
 
-	private static final float MAX_AMP_SCALAR = 1.12f;
-	private static final float ALPHA_SCALAR = .8f;
+	private static final float MAX_AMP_SCALAR = .2f;
+	private static final float ALPHA_SCALAR = .04f;
 	private static final float RADIUS = 20;
 	private static final float SPACE = 40;
 	
@@ -52,9 +52,7 @@ public class FloatingGeometry extends LiteShapeSystem {
 		int width = parent.width;
 		int height = parent.height;
 		
-		float maxAmp = fftAnalysis.getMaxAmp();
-		float ampScalar = PApplet.map(maxAmp, 0, 3, 1, MAX_AMP_SCALAR);
-		
+		float ampScalar = fftAnalysis.getMappedAmp(0, 3, 1, MAX_AMP_SCALAR);
 		float alphaScalar = parent.getFrameCount() * ALPHA_SCALAR * ampScalar;
 		float a = PApplet.dist(x, y, width / 2, height / 2) - alphaScalar;
 		float r2 = PApplet.map(sin(PApplet.radians(a)), 0, 1, 0, r);
