@@ -88,6 +88,8 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
+private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
+
 public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
@@ -293,9 +295,6 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		}
 	}
 	
-	
-	
-	
 	public Configurator(Main parent) {
 		super(parent);
 		conf = ConfigFactory.load();
@@ -449,6 +448,9 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 	}
 	
 	protected void initScramble() {
-		shouldScrambleInitialSystems = getRootConfig().getBoolean("apv.scramble-systems");
+		Config rc = getRootConfig();
+		if (rc.hasPath(SCRAMBLE_KEY)) {
+			shouldScrambleInitialSystems = rc.getBoolean(SCRAMBLE_KEY);
+		}
 	}
 }

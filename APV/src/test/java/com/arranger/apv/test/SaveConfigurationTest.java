@@ -48,6 +48,8 @@ public class SaveConfigurationTest extends APVPluginTest {
 		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
 		results.append(System.lineSeparator()).append(System.lineSeparator());
 		
+		results.append(parent.getConfig());
+		
 		results.append(getConfigForSystem("scenes"));
 		results.append(getConfigForSystem("liked-scenes"));
 		results.append(getConfigForSystem("backgrounds"));

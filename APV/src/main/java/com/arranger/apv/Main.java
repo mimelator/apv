@@ -685,6 +685,7 @@ public class Main extends PApplet {
 		//Constants
 		addConstant(buffer, "controlMode", getCurrentControlMode().name());
 		addConstant(buffer, "fullScreen", String.valueOf(getConfigurator().getRootConfig().getBoolean("apv.fullScreen")));
+		addConstant(buffer, "scrambleSystems", String.valueOf(getConfigurator().getRootConfig().getBoolean("apv.scrambleSystems")));
 		addConstant(buffer, "screen.width", String.valueOf(width));
 		addConstant(buffer, "screen.height", String.valueOf(height));		
 		
