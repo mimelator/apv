@@ -26,6 +26,11 @@ public class Tree extends Scene {
 	}
 	
 	@Override
+	public char getHotKey() {
+		return 't';
+	}
+	
+	@Override
 	public boolean isNormal() {
 		return false;
 	}

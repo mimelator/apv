@@ -45,6 +45,10 @@ public class Scene extends ShapeSystem {
 		this.filter = filter;
 	}
 	
+	public char getHotKey() {
+		return '0';
+	}
+	
 	@Override
 	public String getConfig() {
 		return String.format("{%1s : [%2s, %3s, %4s, %5s]}", getName(),

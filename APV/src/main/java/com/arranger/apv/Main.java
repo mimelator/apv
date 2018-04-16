@@ -189,6 +189,21 @@ public class Main extends PApplet {
 	public CONTROL_MODES getCurrentControlMode() {
 		return currentControlMode;
 	}
+	
+	public void setNextScene(Scene scene) {
+		//update the sceneIndex
+		for (int index = 0; index < scenes.size(); index++) {
+			if (scene.equals(scenes.get(index))) {
+				sceneIndex = index;
+				return;
+			}
+		}
+		throw new RuntimeException("Unable to find the nextScene");
+	}
+	
+	public Scene getCurrentScene() {
+		return currentScene;
+	}
 
 	public List<APVPlugin> getListeners() {
 		return listeners;
@@ -255,6 +270,10 @@ public class Main extends PApplet {
 	public List<Scene> getLikedScenes() {
 		return likedScenes;
 	}	
+	
+	public List<Scene> getScenes() {
+		return scenes;
+	}
 	
 	public void addSettingsMessage(String msg) {
 		settingsDisplay.addSettingsMessage(msg);
@@ -364,8 +383,6 @@ public class Main extends PApplet {
 				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
 		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
-		cs.registerCommand('e', "Scenes", "Cycles through the scenes (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) sceneIndex--; else sceneIndex++;});
 		
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());

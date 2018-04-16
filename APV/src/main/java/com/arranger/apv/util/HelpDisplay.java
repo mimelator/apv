@@ -35,9 +35,9 @@ public class HelpDisplay extends APVPlugin {
 			});
 		});
 		
-		//add custom CommandSystem msg
-		// If this situation happens again, i'll need to add another visitor interface like above
-		messages.add("~: MessageEntry: Updates the Next message that the Marquee-type listener will display");
+		for (String m : commandSystem.getInterceptorHelpMessages()) {
+			messages.add(m);
+		}
 		
 		List<String> sortedMessages = new ArrayList<String>(messages);
 		sortedMessages.sort(Comparator.naturalOrder());

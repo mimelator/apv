@@ -5,24 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.arranger.apv.cmd.MessageModeInterceptor;
+import com.arranger.apv.cmd.SceneSelectInterceptor;
+
 import processing.event.KeyEvent;
 
 public class CommandSystem extends APVPlugin {
 	
-	private static final char MESSAGE_ENTRY_KEY = '~';
+	
 	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
 	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
-	protected List<MessageHandler> messageHandlers = new ArrayList<MessageHandler>();
 	
+	private MessageModeInterceptor messageModeInterceptor;
+	private SceneSelectInterceptor sceneSelectInterceptor;
 	private APVCommand lastCommand;
-	private boolean isMessageEntryMode = false;
-	private StringBuffer messageText;
 	
 	@FunctionalInterface
 	public static interface IVisitor {
 		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
 	}
-	
 	
 	public void visitCommands(boolean isKeyCommands, IVisitor visitor) {
 		if (isKeyCommands) {
@@ -34,9 +35,27 @@ public class CommandSystem extends APVPlugin {
 
 	public CommandSystem(Main parent) {
 		super(parent);
+		messageModeInterceptor = new MessageModeInterceptor(parent);
+		sceneSelectInterceptor = new SceneSelectInterceptor(parent);
 		parent.registerMethod("keyEvent", this);
 	}
 	
+	public MessageModeInterceptor getMessageModeInterceptor() {
+		return messageModeInterceptor;
+	}
+	
+	public SceneSelectInterceptor getSceneSelectInterceptor() {
+		return sceneSelectInterceptor;
+	}
+	
+	public String [] getInterceptorHelpMessages() {
+		String [] results = new String[] {
+			messageModeInterceptor.getHelpText(),
+			sceneSelectInterceptor.getHelpText(),	
+		};
+		return results;
+	}
+
 	public void registerCommand(int key, String name, String helpText, CommandHandler handler) {
 		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
 		List<APVCommand> list = keyCommands.get(key);
@@ -58,17 +77,17 @@ public class CommandSystem extends APVPlugin {
 		list.add(apvCommand);
 	}
 	
-	public void registerMessageListeners(MessageHandler handler) {
-		messageHandlers.add(handler);
-	}
-	
 	public void keyEvent(KeyEvent keyEvent) {
 		if (keyEvent.getAction() != KeyEvent.RELEASE) {
 			return;
 		}
 		
 		char key = keyEvent.getKey();
-		if (isMessageMode(key)) {
+		if (messageModeInterceptor.intercept(key)) {
+			return;
+		}
+		
+		if (sceneSelectInterceptor.intercept(key)) {
 			return;
 		}
 		
@@ -86,32 +105,7 @@ public class CommandSystem extends APVPlugin {
 			lastCommand = list.get(0);
 		}
 	}
-
-	protected boolean isMessageMode(char key) {
-		if (key == MESSAGE_ENTRY_KEY) {
-			if (isMessageEntryMode) {
-				onMessage(messageText.toString());
-			} else {
-				//brand new
-				messageText = new StringBuffer();
-			}
-			isMessageEntryMode = !isMessageEntryMode;
-			return true;
-		}
-		
-		if (isMessageEntryMode) {
-			if (key != 65535) { //Don't understand what meta character i should be looking for
-				messageText.append(String.valueOf(key));
-			}
-			return true;
-		}
-		
-		return false;
-	}
 	
-	protected void onMessage(String text) {
-		messageHandlers.stream().forEach(e -> e.onMessage(text));
-	}
 	
 	@FunctionalInterface
 	public static interface CommandHandler {
