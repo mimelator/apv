@@ -37,10 +37,10 @@ import com.arranger.apv.control.Perlin;
 import com.arranger.apv.control.Snap;
 import com.arranger.apv.factory.CircleImageFactory;
 import com.arranger.apv.factory.DotFactory;
+import com.arranger.apv.factory.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.factory.SpriteFactory;
 import com.arranger.apv.factory.SquareFactory;
 import com.arranger.apv.factory.StarFactory;
-import com.arranger.apv.factory.ParametricFactory.HypocycloidFactory;
 import com.arranger.apv.filter.BlendModeFilter;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.PulseShakeFilter;
@@ -68,7 +68,6 @@ import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.systems.lite.LightWormSystem;
 import com.arranger.apv.systems.lite.PixelAttractor;
 import com.arranger.apv.systems.lite.PlasmaSystem;
-import com.arranger.apv.systems.lite.ShowerSystem;
 import com.arranger.apv.systems.lite.Spirograph;
 import com.arranger.apv.systems.lite.SpraySpark;
 import com.arranger.apv.systems.lite.TwistedLines;
@@ -108,7 +107,6 @@ public static Map<String, Class<?>> CLASS_MAP = new HashMap<String, Class<?>>();
 		LightWormSystem.class,
 		ScribblerShapeSystem.class,
 		GridShapeSystem.class,
-		ShowerSystem.class,
 		PlasmaSystem.class,
 		StarWebSystem.class,
 		GravitySystem.class,
