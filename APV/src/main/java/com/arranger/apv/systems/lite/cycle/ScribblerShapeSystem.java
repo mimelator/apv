@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FFTAnalysis;
 
 import processing.core.PApplet;
 
@@ -19,21 +20,40 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 	private static final float MAX_THETA = .2f;//0.1f;
 	private static final float MAX_VELOCITY = 5;//2.5f;
 	private static final float MAX_STROKE_WEIGHT = 1.5f;
+	private static final int MAX_LINE_WIDTH = 10;
+	private FFTAnalysis fftAnalysis;
+	private int maxLineWidth = MAX_LINE_WIDTH;
 	
 	public ScribblerShapeSystem(Main parent) {
-		super(parent);
+		this(parent, Main.NUMBER_PARTICLES, MAX_LINE_WIDTH);
 	}
 
 	public ScribblerShapeSystem(Main parent, int numNewObjects) {
+		this(parent, numNewObjects, MAX_LINE_WIDTH);
+	}
+	
+	public ScribblerShapeSystem(Main parent, int numNewObjects, int maxLineWidth) {
 		super(parent, numNewObjects);
+		this.maxLineWidth = maxLineWidth;
 	}
 	
 	public ScribblerShapeSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getInt(0, Main.NUMBER_PARTICLES));
+		
+		if (ctx.argList.size() == 2) {
+			this.maxLineWidth = ctx.getInt(1, MAX_LINE_WIDTH);
+		}
+	}
+	
+
+	@Override
+	public String getConfig() {
+		return String.format("{%1s : [%2s, %3s]}", getName(), numNewObjects, maxLineWidth);
 	}
 
 	@Override
 	public void setup() {
+		fftAnalysis = new FFTAnalysis(parent);
 		shouldCreateNewObjectsEveryDraw = false;
 		shouldRepopulateObjectsEveryDraw = true;
 		framesPerReset = SCRIBBLER_DEFAULT_FRAMES_PER_RESET;
@@ -46,6 +66,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 	}
 	
 	private class Scribbler extends LiteCycleObj {
+		
 		
 		float prevX = 0, prevY = 0;
 		float theta;
@@ -86,9 +107,16 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 			float curX = anchorX + (cos(theta) * distance);
 			float curY = anchorY + (sin(theta) * distance);
 
+			//Adjust the line width using the FFT
+			float lineWidth = distance * strokeWeight * 0.01f;
+			float maxAmp = fftAnalysis.getMaxAmp();
+			float ampScalar = PApplet.map(maxAmp, 0, 1, 1, maxLineWidth);
+			lineWidth *= ampScalar;
+			
 			parent.pushStyle();
 			parent.stroke(strokeColor.getRGB());
-			parent.strokeWeight(distance * strokeWeight * 0.01f);
+			
+			parent.strokeWeight(lineWidth);
 			parent.line(prevX, prevY, curX, curY); //TODO Explore using ShapeFactory
 			parent.popStyle();
 
