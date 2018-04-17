@@ -11,9 +11,11 @@ public class FrameStrober extends APVPlugin {
 	public FrameStrober(Main parent) {
 		super(parent);
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('a', "SkipFrame Rate", "Increases/Decreases the frames to skip (hold shift to decrease)", 
-				event -> {if (event.isShiftDown()) skipNFrames-- ; else skipNFrames++;});
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand('a', "SkipFrame Rate", "Increases/Decreases the frames to skip (hold shift to decrease)", 
+					event -> {if (event.isShiftDown()) skipNFrames-- ; else skipNFrames++;});
+		});
 	}
 
 	public int getSkipNFrames() {

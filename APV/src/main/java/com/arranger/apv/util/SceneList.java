@@ -18,16 +18,18 @@ public class SceneList extends APVPlugin {
 	public SceneList(Main parent) {
 		super(parent);
 		
-		//get the strings
-		ConfigList configList = parent.getConfigurator().getRootConfig().getList("song-list");
-		stringList = configList.stream().map(e -> (String)e.unwrapped()).collect(Collectors.toList());
+		parent.registerSetupListener(() -> {
+			// get the strings
+			ConfigList configList = parent.getConfigurator().getRootConfig().getList("song-list");
+			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
-		//for each string register a custom action
-		SceneSelectInterceptor ssi = parent.getCommandSystem().getSceneSelectInterceptor();
+			// for each string register a custom action
+			SceneSelectInterceptor ssi = parent.getCommandSystem().getSceneSelectInterceptor();
 
-		stringList.stream().forEach(s -> {
-			ssi.registerScene(c -> {
-				ssi.showMessageSceneWithText(s);
+			stringList.stream().forEach(s -> {
+				ssi.registerScene(c -> {
+					ssi.showMessageSceneWithText(s);
+				});
 			});
 		});
 	}

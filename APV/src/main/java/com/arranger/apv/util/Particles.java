@@ -13,9 +13,15 @@ public class Particles extends APVPlugin {
 	public Particles(Main parent) {
 		super(parent);
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('p', "Particles", "Increases/Decreases Number Particles",  
-				(event) -> {if (event.isShiftDown()) decrement(); else increment();});
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand('p', "Particles", "Increases/Decreases Number Particles", (event) -> {
+				if (event.isShiftDown())
+					decrement();
+				else
+					increment();
+			});
+		});
 	}
 
 	public float getPct() {

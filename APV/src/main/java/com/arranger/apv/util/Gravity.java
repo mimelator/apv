@@ -14,10 +14,17 @@ public class Gravity extends APVPlugin {
 	public Gravity(Main parent) {
 		super(parent);
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('g', "Gravity", "Increases/Decreases Gravity",
-				(event) -> {if (event.isShiftDown()) gravityIndex--; else gravityIndex++;});
-		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> gravityIndex = (int)parent.random(GRAVITY.length - 1));
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand('g', "Gravity", "Increases/Decreases Gravity", (event) -> {
+				if (event.isShiftDown())
+					gravityIndex--;
+				else
+					gravityIndex++;
+			});
+			cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things",
+					event -> gravityIndex = (int) parent.random(GRAVITY.length - 1));
+		});
 	}
 	
 	public float getCurrentGravity() {
