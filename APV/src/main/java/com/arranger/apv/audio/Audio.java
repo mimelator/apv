@@ -105,11 +105,10 @@ public class Audio extends APVPlugin {
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					//scale(sampsR, .5f);
-					freqDetector.detect(sampsL); //dont scale the freq just yet
 					floatScalar.scale(sampsL, scaleFactor); 
-					pulseDetector.detect(sampsL); //Mono amplitutde detection
-					fft.forward(source.mix);
+					freqDetector.detect(sampsL); 
+					pulseDetector.detect(sampsL); 
+					fft.forward(sampsL);
 				}
 			});
 		}

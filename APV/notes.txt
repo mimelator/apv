@@ -1,7 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-dyamic particle listener
+
 
 TODO:
 *****************************************************************************
@@ -12,7 +12,6 @@ TODO:
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
-* test Audio#scale
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 * number of particles could ebb and flow with the intensity of the music
