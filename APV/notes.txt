@@ -1,15 +1,18 @@
-BRANCH: auto-scene-mode
+BRANCH: panic-mode
 https://github.com/mimelator/apv
 
 
 
+Panic Mode '?'
+
+
 *****************************************************************************
 Document the rendering process and how they interact with the objects
-I Should be able to use the normal cycle commands f,t,b,o, etc... even in liked mode
+
 Should liked mode also capture: color,mouse?
 	Should there be two different versions of this mode.  1 just captures 4, the other mode captures all six traits of the Scene
+Shift-L to keep current liked scene active
 
-Panic mode?
 
 
 TODO: 

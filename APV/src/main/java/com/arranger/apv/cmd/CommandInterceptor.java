@@ -12,6 +12,10 @@ public abstract class CommandInterceptor extends APVPlugin {
 	}
 	
 	public abstract boolean intercept(char key);
-	
 	public abstract String getHelpText();
+	
+	
+	public void panic() {
+		active = false;
+	}
 }

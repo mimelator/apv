@@ -11,12 +11,12 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
 
-public class Monitor extends APVPlugin {
+public class PerformanceMonitor extends APVPlugin {
 
 	private static final int FRAME_RATE_THRESHOLD = 30;
 	private static final int MIN_THRESHOLD_ENTRIES = 3;
 	
-	public Monitor(Main parent) {
+	public PerformanceMonitor(Main parent) {
 		super(parent);
 	}
 

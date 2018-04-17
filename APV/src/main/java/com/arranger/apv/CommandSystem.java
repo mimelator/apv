@@ -37,6 +37,15 @@ public class CommandSystem extends APVPlugin {
 		return sceneSelectInterceptor;
 	}
 	
+	/**
+	 * Called from {@link Main#panic()}
+	 * Reset the interceptors
+	 */
+	public void panic() {
+		messageModeInterceptor.panic();
+		sceneSelectInterceptor.panic();
+	}
+	
 	public void invokeCommand(char cmdKey) {
 		keyEvent(keyEventHelper.createKeyEvent(cmdKey, null));
 	}

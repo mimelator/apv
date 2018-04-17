@@ -24,7 +24,7 @@ import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
-import com.arranger.apv.util.Monitor;
+import com.arranger.apv.util.PerformanceMonitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.SceneList;
@@ -91,7 +91,7 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Gravity gravity;
 	protected FrameStrober frameStrober;
-	protected Monitor monitor;
+	protected PerformanceMonitor monitor;
 	protected SettingsDisplay settingsDisplay;
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
@@ -140,7 +140,6 @@ public class Main extends PApplet {
 		PApplet.main(new String[] {Main.class.getName()});
 	}
 
-	@SuppressWarnings("unchecked")
 	public void settings() {
 		//can't load the settings until i load the configurator
 		//don't want to load the configurator until i load the logging
@@ -148,7 +147,7 @@ public class Main extends PApplet {
 		loggingConfig.configureLogging();
 		
 		configurator = new Configurator(this);
-		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
+		configureSwitches();
 		
 		Config rootConfig = configurator.getRootConfig();
 		boolean isFullScreen = rootConfig.getBoolean("apv.fullScreen");
@@ -158,7 +157,7 @@ public class Main extends PApplet {
 			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
 	}
-	
+
 	public SceneList getSceneList() {
 		return sceneList;
 	}
@@ -191,7 +190,7 @@ public class Main extends PApplet {
 		return commandSystem;
 	}
 	
-	public Monitor getMonitor() {
+	public PerformanceMonitor getMonitor() {
 		return monitor;
 	}
 	
@@ -344,7 +343,7 @@ public class Main extends PApplet {
 		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		monitor = new Monitor(this);
+		monitor = new PerformanceMonitor(this);
 		frameStrober = new FrameStrober(this);
 		sceneList = new SceneList(this);
 		
@@ -362,7 +361,7 @@ public class Main extends PApplet {
 		likedScenes = (List<Scene>)configurator.loadAVPPlugins("liked-scenes");
 		
 		//currentControlMode
-		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
+		initControlMode();
 
 		setupSystems(foregrounds);
 		setupSystems(backgrounds);
@@ -371,7 +370,7 @@ public class Main extends PApplet {
 		setupSystems(messages);
 		setupSystems(scenes);
 		setupSystems(likedScenes);
-		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extends the ShapeSystem
+		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extend ShapeSystem
 		
 		//processing hints
 		orientation(LANDSCAPE);
@@ -380,102 +379,7 @@ public class Main extends PApplet {
 		
 		setupListeners.forEach(sl -> sl.onSetupComplete());
 	}
-	
 
-
-	protected void initializeCommands() {
-		CommandSystem cs = commandSystem;
-		
-		registerNonFreezableSwitchCommand(helpSwitch, 'h');
-		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
-		registerNonFreezableSwitchCommand(likedScenesSwitch, 'l');
-		
-		registerSwitchCommand(foreGroundSwitch, '1');
-		registerSwitchCommand(backGroundSwitch, '2');
-		registerSwitchCommand(backDropSwitch, '3');
-		registerSwitchCommand(filtersSwitch, '4');
-		registerSwitchCommand(messagesSwitch, '5');
-		registerSwitchCommand(transitionSwitch, '6');
-		registerSwitchCommand(pulseListenerSwitch, '7');
-		registerSwitchCommand(frameStroberSwitch, '8');
-		registerSwitchCommand(videoCaptureSwitch, '9');
-		//not registering scrambleModeSwitch  It is a synthetic switch
-		
-		cs.registerCommand('f', "Foreground", "Cycles through the foregrounds", 
-				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
-		cs.registerCommand('b', "Background", "Cycles through the backgrounds", 
-				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
-		cs.registerCommand('o', "Backdrop", "Cycles through the backdrops", 
-				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
-		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
-		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
-		cs.registerCommand('c', "Colors", "Cycles through the colors (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
-		cs.registerCommand('n', "Transition", "Cycles through the transition (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
-		cs.registerCommand('m', "Message", "Cycles through the message (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
-		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
-		
-		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
-		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
-		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
-		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
-		
-		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", event -> likedSceneIndex++);
-		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", event -> likedSceneIndex--);
-		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
-		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
-		
-		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
-				(event) -> {
-					for (TransitionSystem sys : transitions) {
-						sys.incrementTransitionFrames();
-					}
-				});
-		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
-				(event) -> {
-					for (TransitionSystem sys : transitions) {
-						sys.decrementTransitionFrames();
-					}
-				});
-	}
-
-	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
-		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
-				"Toggles between enabling " + s.getName(), 
-				event -> s.toggleEnabled());
-	}
-	
-	protected void registerSwitchCommand(Switch s, char charCode) {
-		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
-									"Toggles between enabling or freezing " + s.getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
-									(event) -> {
-										if (event.isMetaDown()) {
-											s.toggleFrozen();
-										} else {
-											s.toggleEnabled();
-										}
-									});
-	}
-	
-	protected void cycleMode(boolean advance) {
-		if (advance) {
-			currentControlMode = getControl().getControlMode().getNext();
-		} else {
-			currentControlMode = getControl().getControlMode().getPrevious();
-		}
-	}
-
-	protected void setupSystems(List<? extends ShapeSystem> systems) {
-		for (ShapeSystem system : systems) {
-			system.setup();
-		}
-	}
-	
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
 		fileHelper.getFullPath(fileName);
@@ -504,53 +408,13 @@ public class Main extends PApplet {
 		}
 	}
 	
-	protected void doScramble() {
-		//mess it all up, except for transitions which were already scrambled
-		if (!likedScenesSwitch.isEnabled()) {
-			if (!foreGroundSwitch.isFrozen()) {
-				foregroundIndex += random(foregrounds.size() - 1);
-			}
-			
-			if (!backGroundSwitch.isFrozen()) {
-				backgroundIndex += random(backgrounds.size() - 1);
-			}
-			
-			if (!backDropSwitch.isFrozen()) {
-				backDropIndex += random(backDrops.size() - 1);
-			}
-			
-			if (!filtersSwitch.isFrozen()) {
-				filterIndex += random(filters.size() - 1);
-			}
-			
-			if (!messagesSwitch.isFrozen()) {
-				messageIndex += random(messages.size());
-			}
-		}
-		
-		locationIndex += random(locations.size() - 1);
-		colorIndex += random(colors.size() - 1);
-		
-		//send out a cool message about the new system
-		if (messagesSwitch.isEnabled()) {
-			List<String> msgs = new ArrayList<String>();
-			if (backDropSwitch.isEnabled()) {
-				msgs.add(getBackDrop().getDisplayName());
-			}
-
-			if (foreGroundSwitch.isEnabled()) {
-				msgs.add(getForeground().getDisplayName());
-			}
-			
-			if (backGroundSwitch.isEnabled()) {
-				msgs.add(getBackground().getDisplayName());
-			}
-			
-			sendMessage(msgs.toArray(new String[msgs.size()]));
-		}
-		
-		//reset the flag
-		scrambleMode = false;
+	/**
+	 * Reset all switches and control mode
+	 */
+	public void panic() {
+		resetSwitches();
+		initControlMode();
+		commandSystem.panic();
 	}
 	
 	public void sendMessage(String [] messages) {
@@ -645,6 +509,15 @@ public class Main extends PApplet {
 		}
 	}
 	
+	public void drawSystem(ShapeSystem s, String debugName) {
+		pushStyle();
+		pushMatrix();
+		settingsDisplay.debugSystem(s, debugName);
+		s.draw();
+		popMatrix();
+		popStyle();
+	}
+	
 	protected TransitionSystem prepareTransition(boolean forceStart) {
 		TransitionSystem transition = null;
 		if (transitionSwitch.isEnabled()) {
@@ -666,15 +539,150 @@ public class Main extends PApplet {
 		}
 	}
 	
-	public void drawSystem(ShapeSystem s, String debugName) {
-		pushStyle();
-		pushMatrix();
-		settingsDisplay.debugSystem(s, debugName);
-		s.draw();
-		popMatrix();
-		popStyle();
+	protected void doScramble() {
+		//mess it all up, except for transitions which were already scrambled
+		if (!likedScenesSwitch.isEnabled()) {
+			if (!foreGroundSwitch.isFrozen()) {
+				foregroundIndex += random(foregrounds.size() - 1);
+			}
+			
+			if (!backGroundSwitch.isFrozen()) {
+				backgroundIndex += random(backgrounds.size() - 1);
+			}
+			
+			if (!backDropSwitch.isFrozen()) {
+				backDropIndex += random(backDrops.size() - 1);
+			}
+			
+			if (!filtersSwitch.isFrozen()) {
+				filterIndex += random(filters.size() - 1);
+			}
+			
+			if (!messagesSwitch.isFrozen()) {
+				messageIndex += random(messages.size());
+			}
+		}
+		
+		locationIndex += random(locations.size() - 1);
+		colorIndex += random(colors.size() - 1);
+		
+		//send out a cool message about the new system
+		if (messagesSwitch.isEnabled()) {
+			List<String> msgs = new ArrayList<String>();
+			if (backDropSwitch.isEnabled()) {
+				msgs.add(getBackDrop().getDisplayName());
+			}
+
+			if (foreGroundSwitch.isEnabled()) {
+				msgs.add(getForeground().getDisplayName());
+			}
+			
+			if (backGroundSwitch.isEnabled()) {
+				msgs.add(getBackground().getDisplayName());
+			}
+			
+			sendMessage(msgs.toArray(new String[msgs.size()]));
+		}
+		
+		//reset the flag
+		scrambleMode = false;
 	}
 
+	protected void initControlMode() {
+		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void configureSwitches() {
+		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
+	}
+	
+	protected void initializeCommands() {
+		CommandSystem cs = commandSystem;
+		
+		registerNonFreezableSwitchCommand(helpSwitch, 'h');
+		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
+		registerNonFreezableSwitchCommand(likedScenesSwitch, 'l');
+		
+		registerSwitchCommand(foreGroundSwitch, '1');
+		registerSwitchCommand(backGroundSwitch, '2');
+		registerSwitchCommand(backDropSwitch, '3');
+		registerSwitchCommand(filtersSwitch, '4');
+		registerSwitchCommand(messagesSwitch, '5');
+		registerSwitchCommand(transitionSwitch, '6');
+		registerSwitchCommand(pulseListenerSwitch, '7');
+		registerSwitchCommand(frameStroberSwitch, '8');
+		registerSwitchCommand(videoCaptureSwitch, '9');
+		//not registering scrambleModeSwitch  It is a synthetic switch
+		
+		cs.registerCommand('f', "Foreground", "Cycles through the foregrounds", 
+				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
+		cs.registerCommand('b', "Background", "Cycles through the backgrounds", 
+				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
+		cs.registerCommand('o', "Backdrop", "Cycles through the backdrops", 
+				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
+		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
+		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
+		cs.registerCommand('c', "Colors", "Cycles through the colors (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
+		cs.registerCommand('n', "Transition", "Cycles through the transition (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
+		cs.registerCommand('m', "Message", "Cycles through the message (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
+		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
+				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+		
+		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
+		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
+		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
+		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
+		
+		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", event -> likedSceneIndex++);
+		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", event -> likedSceneIndex--);
+		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
+		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
+		
+		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
+				(event) -> {transitions.forEach(s -> {s.incrementTransitionFrames();});});
+		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
+				(event) -> {transitions.forEach(s -> {s.decrementTransitionFrames();});});
+	}
+
+	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
+		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
+				"Toggles between enabling " + s.getName(), 
+				event -> s.toggleEnabled());
+	}
+	
+	protected void registerSwitchCommand(Switch s, char charCode) {
+		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
+									"Toggles between enabling or freezing " + s.getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
+									(event) -> {
+										if (event.isMetaDown()) {
+											s.toggleFrozen();
+										} else {
+											s.toggleEnabled();
+										}
+									});
+	}
+	
+	protected void cycleMode(boolean advance) {
+		if (advance) {
+			currentControlMode = getControl().getControlMode().getNext();
+		} else {
+			currentControlMode = getControl().getControlMode().getPrevious();
+		}
+	}
+
+	protected void setupSystems(List<? extends ShapeSystem> systems) {
+		for (ShapeSystem system : systems) {
+			system.setup();
+		}
+	}
+	
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
 		return list.get(Math.abs(index) % list.size());
 	}
@@ -701,9 +709,15 @@ public class Main extends PApplet {
 		scrambleModeSwitch = switches.get("Scramble");
 	}
 	
-	/**
-	 * collect: Constants
-	 */
+	@SuppressWarnings("unchecked")
+	protected void resetSwitches() {
+		List<Switch> configSwitches = (List<Switch>)configurator.loadAVPPlugins("switches");
+		configSwitches.forEach(cs -> {
+			Switch s = switches.get(cs.name);
+			s.setState(cs.state);
+		});
+	}
+	
 	public String getConfig() {
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
 		

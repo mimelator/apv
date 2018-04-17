@@ -25,7 +25,7 @@ public class MessageModeInterceptor extends CommandInterceptor {
 	public String getHelpText() {
 		return "~: MessageEntry: Updates the Next message that the Marquee-type listener will display";
 	}
-
+	
 	@Override
 	public boolean intercept(char key) {
 		if (key == MESSAGE_ENTRY_KEY) {
