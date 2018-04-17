@@ -1,13 +1,13 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+dyamic particle listener
+need to fix FFTAnalysis#map
 
-
-*****************************************************************************
 TODO:
+*****************************************************************************
 * Should liked mode also capture: color, mouse?
 * Should there be two different versions of this mode.  1 just captures 4, the other mode captures all six traits of the Scene 
-* Document the rendering process and how they interact with the objects
 * Shift-L to keep current liked scene active
 * Add documentation to each plugin to describe it's arguments
 * More animations like light worm
@@ -19,33 +19,14 @@ TODO:
 * number of particles could ebb and flow with the intensity of the music
 *****************************************************************************
 		
--Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		
+	
 
-*****************************************************************************
 Build & Release to local artifactory and github
-mvn clean
+*****************************************************************************
 mvn package
 mvn release:clean
 mvn release:prepare
 mvn release:perform
 *****************************************************************************
 
-*****************************************************************************
-When applying a custom application.conf, ensure a script named application.conf is in the same directory
-as the APV jar
-eg: java -cp .:apv.jar com.arranger.apv.Main
-
-the '.' at the beginning of the classpath tells the class loader to look in the current directory for resources.
-*****************************************************************************
-
-*****************************************************************************
-Overriding properties on the command line example
--Dapv.fullScreen=false
-eg: java -Dapv.fullScreen=false -cp .:apv.jar com.arranger.apv.Main
-*****************************************************************************
-
-*****************************************************************************
-Running on windows:
-Install Java 8
-Intel?  https://www.drivereasy.com/knowledge/solved-cant-find-the-name-of-intel-icd-opengl-driver/
-*****************************************************************************
+-Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5	

@@ -20,7 +20,7 @@ public class TwistedLines extends LiteShapeSystem {
 	private static final int LOUD_AMP = 3;
 	private static final int QUIET_AMP = 0;
 	private static final int SMALL_HEIGHT = 25;
-	private static final int LARGE_HEIGHT = 200;
+	private static final int LARGE_HEIGHT = 250;
 	
 	protected FFTAnalysis fftAnalysis;
 	Color [] colors = new Color[NUM_LINES];

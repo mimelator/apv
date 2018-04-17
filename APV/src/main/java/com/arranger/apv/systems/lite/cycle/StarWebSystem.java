@@ -19,7 +19,7 @@ import processing.core.PVector;
  */
 public class StarWebSystem extends LiteCycleShapeSystem {
 
-	private static final float MAX_AMP_SCALAR = 1.1f;
+	private static final float MAX_AMP_SCALAR = 3f;//1.1f;
 	
 	private static final int LARGE_RADIUS = 150;
 	private static final int SMALL_RADIUS = 50;

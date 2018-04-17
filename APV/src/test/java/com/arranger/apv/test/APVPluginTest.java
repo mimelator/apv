@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,6 +29,7 @@ import com.arranger.apv.util.PeekIterator;
 import com.arranger.apv.util.SceneList;
 
 import ddf.minim.analysis.BeatDetect;
+import ddf.minim.analysis.FFT;
 import processing.core.PShape;
 
 public abstract class APVPluginTest {
@@ -46,18 +44,9 @@ public abstract class APVPluginTest {
 	protected int frameIndexEnd;
 	protected PeekIterator<Integer> frameIterator;
 	
-	/**
-	 * Not using java.util.logging for tests just yet
-	 */
 	protected void debug(String msg) {
 		System.out.println(msg);
 	}
-	
-	
-    @BeforeAll
-    static void beforeAll() {
-        //debug("Before all test methods");
-    }
  
     @BeforeEach
     void beforeEach() {
@@ -74,6 +63,7 @@ public abstract class APVPluginTest {
         Audio audio = Mockito.mock(Audio.class);
         BeatInfo beatInfo = Mockito.mock(BeatInfo.class);
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
+        FFT fft = Mockito.mock(FFT.class);
         APVPulseListener apvPulseListener = Mockito.mock(APVPulseListener.class);
         CommandSystem commandSystem = Mockito.mock(CommandSystem.class);
         MessageModeInterceptor messageModeInterceptor = Mockito.mock(MessageModeInterceptor.class);
@@ -83,6 +73,7 @@ public abstract class APVPluginTest {
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
         when(audio.getBeatInfo()).thenReturn(beatInfo);
+        when(beatInfo.getFFT()).thenReturn(fft);
         assert(parent.getAudio().getBeatInfo() != null);
         
         //mock audio's pulse detector and more
@@ -106,16 +97,6 @@ public abstract class APVPluginTest {
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);
         when(commandSystem.getSceneSelectInterceptor()).thenReturn(sceneSelectInterceptor);
         when(sceneList.getConfig()).thenCallRealMethod();
-    }
-
-	@AfterEach
-    void afterEach() {
-        //debug("After each test method");
-    }
- 
-    @AfterAll
-    static void afterAll() {
-        //debug("After all test methods");
     }
     
     protected abstract void setFrameIndexes();

@@ -24,12 +24,12 @@ import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
-import com.arranger.apv.util.PerformanceMonitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
+import com.arranger.apv.util.PerformanceMonitor;
 import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
-import com.arranger.apv.util.SplineInterpolator;
+import com.arranger.apv.util.SplineHelper;
 import com.arranger.apv.util.VersionInfo;
 import com.typesafe.config.Config;
 
@@ -100,6 +100,7 @@ public class Main extends PApplet {
 	protected VersionInfo versionInfo;
 	protected FileHelper fileHelper;
 	protected SceneList sceneList;
+	private SplineHelper splineHelper;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -323,8 +324,7 @@ public class Main extends PApplet {
 	}
 	
 	public float mapEx(float value, float start, float end, float start1, float end1) {
-		SplineInterpolator si = new SplineInterpolator(start, end, start1, end1);
-		return (float)si.interpolate(value);
+		return splineHelper.map(value, start, end, start1, end1);
 	}
 	
 	public float oscillate(float low, float high, float oscSpeed) {
@@ -353,6 +353,7 @@ public class Main extends PApplet {
 		perfMonitor = new PerformanceMonitor(this);
 		frameStrober = new FrameStrober(this);
 		sceneList = new SceneList(this);
+		splineHelper = new SplineHelper(this);
 		
 		locations = (List<LocationSystem>)configurator.loadAVPPlugins("locations");
 		colors = (List<ColorSystem>)configurator.loadAVPPlugins("colors");

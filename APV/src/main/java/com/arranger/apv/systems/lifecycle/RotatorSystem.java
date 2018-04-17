@@ -79,9 +79,6 @@ public class RotatorSystem extends LifecycleSystem {
 			rotationSpeed += rotationScalar;
 			heading += rotationSpeed * uniqueOffset;
 			
-//			float width = shape.getWidth();
-//			float height = shape.getHeight();
-			
 			shape.rotate(PApplet.radians(heading));
 			shape.translate((float)p.getX(), (float)p.getY()); //Starting point
 			shape.translate(dist.x, dist.y); //move it along

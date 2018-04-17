@@ -6,9 +6,12 @@ import com.arranger.apv.Main;
 import ddf.minim.analysis.FFT;
 
 public class FFTAnalysis extends APVPlugin {
+	
+	private SplineHelper splineHelper;
 
 	public FFTAnalysis(Main parent) {
 		super(parent);
+		splineHelper = new SplineHelper(parent);
 	}
 
 	boolean invert = false;
@@ -22,10 +25,8 @@ public class FFTAnalysis extends APVPlugin {
 		return mappedAmp;
 	}
 	
-	
 	public float getMappedAmp(float start, float end, float start1, float end1) {
-		SplineInterpolator si = new SplineInterpolator(start, end, start1, end1);
-		return (float)si.interpolate(getMaxAmp());
+		return splineHelper.map(getMaxAmp(), start, end, start1, end1);
 	}
 	
 	public float getMaxAmp() {

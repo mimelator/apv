@@ -40,6 +40,9 @@ public class SplineInterpolator {
         }
     }
 
+    /**
+     * Expects a value between 0 and 1
+     */
     public double interpolate(double fraction) {
         int low = 1;
         int high = normalisedCurve.size() - 1;
