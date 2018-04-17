@@ -1,7 +1,9 @@
 package com.arranger.apv.cmd;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,12 +41,17 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 			parent.getScenes().stream().forEach(s -> {
 				registerScene(s.getHotKey(), defaultHandler);
 			});
+			
+			initialize();
 		});
 	}
 	
 	@Override
 	public String getHelpText() {
-		String result = handlerMap.keySet().stream().
+		List<Character> keys = new ArrayList<Character>(handlerMap.keySet());
+		keys.sort(null);
+		
+		String result = keys.stream().
 				map(String::valueOf).
 				collect(Collectors.joining(", "));
 		
@@ -60,7 +67,6 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 	}
 	
 	public void showMessageSceneWithText(String text) {
-		ensureInit();
 		Marquee marquee = (Marquee)sceneMap.get('m');
 		marquee.setText(text);
 		parent.setNextScene(marquee);
@@ -112,15 +118,13 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 	 * issue the commands to switch a scene
 	 */
 	protected void switchToScene(char sceneKey) {
-		ensureInit();
-		
 		Scene scene = sceneMap.get(sceneKey);
 		if (scene != null) {
 			parent.setNextScene(scene);
 		}
 	}
 	
-	protected void ensureInit() {
+	protected void initialize() {
 		if (sceneMap != null) {
 			return;
 		}
