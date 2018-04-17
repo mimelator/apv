@@ -28,13 +28,15 @@ public abstract class PathLocationSystem extends LocationSystem {
 		this.secondsPerPath = getLoopInSeconds();
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
-		
-		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE); 
 		this.splitter = splitter;
+		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE);
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
-		cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", event -> reverser.reverse());
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
+			cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things",
+					event -> reverser.reverse());
+		});
 	}
 	
 	@Override

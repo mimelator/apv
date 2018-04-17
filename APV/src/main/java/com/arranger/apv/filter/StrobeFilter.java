@@ -21,9 +21,11 @@ public class StrobeFilter extends Filter {
 		this.flashDuration = flashDuration;
 		
 		//register
-		parent.getPulseListener().registerPulseListener(() -> {
-			onNewPulse();
-		}, PULSES_TO_SKIP);
+		parent.registerSetupListener(() -> {
+					parent.getPulseListener().registerPulseListener(() -> {
+						onNewPulse();
+				}, PULSES_TO_SKIP);
+		});
 	}
 	
 	public StrobeFilter(Configurator.Context ctx) {

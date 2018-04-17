@@ -18,6 +18,7 @@ public class CircularMessage extends MessageSystem {
 	
 	public CircularMessage(Main parent) {
 		super(parent);
+		//TODO Use Font Helper
 		font = parent.createFont("Arial Bold", 20, true);
 	}
 

@@ -19,8 +19,10 @@ public class SpraySpark extends LiteShapeSystem {
 	public SpraySpark(Main parent) {
 		super(parent);
 		
-		parent.getPulseListener().registerPulseListener(() -> {
-			spark();
+		parent.registerSetupListener(() -> {
+			parent.getPulseListener().registerPulseListener(() -> {
+				spark();
+			});
 		});
 	}
 

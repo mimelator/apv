@@ -83,7 +83,7 @@ public class Main extends PApplet {
 	protected Map<String, Switch> switches;
 	protected List<ControlSystem> controls;
 	protected CONTROL_MODES currentControlMode;
-	protected List<APVPlugin> listeners;
+	protected List<APVPlugin> pulseListeners;
 	
 	//Useful helper classes
 	protected Configurator configurator;
@@ -226,8 +226,8 @@ public class Main extends PApplet {
 		return currentScene;
 	}
 
-	public List<APVPlugin> getListeners() {
-		return listeners;
+	public List<APVPlugin> getPulseListeners() {
+		return pulseListeners;
 	}
 	
 	public ColorSystem getColor() {
@@ -357,7 +357,7 @@ public class Main extends PApplet {
 		filters = (List<Filter>)configurator.loadAVPPlugins("filters");
 		transitions = (List<TransitionSystem>)configurator.loadAVPPlugins("transitions");
 		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
-		listeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
+		pulseListeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
 		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes", false);
 		likedScenes = (List<Scene>)configurator.loadAVPPlugins("liked-scenes");
 		

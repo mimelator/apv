@@ -20,9 +20,11 @@ public class Spirograph extends LiteShapeSystem {
 	public Spirograph(Main parent) {
 		super(parent);
 		
-		parent.getPulseListener().registerPulseListener(()->{
-			initialize(true);
-		}, 16); //skip every 16 pulses
+		parent.registerSetupListener(() -> {
+			parent.getPulseListener().registerPulseListener(() -> {
+				initialize(true);
+			}, 16); //skip every 16 pulses
+		});
 	}
 
 	@Override

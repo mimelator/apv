@@ -17,9 +17,11 @@ public class PixelAttractor extends LiteShapeSystem {
 
 	public PixelAttractor(Main parent) {
 		super(parent);
-		parent.getPulseListener().registerPulseListener(()->{
-			setup();
-		}, 4); //skip every 4 pulses
+		parent.registerSetupListener(() -> {
+			parent.getPulseListener().registerPulseListener(() -> {
+				setup();
+			}, 4); //skip every 4 pulses
+		});
 	}
 
 	@Override

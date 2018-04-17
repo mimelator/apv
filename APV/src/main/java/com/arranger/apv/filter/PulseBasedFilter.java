@@ -10,7 +10,9 @@ public abstract class PulseBasedFilter extends Filter {
 
 	public PulseBasedFilter(Main parent) {
 		super(parent);
-		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
+		parent.registerSetupListener(() -> {
+			pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
+		});
 	}
 
 }

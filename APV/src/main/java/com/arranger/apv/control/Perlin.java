@@ -59,9 +59,13 @@ public class Perlin extends PulseListeningControlSystem {
 		super(parent);
 		resetLocator(1);
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode", event -> incWalker());
-		cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode", event -> decWalker());
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode",
+					event -> incWalker());
+			cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode",
+					event -> decWalker());
+		});
 	}
 
 	

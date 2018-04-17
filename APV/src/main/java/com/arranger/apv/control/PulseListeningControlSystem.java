@@ -16,9 +16,13 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 		
 		autoSkipPulseListener = new PulseListener(parent, getDefaultPulsesToSkip());
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in auto/perlin mode", event -> autoSkipPulseListener.incrementPulsesToSkip());
-		cs.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in auto/perlin mode", event -> autoSkipPulseListener.deccrementPulsesToSkip());
+		parent.registerSetupListener(() -> {
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in auto/perlin mode",
+					event -> autoSkipPulseListener.incrementPulsesToSkip());
+			cs.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in auto/perlin mode",
+					event -> autoSkipPulseListener.deccrementPulsesToSkip());
+		});
 	}
 
 	protected abstract int getDefaultPulsesToSkip();

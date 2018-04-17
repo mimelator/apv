@@ -33,9 +33,11 @@ public class Marquee extends Scene {
 	public Marquee(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, "Hello World"));
 		
-		parent.getCommandSystem().getMessageModeInterceptor().registerMessageListeners(msg -> {
-			text = msg.trim();
-			reset();
+		parent.registerSetupListener(() -> {
+			parent.getCommandSystem().getMessageModeInterceptor().registerMessageListeners(msg -> {
+				text = msg.trim();
+				reset();
+			});
 		});
 	}
 	
