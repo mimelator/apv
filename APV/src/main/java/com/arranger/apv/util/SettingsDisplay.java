@@ -10,6 +10,8 @@ import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.Switch;
+import com.arranger.apv.archive.ui.PopupWindow;
+import com.arranger.apv.archive.ui.PopupWindow.WindowTextPrinter;
 
 import processing.core.PApplet;
 
@@ -21,9 +23,19 @@ public class SettingsDisplay extends APVPlugin {
 	public static final int TEXT_INDEX = 10;
 	protected List<String> settingsMessages = new ArrayList<String>();
 	
-	
 	public SettingsDisplay(Main parent) {
 		super(parent);
+		
+		parent.registerSetupListener(() -> {
+				parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
+					"Popup window to display Settings", 
+					e -> createSettingsWindow());
+		});
+	}
+	
+	public void reset() {
+		settingsMessages.clear();
+		addPrimarySettingsMessages();
 	}
 	
 	public void addSettingsMessage(String msg) {
@@ -52,11 +64,7 @@ public class SettingsDisplay extends APVPlugin {
 		}
 	}
 	
-	public void prepareSettingsMessages() {
-		settingsMessages.clear();
-	}
-	
-	public void addPrimarySettingsMessages() {
+	protected void addPrimarySettingsMessages() {
 		Main p = parent;
 		
 		addSettingsMessage("---------System Settings-------");
@@ -91,4 +99,11 @@ public class SettingsDisplay extends APVPlugin {
 		drawText(settingsMessages);
 	}
 	
+	protected void createSettingsWindow() {
+		final WindowTextPrinter printer = new PopupWindow(parent).launchWindow("settings", 
+				(int)(parent.width / 6), (int)(parent.height * .8f));
+		parent.registerDrawListener(() -> {
+			printer.printText(settingsMessages);
+		});
+	}
 }

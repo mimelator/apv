@@ -1,9 +1,6 @@
-BRANCH: panic-mode
+BRANCH: master
 https://github.com/mimelator/apv
 
-
-
-Panic Mode '?'
 
 
 *****************************************************************************
@@ -11,12 +8,12 @@ Document the rendering process and how they interact with the objects
 
 Should liked mode also capture: color,mouse?
 	Should there be two different versions of this mode.  1 just captures 4, the other mode captures all six traits of the Scene
-Shift-L to keep current liked scene active
+
 
 
 
 TODO: 
-* Auto scene mode: list of messages
+* Shift-L to keep current liked scene active
 * Popout windows for the settings?
 * Add documentation to each plugin to describe it's arguments
 * More animations like light worm

@@ -42,7 +42,6 @@ public class Main extends PApplet {
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
-	
 	public static final int NUMBER_PARTICLES = 1000;
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
@@ -126,9 +125,13 @@ public class Main extends PApplet {
 	private Scene currentScene;
 
 	private List<SetupListener> setupListeners = new ArrayList<SetupListener>();
-	
 	public void registerSetupListener(SetupListener sl) {
 		setupListeners.add(sl);
+	}
+	
+	private List<DrawListener> drawListeners = new ArrayList<DrawListener>();
+	public void registerDrawListener(DrawListener dl) {
+		drawListeners.add(dl);
 	}
 	
 	@FunctionalInterface
@@ -136,8 +139,13 @@ public class Main extends PApplet {
 		void onSetupComplete();
 	}
 	
+	@FunctionalInterface
+	public static interface DrawListener {
+		void onDrawComplete();
+	}
+	
 	public static void main(String[] args) {
-		PApplet.main(new String[] {Main.class.getName()});
+		PApplet.main(Main.class, new String[0]);
 	}
 
 	public void settings() {
@@ -433,10 +441,7 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (showSettingsSwitch.isEnabled()) {
-			settingsDisplay.prepareSettingsMessages();
-			settingsDisplay.addPrimarySettingsMessages();
-		}
+		settingsDisplay.reset();
 		
 		TransitionSystem transition = prepareTransition(false);
 		
@@ -507,6 +512,8 @@ public class Main extends PApplet {
 		if (videoCaptureSwitch.isEnabled()) {
 			doScreenCapture();
 		}
+		
+		drawListeners.forEach(dl -> dl.onDrawComplete());
 	}
 	
 	public void drawSystem(ShapeSystem s, String debugName) {
