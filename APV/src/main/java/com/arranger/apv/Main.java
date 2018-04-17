@@ -27,6 +27,7 @@ import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Monitor;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
+import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineInterpolator;
 import com.arranger.apv.util.VersionInfo;
@@ -99,6 +100,7 @@ public class Main extends PApplet {
 	protected Particles particles;
 	protected VersionInfo versionInfo;
 	protected FileHelper fileHelper;
+	protected SceneList sceneList;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -123,6 +125,16 @@ public class Main extends PApplet {
 
 	private Scene currentScene;
 
+	private List<SetupListener> setupListeners = new ArrayList<SetupListener>();
+	
+	public void registerSetupListener(SetupListener sl) {
+		setupListeners.add(sl);
+	}
+	
+	@FunctionalInterface
+	public static interface SetupListener {
+		void onSetupComplete();
+	}
 	
 	public static void main(String[] args) {
 		PApplet.main(new String[] {Main.class.getName()});
@@ -145,6 +157,10 @@ public class Main extends PApplet {
 		} else {
 			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
+	}
+	
+	public SceneList getSceneList() {
+		return sceneList;
 	}
 	
 	public VersionInfo getVersionInfo() {
@@ -330,6 +346,7 @@ public class Main extends PApplet {
 		audio = new Audio(this, BUFFER_SIZE);
 		monitor = new Monitor(this);
 		frameStrober = new FrameStrober(this);
+		sceneList = new SceneList(this);
 		
 		locations = (List<LocationSystem>)configurator.loadAVPPlugins("locations");
 		colors = (List<ColorSystem>)configurator.loadAVPPlugins("colors");
@@ -360,7 +377,11 @@ public class Main extends PApplet {
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
+		
+		setupListeners.forEach(sl -> sl.onSetupComplete());
 	}
+	
+
 
 	protected void initializeCommands() {
 		CommandSystem cs = commandSystem;

@@ -1,6 +1,9 @@
-BRANCH: annotation-class-loading
+BRANCH: auto-scene-mode
 https://github.com/mimelator/apv
 
+
+
+*****************************************************************************
 Document the rendering process and how they interact with the objects
 I Should be able to use the normal cycle commands f,t,b,o, etc... even in liked mode
 Should liked mode also capture: color,mouse?
@@ -8,21 +11,18 @@ Should liked mode also capture: color,mouse?
 
 Panic mode?
 
-New Dependency:
-google reflections at: https://code.google.com/archive/p/reflections/
 
-*****************************************************************************
 TODO: 
-* BGImage
+* Auto scene mode: list of messages
+* Popout windows for the settings?
 * Add documentation to each plugin to describe it's arguments
 * More animations like light worm
-* Implement more Custom Scenes for animations?
-* Filter, munge the background (Espeically when BGImage is in use)
+* Implement more Custom Scenes for animations
+* BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * test Audio#scale
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 * number of particles could ebb and flow with the intensity of the music
-* Snap Listener maybe shows a flash?
 *****************************************************************************
 		
 -Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5		

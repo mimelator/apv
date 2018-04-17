@@ -7,6 +7,9 @@ import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
+/**
+ * 	#{BGImage : [{SpriteFactory : [max.jpg]}, .15, 2, 2]}
+ */
 public class BGImage extends LiteShapeSystem {
 	
 	private APVShape shape;

@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigValue;
 public class ConfiguratorTest extends APVPluginTest {
 	
 	private static final String CONFIG = "alt.properties";
-	Configurator cfg;
+	Configurator configurator;
 	
 	@Test
 	public void testConfigOverride() throws Exception {
@@ -44,14 +44,14 @@ public class ConfiguratorTest extends APVPluginTest {
 			loadConfigurator(inputStream);
 		});
 		
-		assert(cfg != null);
-		Config rootConfig = cfg.getRootConfig();
+		assert(configurator != null);
+		Config rootConfig = configurator.getRootConfig();
 		assert(rootConfig != null);
 		debug(rootConfig.toString());
 	}
 	
 	protected void loadConfigurator(InputStream is) throws Exception {
-		cfg = new Configurator(parent, is);
+		configurator = new Configurator(parent, is);
 	}
 	
 	@Test

@@ -7,6 +7,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
 import com.arranger.apv.util.Configurator;
 
+import processing.core.PApplet;
 import processing.core.PGraphics;
 
 /**
@@ -14,7 +15,10 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Scene {
 
+	private static final int NEW_CHARS_PER_DRAW = 120;//60;
 	private static final int FRAMES_REQUIRED_TO_RESET = 60;
+	private static final int MAX_TEXT_LENGTH = 30;
+	private static final int MAX_TEXT_LENGTH_OFFSET = 120;
 	private static final int TEXT_SIZE = 200;
 	private String text;
 	private int characterColor;
@@ -33,6 +37,10 @@ public class Marquee extends Scene {
 			text = msg.trim();
 			reset();
 		});
+	}
+	
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 	@Override
@@ -72,7 +80,7 @@ public class Marquee extends Scene {
 			init();
 		}
 		
-		//draw background frame
+		//draw background frame always the same size
 		int insetY = parent.height / 3;
 		parent.fill(0, 50);
 		parent.stroke(255);
@@ -87,7 +95,7 @@ public class Marquee extends Scene {
 		parent.textAlign(CENTER, CENTER);
 
 		if (chrs.size() < 2000) {
-			for (int i = 0; i < 60; i++) {
+			for (int i = 0; i < NEW_CHARS_PER_DRAW; i++) {
 				float x = parent.random(parent.width);
 				float y = parent.random(parent.height);
 				int c = pg.get((int) x, (int) y);
@@ -103,10 +111,14 @@ public class Marquee extends Scene {
 	}
 	
 	protected void init() {
+		//adjust the textSize based on the length of the text
+		int textOffset = (int)PApplet.map(text.length(), 1, MAX_TEXT_LENGTH, 0, MAX_TEXT_LENGTH_OFFSET);
+		int textSize = TEXT_SIZE - textOffset;
+		
 		chrs = new ArrayList<OneChr>();
 		pg = parent.createGraphics(parent.width, parent.height, JAVA2D);
 		pg.beginDraw();
-		pg.textSize(TEXT_SIZE);
+		pg.textSize(textSize);
 		pg.textAlign(CENTER, CENTER);
 		pg.fill(characterColor);
 		pg.text(text.trim(), pg.width / 2, pg.height / 2);
