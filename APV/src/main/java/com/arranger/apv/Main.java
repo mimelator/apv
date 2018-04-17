@@ -90,7 +90,7 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Gravity gravity;
 	protected FrameStrober frameStrober;
-	protected PerformanceMonitor monitor;
+	protected PerformanceMonitor perfMonitor;
 	protected SettingsDisplay settingsDisplay;
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
@@ -198,8 +198,8 @@ public class Main extends PApplet {
 		return commandSystem;
 	}
 	
-	public PerformanceMonitor getMonitor() {
-		return monitor;
+	public PerformanceMonitor getPerformanceMonitor() {
+		return perfMonitor;
 	}
 	
 	public APVPulseListener getPulseListener() {
@@ -219,7 +219,6 @@ public class Main extends PApplet {
 	}
 	
 	public void setNextScene(Scene scene) {
-		//update the sceneIndex
 		for (int index = 0; index < scenes.size(); index++) {
 			if (scene.equals(scenes.get(index))) {
 				sceneIndex = index;
@@ -351,7 +350,7 @@ public class Main extends PApplet {
 		helpDisplay = new HelpDisplay(this);
 		gravity = new Gravity(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		monitor = new PerformanceMonitor(this);
+		perfMonitor = new PerformanceMonitor(this);
 		frameStrober = new FrameStrober(this);
 		sceneList = new SceneList(this);
 		
@@ -481,7 +480,7 @@ public class Main extends PApplet {
 		
 		drawSystem(currentScene, "scene");
 		
-		monitor.doMonitorCheck(currentScene);
+		perfMonitor.doMonitorCheck(currentScene);
 		
 		if (transition != null) {
 			drawSystem(transition, "transition");
@@ -643,7 +642,7 @@ public class Main extends PApplet {
 		
 		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
-		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> monitor.dumpMonitorInfo());
+		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> perfMonitor.dumpMonitorInfo());
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
 		
@@ -677,10 +676,11 @@ public class Main extends PApplet {
 	}
 	
 	protected void cycleMode(boolean advance) {
+		CONTROL_MODES controlMode = getControl().getControlMode();
 		if (advance) {
-			currentControlMode = getControl().getControlMode().getNext();
+			currentControlMode = controlMode.getNext();
 		} else {
-			currentControlMode = getControl().getControlMode().getPrevious();
+			currentControlMode = controlMode.getPrevious();
 		}
 	}
 
