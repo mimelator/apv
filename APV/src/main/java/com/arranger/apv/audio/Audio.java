@@ -4,6 +4,7 @@ package com.arranger.apv.audio;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.util.APVFloatScalar;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
@@ -20,11 +21,13 @@ public class Audio extends APVPlugin {
 	
 	private static final float DEFAULT_PULSE_DECTECT_SCALAR = 5.0f;
 	
+	protected APVFloatScalar floatScalar;
 	protected BeatInfo beatInfo;
 	public float scaleFactor = DEFAULT_PULSE_DECTECT_SCALAR;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
+		floatScalar = new APVFloatScalar(parent);
 		Minim minim = new Minim(parent);
 		AudioSource source = minim.getLineIn(Minim.MONO, bufferSize);
 		
@@ -39,9 +42,11 @@ public class Audio extends APVPlugin {
 			}
 		}
 		
-		CommandSystem cs = parent.getCommandSystem();
-		cs.registerCommand('+', "Audio", "Increases the audio sensitivity", event -> scaleFactor++);
-		cs.registerCommand('-', "Audio", "Decreases the audio sensitivity", event -> scaleFactor--);
+		parent.registerSetupListener(() -> {
+					CommandSystem cs = parent.getCommandSystem();
+				cs.registerCommand('+', "Audio", "Increases the audio sensitivity", event -> scaleFactor++);
+				cs.registerCommand('-', "Audio", "Decreases the audio sensitivity", event -> scaleFactor--);
+		});
 	}
 	
 	public float getScaleFactor() {
@@ -100,31 +105,15 @@ public class Audio extends APVPlugin {
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					scale(sampsR, .5f);
+					//scale(sampsR, .5f);
 					freqDetector.detect(sampsL); //dont scale the freq just yet
-					scale(sampsL, scaleFactor); 
+					floatScalar.scale(sampsL, scaleFactor); 
 					pulseDetector.detect(sampsL); //Mono amplitutde detection
 					fft.forward(source.mix);
 				}
 			});
 		}
 		
-		/**
-		 * Scales in place  (not very functional)
-		 * When the sf goes below Zero, the following happens: 1 x 10^sf
-		 * 
-		 * So, -3 becomes 10^-3 or .0001
-		 * 
-		 * TODO Needs Test
-		 */
-		protected void scale(float [] samps, float sf) {
-			if (sf < 0) {
-				sf = (float)Math.pow(10, sf);
-			}
-			
-			for (int i=0; i<samps.length; i++) {
-				samps[i] *= sf;
-			}
-		}
+
 	}
 }

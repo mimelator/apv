@@ -2,7 +2,6 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 dyamic particle listener
-need to fix FFTAnalysis#map
 
 TODO:
 *****************************************************************************
