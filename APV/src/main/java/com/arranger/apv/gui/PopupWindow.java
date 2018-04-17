@@ -1,4 +1,4 @@
-package com.arranger.apv.archive.ui;
+package com.arranger.apv.gui;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
