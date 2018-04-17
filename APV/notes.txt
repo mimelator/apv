@@ -2,14 +2,19 @@ BRANCH: annotation-class-loading
 https://github.com/mimelator/apv
 
 Document the rendering process and how they interact with the objects
+I Should be able to use the normal cycle commands f,t,b,o, etc... even in liked mode
+Should liked mode also capture: color,mouse?
+	Should there be two different versions of this mode.  1 just captures 4, the other mode captures all six traits of the Scene
 
+Panic mode?
 
 New Dependency:
 google reflections at: https://code.google.com/archive/p/reflections/
 
 *****************************************************************************
 TODO: 
-* Surfs Up Sketche
+* BGImage
+* Add documentation to each plugin to describe it's arguments
 * More animations like light worm
 * Implement more Custom Scenes for animations?
 * Filter, munge the background (Espeically when BGImage is in use)

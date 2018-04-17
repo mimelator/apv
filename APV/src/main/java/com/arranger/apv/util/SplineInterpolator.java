@@ -85,7 +85,7 @@ public class SplineInterpolator {
         return (b1 * points[2]) + (b2 * points[3]) + b3;
     }
 
-    public class PointUnit {
+    public static class PointUnit {
 
         private final double distance;
         private final double point;

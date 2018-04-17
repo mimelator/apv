@@ -55,6 +55,6 @@ public class OscilatingBackDrop extends BackDropSystem {
 	}
 	
 	private String format(Color c) {
-		return String.format("(%1s,%2s,%3s)", c.getRed(), c.getGreen(), c.getBlue());
+		return parent.format(c);
 	}
 }

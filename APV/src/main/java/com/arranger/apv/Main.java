@@ -309,6 +309,10 @@ public class Main extends PApplet {
 		return oscillator.oscillate(low, high, oscSpeed);
 	}
 
+	public String format(Color c) {
+		return String.format("(%1s,%2s,%3s)", c.getRed(), c.getGreen(), c.getBlue());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		versionInfo = new VersionInfo(this);
