@@ -341,6 +341,10 @@ public class Main extends PApplet {
 		return String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue());
 	}
 	
+	public float lerpAlpha(float pct) {
+		return PApplet.lerp(0, MAX_ALPHA, pct);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		versionInfo = new VersionInfo(this);

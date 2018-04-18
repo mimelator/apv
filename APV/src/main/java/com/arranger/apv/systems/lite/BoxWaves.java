@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.PulseFader;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -46,6 +47,7 @@ public class BoxWaves extends LiteShapeSystem {
 	int highColor = new Color(150, 220, 255).getRGB();
 	float rotationStep = 0;
 
+	PulseFader pulseFader;
 	ArrayList<Block> blocks;
 
 	public BoxWaves(Main parent) {
@@ -55,6 +57,10 @@ public class BoxWaves extends LiteShapeSystem {
 			parent.getPulseListener().registerPulseListener(() -> {
 				updateLocation();
 			}, RESET_EVERY_N_PULSES); //skip every 16 pulses
+		});
+		
+		parent.registerSetupListener(() -> {
+			pulseFader = new PulseFader(parent, 30, 15, heightMult);
 		});
 	}
 
@@ -89,6 +95,7 @@ public class BoxWaves extends LiteShapeSystem {
 		for (Block b : blocks) {
 			b.display();
 		}
+		heightMult = pulseFader.getValue();
 	}
 
 	void updateLocation() {

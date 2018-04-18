@@ -17,6 +17,8 @@ import processing.core.PApplet;
  */
 public class Surfin extends LiteShapeSystem {
 
+	private static final int NUM_PARTICLES = 6000;
+
 	public enum COLOR_MODE {
 		ORIG, APV, CUSTOM
 	}
@@ -110,7 +112,7 @@ public class Surfin extends LiteShapeSystem {
 	}
 
 	void setParticles() {
-		particles = new Particle[6000];
+		particles = new Particle[NUM_PARTICLES];
 		for (int i = 0; i < 6000; i++) {
 			float x = random(parent.width);
 			float y = random(parent.height);

@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.util.FrameFader;
 
-import processing.core.PApplet;
-
 public abstract class MessageSystem extends ShapeSystem {
 
 	private static final Logger logger = Logger.getLogger(MessageSystem.class.getName());
@@ -65,17 +63,12 @@ public abstract class MessageSystem extends ShapeSystem {
 		}
 	}
 	
-	protected float getAlapha(float pct) {
-		float alpha = PApplet.lerp(0, Main.MAX_ALPHA, pct);
-		return alpha;
-	}
-	
 	protected void doStandardFade(float pct) {
 		doStandardFade(parent.getColor().getCurrentColor(), pct);
 	}
 	
 	protected void doStandardFade(Color c, float pct) {
-		float alpha = getAlapha(pct);
+		float alpha = parent.lerpAlpha(pct);
 		//parent.tint(c.getRGB(), alpha);  
 		parent.fill(c.getRGB(), alpha);
 	}

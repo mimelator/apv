@@ -59,7 +59,7 @@ public class BGImage extends LiteShapeSystem {
 			
 		}
 		
-		float a = PApplet.lerp(0, Main.MAX_ALPHA, alpha);
+		float a = parent.lerpAlpha(alpha);
 		
 		shape.setColor(parent.getColor().getCurrentColor().getRGB(), a);
 		parent.shape(shape.getShape(), 0, 0, parent.width * scaleX, parent.height * scaleY);
