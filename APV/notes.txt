@@ -1,22 +1,16 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-getAlapha
-frameFader
 
-PulseBlendFilter pulseFader
-
-
-WanderingInSpace (bg better than warp?)
-
-Create a sample pack
 
 
 TODO:
 *****************************************************************************
+* Create a sample pack
 * Have an ability to randomly fire off a spark from anywhere
 * More animations like light worm
 * Implement more Custom Scenes for animations
+* WanderingInSpace (bg better than warp?)
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
 *****************************************************************************
