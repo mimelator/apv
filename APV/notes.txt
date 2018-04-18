@@ -1,14 +1,5 @@
-BRANCH: applicaton-conf
+BRANCH: scene-pack
 https://github.com/mimelator/apv
-
-Image List
-
-2. Configure an image pack directory so that you can use a folder
-  on the file system with your own images
-    This will need a change to SpriteFactory load()
-    see https://processing.org/discourse/beta/num_1247100666.html
-    for details
-
 
 
 TODO:
@@ -17,8 +8,6 @@ TODO:
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
-* externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
-*  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
 *****************************************************************************
 		
 
