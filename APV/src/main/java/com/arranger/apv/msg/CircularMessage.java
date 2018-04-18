@@ -10,7 +10,10 @@ import processing.core.PApplet;
  */
 public class CircularMessage extends MessageSystem {
 
-	private static final int LARGEST_RADIUS = 100;
+	private static final int LENGTH_REQUIRED_FOR_PADDING = 5;
+	private static final String TEXT_PADDING = "                     ";
+	private static final int TEXT_SIZE = 40;
+	private static final int LARGEST_RADIUS = 200;
 	
 	private CircleText nvCirc;
 	
@@ -24,9 +27,15 @@ public class CircularMessage extends MessageSystem {
 			nvCirc = new CircleText(parent.width / 2, parent.height / 2, joinMessage(fadingMessage, "  "));
 		}
 		
+		//too few characters and the circular message is wierd
+		if (nvCirc.inText.length() < LENGTH_REQUIRED_FOR_PADDING) {
+			nvCirc.inText += TEXT_PADDING;
+		}
+		
 		//draw this thing
 		doStandardFade(fadingMessage.frameFader.getFadePct());
-	
+		
+		parent.textSize(TEXT_SIZE);
 		parent.translate (parent.width / 2, parent.height / 2);
 		parent.rotate(parent.oscillate(0, TWO_PI, 12));
 		nvCirc.drawTextRing(0, 0, nvCirc.inText);
