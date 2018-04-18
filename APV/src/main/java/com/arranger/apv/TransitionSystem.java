@@ -123,6 +123,6 @@ public abstract class TransitionSystem extends ShapeSystem {
 	
 	protected void doStandardFade(float pct) {
 		float alpha = getAlapha(pct);
-		parent.tint(255, alpha);  // Display at half opacity
+		parent.tint(255, alpha);  
 	}
 }

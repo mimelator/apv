@@ -2,9 +2,10 @@ package com.arranger.apv.filter;
 
 import com.arranger.apv.Main;
 
+import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 
-public class PulseShakeFilter extends PulseBasedFilter {
+public class PulseShakeFilter extends Filter {
 	
 	private static final float SHAKE_SIZE = 1.5f;
 	
@@ -12,9 +13,13 @@ public class PulseShakeFilter extends PulseBasedFilter {
 	private static final float SIZE_SCALAR_LARGE = 3.0f;
 	
 	private static final float OSC_SCALAR = 5f;
+	protected BeatDetect pulseDetector;
 	
 	public PulseShakeFilter(Main parent) {
 		super(parent);
+		parent.registerSetupListener(() -> {
+			pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
+		});
 	}
 	
 	@Override
