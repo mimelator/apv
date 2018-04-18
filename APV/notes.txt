@@ -6,8 +6,6 @@ Emojis
 Image List
 
 Emoji list: https://www.copypastecharacter.com/emojis
-https://indesignsecrets.com/find-font-glyph.php
-
 
 1. Create a Font file that has as many unicode characters as possible
 	-> Using processing tools to create my own tool

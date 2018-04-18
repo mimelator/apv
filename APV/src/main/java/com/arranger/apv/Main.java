@@ -338,7 +338,7 @@ public class Main extends PApplet {
 	}
 
 	public String format(Color c) {
-		return String.format("(%1s,%2s,%3s)", c.getRed(), c.getGreen(), c.getBlue());
+		return String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue());
 	}
 	
 	@SuppressWarnings("unchecked")
