@@ -1,15 +1,8 @@
 BRANCH: applicaton-conf
 https://github.com/mimelator/apv
 
-Song List
-Emojis
 Image List
 
-http://asciimoji.com
-
-1. Create a Font file that has as many unicode characters as possible
-	-> Using processing tools to create my own tool
-	Update FontHelper (move, install, etc...)
 2. Configure an image pack directory so that you can use a folder
   on the file system with your own images
     This will need a change to SpriteFactory load()
