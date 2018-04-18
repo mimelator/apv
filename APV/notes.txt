@@ -5,7 +5,7 @@ Song List
 Emojis
 Image List
 
-Emoji list: https://www.copypastecharacter.com/emojis
+http://asciimoji.com
 
 1. Create a Font file that has as many unicode characters as possible
 	-> Using processing tools to create my own tool
