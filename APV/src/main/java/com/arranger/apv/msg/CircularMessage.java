@@ -4,7 +4,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.MessageSystem;
 
 import processing.core.PApplet;
-import processing.core.PFont;
 
 /**
  * @see https://www.openprocessing.org/sketch/166952
@@ -14,12 +13,9 @@ public class CircularMessage extends MessageSystem {
 	private static final int LARGEST_RADIUS = 100;
 	
 	private CircleText nvCirc;
-	private PFont font;
 	
 	public CircularMessage(Main parent) {
 		super(parent);
-		//TODO Use Font Helper
-		font = parent.createFont("Arial Bold", 20, true);
 	}
 
 	@Override
@@ -30,9 +26,7 @@ public class CircularMessage extends MessageSystem {
 		
 		//draw this thing
 		doStandardFade(fadingMessage.frameFader.getFadePct());
-		
-		float fontSize = LARGEST_RADIUS; //parent.random(10, 40);
-		parent.textFont(font, fontSize);
+	
 		parent.translate (parent.width / 2, parent.height / 2);
 		parent.rotate(parent.oscillate(0, TWO_PI, 12));
 		nvCirc.drawTextRing(0, 0, nvCirc.inText);

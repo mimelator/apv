@@ -20,6 +20,7 @@ import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
@@ -100,7 +101,8 @@ public class Main extends PApplet {
 	protected VersionInfo versionInfo;
 	protected FileHelper fileHelper;
 	protected SceneList sceneList;
-	private SplineHelper splineHelper;
+	protected FontHelper fontHelper;
+	protected SplineHelper splineHelper;
 
 	//Internal data
 	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
@@ -165,6 +167,10 @@ public class Main extends PApplet {
 		} else {
 			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
+	}
+	
+	public FontHelper getFontHelper() {
+		return fontHelper;
 	}
 
 	public SceneList getSceneList() {
@@ -354,6 +360,7 @@ public class Main extends PApplet {
 		frameStrober = new FrameStrober(this);
 		sceneList = new SceneList(this);
 		splineHelper = new SplineHelper(this);
+		fontHelper = new FontHelper(this);
 		
 		locations = (List<LocationSystem>)configurator.loadAVPPlugins("locations");
 		colors = (List<ColorSystem>)configurator.loadAVPPlugins("colors");

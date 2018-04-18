@@ -1,23 +1,35 @@
-BRANCH: master
+BRANCH: applicaton-conf
 https://github.com/mimelator/apv
+
+Song List
+Emojis
+Image List
+
+Emoji list: https://www.copypastecharacter.com/emojis
+https://indesignsecrets.com/find-font-glyph.php
+
+
+1. Create a Font file that has as many unicode characters as possible
+	-> Using processing tools to create my own tool
+	Update FontHelper (move, install, etc...)
+2. Configure an image pack directory so that you can use a folder
+  on the file system with your own images
+    This will need a change to SpriteFactory load()
+    see https://processing.org/discourse/beta/num_1247100666.html
+    for details
 
 
 
 TODO:
 *****************************************************************************
-* Should liked mode also capture: color, mouse?
-* Should there be two different versions of this mode.  1 just captures 4, the other mode captures all six traits of the Scene 
-* Shift-L to keep current liked scene active
 * Add documentation to each plugin to describe it's arguments
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * externalize image packs for themed visuals (Emoji packs, Holiday Packs, Sports Packs, Drug Packs)
 *  The ScenePack will be a bunch of files and file names for the configured systems (Use substitution to override defaults)
-* number of particles could ebb and flow with the intensity of the music
 *****************************************************************************
 		
-	
 
 Build & Release to local artifactory and github
 *****************************************************************************
