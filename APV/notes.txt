@@ -3,8 +3,14 @@ https://github.com/mimelator/apv
 
 
 * Reaction scripts
-* Enhance the Refresh to specify what pct to blur, and how often
 
+** Once per every N draw cycles they get a chance to issue a command like:
+	parent.getCommandSystem().invokeCommand('t'); //t for filters
+
+** Need to listen to events that you care about and store the latest value
+	For instance, Listen for a Gravity based foreground (Just use instanceOf)
+	
+	
 
 TODO:
 *****************************************************************************
