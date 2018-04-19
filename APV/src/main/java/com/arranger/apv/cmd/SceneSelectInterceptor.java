@@ -36,7 +36,7 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 	public SceneSelectInterceptor(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			//register all the existing scenes with their hotkeys
 			parent.getScenes().stream().forEach(s -> {
 				registerScene(s.getHotKey(), defaultHandler);

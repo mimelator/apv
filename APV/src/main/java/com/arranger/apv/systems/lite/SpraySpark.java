@@ -1,6 +1,7 @@
 package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.DrawHelper;
 
 import processing.core.PApplet;
 
@@ -17,13 +18,22 @@ public class SpraySpark extends LiteShapeSystem {
 	private static final int NUM_SPARKS_LOW = 10;
 	private static final int NUM_SPARKS_HIGH = 40;
 
+	private DrawHelper drawHelper;
+	
 	public SpraySpark(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				spark();
 			});
+		});
+		
+		parent.getSparkEvent().register(() -> {
+			if (drawHelper == null) {
+				spark();
+				drawHelper = new DrawHelper(parent, this, () -> drawHelper = null);
+			}
 		});
 	}
 
@@ -159,8 +169,6 @@ public class SpraySpark extends LiteShapeSystem {
 			nextSpark = (nextSpark + 1) % PARTICLE_COUNT;
 		}
 	}
-
-	
 	
 	protected long millis() {
 		return (long)(SLOW_TIME * parent.millis());

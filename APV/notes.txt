@@ -2,11 +2,8 @@ BRANCH: agents
 https://github.com/mimelator/apv
 
 
-* Have an ability to randomly fire off a spark from anywhere
-* Trigger a spark (fix SpraySpark)
-* Trigger a carnival
-
-
+Trigger any shape system from anywhere
+Document Events and DrawHelper
 	
 
 TODO:

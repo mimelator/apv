@@ -17,7 +17,7 @@ public class Snap extends ControlSystem {
 		super(parent);
 		snapListener = new SnapListener(parent, DEFAULT_FRAMES_TO_SKIP_FOR_SNAP);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerCommand(')', "Frame++", "Increases the size of the Quiet Window in Snap mode",
 					event -> snapListener.incrementFramesToSkip());

@@ -21,7 +21,7 @@ public class StrobeFilter extends Filter {
 		this.flashDuration = flashDuration;
 		
 		//register
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 					parent.getPulseListener().registerHandler(() -> {
 						onNewPulse();
 				}, PULSES_TO_SKIP);

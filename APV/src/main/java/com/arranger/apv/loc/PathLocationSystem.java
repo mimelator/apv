@@ -31,7 +31,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		this.splitter = splitter;
 		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
 			cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things",

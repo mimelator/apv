@@ -32,7 +32,7 @@ public class Surfin extends LiteShapeSystem {
 	public Surfin(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				setParticles();
 			}, DEFAULT_PULSES_TO_SKIP);

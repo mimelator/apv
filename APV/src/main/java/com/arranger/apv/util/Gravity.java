@@ -14,7 +14,7 @@ public class Gravity extends APVPlugin {
 	public Gravity(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerCommand('g', "Gravity", "Increases/Decreases Gravity", (event) -> {
 				if (event.isShiftDown())

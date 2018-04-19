@@ -12,7 +12,7 @@ public class Particles extends APVPlugin {
 	public Particles(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerCommand('p', "Particles", "Increases/Decreases Number Particles", (event) -> {
 				if (event.isShiftDown())

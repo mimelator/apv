@@ -53,13 +53,13 @@ public class BoxWaves extends LiteShapeSystem {
 	public BoxWaves(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				updateLocation();
 			}, RESET_EVERY_N_PULSES); //skip every 16 pulses
 		});
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			pulseFader = new PulseFader(parent, 30, 15, heightMult);
 		});
 	}

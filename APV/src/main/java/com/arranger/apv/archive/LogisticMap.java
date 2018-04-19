@@ -25,7 +25,7 @@ public class LogisticMap extends APVPlugin {
 	public LogisticMap(Main parent, int framesToSkip) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getAgent().registerHandler(() -> {
 				doLogisticMap();
 			}, framesToSkip);

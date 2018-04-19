@@ -18,7 +18,7 @@ public class SceneList extends APVPlugin {
 	public SceneList(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			// get the strings
 			ConfigList configList = parent.getConfigurator().getRootConfig().getList("song-list");
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());

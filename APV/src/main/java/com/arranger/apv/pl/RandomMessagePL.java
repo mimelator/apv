@@ -35,7 +35,7 @@ public class RandomMessagePL extends APVPlugin {
 		}
 		
 		//prepare fonts
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			FontHelper fh = parent.getFontHelper();
 			PFont font = fh.createFontForText(msgList.stream().collect(Collectors.joining()));
 			fh.setDefaultFont(font);
@@ -43,7 +43,7 @@ public class RandomMessagePL extends APVPlugin {
 		
 		//subscribe
 		this.pulsesToSkip = pulsesToSkip;
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler( ()-> { 
 				parent.sendMessage(new String[]{getMessage()}); 
 				}  

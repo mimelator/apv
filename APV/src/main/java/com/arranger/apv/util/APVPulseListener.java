@@ -10,7 +10,7 @@ public class APVPulseListener extends APVCallback {
 	
 	public APVPulseListener(Main parent) {
 		super(parent, "pulseListeners");
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			pulseListener = new PulseListener(parent, 1);
 		});
 	}

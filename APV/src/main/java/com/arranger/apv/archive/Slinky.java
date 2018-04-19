@@ -35,7 +35,7 @@ public class Slinky extends LiteShapeSystem {
 		super(parent);
 		this.numShapes = numShapes;
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			pulseFader = new PulseFader(parent, NUM_FRAMES_FOR_PULSE, PULSE_MULTIPLIER, pulseScalar);
 		});
 	}

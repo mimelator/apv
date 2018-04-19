@@ -12,7 +12,7 @@ public abstract class PulseAgent extends APVPlugin {
 
 	public PulseAgent(Main parent, int numPulses) {
 		super(parent);
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			parent.getAgent().registerHandler(() -> {
 				if (pulseListener.isNewPulse()) {
 					onPulse();

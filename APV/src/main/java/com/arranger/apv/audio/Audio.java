@@ -42,8 +42,8 @@ public class Audio extends APVPlugin {
 			}
 		}
 		
-		parent.registerSetupListener(() -> {
-					CommandSystem cs = parent.getCommandSystem();
+		parent.getSetupEvent().register(() -> {
+				CommandSystem cs = parent.getCommandSystem();
 				cs.registerCommand('+', "Audio", "Increases the audio sensitivity", event -> scaleFactor++);
 				cs.registerCommand('-', "Audio", "Decreases the audio sensitivity", event -> scaleFactor--);
 		});

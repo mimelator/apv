@@ -26,7 +26,7 @@ public class SettingsDisplay extends APVPlugin {
 	public SettingsDisplay(Main parent) {
 		super(parent);
 		
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 				parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
 					"Popup window to display Settings", 
 					e -> createSettingsWindow());
@@ -102,7 +102,7 @@ public class SettingsDisplay extends APVPlugin {
 	protected void createSettingsWindow() {
 		final WindowTextPrinter printer = new PopupWindow(parent).launchWindow("settings", 
 				(int)(parent.width / 6), (int)(parent.height * .8f));
-		parent.registerDrawListener(() -> {
+		parent.getDrawEvent().register(() -> {
 			printer.printText(settingsMessages);
 		});
 	}

@@ -28,7 +28,7 @@ public class StarPL extends APVPlugin {
 		this.scaleLarge = scaleLarge;
 		
 		star = new StarMaker(parent).createStar();
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			registerListener(parent);
 		});
 	}

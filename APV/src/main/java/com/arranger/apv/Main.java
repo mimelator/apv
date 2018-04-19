@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.arranger.apv.APVEvent.EventHandler;
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.Switch.STATE;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.color.ColorSystem;
+import com.arranger.apv.event.CoreEvent;
+import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
@@ -83,12 +86,14 @@ public class Main extends PApplet {
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
 	protected Map<String, Switch> switches;
-
+	protected Map<EVENT_TYPES, APVEvent<? extends EventHandler>> eventMap;
+	
 	//Stateful data
 	private Scene currentScene;
 	private CONTROL_MODES currentControlMode; 
 	private boolean scrambleMode = false;	
 	private int lastScrambleFrame = 0;
+	
 	
 	//Switches for runtime
 	private Switch helpSwitch,
@@ -97,26 +102,6 @@ public class Main extends PApplet {
 					videoCaptureSwitch,
 					scrambleModeSwitch;
 
-
-	private List<SetupListener> setupListeners = new ArrayList<SetupListener>();
-	public void registerSetupListener(SetupListener sl) {
-		setupListeners.add(sl);
-	}
-	
-	private List<DrawListener> drawListeners = new ArrayList<DrawListener>();
-	public void registerDrawListener(DrawListener dl) {
-		drawListeners.add(dl);
-	}
-	
-	@FunctionalInterface
-	public static interface SetupListener {
-		void onSetupComplete();
-	}
-	
-	@FunctionalInterface
-	public static interface DrawListener {
-		void onDrawComplete();
-	}
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class, new String[0]);
@@ -136,6 +121,8 @@ public class Main extends PApplet {
 		} else {
 			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
 		}
+		
+		initEvents();
 	}
 	
 	public FontHelper getFontHelper() {
@@ -196,6 +183,22 @@ public class Main extends PApplet {
 	
 	public CONTROL_MODES getCurrentControlMode() {
 		return currentControlMode;
+	}
+	
+	public CoreEvent getSetupEvent() {
+		return (CoreEvent)eventMap.get(EVENT_TYPES.SETUP);
+	}
+	
+	public CoreEvent getDrawEvent() {
+		return (CoreEvent)eventMap.get(EVENT_TYPES.DRAW);
+	}
+	
+	public DrawShapeEvent getSparkEvent() {
+		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
+	}
+	
+	public DrawShapeEvent getCarnivalEvent() {
+		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
 	}
 	
 	public void setNextScene(Scene scene) {
@@ -363,7 +366,7 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
 		
-		setupListeners.forEach(sl -> sl.onSetupComplete());
+		getSetupEvent().fire();
 	}
 
 	public void doScreenCapture() {
@@ -489,7 +492,7 @@ public class Main extends PApplet {
 			doScreenCapture();
 		}
 		
-		drawListeners.forEach(dl -> dl.onDrawComplete());
+		getDrawEvent().fire();
 	}
 	
 	protected TransitionSystem prepareTransition(boolean forceStart) {
@@ -646,6 +649,18 @@ public class Main extends PApplet {
 			Switch s = switches.get(cs.name);
 			s.setState(cs.state);
 		});
+	}
+	
+	protected enum EVENT_TYPES {
+		SETUP, DRAW, SPARK, CARNIVAL
+	}
+	
+	protected void initEvents() {
+		eventMap = new HashMap<EVENT_TYPES, APVEvent<? extends EventHandler>>();
+		eventMap.put(EVENT_TYPES.SETUP, new CoreEvent(this));
+		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
+		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
+		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
 	}
 	
 	public String getConfig() {

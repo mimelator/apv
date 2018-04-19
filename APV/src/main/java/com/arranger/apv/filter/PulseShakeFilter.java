@@ -17,7 +17,7 @@ public class PulseShakeFilter extends Filter {
 	
 	public PulseShakeFilter(Main parent) {
 		super(parent);
-		parent.registerSetupListener(() -> {
+		parent.getSetupEvent().register(() -> {
 			pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 		});
 	}

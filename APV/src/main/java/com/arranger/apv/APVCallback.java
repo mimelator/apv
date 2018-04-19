@@ -11,7 +11,7 @@ public class APVCallback extends APV<APVPlugin> {
 	public APVCallback(Main parent, String name) {
 		super(parent, name, false);
 		
-		parent.registerDrawListener(() -> {
+		parent.getDrawEvent().register(() -> {
 			if (isEnabled()) {
 				handlers.forEach(h -> {
 					if (h.shouldHandle()) {

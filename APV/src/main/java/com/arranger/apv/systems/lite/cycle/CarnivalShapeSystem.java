@@ -7,6 +7,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.DrawHelper;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -16,16 +17,25 @@ import processing.core.PVector;
  */
 public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	
+	private static final int NUM_FLASH_DRAWS = 30;
+	
 	private boolean useCustomColor = false;
 	private ColorSystem colorSystem;
+	private DrawHelper drawHelper;
 
 	public CarnivalShapeSystem(Main parent) {
-		super(parent);
+		this(parent, false);
 	}
 	
 	public CarnivalShapeSystem(Main parent, boolean useCustomColor) {
 		super(parent);
 		this.useCustomColor = useCustomColor;
+		
+		parent.getCarnivalEvent().register(() -> {
+			if (drawHelper == null) {
+				drawHelper = new DrawHelper(parent, NUM_FLASH_DRAWS, this, () -> drawHelper = null);
+			}
+		});
 	}
 	
 	public CarnivalShapeSystem(Configurator.Context ctx) {
