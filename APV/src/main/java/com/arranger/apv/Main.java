@@ -17,6 +17,7 @@ import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
+import com.arranger.apv.util.APVAgent;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
@@ -50,25 +51,26 @@ public class Main extends PApplet {
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
-
-	protected APV<ShapeSystem> foregrounds; 
+	protected APV<APVPlugin> agents;
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
-	protected APV<LocationSystem> locations; 
 	protected APV<ColorSystem> colors;
-	protected APV<TransitionSystem> transitions;	
-	protected APV<MessageSystem> messages;	
-	protected APV<Filter> filters; 
-	protected APV<Scene> scenes;	
-	protected APV<Scene> likedScenes;	
 	protected APV<ControlSystem> controls;	
-	protected APV<APVPlugin> pulseListeners;
+	protected APV<Filter> filters; 
+	protected APV<ShapeSystem> foregrounds; 
+	protected APV<Scene> likedScenes;
+	protected APV<LocationSystem> locations; 
+	protected APV<MessageSystem> messages;	
+	protected APV<Scene> scenes;	
+	protected APV<TransitionSystem> transitions;
+	protected APVPulseListener pulseListener;
 	
 	protected Map<String, Switch> switches;
 	protected CONTROL_MODES currentControlMode; 
 
 	
 	//Useful helper classes
+	protected APVAgent agent;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
 	protected Audio audio;
@@ -79,7 +81,6 @@ public class Main extends PApplet {
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
 	protected HelpDisplay helpDisplay;
-	protected APVPulseListener pulseListener;
 	protected Particles particles;
 	protected VersionInfo versionInfo;
 	protected FileHelper fileHelper;
@@ -188,6 +189,10 @@ public class Main extends PApplet {
 		return pulseListener;
 	}
 	
+	public APVAgent getAgent() {
+		return agent;
+	}
+	
 	public Particles getParticles() {
 		return particles;
 	}
@@ -216,7 +221,11 @@ public class Main extends PApplet {
 	}
 
 	public List<APVPlugin> getPulseListeners() {
-		return pulseListeners.getList();
+		return pulseListener.getList();
+	}
+	
+	public List<APVPlugin> getAgents() {
+		return agents.getList();
 	}
 	
 	public ColorSystem getColor() {
@@ -327,6 +336,7 @@ public class Main extends PApplet {
 		commandSystem = new CommandSystem(this);
 		oscillator = new Oscillator(this);
 		pulseListener = new APVPulseListener(this);
+		agent = new APVAgent(this);
 		particles = new Particles(this);
 		settingsDisplay = new SettingsDisplay(this);
 		helpDisplay = new HelpDisplay(this);
@@ -338,7 +348,7 @@ public class Main extends PApplet {
 		splineHelper = new SplineHelper(this);
 		fontHelper = new FontHelper(this);
 		
-		backDrops = new APV<BackDropSystem>(this, "backDrops");
+		agents = new APV<APVPlugin>(this, "agents");
 		backDrops = new APV<BackDropSystem>(this, "backDrops");
 		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
 		colors = new APV<ColorSystem>(this, "colors");
@@ -348,7 +358,7 @@ public class Main extends PApplet {
 		likedScenes = new APV<Scene>(this, "likedScenes");
 		locations = new APV<LocationSystem>(this, "locations");
 		messages = new APV<MessageSystem>(this, "messages");	
-		pulseListeners = new APV<APVPlugin>(this, "pulseListeners");
+		pulseListener = new APVPulseListener(this);
 		scenes = new APV<Scene>(this, "scenes", false);
 		transitions = new APV<TransitionSystem>(this, "transitions");
 		
@@ -362,7 +372,6 @@ public class Main extends PApplet {
 		setupSystems(messages);
 		setupSystems(scenes);
 		setupSystems(likedScenes);
-		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extend ShapeSystem
 		
 		initializeCommands();
 		
@@ -474,10 +483,6 @@ public class Main extends PApplet {
 		
 		runControlMode();
 		
-		if (pulseListeners.isEnabled()) {
-			pulseListener.checkPulse();
-		}
-		
 		if (videoCaptureSwitch.isEnabled()) {
 			doScreenCapture();
 		}
@@ -565,6 +570,10 @@ public class Main extends PApplet {
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
 		registerNonFreezableSwitchCommand(likedScenes.getSwitch(), 'l');
+		registerNonFreezableSwitchCommand(agents.getSwitch(), 'x');
+		registerNonFreezableSwitchCommand(pulseListener.getSwitch(), '7');
+		registerNonFreezableSwitchCommand(frameStroberSwitch, '8');
+		registerNonFreezableSwitchCommand(videoCaptureSwitch, '9');
 		
 		foregrounds.registerSwitchCommand('1');
 		backgrounds.registerSwitchCommand('2');
@@ -572,11 +581,6 @@ public class Main extends PApplet {
 		filters.registerSwitchCommand('4');
 		messages.registerSwitchCommand('5');
 		transitions.registerSwitchCommand('6');
-		pulseListeners.registerSwitchCommand('7');
-		
-		registerNonFreezableSwitchCommand(frameStroberSwitch, '8');
-		registerNonFreezableSwitchCommand(videoCaptureSwitch, '9');
-		//not registering scrambleModeSwitch  It is a synthetic switch
 
 		foregrounds.registerCommand('f', "Foreground", "Cycles through the foregrounds");
 		backgrounds.registerCommand('b', "Background", "Cycles through the backgrounds");

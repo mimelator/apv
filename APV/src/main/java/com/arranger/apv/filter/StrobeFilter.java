@@ -22,7 +22,7 @@ public class StrobeFilter extends Filter {
 		
 		//register
 		parent.registerSetupListener(() -> {
-					parent.getPulseListener().registerPulseListener(() -> {
+					parent.getPulseListener().registerHandler(() -> {
 						onNewPulse();
 				}, PULSES_TO_SKIP);
 		});

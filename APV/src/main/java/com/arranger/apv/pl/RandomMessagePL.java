@@ -41,7 +41,14 @@ public class RandomMessagePL extends APVPlugin {
 			fh.setDefaultFont(font);
 		});
 		
-		registerListener(parent, pulsesToSkip);
+		//subscribe
+		this.pulsesToSkip = pulsesToSkip;
+		parent.registerSetupListener(() -> {
+			parent.getPulseListener().registerHandler( ()-> { 
+				parent.sendMessage(new String[]{getMessage()}); 
+				}  
+			, pulsesToSkip); 
+		});
 	}
 	
 	public RandomMessagePL(Configurator.Context ctx) {
@@ -59,13 +66,5 @@ public class RandomMessagePL extends APVPlugin {
 	
 	private String getMessage() {
 		return msgList.get((int)parent.random(msgList.size()));
-	}
-	
-	protected void registerListener(Main parent, int pulsesToSkip) {
-		this.pulsesToSkip = pulsesToSkip;
-		parent.getPulseListener().registerPulseListener( ()-> { 
-			parent.sendMessage(new String[]{getMessage()}); 
-			}  
-		, pulsesToSkip); //eg: Skip every other pulse
 	}
 }

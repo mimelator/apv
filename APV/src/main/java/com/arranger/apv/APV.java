@@ -25,7 +25,7 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 		this.name = name;
 		this.sw = parent.getSwitch(name);
 	}
-
+	
 	public int getIndex() {
 		return index;
 	}
@@ -52,7 +52,7 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 		if (sw == null) {
 			return true; //we're not a switcher
 		}
-		return sw.isEnabled() && !list.isEmpty(); //This might be too much...
+		return sw.isEnabled() && !list.isEmpty(); 
 	}
 	
 	public List<T> getList() {

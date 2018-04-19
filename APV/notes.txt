@@ -2,6 +2,11 @@ BRANCH: agents
 https://github.com/mimelator/apv
 
 
+Documentation:
+Add the APVAgent and the agent and the draw cycle
+'x' command for the agent switch
+
+
 * Reaction scripts
 
 ** Once per every N draw cycles they get a chance to issue a command like:

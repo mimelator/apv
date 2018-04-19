@@ -5,8 +5,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.factory.SpriteFactory;
 import com.arranger.apv.util.Configurator;
 
-import processing.core.PApplet;
-
 /**
  * 	#{BGImage : [{SpriteFactory : [max.jpg]}, .15, 2, 2]}
  */

@@ -28,7 +28,9 @@ public class StarPL extends APVPlugin {
 		this.scaleLarge = scaleLarge;
 		
 		star = new StarMaker(parent).createStar();
-		registerListener(parent);	
+		parent.registerSetupListener(() -> {
+			registerListener(parent);
+		});
 	}
 	
 	public StarPL(Configurator.Context ctx) {
@@ -36,7 +38,7 @@ public class StarPL extends APVPlugin {
 	}
 	
 	protected void registerListener(Main parent) {
-		parent.getPulseListener().registerPulseListener( ()-> { 
+		parent.getPulseListener().registerHandler(()-> { 
 				//location
 				Point2D point = parent.getLocation().getCurrentPoint();
 				int x = (int)point.getX();
