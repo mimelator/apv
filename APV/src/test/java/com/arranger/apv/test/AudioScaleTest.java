@@ -2,7 +2,7 @@ package com.arranger.apv.test;
 
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.util.APVFloatScalar;
+import com.arranger.apv.util.FloatScalar;
 
 public class AudioScaleTest extends APVPluginTest {
 
@@ -15,7 +15,7 @@ public class AudioScaleTest extends APVPluginTest {
 	
 	@Test
 	public void testScalar() {
-		APVFloatScalar fs = new APVFloatScalar(parent);
+		FloatScalar fs = new FloatScalar(parent);
 		
 		float[] values = createFloatArray(ARRAY_SIZE, 1);
 		fs.scale(values, .5f);

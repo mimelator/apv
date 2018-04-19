@@ -3,9 +3,9 @@ package com.arranger.apv.util;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
-public class APVFloatScalar extends APVPlugin {
+public class FloatScalar extends APVPlugin {
 
-	public APVFloatScalar(Main parent) {
+	public FloatScalar(Main parent) {
 		super(parent);
 	}
 	

@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
 import com.arranger.apv.Main;
+import com.arranger.apv.Switch;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 
 import processing.core.PApplet;
@@ -30,12 +31,12 @@ public class Perlin extends PulseListeningControlSystem {
 			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
 			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
 			new CommandHolder('r', null),
-			new CommandHolder('f', "ForeGround"),  
-			new CommandHolder('b', "BackGround"),
-			new CommandHolder('o', "BackDrop"),
-			new CommandHolder('t', "Filters"),
+			new CommandHolder('f', "foregrounds"),  
+			new CommandHolder('b', "backgrounds"),
+			new CommandHolder('o', "backDrops"),
+			new CommandHolder('t', "filters"),
 			new CommandHolder('c', null),
-			new CommandHolder('n', "Transitions"),
+			new CommandHolder('n', "transitions"),
 			new CommandHolder('g', null),
 			new CommandHolder(PApplet.ENTER, null)
 	};
@@ -95,10 +96,18 @@ public class Perlin extends PulseListeningControlSystem {
 		KeyEvent keyEvent = null;
 		while (keyEvent == null) {
 			keyEvent = getKeyEvent(offset);
+			
 			String switchName = (String)keyEvent.getNative();
-			if (switchName != null && parent.getSwitch(switchName).isFrozen()) {
-				keyEvent = null;
-				offset++;
+			if (switchName != null) {
+				Switch curSwitch = parent.getSwitch(switchName);
+				if (curSwitch == null) {
+					throw new RuntimeException("Unknown switch: " + switchName);
+				}
+				
+				if (curSwitch.isFrozen()) {
+					keyEvent = null;
+					offset++;
+				}
 			}
 		}
 		

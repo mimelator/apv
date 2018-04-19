@@ -5,6 +5,7 @@ https://github.com/mimelator/apv
 Documentation:
 Add the APVAgent and the agent and the draw cycle
 'x' command for the agent switch
+APVFloatScalar -> FloatScalar
 
 
 * Reaction scripts

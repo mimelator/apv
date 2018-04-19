@@ -4,7 +4,7 @@ package com.arranger.apv.audio;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.APVFloatScalar;
+import com.arranger.apv.util.FloatScalar;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
@@ -21,13 +21,13 @@ public class Audio extends APVPlugin {
 	
 	private static final float DEFAULT_PULSE_DECTECT_SCALAR = 5.0f;
 	
-	protected APVFloatScalar floatScalar;
+	protected FloatScalar floatScalar;
 	protected BeatInfo beatInfo;
 	public float scaleFactor = DEFAULT_PULSE_DECTECT_SCALAR;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
-		floatScalar = new APVFloatScalar(parent);
+		floatScalar = new FloatScalar(parent);
 		Minim minim = new Minim(parent);
 		AudioSource source = minim.getLineIn(Minim.MONO, bufferSize);
 		

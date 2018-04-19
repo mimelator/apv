@@ -51,7 +51,6 @@ public class Main extends PApplet {
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
-	protected APV<APVPlugin> agents;
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
 	protected APV<ColorSystem> colors;
@@ -63,7 +62,6 @@ public class Main extends PApplet {
 	protected APV<MessageSystem> messages;	
 	protected APV<Scene> scenes;	
 	protected APV<TransitionSystem> transitions;
-	protected APVPulseListener pulseListener;
 	
 	protected Map<String, Switch> switches;
 	protected CONTROL_MODES currentControlMode; 
@@ -71,6 +69,7 @@ public class Main extends PApplet {
 	
 	//Useful helper classes
 	protected APVAgent agent;
+	protected APVPulseListener pulseListener;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
 	protected Audio audio;
@@ -220,14 +219,6 @@ public class Main extends PApplet {
 		return currentScene;
 	}
 
-	public List<APVPlugin> getPulseListeners() {
-		return pulseListener.getList();
-	}
-	
-	public List<APVPlugin> getAgents() {
-		return agents.getList();
-	}
-	
 	public ColorSystem getColor() {
 		return colors.getPlugin();
 	}
@@ -348,7 +339,6 @@ public class Main extends PApplet {
 		splineHelper = new SplineHelper(this);
 		fontHelper = new FontHelper(this);
 		
-		agents = new APV<APVPlugin>(this, "agents");
 		backDrops = new APV<BackDropSystem>(this, "backDrops");
 		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
 		colors = new APV<ColorSystem>(this, "colors");
@@ -358,7 +348,6 @@ public class Main extends PApplet {
 		likedScenes = new APV<Scene>(this, "likedScenes");
 		locations = new APV<LocationSystem>(this, "locations");
 		messages = new APV<MessageSystem>(this, "messages");	
-		pulseListener = new APVPulseListener(this);
 		scenes = new APV<Scene>(this, "scenes", false);
 		transitions = new APV<TransitionSystem>(this, "transitions");
 		
@@ -570,7 +559,7 @@ public class Main extends PApplet {
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
 		registerNonFreezableSwitchCommand(likedScenes.getSwitch(), 'l');
-		registerNonFreezableSwitchCommand(agents.getSwitch(), 'x');
+		registerNonFreezableSwitchCommand(agent.getSwitch(), 'x');
 		registerNonFreezableSwitchCommand(pulseListener.getSwitch(), '7');
 		registerNonFreezableSwitchCommand(frameStroberSwitch, '8');
 		registerNonFreezableSwitchCommand(videoCaptureSwitch, '9');
