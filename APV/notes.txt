@@ -4,11 +4,11 @@ https://github.com/mimelator/apv
 
 * Reaction scripts
 * Enhance the Refresh to specify what pct to blur, and how often
-* Uninstall MoreUnit
 
 
 TODO:
 *****************************************************************************
+* reload config command
 * Create a sample pack
 * Have an ability to randomly fire off a spark from anywhere
 * More animations like light worm

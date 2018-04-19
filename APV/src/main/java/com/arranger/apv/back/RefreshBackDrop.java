@@ -10,21 +10,25 @@ import processing.core.PApplet;
 public class RefreshBackDrop extends BackDropSystem {
 
 	private static final float PCT_BG_REFRESH = .8f;
-	protected static final int RATE = 1200;
+	protected static final int DEFAULT_RATE = 1200;
 	protected static final int RANGE = 100;
 	protected float bgRefreshPct;
+	protected int rate;
 	
 	public RefreshBackDrop(Main parent) {
-		this(parent, PCT_BG_REFRESH);
+		this(parent, PCT_BG_REFRESH, DEFAULT_RATE);
 	}
 	
-	public RefreshBackDrop(Main parent, float bgRefreshPct) {
+	public RefreshBackDrop(Main parent, float bgRefreshPct, int rate) {
 		super(parent);
 		this.bgRefreshPct = bgRefreshPct;
+		this.rate = rate;
 	}
 	
 	public RefreshBackDrop(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getFloat(0, PCT_BG_REFRESH));
+		this(ctx.getParent(), 
+				ctx.getFloat(0, PCT_BG_REFRESH),
+				ctx.getInt(1, DEFAULT_RATE));
 	}
 	
 	
@@ -39,7 +43,7 @@ public class RefreshBackDrop extends BackDropSystem {
 	 */
 	@Override
 	public void drawBackground() {
-		float res = PApplet.map(parent.getFrameCount() % RATE, 0, RATE, 0, RANGE);
+		float res = PApplet.map(parent.getFrameCount() % rate, 0, rate, 0, RANGE);
 		if (res < bgRefreshPct * RANGE) {
 			parent.background(Color.BLACK.getRGB());
 		}
