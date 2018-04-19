@@ -1,9 +1,10 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+
+* Reaction scripts
 * Enhance the Refresh to specify what pct to blur, and how often
-* Slinky and LightSaber might have to go
-* Is there anyway to improve the perf of StarWeb?
+* Uninstall MoreUnit
 
 
 TODO:

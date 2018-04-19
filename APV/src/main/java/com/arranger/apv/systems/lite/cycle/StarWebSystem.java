@@ -24,7 +24,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	private static final int LARGE_RADIUS = 150;
 	private static final int SMALL_RADIUS = 50;
 	private static final int NUM_EDGES = 100;
-	private static final int DEFAULT_NUM_BALLS = 180;
+	private static final int DEFAULT_NUM_BALLS = 100;//180;
 	private static final int LINE_ALPHA = 150;
 	private static final int BALL_CONNECTION_DISTANCE = 90;//60;
 	private static final float LINE_STROKE_WEIGHT = 1.5f;
@@ -65,36 +65,20 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	}
 	
 	public StarWebSystem(Configurator.Context ctx) {
-		this(ctx.getParent());
-		
-		int size = ctx.argList.size();
-		switch (size) {
-		case 0:
-			break;
-		case 1:
-			factory = (ShapeFactory)ctx.loadPlugin(0);
-			break;
-		case 3:
-			factory = (ShapeFactory)ctx.loadPlugin(0);
-			numNewObjects = ctx.getInt(1, DEFAULT_NUM_BALLS);
-			doRotateScale =  ctx.getBoolean(2, false);
-			break;
-			default:
-				throw new RuntimeException("Unknown number of args: " + ctx.toString());
-		}
+		this(ctx.getParent(),
+				(ShapeFactory)ctx.loadPlugin(0),
+				ctx.getInt(1, DEFAULT_NUM_BALLS),
+				ctx.getBoolean(2, false));
 	}
 	
 	@Override
 	public String getConfig() {
 		//{StarWebSystem : [{SpriteFactory : [Emoji_Blitz_Star.png, 1.5]}, ${ALL_PARTICLES}, true]}
-		String result = null;
-		if (factory != null) {
-			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s, %4b]}", getName(), childConfig, numNewObjects, doRotateScale);
-		} else {
-			result = String.format("{%1s : [%2s, %3b]}", getName(), numNewObjects, doRotateScale);
-		}
-		return result;
+		return String.format("{%1s : [%2s, %3s, %4b]}", 
+				getName(), 
+				factory == null ? "{}" : factory.getConfig(), 
+				numNewObjects, 
+				doRotateScale);
 	}
 
 	@Override
