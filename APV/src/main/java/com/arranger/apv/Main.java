@@ -417,7 +417,16 @@ public class Main extends PApplet {
 		}
 	}
 	
-	public void _draw() {
+	public void drawSystem(ShapeSystem s, String debugName) {
+		pushStyle();
+		pushMatrix();
+		settingsDisplay.debugSystem(s, debugName);
+		s.draw();
+		popMatrix();
+		popStyle();
+	}
+	
+	protected void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
 		scrambleModeSwitch.setState(isScrambleModeAvailable() ? STATE.ENABLED : STATE.DISABLED);
@@ -481,15 +490,6 @@ public class Main extends PApplet {
 		}
 		
 		drawListeners.forEach(dl -> dl.onDrawComplete());
-	}
-	
-	public void drawSystem(ShapeSystem s, String debugName) {
-		pushStyle();
-		pushMatrix();
-		settingsDisplay.debugSystem(s, debugName);
-		s.draw();
-		popMatrix();
-		popStyle();
 	}
 	
 	protected TransitionSystem prepareTransition(boolean forceStart) {

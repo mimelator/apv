@@ -11,8 +11,9 @@ import processing.core.PApplet;
  */
 public class SpraySpark extends LiteShapeSystem {
 	
-	private static final float PREV_LOC_OFFSET = .5f;
-	private static final float LOC_INCREMENT = .05f;
+	private static final float SLOW_TIME = .25f;
+	private static final float PREV_LOC_OFFSET = .5f; 
+	private static final float LOC_INCREMENT = .025f; //.05f;
 	private static final int NUM_SPARKS_LOW = 10;
 	private static final int NUM_SPARKS_HIGH = 40;
 
@@ -63,12 +64,12 @@ public class SpraySpark extends LiteShapeSystem {
 	 * The amount of error allowed in model coordinate measurements. Lowering this
 	 * will let sparks have tiny bounces longer.
 	 */
-	float TOLERANCE = 0.3f;
+	float TOLERANCE = 0.2f;
 
 	/**
 	 * The focal length from the viewer to the screen in model coordinates.
 	 */
-	float FOCAL_LENGTH = 1000.0f;
+	float FOCAL_LENGTH = 1000;
 
 	/**
 	 * The distance in model coordinates from the viewer to where new sparks are
@@ -90,8 +91,12 @@ public class SpraySpark extends LiteShapeSystem {
 	 * The index of the Particle to use for the next spark created.
 	 */
 	int nextSpark = 0;
+	
+	//internal state
+	long lastFrameDrawn;
+	float averageElapsedMillis = 20.0f;
 
-/**
+	/**
 	 * Perform initial setup needed for the sketch.
 	 *
 	 * @author Gregory Bush https://www.openprocessing.org/sketch/100893
@@ -102,6 +107,7 @@ public class SpraySpark extends LiteShapeSystem {
 		for (int i = 0; i < PARTICLE_COUNT; i++) {
 			sparks[i] = new Particle(random(256), random(256), random(256));
 		}
+		lastFrameDrawn = millis();
 	}
 
 	/**
@@ -114,7 +120,6 @@ public class SpraySpark extends LiteShapeSystem {
 		if (canvas == null) {
 			setup();
 		}
-		
 		
 		float prevOffset = PREV_LOC_OFFSET;
 		
@@ -141,7 +146,9 @@ public class SpraySpark extends LiteShapeSystem {
 			 * time.
 			 */
 			Vector3D velocity = current.diff(prior);
-			velocity.shift(new Vector3D(random(-SPRAY_SPREAD, SPRAY_SPREAD), 0,
+			velocity.shift(new Vector3D(
+					random(-SPRAY_SPREAD, SPRAY_SPREAD), 
+					0,
 					random(-SPRAY_SPREAD, SPRAY_SPREAD) * velocity.x));
 			velocity.scale(1.0f / averageElapsedMillis);
 
@@ -153,12 +160,11 @@ public class SpraySpark extends LiteShapeSystem {
 		}
 	}
 
-	protected long millis() {
-		return parent.millis();
-	}
 	
-	long lastFrameDrawn = millis();
-	float averageElapsedMillis = 20.0f;
+	
+	protected long millis() {
+		return (long)(SLOW_TIME * parent.millis());
+	}
 
 	@Override
 	public void draw() {
@@ -384,6 +390,8 @@ public class SpraySpark extends LiteShapeSystem {
 		 * Was the particle drawn off the right of the screen?
 		 */
 		private boolean pastRightWall;
+		
+		private boolean pastTop;
 
 		/**
 		 * Create a Particle with a specified color and characteristic sound.
@@ -401,6 +409,8 @@ public class SpraySpark extends LiteShapeSystem {
 		public void initializeMotion(Point3D location, Vector3D velocity) {
 			this.location = location;
 			this.velocity = velocity;
+			//weight is based on velocity
+			//System.out.printf("initializeMotion: [x,y,z] [%1f, %2f, %3f]\n", velocity.x, velocity.y, velocity.z);
 		}
 
 		/**
@@ -434,8 +444,8 @@ public class SpraySpark extends LiteShapeSystem {
 			/*
 			 * Draw three motion blurs, successively narrower and brighter.
 			 */
-			drawMotion(from, to, 64, 8);
-			drawMotion(from, to, 32, 32);
+			drawMotion(from, to, 40, 4);
+			drawMotion(from, to, 20, 32);
 			drawMotion(from, to, 8, 255);
 
 			/*
@@ -453,6 +463,7 @@ public class SpraySpark extends LiteShapeSystem {
 			Point2D p = canvas.toScreenCoordinates(to);
 			pastLeftWall = p.x < 0;
 			pastRightWall = p.x >= parent.width;
+			pastTop = p.y < 0;
 		}
 
 		/*
@@ -474,14 +485,14 @@ public class SpraySpark extends LiteShapeSystem {
 			 */
 			parent.stroke(amplify(red), amplify(green), amplify(blue), 255);
 			canvas.drawPoint(to, 16);
-
 		}
 
 		/*
 		 * Is the Particle's next position beneath the surface of the ground?
 		 */
 		private boolean isUnderground(float elapsedMillis) {
-			return location.y + velocity.y * elapsedMillis > parent.height;
+			//return location.y + velocity.y * elapsedMillis > parent.height;
+			return location.y + velocity.y > parent.height;
 		}
 
 		/*
@@ -512,7 +523,7 @@ public class SpraySpark extends LiteShapeSystem {
 		 * Reverse the horizontal motion of the Particle.
 		 */
 		private void bounceHorizontal() {
-			velocity.x = -velocity.x;
+			velocity.x = -velocity.x * random(LOW_BOUNCE / 2, HIGH_BOUNCE / 2);
 		}
 
 		/*
@@ -523,7 +534,12 @@ public class SpraySpark extends LiteShapeSystem {
 			 * The Particle's kinetic energy will be scaled down randomly. It will lose
 			 * energy with every bounce.
 			 */
-			velocity.y = -velocity.y * random(LOW_BOUNCE, HIGH_BOUNCE);
+			//only change velocity if we're bouncing off the bottom
+			if (pastTop) {
+				velocity.y = -velocity.y;
+			} else {
+				velocity.y = -velocity.y * random(LOW_BOUNCE, HIGH_BOUNCE);
+			}
 		}
 
 		/*
@@ -544,6 +560,10 @@ public class SpraySpark extends LiteShapeSystem {
 			 */
 			if ((pastLeftWall && isMovingLeft()) || (pastRightWall && isMovingRight())) {
 				bounceHorizontal();
+			}
+			
+			if (pastTop && isMovingUp()) {
+				bounceVertical();
 			}
 
 			/*

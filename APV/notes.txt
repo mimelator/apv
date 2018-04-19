@@ -2,20 +2,23 @@ BRANCH: agents
 https://github.com/mimelator/apv
 
 
-* Reaction scripts
-* put a try/catch around draw, because Processing does weird stuff with unhandled exceptions	
+* Have an ability to randomly fire off a spark from anywhere
+* Trigger a spark (fix SpraySpark)
+* Trigger a carnival
+
+
 	
 
 TODO:
 *****************************************************************************
-* reload config command
+* An agent script that checks frame rate and changes the filter to StrobeFilter
 * Create a sample pack
-* Have an ability to randomly fire off a spark from anywhere
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * WanderingInSpace (bg better than warp?)
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
+* reload config command
 *****************************************************************************
 		
 
