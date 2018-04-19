@@ -7,9 +7,7 @@ import com.arranger.apv.Main;
 public class Particles extends APVPlugin {
 	
 	private static final float INCREMENT_SIZE = .05f;
-	
 	private float pct = 1.0f;
-	
 	
 	public Particles(Main parent) {
 		super(parent);

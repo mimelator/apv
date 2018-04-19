@@ -2,19 +2,8 @@ BRANCH: agents
 https://github.com/mimelator/apv
 
 
-Documentation:
-Add the APVAgent and the 
-Add APVagent to the draw cycle
-'x' command for the agent switch
-APVFloatScalar -> FloatScalar
-GravityAgent
-FilterAgent
-
-
 * Reaction scripts
-
-
-	
+* put a try/catch around draw, because Processing does weird stuff with unhandled exceptions	
 	
 
 TODO:

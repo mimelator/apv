@@ -44,7 +44,7 @@ public class Main extends PApplet {
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
-	public static final int NUMBER_PARTICLES = 1000;
+	public static final int NUMBER_PARTICLES = 100;
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
@@ -62,10 +62,6 @@ public class Main extends PApplet {
 	protected APV<MessageSystem> messages;	
 	protected APV<Scene> scenes;	
 	protected APV<TransitionSystem> transitions;
-	
-	protected Map<String, Switch> switches;
-	protected CONTROL_MODES currentControlMode; 
-
 	
 	//Useful helper classes
 	protected APVAgent agent;
@@ -86,11 +82,13 @@ public class Main extends PApplet {
 	protected SceneList sceneList;
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
+	protected Map<String, Switch> switches;
 
-	//Internal data
-	private boolean scrambleMode = false;	//this is a flag to signal to the TransitionSystem for #onDrawStart
+	//Stateful data
+	private Scene currentScene;
+	private CONTROL_MODES currentControlMode; 
+	private boolean scrambleMode = false;	
 	private int lastScrambleFrame = 0;
-	
 	
 	//Switches for runtime
 	private Switch helpSwitch,
@@ -99,8 +97,6 @@ public class Main extends PApplet {
 					videoCaptureSwitch,
 					scrambleModeSwitch;
 
-
-	private Scene currentScene;
 
 	private List<SetupListener> setupListeners = new ArrayList<SetupListener>();
 	public void registerSetupListener(SetupListener sl) {
@@ -127,8 +123,6 @@ public class Main extends PApplet {
 	}
 
 	public void settings() {
-		//can't load the settings until i load the configurator
-		//don't want to load the configurator until i load the logging
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
 		
@@ -322,22 +316,22 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
-		versionInfo = new VersionInfo(this);
-		fileHelper = new FileHelper(this);
-		commandSystem = new CommandSystem(this);
-		oscillator = new Oscillator(this);
-		pulseListener = new APVPulseListener(this);
 		agent = new APVAgent(this);
-		particles = new Particles(this);
-		settingsDisplay = new SettingsDisplay(this);
-		helpDisplay = new HelpDisplay(this);
-		gravity = new Gravity(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		perfMonitor = new PerformanceMonitor(this);
+		commandSystem = new CommandSystem(this);
+		fileHelper = new FileHelper(this);
 		frameStrober = new FrameStrober(this);
-		sceneList = new SceneList(this);
-		splineHelper = new SplineHelper(this);
 		fontHelper = new FontHelper(this);
+		gravity = new Gravity(this);
+		helpDisplay = new HelpDisplay(this);
+		oscillator = new Oscillator(this);
+		particles = new Particles(this);
+		perfMonitor = new PerformanceMonitor(this);
+		pulseListener = new APVPulseListener(this);
+		sceneList = new SceneList(this);
+		settingsDisplay = new SettingsDisplay(this);
+		splineHelper = new SplineHelper(this);
+		versionInfo = new VersionInfo(this);
 		
 		backDrops = new APV<BackDropSystem>(this, "backDrops");
 		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
@@ -354,13 +348,13 @@ public class Main extends PApplet {
 		//currentControlMode
 		initControlMode();
 
-		setupSystems(foregrounds);
-		setupSystems(backgrounds);
 		setupSystems(backDrops);
-		setupSystems(transitions);
+		setupSystems(backgrounds);
+		setupSystems(foregrounds);
+		setupSystems(likedScenes);
 		setupSystems(messages);
 		setupSystems(scenes);
-		setupSystems(likedScenes);
+		setupSystems(transitions);
 		
 		initializeCommands();
 		
@@ -412,8 +406,18 @@ public class Main extends PApplet {
 			getMessage().onNewMessage(messages);
 		}
 	}
-	
+
+	@Override
 	public void draw() {
+		try {
+			_draw(); //Processing has an unusual exception handler
+		} catch (Throwable t) {
+			System.out.println(t);
+			t.printStackTrace();
+		}
+	}
+	
+	public void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
 		scrambleModeSwitch.setState(isScrambleModeAvailable() ? STATE.ENABLED : STATE.DISABLED);
@@ -521,7 +525,6 @@ public class Main extends PApplet {
 		locations.scramble(false);
 		colors.scramble(false);
 		
-		
 		//send out a cool message about the new system
 		if (messages.isEnabled()) {
 			List<String> msgs = new ArrayList<String>();
@@ -548,14 +551,7 @@ public class Main extends PApplet {
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected void configureSwitches() {
-		configureSwitches((List<Switch>)configurator.loadAVPPlugins("switches"));
-	}
-	
 	protected void initializeCommands() {
-		CommandSystem cs = commandSystem;
-		
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
 		registerNonFreezableSwitchCommand(likedScenes.getSwitch(), 'l');
@@ -582,6 +578,7 @@ public class Main extends PApplet {
 		likedScenes.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", e -> likedScenes.increment());
 		likedScenes.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", e -> likedScenes.decrement());
 		
+		CommandSystem cs = commandSystem;
 		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
 		
@@ -590,7 +587,6 @@ public class Main extends PApplet {
 		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> perfMonitor.dumpMonitorInfo());
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
-		
 		
 		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
 		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
@@ -626,7 +622,10 @@ public class Main extends PApplet {
 		return list.get(Math.abs(index) % list.size());
 	}
 	
-	protected void configureSwitches(List<Switch> ss) {
+	@SuppressWarnings("unchecked")
+	protected void configureSwitches() {
+		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins("switches");
+		
 		switches = new HashMap<String, Switch>(ss.size());
 		for (Iterator<Switch> it = ss.iterator(); it.hasNext();) {
 			Switch nextSwitch = it.next();
@@ -651,11 +650,12 @@ public class Main extends PApplet {
 	
 	public String getConfig() {
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
+		Config rootConfig = getConfigurator().getRootConfig();
 		
 		//Constants
 		addConstant(buffer, "controlMode", getCurrentControlMode().name());
-		addConstant(buffer, "fullScreen", String.valueOf(getConfigurator().getRootConfig().getBoolean("apv.fullScreen")));
-		addConstant(buffer, "scrambleSystems", String.valueOf(getConfigurator().getRootConfig().getBoolean("apv.scrambleSystems")));
+		addConstant(buffer, "fullScreen", String.valueOf(rootConfig.getBoolean("apv.fullScreen")));
+		addConstant(buffer, "scrambleSystems", String.valueOf(rootConfig.getBoolean("apv.scrambleSystems")));
 		addConstant(buffer, "screen.width", String.valueOf(width));
 		addConstant(buffer, "screen.height", String.valueOf(height));		
 		
