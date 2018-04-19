@@ -1,4 +1,4 @@
-BRANCH: master
+BRANCH: agents
 https://github.com/mimelator/apv
 
 
@@ -9,6 +9,16 @@ https://github.com/mimelator/apv
 
 ** Need to listen to events that you care about and store the latest value
 	For instance, Listen for a Gravity based foreground (Just use instanceOf)
+	Or how Strobe filter switches after it's done
+	
+	
+The Agent called from main:onDraw()
+
+Option #1
+	The Agent should register with Main.onDrawListener().  Then the agent invokes all of the 
+	code according to how frequent the code has registered 	
+	
+	
 	
 	
 

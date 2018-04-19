@@ -93,6 +93,7 @@ public abstract class APVPluginTest {
         when(parent.createShape()).thenReturn(new PShape());
         when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
         when(parent.getSceneList()).thenReturn(sceneList);
+        when(parent.format(Mockito.any())).thenCallRealMethod();
         
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);
         when(commandSystem.getSceneSelectInterceptor()).thenReturn(sceneSelectInterceptor);

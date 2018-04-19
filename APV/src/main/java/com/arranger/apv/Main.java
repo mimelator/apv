@@ -50,40 +50,23 @@ public class Main extends PApplet {
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
-	protected List<ShapeSystem> foregrounds;
-	protected int foregroundIndex = 0;
-	
-	protected List<ShapeSystem> backgrounds;
-	protected int backgroundIndex = 0;
-	
-	protected List<BackDropSystem> backDrops;
-	protected int backDropIndex = 0;
 
-	protected List<LocationSystem> locations; 
-	protected int locationIndex = 0;
-	
-	protected List<ColorSystem> colors; 
-	protected int colorIndex = 0;
-	
-	protected List<TransitionSystem> transitions;
-	protected int transitionIndex = 0;
-	
-	protected List<MessageSystem> messages;
-	protected int messageIndex = 0;
-	
-	protected List<Filter> filters; 
-	protected int filterIndex = 0;
-	
-	protected List<Scene> scenes;
-	protected int sceneIndex;
-	
-	protected List<Scene> likedScenes;
-	protected int likedSceneIndex = 0;
+	protected APV<ShapeSystem> foregrounds; 
+	protected APV<ShapeSystem> backgrounds;
+	protected APV<BackDropSystem> backDrops;
+	protected APV<LocationSystem> locations; 
+	protected APV<ColorSystem> colors;
+	protected APV<TransitionSystem> transitions;	
+	protected APV<MessageSystem> messages;	
+	protected APV<Filter> filters; 
+	protected APV<Scene> scenes;	
+	protected APV<Scene> likedScenes;	
+	protected APV<ControlSystem> controls;	
+	protected APV<APVPlugin> pulseListeners;
 	
 	protected Map<String, Switch> switches;
-	protected List<ControlSystem> controls;
-	protected CONTROL_MODES currentControlMode;
-	protected List<APVPlugin> pulseListeners;
+	protected CONTROL_MODES currentControlMode; 
+
 	
 	//Useful helper classes
 	protected Configurator configurator;
@@ -110,16 +93,8 @@ public class Main extends PApplet {
 	
 	
 	//Switches for runtime
-	private Switch foreGroundSwitch, 
-					backGroundSwitch, 
-					backDropSwitch, 
-					filtersSwitch, 
-					transitionSwitch,
-					messagesSwitch,
-					helpSwitch,
+	private Switch helpSwitch,
 					showSettingsSwitch,
-					pulseListenerSwitch,
-					likedScenesSwitch, 
 					frameStroberSwitch,
 					videoCaptureSwitch,
 					scrambleModeSwitch;
@@ -226,9 +201,10 @@ public class Main extends PApplet {
 	}
 	
 	public void setNextScene(Scene scene) {
-		for (int index = 0; index < scenes.size(); index++) {
-			if (scene.equals(scenes.get(index))) {
-				sceneIndex = index;
+		List<Scene> list = scenes.getList();
+		for (int index = 0; index < list.size(); index++) {
+			if (scene.equals(list.get(index))) {
+				scenes.setIndex(index);
 				return;
 			}
 		}
@@ -240,40 +216,40 @@ public class Main extends PApplet {
 	}
 
 	public List<APVPlugin> getPulseListeners() {
-		return pulseListeners;
+		return pulseListeners.getList();
 	}
 	
 	public ColorSystem getColor() {
-		return (ColorSystem)getPlugin(colors, colorIndex);
+		return colors.getPlugin();
 	}
 	
 	public ShapeSystem getForeground() {
-		return (ShapeSystem)getPlugin(foregrounds, foregroundIndex);
+		return foregrounds.getPlugin();
 	}
 
 	public ShapeSystem getBackground() {
-		return (ShapeSystem)getPlugin(backgrounds, backgroundIndex);
+		return backgrounds.getPlugin();
 	}
 
 	public BackDropSystem getBackDrop() {
-		return (BackDropSystem)getPlugin(backDrops, backDropIndex);
+		return backDrops.getPlugin();
 	}
 	
 	public TransitionSystem getTransition() {
-		return (TransitionSystem)getPlugin(transitions, transitionIndex);
+		return transitions.getPlugin();
 	}
 	
 	public MessageSystem getMessage() {
-		return (MessageSystem)getPlugin(messages, messageIndex);
+		return messages.getPlugin();
 	}
 	
 	public LocationSystem getLocation() {
 		LocationSystem ls = null;
 		ControlSystem cs = getControl();
 		while (ls == null) {
-			ls = (LocationSystem)getPlugin(locations, locationIndex);
+			ls = locations.getPlugin();
 			if (!cs.allowsMouseLocation() && ls instanceof MouseLocationSystem) {
-				locationIndex++;
+				locations.increment();
 				ls = null;
 			}
 		}
@@ -282,7 +258,7 @@ public class Main extends PApplet {
 	
 	public ControlSystem getControl() {
 		//there is probably a more efficient way to do this 
-		for (ControlSystem cs : controls) {
+		for (ControlSystem cs : controls.getList()) {
 			if (cs.getControlMode() == currentControlMode) {
 				return cs;
 			}
@@ -292,21 +268,21 @@ public class Main extends PApplet {
 	}
 	
 	public void likeCurrentScene() {
-		likedScenes.add(new Scene(currentScene));
+		likedScenes.getList().add(new Scene(currentScene));
 		sendMessage(new String[] {"Liked :)"});
 	}
 	
 	public void disLikeCurrentScene() {
-		likedScenes.remove(currentScene);
+		likedScenes.getList().remove(currentScene);
 		sendMessage(new String[] {"Disliked :("});
 	}
 	
 	public List<Scene> getLikedScenes() {
-		return likedScenes;
+		return likedScenes.getList();
 	}	
 	
 	public List<Scene> getScenes() {
-		return scenes;
+		return scenes.getList();
 	}
 	
 	public void addSettingsMessage(String msg) {
@@ -345,14 +321,10 @@ public class Main extends PApplet {
 		return PApplet.lerp(0, MAX_ALPHA, pct);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setup() {
 		versionInfo = new VersionInfo(this);
 		fileHelper = new FileHelper(this);
-		
 		commandSystem = new CommandSystem(this);
-		initializeCommands();
-		
 		oscillator = new Oscillator(this);
 		pulseListener = new APVPulseListener(this);
 		particles = new Particles(this);
@@ -366,18 +338,19 @@ public class Main extends PApplet {
 		splineHelper = new SplineHelper(this);
 		fontHelper = new FontHelper(this);
 		
-		locations = (List<LocationSystem>)configurator.loadAVPPlugins("locations");
-		colors = (List<ColorSystem>)configurator.loadAVPPlugins("colors");
-		controls = (List<ControlSystem>)configurator.loadAVPPlugins("controls");
-		backgrounds = (List<ShapeSystem>)configurator.loadAVPPlugins("backgrounds");
-		backDrops = (List<BackDropSystem>)configurator.loadAVPPlugins("backDrops");
-		foregrounds = (List<ShapeSystem>)configurator.loadAVPPlugins("foregrounds");
-		filters = (List<Filter>)configurator.loadAVPPlugins("filters");
-		transitions = (List<TransitionSystem>)configurator.loadAVPPlugins("transitions");
-		messages = (List<MessageSystem>)configurator.loadAVPPlugins("messages");	
-		pulseListeners = (List<APVPlugin>)configurator.loadAVPPlugins("pulse-listeners");
-		scenes = (List<Scene>)configurator.loadAVPPlugins("scenes", false);
-		likedScenes = (List<Scene>)configurator.loadAVPPlugins("liked-scenes");
+		backDrops = new APV<BackDropSystem>(this, "backDrops");
+		backDrops = new APV<BackDropSystem>(this, "backDrops");
+		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
+		colors = new APV<ColorSystem>(this, "colors");
+		controls = new APV<ControlSystem>(this, "controls");
+		filters = new APV<Filter>(this, "filters");
+		foregrounds = new APV<ShapeSystem>(this, "foregrounds");
+		likedScenes = new APV<Scene>(this, "likedScenes");
+		locations = new APV<LocationSystem>(this, "locations");
+		messages = new APV<MessageSystem>(this, "messages");	
+		pulseListeners = new APV<APVPlugin>(this, "pulseListeners");
+		scenes = new APV<Scene>(this, "scenes", false);
+		transitions = new APV<TransitionSystem>(this, "transitions");
 		
 		//currentControlMode
 		initControlMode();
@@ -390,6 +363,8 @@ public class Main extends PApplet {
 		setupSystems(scenes);
 		setupSystems(likedScenes);
 		//setupSystems(filters);  Filters get left out of the setup() for now because they don't extend ShapeSystem
+		
+		initializeCommands();
 		
 		//processing hints
 		orientation(LANDSCAPE);
@@ -422,9 +397,7 @@ public class Main extends PApplet {
 		scrambleMode = true;
 		
 		//switch transitions now instead of in the #doScramble
-		if (!transitionSwitch.isFrozen()) {
-			transitionIndex += random(transitions.size() - 1); 
-		}
+		transitions.scramble(true);
 	}
 	
 	/**
@@ -437,7 +410,7 @@ public class Main extends PApplet {
 	}
 	
 	public void sendMessage(String [] messages) {
-		if (messagesSwitch.isEnabled()) {
+		if (this.messages.isEnabled()) {
 			getMessage().onNewMessage(messages);
 		}
 	}
@@ -456,30 +429,15 @@ public class Main extends PApplet {
 		
 		TransitionSystem transition = prepareTransition(false);
 		
-		if (likedScenesSwitch.isEnabled() && !likedScenes.isEmpty()) {
-			currentScene = (Scene)getPlugin(likedScenes, likedSceneIndex);
+		if (likedScenes.isEnabled()) {
+			currentScene = likedScenes.getPlugin();
 		} else {
-			currentScene = (Scene)getPlugin(scenes, sceneIndex);
+			currentScene = scenes.getPlugin();
 			if (currentScene.isNormal()) {
-				BackDropSystem backDrop = null;
-				if (backDropSwitch.isEnabled()) {
-					backDrop = getBackDrop();
-				}
-	
-				ShapeSystem bgSys = null;
-				if (backGroundSwitch.isEnabled()) {
-					bgSys = getBackground();
-				}
-	
-				Filter filter = null;
-				if (filtersSwitch.isEnabled()) {
-					filter = (Filter) getPlugin(filters, filterIndex);
-				}
-	
-				ShapeSystem fgSys = null;
-				if (foreGroundSwitch.isEnabled()) {
-					fgSys = getForeground();
-				}
+				BackDropSystem backDrop = backDrops.getPlugin(true);
+				ShapeSystem bgSys = backgrounds.getPlugin(true);
+				Filter filter = filters.getPlugin(true);
+				ShapeSystem fgSys = foregrounds.getPlugin(true);
 	
 				currentScene.setSystems(backDrop, bgSys, fgSys, filter);
 			} else {
@@ -498,7 +456,7 @@ public class Main extends PApplet {
 			drawSystem(transition, "transition");
 		}
 		
-		if (messagesSwitch.isEnabled()) {
+		if (messages.isEnabled()) {
 			drawSystem(getMessage(), "message");
 		}
 		
@@ -516,7 +474,7 @@ public class Main extends PApplet {
 		
 		runControlMode();
 		
-		if (pulseListenerSwitch.isEnabled()) {
+		if (pulseListeners.isEnabled()) {
 			pulseListener.checkPulse();
 		}
 		
@@ -537,9 +495,8 @@ public class Main extends PApplet {
 	}
 	
 	protected TransitionSystem prepareTransition(boolean forceStart) {
-		TransitionSystem transition = null;
-		if (transitionSwitch.isEnabled()) {
-			transition = getTransition();
+		TransitionSystem transition = transitions.getPlugin(true);
+		if (transition != null) {
 			if (scrambleMode || forceStart) {
 				transition.startTransition();
 			}
@@ -559,43 +516,30 @@ public class Main extends PApplet {
 	
 	protected void doScramble() {
 		//mess it all up, except for transitions which were already scrambled
-		if (!likedScenesSwitch.isEnabled()) {
-			if (!foreGroundSwitch.isFrozen()) {
-				foregroundIndex += random(foregrounds.size() - 1);
-			}
-			
-			if (!backGroundSwitch.isFrozen()) {
-				backgroundIndex += random(backgrounds.size() - 1);
-			}
-			
-			if (!backDropSwitch.isFrozen()) {
-				backDropIndex += random(backDrops.size() - 1);
-			}
-			
-			if (!filtersSwitch.isFrozen()) {
-				filterIndex += random(filters.size() - 1);
-			}
-			
-			if (!messagesSwitch.isFrozen()) {
-				messageIndex += random(messages.size());
-			}
+		if (!likedScenes.isEnabled()) {
+			foregrounds.scramble(true);
+			backgrounds.scramble(true);
+			backDrops.scramble(true);
+			filters.scramble(true);
+			messages.scramble(true);
 		}
+
+		locations.scramble(false);
+		colors.scramble(false);
 		
-		locationIndex += random(locations.size() - 1);
-		colorIndex += random(colors.size() - 1);
 		
 		//send out a cool message about the new system
-		if (messagesSwitch.isEnabled()) {
+		if (messages.isEnabled()) {
 			List<String> msgs = new ArrayList<String>();
-			if (backDropSwitch.isEnabled()) {
+			if (backDrops.isEnabled()) {
 				msgs.add(getBackDrop().getDisplayName());
 			}
 
-			if (foreGroundSwitch.isEnabled()) {
+			if (foregrounds.isEnabled()) {
 				msgs.add(getForeground().getDisplayName());
 			}
 			
-			if (backGroundSwitch.isEnabled()) {
+			if (backgrounds.isEnabled()) {
 				msgs.add(getBackground().getDisplayName());
 			}
 			
@@ -620,35 +564,31 @@ public class Main extends PApplet {
 		
 		registerNonFreezableSwitchCommand(helpSwitch, 'h');
 		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
-		registerNonFreezableSwitchCommand(likedScenesSwitch, 'l');
+		registerNonFreezableSwitchCommand(likedScenes.getSwitch(), 'l');
 		
-		registerSwitchCommand(foreGroundSwitch, '1');
-		registerSwitchCommand(backGroundSwitch, '2');
-		registerSwitchCommand(backDropSwitch, '3');
-		registerSwitchCommand(filtersSwitch, '4');
-		registerSwitchCommand(messagesSwitch, '5');
-		registerSwitchCommand(transitionSwitch, '6');
-		registerSwitchCommand(pulseListenerSwitch, '7');
-		registerSwitchCommand(frameStroberSwitch, '8');
-		registerSwitchCommand(videoCaptureSwitch, '9');
+		foregrounds.registerSwitchCommand('1');
+		backgrounds.registerSwitchCommand('2');
+		backDrops.registerSwitchCommand('3');
+		filters.registerSwitchCommand('4');
+		messages.registerSwitchCommand('5');
+		transitions.registerSwitchCommand('6');
+		pulseListeners.registerSwitchCommand('7');
+		
+		registerNonFreezableSwitchCommand(frameStroberSwitch, '8');
+		registerNonFreezableSwitchCommand(videoCaptureSwitch, '9');
 		//not registering scrambleModeSwitch  It is a synthetic switch
+
+		foregrounds.registerCommand('f', "Foreground", "Cycles through the foregrounds");
+		backgrounds.registerCommand('b', "Background", "Cycles through the backgrounds");
+		backDrops.registerCommand('o', "Backdrop", "Cycles through the backdrops");
+		locations.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)");
+		filters.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)");
+		colors.registerCommand('c', "Colors", "Cycles through the colors (reverse w/the shift key held)");
+		transitions.registerCommand('n', "Transition", "Cycles through the transition (reverse w/the shift key held)");
+		messages.registerCommand('m', "Message", "Cycles through the message (reverse w/the shift key held)");
+		likedScenes.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", e -> likedScenes.increment());
+		likedScenes.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", e -> likedScenes.decrement());
 		
-		cs.registerCommand('f', "Foreground", "Cycles through the foregrounds", 
-				(event) -> {if (event.isShiftDown()) foregroundIndex--; else foregroundIndex++;});
-		cs.registerCommand('b', "Background", "Cycles through the backgrounds", 
-				(event) -> {if (event.isShiftDown()) backgroundIndex--; else backgroundIndex++;});
-		cs.registerCommand('o', "Backdrop", "Cycles through the backdrops", 
-				(event) -> {if (event.isShiftDown()) backDropIndex--; else backDropIndex++;});
-		cs.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) locationIndex--; else locationIndex++;});
-		cs.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) filterIndex--; else filterIndex++;});
-		cs.registerCommand('c', "Colors", "Cycles through the colors (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) colorIndex--; else colorIndex++;});
-		cs.registerCommand('n', "Transition", "Cycles through the transition (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) transitionIndex--; else transitionIndex++;});
-		cs.registerCommand('m', "Message", "Cycles through the message (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) messageIndex--; else messageIndex++;});
 		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
 		
@@ -658,33 +598,20 @@ public class Main extends PApplet {
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
 		
-		cs.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", event -> likedSceneIndex++);
-		cs.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", event -> likedSceneIndex--);
+		
 		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
 		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
-				(event) -> {transitions.forEach(s -> {s.incrementTransitionFrames();});});
+				(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
-				(event) -> {transitions.forEach(s -> {s.decrementTransitionFrames();});});
+				(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 	}
 
 	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
 		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
 				"Toggles between enabling " + s.getName(), 
 				event -> s.toggleEnabled());
-	}
-	
-	protected void registerSwitchCommand(Switch s, char charCode) {
-		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
-									"Toggles between enabling or freezing " + s.getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
-									(event) -> {
-										if (event.isMetaDown()) {
-											s.toggleFrozen();
-										} else {
-											s.toggleEnabled();
-										}
-									});
 	}
 	
 	protected void cycleMode(boolean advance) {
@@ -696,8 +623,8 @@ public class Main extends PApplet {
 		}
 	}
 
-	protected void setupSystems(List<? extends ShapeSystem> systems) {
-		for (ShapeSystem system : systems) {
+	protected void setupSystems(APV<? extends ShapeSystem> apv) {
+		for (ShapeSystem system : apv.getList()) {
 			system.setup();
 		}
 	}
@@ -713,16 +640,8 @@ public class Main extends PApplet {
 			switches.put(nextSwitch.name, nextSwitch);
 		}
 		
-		foreGroundSwitch = switches.get("ForeGround"); 
-		backGroundSwitch = switches.get("BackGround");
-		backDropSwitch = switches.get("BackDrop");
-		filtersSwitch = switches.get("Filters");
-		transitionSwitch = switches.get("Transitions");
-		messagesSwitch = switches.get("Messages");
 		helpSwitch = switches.get("Help");
 		showSettingsSwitch = switches.get("ShowSettings");
-		pulseListenerSwitch = switches.get("PulseListener");
-		likedScenesSwitch = switches.get("LikedScenes");
 		frameStroberSwitch = switches.get("FrameStrober");
 		videoCaptureSwitch = switches.get("VideoCapture");
 		scrambleModeSwitch = switches.get("Scramble");

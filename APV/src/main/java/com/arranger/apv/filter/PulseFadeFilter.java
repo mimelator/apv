@@ -24,9 +24,7 @@ public class PulseFadeFilter extends Filter {
 		super(parent);
 		this.color = color;
 		
-		parent.registerSetupListener(() -> {
-			pulseFader = new PulseFader(parent, FADE_OUT_FRAMES, Main.MAX_ALPHA, 0, pulsesToSkip);
-		});
+		pulseFader = new PulseFader(parent, FADE_OUT_FRAMES, Main.MAX_ALPHA, 0, pulsesToSkip);
 	}
 	
 	public PulseFadeFilter(Configurator.Context ctx) {
@@ -38,7 +36,10 @@ public class PulseFadeFilter extends Filter {
 	@Override
 	public String getConfig() {
 		//	{PulseFadeFilter : [RED, 1]}
-		return String.format("{%1s : [%2s, %3d]}", getName(), parent.format(color), pulseFader.getPulsesToSkip());
+		return String.format("{%1s : [%2s, %3d]}", 
+				getName(), 
+				parent.format(color), 
+				pulseFader.getPulsesToSkip());
 	}
 
 	@Override
