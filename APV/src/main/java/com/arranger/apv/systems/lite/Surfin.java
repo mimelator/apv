@@ -18,6 +18,7 @@ import processing.core.PApplet;
 public class Surfin extends LiteShapeSystem {
 
 	private static final int NUM_PARTICLES = 6000;
+	private static final int DEFAULT_PULSES_TO_SKIP = 4;
 
 	public enum COLOR_MODE {
 		ORIG, APV, CUSTOM
@@ -34,7 +35,7 @@ public class Surfin extends LiteShapeSystem {
 		parent.registerSetupListener(() -> {
 			parent.getPulseListener().registerPulseListener(() -> {
 				setParticles();
-			});
+			}, DEFAULT_PULSES_TO_SKIP);
 		});
 	}
 	

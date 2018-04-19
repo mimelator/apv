@@ -1,10 +1,11 @@
-package com.arranger.apv.systems.lite;
+package com.arranger.apv.archive;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.systems.lite.LiteShapeSystem;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.PulseFader;
 
