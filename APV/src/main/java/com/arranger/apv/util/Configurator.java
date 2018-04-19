@@ -225,8 +225,11 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 					return null;
 				}
 			}
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+		} catch (Throwable t) {
+			if (!t.getCause().equals(t)) {
+				t = t.getCause();
+			}
+			logger.log(Level.SEVERE, t.getMessage(), t);
 			return null;
 		}
 	}
@@ -239,7 +242,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		
 		results.append(parent.getConfig()); //Constants
 		
-		results.append(getConfigForPlugins("liked-scenes", parent.getLikedScenes()));
+		results.append(getConfigForPlugins("likedScenes", parent.getLikedScenes()));
 		results.append(getConfigForSystem("scenes"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));
@@ -251,7 +254,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		results.append(getConfigForSystem("transitions"));
 		results.append(getConfigForSystem("messages"));
 		results.append(getConfigForSystem("switches"));
-		results.append(getConfigForSystem("pulse-listeners"));
+		results.append(getConfigForSystem("pulseListeners"));
 		
 		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
 	}

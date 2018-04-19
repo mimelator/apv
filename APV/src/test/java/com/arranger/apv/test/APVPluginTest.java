@@ -24,6 +24,8 @@ import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
 import com.arranger.apv.cmd.MessageModeInterceptor;
 import com.arranger.apv.cmd.SceneSelectInterceptor;
+import com.arranger.apv.event.CoreEvent;
+import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.PeekIterator;
 import com.arranger.apv.util.SceneList;
@@ -69,6 +71,8 @@ public abstract class APVPluginTest {
         MessageModeInterceptor messageModeInterceptor = Mockito.mock(MessageModeInterceptor.class);
         SceneSelectInterceptor sceneSelectInterceptor = Mockito.mock(SceneSelectInterceptor.class);
         SceneList sceneList = Mockito.mock(SceneList.class);
+        CoreEvent coreEvent = Mockito.mock(CoreEvent.class);
+        DrawShapeEvent drawShapeEvent = Mockito.mock(DrawShapeEvent.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
@@ -94,6 +98,11 @@ public abstract class APVPluginTest {
         when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
         when(parent.getSceneList()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
+        when(parent.getSetupEvent()).thenReturn(coreEvent);
+        when(parent.getDrawEvent()).thenReturn(coreEvent);
+        when(parent.getSparkEvent()).thenReturn(drawShapeEvent);
+        when(parent.getCarnivalEvent()).thenReturn(drawShapeEvent);
+        
         
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);
         when(commandSystem.getSceneSelectInterceptor()).thenReturn(sceneSelectInterceptor);

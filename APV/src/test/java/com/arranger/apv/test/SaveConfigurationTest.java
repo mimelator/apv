@@ -52,7 +52,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 		results.append(parent.getSceneList().getConfig()).append(System.lineSeparator()).append(System.lineSeparator()); 
 		
 		results.append(getConfigForSystem("scenes"));
-		results.append(getConfigForSystem("liked-scenes"));
+		results.append(getConfigForSystem("likedScenes"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));
 		results.append(getConfigForSystem("foregrounds"));
@@ -63,7 +63,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 		results.append(getConfigForSystem("transitions"));
 		results.append(getConfigForSystem("messages"));
 		results.append(getConfigForSystem("switches"));
-		results.append(getConfigForSystem("pulse-listeners"));
+		results.append(getConfigForSystem("pulseListeners"));
 		
 		saveConfigFile("testGettingGlobalConfig.conf", results.toString());
 	}
