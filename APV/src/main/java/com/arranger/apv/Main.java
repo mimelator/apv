@@ -197,6 +197,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
 	}
 	
+	public CoreEvent getStrobeEvent() {
+		return (CoreEvent)eventMap.get(EVENT_TYPES.STROBE);
+	}
+	
 	public DrawShapeEvent getCarnivalEvent() {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
 	}
@@ -220,16 +224,20 @@ public class Main extends PApplet {
 		return colors.getPlugin();
 	}
 	
-	public ShapeSystem getForeground() {
-		return foregrounds.getPlugin();
+	public APV<ShapeSystem> getBackgrounds(){
+		return backgrounds;
 	}
-
-	public ShapeSystem getBackground() {
-		return backgrounds.getPlugin();
+	
+	public APV<BackDropSystem> getBackDrops(){
+		return backDrops;
 	}
-
-	public BackDropSystem getBackDrop() {
-		return backDrops.getPlugin();
+	
+	public APV<ShapeSystem> getForegrounds() {
+		return foregrounds;
+	}
+	
+	public APV<Filter> getFilters() {
+		return filters;
 	}
 	
 	public TransitionSystem getTransition() {
@@ -532,15 +540,15 @@ public class Main extends PApplet {
 		if (messages.isEnabled()) {
 			List<String> msgs = new ArrayList<String>();
 			if (backDrops.isEnabled()) {
-				msgs.add(getBackDrop().getDisplayName());
+				msgs.add(getBackDrops().getPlugin().getDisplayName());
 			}
 
 			if (foregrounds.isEnabled()) {
-				msgs.add(getForeground().getDisplayName());
+				msgs.add(getForegrounds().getPlugin().getDisplayName());
 			}
 			
 			if (backgrounds.isEnabled()) {
-				msgs.add(getBackground().getDisplayName());
+				msgs.add(getBackgrounds().getPlugin().getDisplayName());
 			}
 			
 			sendMessage(msgs.toArray(new String[msgs.size()]));
@@ -652,13 +660,14 @@ public class Main extends PApplet {
 	}
 	
 	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL
+		SETUP, DRAW, SPARK, CARNIVAL, STROBE,
 	}
 	
 	protected void initEvents() {
 		eventMap = new HashMap<EVENT_TYPES, APVEvent<? extends EventHandler>>();
 		eventMap.put(EVENT_TYPES.SETUP, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
+		eventMap.put(EVENT_TYPES.STROBE, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
 	}

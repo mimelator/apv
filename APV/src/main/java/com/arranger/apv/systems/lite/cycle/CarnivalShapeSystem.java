@@ -54,6 +54,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 		if (useCustomColor) {
 			colorSystem = new OscillatingColor(parent);
 		}
+		super.setup();
 	}
 
 	public void draw() {
@@ -95,7 +96,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 			lifeSpan = (int) (parent.random(30, 90));
 			decay = parent.random(0.75f, 0.9f);
 			
-			ColorSystem cs = (useCustomColor) ? colorSystem : parent.getColor();
+			ColorSystem cs = (colorSystem != null) ? colorSystem : parent.getColor();
 			c = cs.getCurrentColor().getRGB();
 
 			//Original color scheme

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.arranger.apv.CommandSystem.CommandHandler;
+import com.arranger.apv.Switch.STATE;
 
 import processing.event.KeyEvent;
 
@@ -53,6 +54,10 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 			return true; //we're not a switcher
 		}
 		return sw.isEnabled() && !list.isEmpty(); 
+	}
+	
+	public void setEnabled(boolean isEnabled) {
+		sw.setState(isEnabled ? STATE.ENABLED : STATE.DISABLED);
 	}
 	
 	public List<T> getList() {

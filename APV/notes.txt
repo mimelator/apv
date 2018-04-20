@@ -1,13 +1,16 @@
 BRANCH: agents
 https://github.com/mimelator/apv
 
+* How do i use a different name for application.conf?  What's the sys param?
 
-Trigger any shape system from anywhere
-Document Events and DrawHelper
-	
 
 TODO:
 *****************************************************************************
+* Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
+* Look for reusable solutions from ITTT or other automation ideas.
+* help popup window?
+* Maybe i can do a multi hour test of just playing my songs in a loop?
+*  Scramble should be a command on Command System
 * An agent script that checks frame rate and changes the filter to StrobeFilter
 * Create a sample pack
 * More animations like light worm
@@ -16,6 +19,8 @@ TODO:
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
 * reload config command
+* Convert Pulse listeners to agents
+* Ability to individually fire agents and/or disable (switches?)
 *****************************************************************************
 		
 
