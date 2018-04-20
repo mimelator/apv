@@ -10,8 +10,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.Switch;
-import com.arranger.apv.gui.PopupWindow;
-import com.arranger.apv.gui.PopupWindow.WindowTextPrinter;
+import com.arranger.apv.gui.APVTextFrame;
 
 import processing.core.PApplet;
 
@@ -102,10 +101,11 @@ public class SettingsDisplay extends APVPlugin {
 	}
 	
 	protected void createSettingsWindow() {
-		final WindowTextPrinter printer = new PopupWindow(parent).launchWindow("settings", 
-				(int)(parent.width / 6), (int)(parent.height * .8f));
-		parent.getDrawEvent().register(() -> {
-			printer.printText(settingsMessages);
-		});
+		new APVTextFrame(parent, 
+				"settings",
+				(int)(parent.width / 6),
+				(int)(parent.height * .8f),
+				parent.getDrawEvent(),
+				() -> settingsMessages);
 	}
 }

@@ -8,10 +8,9 @@ import java.util.Set;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
-import com.arranger.apv.Main;
 import com.arranger.apv.CommandSystem.APVCommand;
-import com.arranger.apv.gui.PopupWindow;
-import com.arranger.apv.gui.PopupWindow.WindowTextPrinter;
+import com.arranger.apv.Main;
+import com.arranger.apv.gui.APVTextFrame;
 
 public class HelpDisplay extends APVPlugin {
 
@@ -67,10 +66,11 @@ public class HelpDisplay extends APVPlugin {
 	}
 	
 	protected void createSettingsWindow() {
-		final WindowTextPrinter printer = new PopupWindow(parent).launchWindow("help", 
-				(int)(parent.width / 2), (int)(parent.height * .8f));
-		parent.getDrawEvent().register(() -> {
-			printer.printText(getMessages());
-		});
+		new APVTextFrame(parent, 
+				"help",
+				(int)(parent.width / 2),
+				(int)(parent.height * .8f),
+				parent.getDrawEvent(),
+				() -> getMessages());
 	}
 }
