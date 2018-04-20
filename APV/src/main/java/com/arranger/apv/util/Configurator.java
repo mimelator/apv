@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
@@ -108,7 +110,21 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 			return defaultVal;
 		}
 		
+		private static final String DECODE_COLOR_REGEX = "\\Q(\\E(\\d+),\\s?(\\d+),\\s?(\\d+)\\Q)\\E";
+		private final Pattern COLOR_PATTERN = Pattern.compile(DECODE_COLOR_REGEX);
+		
 		private Color decode(String colorName) {
+			if (colorName.contains("(")) {
+				Matcher matcher = COLOR_PATTERN.matcher(colorName);
+				if (matcher.matches()) {
+					String r = matcher.group(1);
+					String g = matcher.group(2);
+					String b = matcher.group(3);
+					return new Color(Integer.parseInt(r), Integer.parseInt(g), Integer.parseInt(b));
+				}
+			}
+			
+			
 			try {
 			    Field field = Color.class.getField(colorName);
 			    return (Color)field.get(null);

@@ -25,11 +25,11 @@ public class Perlin extends PulseListeningControlSystem {
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
 	private static final CommandHolder [] AUTO_CHAR_COMMANDS = {
-			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
-			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
-			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
-			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
-			new CommandHolder(Main.SPACE_BAR_KEY_CODE, "Scramble"),
+			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
+			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
+			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
+			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
+			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
 			new CommandHolder('r', null),
 			new CommandHolder('f', "foregrounds"),  
 			new CommandHolder('b', "backgrounds"),

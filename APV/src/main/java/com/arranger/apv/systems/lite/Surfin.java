@@ -79,8 +79,12 @@ public class Surfin extends LiteShapeSystem {
 		if (COLOR_MODE.CUSTOM != colorMode) {
 			return String.format("{%1s: [%2s]}", getName(), colorMode.name());
 		} else {
-			return String.format("{%1s : [%2s, %3s]}", getName(), format(startColor), format(endColor));
+			return String.format("{%1s : [%2s, %3s]}", getName(), format(startColor, true), format(endColor, true));
 		}
+	}
+	
+	private String format(Color c, boolean addQuote) {
+		return parent.format(c, addQuote);
 	}
 	
 	private String format(Color c) {

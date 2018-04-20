@@ -322,6 +322,14 @@ public class Main extends PApplet {
 		return String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue());
 	}
 	
+	public String format(Color c, boolean addQuote) {
+		if (!addQuote) {
+			return format(c);
+		} else {
+			return "\"" + String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue()) + "\"";
+		}
+	}
+	
 	public float lerpAlpha(float pct) {
 		return PApplet.lerp(0, MAX_ALPHA, pct);
 	}
@@ -593,7 +601,7 @@ public class Main extends PApplet {
 		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
 				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
 		
-		cs.registerCommand(SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things", e -> scramble());
+		cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
 		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> perfMonitor.dumpMonitorInfo());
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());

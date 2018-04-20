@@ -22,7 +22,7 @@ public class Gravity extends APVPlugin {
 				else
 					gravityIndex++;
 			});
-			cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things",
+			cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things",
 					event -> gravityIndex = (int) parent.random(GRAVITY.length - 1));
 		});
 	}

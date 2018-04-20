@@ -32,14 +32,12 @@ public class LowFrameCountAgent extends APVPlugin {
 					if (register == null) {
 						CoreEvent strobeEvent = parent.getStrobeEvent();
 						register = parent.getStrobeEvent().register(() -> {
-							
-							//Scramble, unregister and reset (should be a command on Command System)
-							parent.getCommandSystem().invokeCommand(Main.SPACE_BAR_KEY_CODE);
+							parent.getCommandSystem().invokeScramble();
 							strobeEvent.unregister(register);
 							register = null;
 						});
 					
-						//set filters enabled as well as the strob filter, & sped up, so lfr is false
+						//Ensure Strobe Filter is primed; Frame Count has increased, so lfr is false
 						APV<Filter> filters = parent.getFilters();
 						filters.setEnabled(true);
 						setStrobeFilter(filters);

@@ -11,14 +11,12 @@ public class OscilatingBackDrop extends BackDropSystem {
 	private static final int SPEED_HIGH = 12;
 	private Color c1, c2;
 	private float oscSpeed;
-	private String displayName;
 
 	public OscilatingBackDrop(Main parent, Color c1, Color c2) {
 		super(parent);
 		this.c1 = c1;
 		this.c2 = c2;
 		
-		displayName = format(c1) + " " + format(c2);
 		oscSpeed = parent.random(SPEED_LOW, SPEED_HIGH);
 	}
 	
@@ -28,18 +26,12 @@ public class OscilatingBackDrop extends BackDropSystem {
 				ctx.getColor(1, Color.BLACK));
 	}
 	
-
 	@Override
 	public String getConfig() {
-		//{OscilatingBackDrop: [WHITE, BLACK, White-Black]}
-		return String.format("{%1s : [%2s, %3s, %4s]}", getName(), format(c1), format(c2), displayName);
+		//{OscilatingBackDrop: [WHITE, BLACK]}
+		return String.format("{%1s : [%2s, %3s]}", getName(), format(c1, true), format(c2, true));
 	}	
 	
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
-
 	@Override
 	public void drawBackground() {
 		float amt = parent.oscillate(0, 1, oscSpeed);
@@ -47,14 +39,14 @@ public class OscilatingBackDrop extends BackDropSystem {
 		parent.background(lerpColor);
 		
 		String pctString = String.format("%.0f%%", amt * 100);
-		String colors = String.format("%1s %2s", format(c1), format(c2));
+		String colors = String.format("%1s %2s", format(c1, false), format(c2, false));
 		parent.addSettingsMessage(" --colors: " + colors);
-		parent.addSettingsMessage(" --current: " + format(new Color(lerpColor)));
+		parent.addSettingsMessage(" --current: " + format(new Color(lerpColor), false));
 		parent.addSettingsMessage(" --pctString: " + pctString);
 		parent.addSettingsMessage(" --oscSpeed: " + oscSpeed);
 	}
 	
-	private String format(Color c) {
-		return parent.format(c);
+	private String format(Color c, boolean addQuote) {
+		return parent.format(c, addQuote);
 	}
 }

@@ -1,6 +1,7 @@
 package com.arranger.apv.util;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
 import processing.event.KeyEvent;
@@ -12,7 +13,7 @@ public class KeyEventHelper extends APVPlugin {
 	}
 	
 	public KeyEvent createScramble() {
-		return createKeyEvent(Main.SPACE_BAR_KEY_CODE, this);
+		return createKeyEvent(CommandSystem.SCRAMBLE_COMMAND, this);
 	}
 	
 	public KeyEvent createKeyEvent(int keyCode, Object obj) {

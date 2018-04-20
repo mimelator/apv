@@ -98,6 +98,7 @@ public abstract class APVPluginTest {
         when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
         when(parent.getSceneList()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
+        when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
         when(parent.getSetupEvent()).thenReturn(coreEvent);
         when(parent.getDrawEvent()).thenReturn(coreEvent);
         when(parent.getSparkEvent()).thenReturn(drawShapeEvent);

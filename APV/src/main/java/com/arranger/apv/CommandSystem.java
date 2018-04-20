@@ -13,6 +13,8 @@ import processing.event.KeyEvent;
 
 public class CommandSystem extends APVPlugin {
 	
+	public static final char SCRAMBLE_COMMAND = Main.SPACE_BAR_KEY_CODE;
+	
 	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
 	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
 	
@@ -44,6 +46,10 @@ public class CommandSystem extends APVPlugin {
 	public void panic() {
 		messageModeInterceptor.panic();
 		sceneSelectInterceptor.panic();
+	}
+	
+	public void invokeScramble() {
+		invokeCommand(SCRAMBLE_COMMAND);
 	}
 	
 	public void invokeCommand(char cmdKey) {

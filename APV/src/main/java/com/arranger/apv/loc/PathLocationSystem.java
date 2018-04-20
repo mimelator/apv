@@ -34,7 +34,7 @@ public abstract class PathLocationSystem extends LocationSystem {
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
-			cs.registerCommand(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things",
+			cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things",
 					event -> reverser.reverse());
 		});
 	}
