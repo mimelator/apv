@@ -31,11 +31,11 @@ public class HelpDisplay extends APVPlugin {
 		new SafePainter(parent, () -> {
 			Main p = parent;
 			int x = p.width / 4;
-			int y = p.height / 8;
+			int y = p.height / 12;
 			p.translate(x, y);
 			p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
 			p.translate(-x, -y);
-		});
+		}).paint();
 
 	}
 

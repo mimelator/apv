@@ -53,7 +53,7 @@ public class SettingsDisplay extends APVPlugin {
 				parent.text(s, TEXT_INDEX, offset);
 				offset += TEXT_SIZE;
 			}
-		});
+		}).paint();
 	}
 	
 	public void debugSystem(ShapeSystem ss, String name) {

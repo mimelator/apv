@@ -8,7 +8,7 @@ Fix writing out colors to include the quotes around the parentheses
 Ensure that the BeatColorSystem with purple is working.
 
 
-
+What happened to settings?
 
 
 
