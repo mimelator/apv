@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.SafePainter;
 import com.arranger.apv.util.StarMaker;
 
 import processing.core.PShape;
@@ -17,6 +18,7 @@ public class StarPL extends APVPlugin {
 	
 	private PShape star;
 	private float scaleSmall = SCALE_SMALL, scaleLarge = SCALE_LARGE;
+	private SafePainter safePainter;
 
 	public StarPL(Main parent) {
 		this(parent, SCALE_SMALL, SCALE_LARGE);
@@ -38,25 +40,27 @@ public class StarPL extends APVPlugin {
 	}
 	
 	protected void registerListener(Main parent) {
-		parent.getPulseListener().registerHandler(()-> { 
-				//location
-				Point2D point = parent.getLocation().getCurrentPoint();
-				int x = (int)point.getX();
-				int y = (int)point.getY();
-				
-				//color
-				Color c = parent.getColor().getCurrentColor();
-				star.setFill(c.getRGB());
-				
-				//scale
-				star.scale(parent.random(scaleSmall, scaleLarge));
-				
-				//move it, paint it and then reset
-				parent.translate(x, y);
-				parent.shape(star);
-				parent.translate(-x, -y);
-				star.resetMatrix();
-			}  
-		);
+		safePainter = new SafePainter(parent, () ->  {
+			//location
+			Point2D point = parent.getLocation().getCurrentPoint();
+			int x = (int)point.getX();
+			int y = (int)point.getY();
+			
+			//color
+			Color c = parent.getColor().getCurrentColor();
+			star.setFill(c.getRGB());
+			
+			//scale
+			star.scale(parent.random(scaleSmall, scaleLarge));
+			
+			//move it, paint it and then reset
+			parent.translate(x, y);
+			parent.shape(star);
+			parent.translate(-x, -y);
+			star.resetMatrix();
+			
+		});
+		
+		parent.getPulseListener().registerHandler(()-> safePainter.paint());
 	}
 }
