@@ -44,6 +44,11 @@ public class SpriteFactory extends ShapeFactory {
 		//{SpriteFactory : [triangle.png, 2.5]}
 		return String.format("{%1s : [%2s, %3s]}", getName(), file, alpha);
 	}
+	
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + ":" + file;
+	}
 
 	public int getImageWidth() {
 		return sprite.width;

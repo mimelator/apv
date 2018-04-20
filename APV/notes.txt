@@ -1,11 +1,10 @@
 BRANCH: agents
 https://github.com/mimelator/apv
 
-* How do i use a different name for application.conf?  What's the sys param?
-
 
 TODO:
 *****************************************************************************
+* maybe pressing 'w' again would close the popup windows?
 * After changing to a marquee or a tree scene, change back to normal scenes
 * Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
 * Look for reusable solutions from ITTT or other automation ideas.
