@@ -1,9 +1,8 @@
 package com.arranger.apv.gui;
 
+import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -42,19 +41,26 @@ public class APVCommandFrame extends APVFrame {
 	
 	private JList<CMDModel> list;
 	
+	@SuppressWarnings("serial")
 	public APVCommandFrame(Main parent) {
 		super(parent);
 		CommandSystem cs = parent.getCommandSystem();
 		
-		Map<Character, List<APVCommand>> charCommands = cs.getCharCommands();
 		Vector<CMDModel> modelList = new Vector<CMDModel>();
-		charCommands.entrySet().forEach(e -> {
+		cs.getCharCommands().entrySet().forEach(e -> {
 			APVCommand c = e.getValue().get(0);
 			modelList.add(new CMDModel(c.getCharKey(), c.getName(), c.getHelpText()));
 		});
 		
 		modelList.sort(null);
-		list = new JList<CMDModel>(modelList);
+		list = new JList<CMDModel>(modelList) {
+			@Override
+			public String getToolTipText(MouseEvent event) {
+				int index = locationToIndex(event.getPoint());
+				CMDModel mdl = getModel().getElementAt(index);
+				return mdl.helpText;
+			}
+		};
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -72,9 +78,14 @@ public class APVCommandFrame extends APVFrame {
 		});
 		
 		JPanel panel = new JPanel();
-		panel.add(new JScrollPane(list));
-		panel.add(textField);
-		panel.add(button);
+		panel.setLayout(new BorderLayout());
+		panel.add(new JScrollPane(list), BorderLayout.PAGE_START);
+		
+		JPanel p = new JPanel();
+		p.add(textField);
+		p.add(button);
+		panel.add(p, BorderLayout.PAGE_END);
+		
 		createFrame("Commands", 300, 300, panel, () -> {}).pack();
 	}
 }
