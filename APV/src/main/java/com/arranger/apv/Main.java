@@ -193,6 +193,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EVENT_TYPES.DRAW);
 	}
 	
+	public CoreEvent getSceneCompleteEvent() {
+		return (CoreEvent)eventMap.get(EVENT_TYPES.SCENE_COMPLETE);
+	}
+	
 	public DrawShapeEvent getSparkEvent() {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
 	}
@@ -203,6 +207,11 @@ public class Main extends PApplet {
 	
 	public DrawShapeEvent getCarnivalEvent() {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
+	}
+	
+	public void setDefaultScene() {
+		Scene defaultScene = scenes.getList().stream().filter(e -> e.isNormal()).findFirst().get();
+		setNextScene(defaultScene);
 	}
 	
 	public void setNextScene(Scene scene) {
@@ -668,13 +677,14 @@ public class Main extends PApplet {
 	}
 	
 	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL, STROBE,
+		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE
 	}
 	
 	protected void initEvents() {
 		eventMap = new HashMap<EVENT_TYPES, APVEvent<? extends EventHandler>>();
 		eventMap.put(EVENT_TYPES.SETUP, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
+		eventMap.put(EVENT_TYPES.SCENE_COMPLETE, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.STROBE, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.Tracker;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -73,13 +74,18 @@ public class Marquee extends Scene {
 
 	protected void reset() {
 		pg = null;
-		lastFrameDrawn = 0;
 	}
 
+	private static final int DRAWN_CHAR_THRESHOLD = 800000;
+	private Tracker<Marquee> tracker;
+	int drawCount = 0;
+	
 	@Override
 	public void drawScene() {
 		if (pg == null) {
 			init();
+			drawCount = 0;
+			tracker = new Tracker<Marquee>(parent, parent.getSceneCompleteEvent());
 		}
 		
 		//draw background frame always the same size
@@ -109,6 +115,14 @@ public class Marquee extends Scene {
 		
 		for (OneChr oc : chrs) {
 			oc.updateMe();
+			drawCount++;
+		}
+		
+		if (tracker != null && tracker.isActive(e -> true)) {
+			if (drawCount > DRAWN_CHAR_THRESHOLD) {
+				tracker.fireEvent();
+				tracker = null;
+			}
 		}
 	}
 	

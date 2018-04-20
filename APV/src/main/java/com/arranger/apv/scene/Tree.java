@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
+import com.arranger.apv.util.Tracker;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -15,10 +16,12 @@ import processing.core.PVector;
  **/
 public class Tree extends Scene {
 
+	private static final int GROWTH_THRESHOLD = 100;
+	
 	private static final int FRAMES_REQUIRED_TO_RESET = 60;
 	private static final float SPEED = 1.5f;
 	
-
+	private Tracker<Tree> tracker;
 	private List<PathFinder> paths = new ArrayList<PathFinder>();
 	
 	public Tree(Main parent) {
@@ -49,14 +52,17 @@ public class Tree extends Scene {
 	public void setup() {
 	}
 	
+	
+	
 	@Override
 	public void drawScene() {
 		if (isNew()) {
 			paths.add(new PathFinder());
+			tracker = new Tracker<Tree>(parent, parent.getSceneCompleteEvent());
 		}
+		
 		parent.ellipseMode(CENTER);
 		Color col = parent.getColor().getCurrentColor();
-		
 		parent.fill(col.getRed(), col.getGreen(), col.getBlue());
 
 		List<PathFinder> newPaths = new ArrayList<PathFinder>();
@@ -75,6 +81,14 @@ public class Tree extends Scene {
 		}
 		
 		paths.removeIf(pf -> pf.diameter <= .5);
+		if (tracker != null) {
+			if (tracker.isActive(e -> {return paths.size() > GROWTH_THRESHOLD;})) {
+				if (paths.size() < GROWTH_THRESHOLD) {
+					tracker.fireEvent();
+					tracker = null;
+				}
+			}
+		}
 	}
 
 	class PathFinder {
