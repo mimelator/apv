@@ -48,6 +48,13 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 	public Switch getSwitch() {
 		return sw;
 	}
+	
+	public boolean isFrozen() {
+		if (sw == null) {
+			return false;
+		}
+		return sw.isFrozen();
+	}
 
 	public boolean isEnabled() {
 		if (sw == null) {
@@ -97,6 +104,10 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 
 	@Override
 	public void onKeyPressed(KeyEvent event) {
+		if (isFrozen()) {
+			return;
+		}
+		
 		if (event.isShiftDown()) {
 			decrement(); 		
 		} else {
