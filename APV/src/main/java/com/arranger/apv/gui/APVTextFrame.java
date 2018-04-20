@@ -2,21 +2,17 @@ package com.arranger.apv.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.arranger.apv.APVEvent;
 import com.arranger.apv.APVEvent.EventHandler;
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
-public class APVTextFrame extends APVPlugin {
+public class APVTextFrame extends APVFrame {
 	
 	private static final float EXTRA_SCROLL_PANE_DIMENSION = 1.5f;
 	
@@ -35,19 +31,8 @@ public class APVTextFrame extends APVPlugin {
 		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * EXTRA_SCROLL_PANE_DIMENSION)));
 		outputPanel.setAutoscrolls(true);
 		JScrollPane scrollPane = new JScrollPane(outputPanel);
-		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));
-		
-		JFrame frame = new JFrame(title);
-		frame.setSize(sizeX, sizeY);
-		frame.setResizable(true);
-		frame.getContentPane().add(scrollPane);
-		frame.setVisible(true);
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-            public void windowClosing(WindowEvent e) {
-				event.unregister(handler);
-            }	
-		});
+		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));		
+		createFrame(title, sizeX, sizeY, scrollPane, () -> event.unregister(handler));
 		
 		handler = event.register(() -> {
 			outputPanel.printText(ts.getMessages());

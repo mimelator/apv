@@ -1,6 +1,11 @@
 BRANCH: save-painting
 https://github.com/mimelator/apv
 
+Dashboard:
+
+Button and text input to launch a message
+Input char (or a picker) to invoke command
+
 
 
 TODO:

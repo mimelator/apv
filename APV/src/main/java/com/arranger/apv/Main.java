@@ -18,6 +18,7 @@ import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
+import com.arranger.apv.gui.APVCommandFrame;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.util.APVAgent;
@@ -623,6 +624,10 @@ public class Main extends PApplet {
 				(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
 				(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+		
+		cs.registerCommand('w', "CommandWindow", "Opens a window that allows easy command access", e -> {
+			new APVCommandFrame(this);
+		});
 	}
 
 	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
