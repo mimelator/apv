@@ -435,6 +435,10 @@ public class Main extends PApplet {
 			getMessage().onNewMessage(messages);
 		}
 	}
+	
+	public void sendMarqueeMessage(String message) {
+		getCommandSystem().getSceneSelectInterceptor().showMessageSceneWithText(message);
+	}
 
 	@Override
 	public void draw() {

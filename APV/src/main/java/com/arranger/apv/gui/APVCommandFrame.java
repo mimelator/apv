@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.APVCommand;
@@ -44,8 +46,6 @@ public class APVCommandFrame extends APVFrame {
 		super(parent);
 		CommandSystem cs = parent.getCommandSystem();
 		
-		JPanel panel = new JPanel();
-		
 		Map<Character, List<APVCommand>> charCommands = cs.getCharCommands();
 		Vector<CMDModel> modelList = new Vector<CMDModel>();
 		charCommands.entrySet().forEach(e -> {
@@ -55,7 +55,6 @@ public class APVCommandFrame extends APVFrame {
 		
 		modelList.sort(null);
 		list = new JList<CMDModel>(modelList);
-		
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -66,7 +65,16 @@ public class APVCommandFrame extends APVFrame {
 			}
 		});
 		
+		JTextField textField = new JTextField(30); //max length of Marquee
+		JButton button = new JButton("Send Message");
+		button.addActionListener(l -> {
+			parent.sendMarqueeMessage(textField.getText());
+		});
+		
+		JPanel panel = new JPanel();
 		panel.add(new JScrollPane(list));
+		panel.add(textField);
+		panel.add(button);
 		createFrame("Commands", 300, 300, panel, () -> {}).pack();
 	}
 }
