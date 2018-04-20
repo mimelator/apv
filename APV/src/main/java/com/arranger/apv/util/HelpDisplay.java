@@ -10,14 +10,36 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.gui.PopupWindow;
+import com.arranger.apv.gui.PopupWindow.WindowTextPrinter;
 
 public class HelpDisplay extends APVPlugin {
 
 	public HelpDisplay(Main parent) {
 		super(parent);
+		
+		parent.getSetupEvent().register(() -> {
+			parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
+				"Popup window to display Help", 
+				e -> createSettingsWindow());
+		});
 	}
 
 	public void showHelp() {
+		List<String> sortedMessages = getMessages();
+		
+		new SafePainter(parent, () -> {
+			Main p = parent;
+			int x = p.width / 4;
+			int y = p.height / 8;
+			p.translate(x, y);
+			p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
+			p.translate(-x, -y);
+		});
+
+	}
+
+	protected List<String> getMessages() {
 		Main p = parent;
 		Set<String> messages = new HashSet<String>();
 		CommandSystem commandSystem = p.getCommandSystem();
@@ -41,14 +63,14 @@ public class HelpDisplay extends APVPlugin {
 		
 		List<String> sortedMessages = new ArrayList<String>(messages);
 		sortedMessages.sort(Comparator.naturalOrder());
-		
-		new SafePainter(parent, () -> {
-			int x = p.width / 4;
-			int y = p.height / 8;
-			p.translate(x, y);
-			p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
-			p.translate(-x, -y);
+		return sortedMessages;
+	}
+	
+	protected void createSettingsWindow() {
+		final WindowTextPrinter printer = new PopupWindow(parent).launchWindow("help", 
+				(int)(parent.width / 2), (int)(parent.height * .8f));
+		parent.getDrawEvent().register(() -> {
+			printer.printText(getMessages());
 		});
-
 	}
 }

@@ -1,15 +1,15 @@
 BRANCH: agents
 https://github.com/mimelator/apv
 
-* Use Safe Painter everywhere that paints as isn't a system (Transitions, Filters, messages, Help/Settings)
 * I want a color agent
 ** Different color beatColorSystems (black, blue, green, orange, purple)
+* ability to scroll in settings & help windows
 
 TODO:
 *****************************************************************************
 * After changing to a marquee or a tree scene, change back to normal scenes
 * Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
-* help popup window?
+
 * Maybe i can do a multi hour test of just playing my songs in a loop?
 * Scramble should be a command on Command System
 * Create a sample pack

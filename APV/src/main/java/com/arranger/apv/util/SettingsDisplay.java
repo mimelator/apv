@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.CommandSystem.APVCommand;
-import com.arranger.apv.gui.PopupWindow;
-import com.arranger.apv.gui.PopupWindow.WindowTextPrinter;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.Switch;
+import com.arranger.apv.gui.PopupWindow;
+import com.arranger.apv.gui.PopupWindow.WindowTextPrinter;
 
 import processing.core.PApplet;
 
