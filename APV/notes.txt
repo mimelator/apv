@@ -2,19 +2,12 @@ BRANCH: save-painting
 https://github.com/mimelator/apv
 
 
-Different color beatColorSystems (black, blue, green, orange, purple)
-Fix Configurator#decode Regex ton include spaces
-Fix writing out colors to include the quotes around the parentheses
-Ensure that the BeatColorSystem with purple is working.
-
-
-What happened to settings?
-
 
 
 TODO:
 *****************************************************************************
-If no pulse is found, simulate one every N frames
+* Create a message entry system using actual windows 
+* 	If no pulse is found, simulate one every N frames
 * After changing to a marquee or a tree scene, change back to normal scenes
 * Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
 * More animations like light worm
