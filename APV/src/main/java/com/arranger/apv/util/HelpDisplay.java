@@ -20,7 +20,7 @@ public class HelpDisplay extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
 				"Popup window to display Help", 
-				e -> createSettingsWindow());
+				e -> createHelpWindow());
 		});
 	}
 
@@ -65,7 +65,7 @@ public class HelpDisplay extends APVPlugin {
 		return sortedMessages;
 	}
 	
-	protected void createSettingsWindow() {
+	protected void createHelpWindow() {
 		new APVTextFrame(parent, 
 				"help",
 				(int)(parent.width / 2),

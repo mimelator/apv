@@ -32,9 +32,9 @@ public class APVTextFrame extends APVPlugin {
 	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent event, TextSupplier ts) {
 		super(parent);
 		outputPanel = new OutputPanel();
-		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * 1.5f)));
-		JScrollPane scrollPane = new JScrollPane(outputPanel);
+		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * EXTRA_SCROLL_PANE_DIMENSION)));
 		outputPanel.setAutoscrolls(true);
+		JScrollPane scrollPane = new JScrollPane(outputPanel);
 		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));
 		
 		JFrame frame = new JFrame(title);
@@ -69,7 +69,6 @@ public class APVTextFrame extends APVPlugin {
 			repaint();
 		}
 
-	    //paint
 		public void paintComponent(Graphics g) {
 			if (msgs != null) { 
 				drawText(g, msgs);
