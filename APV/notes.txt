@@ -7,7 +7,6 @@ TODO:
 *****************************************************************************
 * Create a message entry system using actual windows 
 * 	If no pulse is found, simulate one every N frames
-* After changing to a marquee or a tree scene, change back to normal scenes
 * Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
 * More animations like light worm
 * Implement more Custom Scenes for animations
@@ -15,7 +14,7 @@ TODO:
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
 * reload config command
-* Convert Pulse listeners to agents
+* Convert Pulse listeners to agents?
 *****************************************************************************
 		
 
