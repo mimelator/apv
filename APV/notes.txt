@@ -1,7 +1,9 @@
 BRANCH: agents
 https://github.com/mimelator/apv
 
+* Use Safe Painter everywhere that paints as isn't a system (Transitions, Filters, messages, Help/Settings)
 * I want a color agent
+** Different color beatColorSystems (black, blue, green, orange, purple)
 
 TODO:
 *****************************************************************************

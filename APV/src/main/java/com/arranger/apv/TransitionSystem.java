@@ -79,13 +79,12 @@ public abstract class TransitionSystem extends ShapeSystem {
 
 	public void onDrawStop() {
 		logger.fine("frame: " + parent.getFrameCount());
-
 		
 		if (frameFader.isFadeNew()) {
 			logger.info("newFade at frame: " + parent.getFrameCount());
 			captureCurrentImage();
 		} else {
-			//we can't fade if we don't have a saved image
+			//we can't transition if we don't have a saved image
 			if (savedImage != null) {
 				//this is where we are actively fading
 				if (frameFader.isFadeActive() && savedImage.getSavedImage() != null) {

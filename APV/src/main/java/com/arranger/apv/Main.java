@@ -481,11 +481,11 @@ public class Main extends PApplet {
 		if (messages.isEnabled()) {
 			drawSystem(getMessage(), "message");
 		}
-		
+
 		if (showSettingsSwitch.isEnabled()) {
 			settingsDisplay.drawSettingsMessages();
 		}
-		
+
 		if (helpSwitch.isEnabled()) {
 			helpDisplay.showHelp();
 		}

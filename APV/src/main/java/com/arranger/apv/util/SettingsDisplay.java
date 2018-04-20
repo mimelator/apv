@@ -43,15 +43,17 @@ public class SettingsDisplay extends APVPlugin {
 	}
 	
 	public void drawText(List<String> msgs) {
-		parent.fill(255);
-		parent.textAlign(PApplet.LEFT, PApplet.TOP);
-		parent.textSize(TEXT_SIZE);
-		
-		int offset = TEXT_INDEX;
-		for (String s : msgs) {
-			parent.text(s, TEXT_INDEX, offset);
-			offset += TEXT_SIZE;
-		}
+		new SafePainter(parent, () -> {
+			parent.fill(255);
+			parent.textAlign(PApplet.LEFT, PApplet.TOP);
+			parent.textSize(TEXT_SIZE);
+			
+			int offset = TEXT_INDEX;
+			for (String s : msgs) {
+				parent.text(s, TEXT_INDEX, offset);
+				offset += TEXT_SIZE;
+			}
+		});
 	}
 	
 	public void debugSystem(ShapeSystem ss, String name) {

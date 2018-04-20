@@ -42,10 +42,13 @@ public class HelpDisplay extends APVPlugin {
 		List<String> sortedMessages = new ArrayList<String>(messages);
 		sortedMessages.sort(Comparator.naturalOrder());
 		
-		int x = p.width / 4;
-		int y = p.height / 8;
-		p.translate(x, y);
-		p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
-		p.translate(-x, -y);
+		new SafePainter(parent, () -> {
+			int x = p.width / 4;
+			int y = p.height / 8;
+			p.translate(x, y);
+			p.getSettingsDisplay().drawText(new ArrayList<String>(sortedMessages));
+			p.translate(-x, -y);
+		});
+
 	}
 }
