@@ -27,6 +27,7 @@ public class DrawHelper extends APVPlugin {
 		frameFader = new FrameFader(parent, numFramesToDraw);
 		frameFader.startFade();
 		
+		//Keep drawing until the fader is no longer active
 		listener = parent.getDrawEvent().register(() -> {
 			if (!frameFader.isFadeActive()) {
 				parent.getDrawEvent().unregister(listener);

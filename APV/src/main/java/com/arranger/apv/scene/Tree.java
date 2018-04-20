@@ -52,8 +52,6 @@ public class Tree extends Scene {
 	public void setup() {
 	}
 	
-	
-	
 	@Override
 	public void drawScene() {
 		if (isNew()) {
