@@ -1,8 +1,10 @@
 package com.arranger.apv.util;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
@@ -37,17 +39,38 @@ public class FileHelper extends APVPlugin {
 	}
 	
 	public boolean saveFile(String fileName, String text) {
+		return saveFile(fileName, text, false);
+	}
+	
+	public boolean saveFile(String fileName, String text, boolean append) {
 		try {
 			String fullPath = getFullPath(fileName);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(fullPath));
-			writer.write(text);
-			writer.close();
+			if (append) {
+				Files.write(Paths.get(fullPath), 
+						text.getBytes(), 
+						StandardOpenOption.APPEND, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+			} else {
+				Files.write(Paths.get(fullPath), 
+						text.getBytes(), 
+						StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+			}
 		} catch (Exception e) {
 			debug(e);
 			return false;
 		}
 		return true;
-		
+	}
+	
+	public String readFile(String fileName) {
+		String result = null;
+		try {
+			String fullPath = getFullPath(fileName);
+			Path p = Paths.get(fullPath);
+			result = new String(Files.readAllBytes(p));
+		} catch (Exception e) {
+			debug(e);
+		}
+		return result;
 	}
 	
 	private void debug(Exception e) {

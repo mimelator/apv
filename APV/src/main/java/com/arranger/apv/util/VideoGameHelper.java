@@ -10,16 +10,16 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 
-public class VideoGameDisplay extends APVPlugin {
+public class VideoGameHelper extends APVPlugin {
 	
 	private static final DecimalFormat decFormat = new DecimalFormat("#.###");
 
-	Map<String, Integer> commandCounter = new HashMap<String, Integer>();
+	Map<String, Integer> cmdStatMap = new HashMap<String, Integer>();
 	int totalCommands = 0;
 	long startTime = System.currentTimeMillis();
 	String lastCommandName = "";
 	
-	public VideoGameDisplay(Main parent) {
+	public VideoGameHelper(Main parent) {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
@@ -27,28 +27,37 @@ public class VideoGameDisplay extends APVPlugin {
 		});
 	}
 	
-	private void recordLastCommand() {
-		Command cmd = parent.getCommandSystem().getLastCommand();
-		lastCommandName = cmd.name();
-		Integer count = commandCounter.get(lastCommandName);
-		if (count == null) {
-			commandCounter.put(lastCommandName, new Integer(1));
-		} else {
-			commandCounter.put(lastCommandName, ++count);
-		}
-		totalCommands++;
+	public int getTotalCommands() {
+		return totalCommands;
+	}
+	
+	public long getTotalSeconds() {
+		long totalMillis = System.currentTimeMillis() - startTime;
+		return TimeUnit.MILLISECONDS.toSeconds(totalMillis);
+	}
+	
+	public float getCommandsPerSec() {
+		return (float)totalCommands / (float)getTotalSeconds();
 	}
 
+	public String getTimeStamp() {
+		return format(System.currentTimeMillis() - startTime);
+	}
+	
+	public String getLastCommand() {
+		return lastCommandName;
+	}
+	
+	public Map<String, Integer> getCommandStatMap() {
+		return cmdStatMap;
+	}
+	
 	public void showStats() {
 		
-		long totalMillis = System.currentTimeMillis() - startTime;
-		long totalSeconds = TimeUnit.MILLISECONDS.toSeconds(totalMillis);
-		float commandsPerSec = (float)totalCommands / (float)totalSeconds;
-		
 		String [] msgs = new String[] {
-				String.format("Time: %1s", format(totalMillis)),
-				String.format("Cmds/sec: %1s", decFormat.format(commandsPerSec)),
-				String.format("Last Command: %1s[%2d]", lastCommandName, commandCounter.get(lastCommandName)),
+				String.format("Time: %1s", getTimeStamp()),
+				String.format("Cmds/sec: %1s", decFormat.format(getCommandsPerSec())),
+				String.format("Last Command: %1s[%2d]", lastCommandName, cmdStatMap.get(lastCommandName)),
 				String.format("Total Count: %1d", totalCommands),
 		};
 		
@@ -60,6 +69,18 @@ public class VideoGameDisplay extends APVPlugin {
 			p.getSettingsDisplay().drawText(Arrays.asList(msgs));
 			p.translate(-x, -y);
 		}).paint();
+	}
+	
+	private void recordLastCommand() {
+		Command cmd = parent.getCommandSystem().getLastCommand();
+		lastCommandName = cmd.name();
+		Integer count = cmdStatMap.get(lastCommandName);
+		if (count == null) {
+			cmdStatMap.put(lastCommandName, new Integer(1));
+		} else {
+			cmdStatMap.put(lastCommandName, ++count);
+		}
+		totalCommands++;
 	}
 	
 	/**

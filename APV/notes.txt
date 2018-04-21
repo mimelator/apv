@@ -1,17 +1,18 @@
 BRANCH: video-game-mode
 https://github.com/mimelator/apv
 
-Documentation:
-	videoGameDisplay helper object and mode
-	mode
+VideoGameStatsAgent
+	New file for every date stamp
+	Put the Version Info at the top
 
-TODO Phase 2:
-	Showing / Updating records? 
+Missed a tree transition  Took too long.  See first TODO below
 
+Now that i have a video game mode i want to reload configurations
 
 
 *****************************************************************************
 TODO:
+* Should SceneCompleteAgent just fire a new TransitionToDefaultScene() event?
 * TestCases for Agents
 * More animations like light worm
 * Implement more Custom Scenes for animations

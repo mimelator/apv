@@ -71,8 +71,6 @@ public abstract class APVPluginTest {
         MessageModeInterceptor messageModeInterceptor = Mockito.mock(MessageModeInterceptor.class);
         SceneSelectInterceptor sceneSelectInterceptor = Mockito.mock(SceneSelectInterceptor.class);
         SceneList sceneList = Mockito.mock(SceneList.class);
-//        CoreEvent coreEvent = Mockito.mock(CoreEvent.class);
-//        DrawShapeEvent drawShapeEvent = Mockito.mock(DrawShapeEvent.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);

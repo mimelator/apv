@@ -38,7 +38,7 @@ import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineHelper;
 import com.arranger.apv.util.VersionInfo;
-import com.arranger.apv.util.VideoGameDisplay;
+import com.arranger.apv.util.VideoGameHelper;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
@@ -84,7 +84,7 @@ public class Main extends PApplet {
 	protected HelpDisplay helpDisplay;
 	protected Particles particles;
 	protected VersionInfo versionInfo;
-	protected VideoGameDisplay videoGameDisplay;
+	protected VideoGameHelper videoGameHelper;
 	protected FileHelper fileHelper;
 	protected SceneList sceneList;
 	protected FontHelper fontHelper;
@@ -140,6 +140,10 @@ public class Main extends PApplet {
 	
 	public VersionInfo getVersionInfo() {
 		return versionInfo;
+	}
+	
+	public VideoGameHelper getVideoGameHelper() {
+		return videoGameHelper;
 	}
 	
 	public FileHelper getFileHelper() {
@@ -368,7 +372,7 @@ public class Main extends PApplet {
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		versionInfo = new VersionInfo(this);
-		videoGameDisplay = new VideoGameDisplay(this);
+		videoGameHelper = new VideoGameHelper(this);
 		
 		backDrops = new APV<BackDropSystem>(this, "backDrops");
 		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
@@ -521,7 +525,7 @@ public class Main extends PApplet {
 		}
 
 		if (videoGameSwitch.isEnabled()) {
-			videoGameDisplay.showStats();
+			videoGameHelper.showStats();
 		}
 		
 		if (showSettingsSwitch.isEnabled()) {
