@@ -18,7 +18,7 @@ public class LowFrameCountAgent extends BaseAgent {
 	public LowFrameCountAgent(Main parent) {
 		super(parent);
 		
-		registerAgent(() -> {
+		registerAgent(getDrawEvent(), () -> {
 			float currentFrameRate = parent.frameRate;
 			
 			//are we already slow?

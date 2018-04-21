@@ -1,13 +1,17 @@
-package com.arranger.apv;
+package com.arranger.apv.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.arranger.apv.APV;
+import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Main;
 
 
 public class APVCallback extends APV<APVPlugin> {
 	
 	private List<CallbackHandler> handlers = new ArrayList<CallbackHandler>();
-
+	
 	public APVCallback(Main parent, String name) {
 		super(parent, name, false);
 		

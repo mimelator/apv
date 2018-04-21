@@ -51,7 +51,7 @@ public class BlockStep extends LiteShapeSystem {
 		parent.stroke(0);
 		parent.lights();
 
-		Point2D currentPoint = parent.getLocation().getCurrentPoint();
+		Point2D currentPoint = parent.getCurrentPoint();
 		int mouseX = (int) currentPoint.getX();
 		int mouseY = (int) currentPoint.getY();
 		float prevOffset = PREV_LOC_OFFSET;

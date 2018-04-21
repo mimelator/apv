@@ -24,8 +24,7 @@ public class APVTextFrame extends APVFrame {
 		public List<String> getMessages();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent event, TextSupplier ts) {
+	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent<EventHandler> event, TextSupplier ts) {
 		super(parent);
 		outputPanel = new OutputPanel();
 		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * EXTRA_SCROLL_PANE_DIMENSION)));

@@ -12,7 +12,7 @@ public abstract class PulseAgent extends BaseAgent {
 	public PulseAgent(Main parent, int numPulses) {
 		super(parent);
 		
-		registerAgent(() -> {
+		registerAgent(getDrawEvent(), () -> {
 			if (pulseListener.isNewPulse()) {
 				onPulse();
 			}
@@ -29,7 +29,4 @@ public abstract class PulseAgent extends BaseAgent {
 	
 	protected abstract void onPulse();
 	
-	protected void invokeCommand(char c) {
-		parent.getCommandSystem().invokeCommand(c);
-	}
 }

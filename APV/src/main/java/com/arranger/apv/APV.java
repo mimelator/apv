@@ -60,7 +60,7 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 		if (sw == null) {
 			return true; //we're not a switcher
 		}
-		return sw.isEnabled() && !list.isEmpty(); 
+ 		return sw.isEnabled() && !list.isEmpty(); 
 	}
 	
 	public void setEnabled(boolean isEnabled) {

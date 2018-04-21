@@ -1,6 +1,7 @@
 package com.arranger.apv;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVCommandFrame;
 import com.arranger.apv.loc.LocationSystem;
-import com.arranger.apv.loc.MouseLocationSystem;
 import com.arranger.apv.util.APVAgent;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
@@ -198,12 +198,12 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EVENT_TYPES.SCENE_COMPLETE);
 	}
 	
-	public DrawShapeEvent getSparkEvent() {
-		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
-	}
-	
 	public CoreEvent getStrobeEvent() {
 		return (CoreEvent)eventMap.get(EVENT_TYPES.STROBE);
+	}
+	
+	public DrawShapeEvent getSparkEvent() {
+		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
 	}
 	
 	public DrawShapeEvent getCarnivalEvent() {
@@ -258,17 +258,12 @@ public class Main extends PApplet {
 		return messages.getPlugin();
 	}
 	
-	public LocationSystem getLocation() {
-		LocationSystem ls = null;
-		ControlSystem cs = getControl();
-		while (ls == null) {
-			ls = locations.getPlugin();
-			if (!cs.allowsMouseLocation() && ls instanceof MouseLocationSystem) {
-				locations.increment();
-				ls = null;
-			}
-		}
-		return ls;
+	public  APV<LocationSystem> getLocations() {
+		return locations;
+	}
+	
+	public Point2D getCurrentPoint() {
+		return locations.getPlugin().getCurrentPoint();
 	}
 	
 	public ControlSystem getControl() {

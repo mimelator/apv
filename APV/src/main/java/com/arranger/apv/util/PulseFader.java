@@ -21,9 +21,11 @@ public class PulseFader extends APVPlugin {
 		this.pulsesToSkip = pulsesToSkip;
 		
 		fader = new FrameFader(parent, numFramesToFade);
-		parent.getPulseListener().registerHandler(() -> {
-			fader.startFade();
-		}, pulsesToSkip);
+		parent.getSetupEvent().register(() -> {
+			parent.getPulseListener().registerHandler(() -> {
+				fader.startFade();
+			}, pulsesToSkip);
+		});
 	}
 	
 	public int getPulsesToSkip() {

@@ -37,7 +37,7 @@ public class LightSaber extends LiteShapeSystem {
 		parent.noStroke();
 		parent.rectMode(CORNER);
 
-		Point2D cp = parent.getLocation().getCurrentPoint();
+		Point2D cp = parent.getCurrentPoint();
 		int mouseX = (int) cp.getX();
 		int mouseY = (int) cp.getY();
 		float pmouseX = mouseX * PREV_MOUSE_MODIFIER;

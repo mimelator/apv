@@ -37,7 +37,7 @@ public class Hactivity extends LiteShapeSystem {
 		t += 0.01;
 		i.make(parent.width, parent.height);
 
-		Point2D cp = parent.getLocation().getCurrentPoint();
+		Point2D cp = parent.getCurrentPoint();
 		int mouseX = (int)cp.getX();
 		int mouseY = (int)cp.getY();
 		

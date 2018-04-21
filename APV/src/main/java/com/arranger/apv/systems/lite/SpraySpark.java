@@ -133,7 +133,7 @@ public class SpraySpark extends LiteShapeSystem {
 		
 		float prevOffset = PREV_LOC_OFFSET;
 		
-		java.awt.geom.Point2D locPt = parent.getLocation().getCurrentPoint();
+		java.awt.geom.Point2D locPt = parent.getCurrentPoint();
 		int curLocX = (int)locPt.getX();
 		int curLocY = (int)locPt.getY();
 		

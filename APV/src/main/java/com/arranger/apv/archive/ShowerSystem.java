@@ -81,7 +81,7 @@ public class ShowerSystem extends LiteShapeSystem {
 		parent.stroke(useStrokeColor);
 		parent.beginShape();
 
-		Point2D point = parent.getLocation().getCurrentPoint();
+		Point2D point = parent.getCurrentPoint();
 		int mouseX = (int) point.getX();
 		int mouseY = (int) point.getY();
 

@@ -45,6 +45,10 @@ public abstract class PathLocationSystem extends LocationSystem {
 		return String.format("{%1s : [%2b]}", getName(), splitter);
 	}
 	
+	public boolean isSplitter() {
+		return splitter;
+	}
+	
 	public abstract int getLoopInSeconds();
 	
 	protected abstract Shape createPath();

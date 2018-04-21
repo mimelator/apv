@@ -42,7 +42,7 @@ public class StarPL extends APVPlugin {
 	protected void registerListener(Main parent) {
 		safePainter = new SafePainter(parent, () ->  {
 			//location
-			Point2D point = parent.getLocation().getCurrentPoint();
+			Point2D point = parent.getCurrentPoint();
 			int x = (int)point.getX();
 			int y = (int)point.getY();
 			

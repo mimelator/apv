@@ -1,15 +1,15 @@
 package com.arranger.apv.util;
 
+import com.arranger.apv.APVEvent.EventHandler;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeSystem;
-import com.arranger.apv.event.CoreEvent.CoreListener;
 
 public class DrawHelper extends APVPlugin {
 	
 	private static final int DEFAULT_FRAMES_TO_DRAW = 30;
 	
-	private CoreListener listener;
+	private EventHandler eventHandler;
 	private FrameFader frameFader;
 	
 	@FunctionalInterface
@@ -28,10 +28,10 @@ public class DrawHelper extends APVPlugin {
 		frameFader.startFade();
 		
 		//Keep drawing until the fader is no longer active
-		listener = parent.getDrawEvent().register(() -> {
+		eventHandler = parent.getDrawEvent().register(() -> {
 			if (!frameFader.isFadeActive()) {
-				parent.getDrawEvent().unregister(listener);
-				listener = null;
+				parent.getDrawEvent().unregister(eventHandler);
+				eventHandler = null;
 				frameFader = null;
 				handler.onDrawComplete();
 			} else {

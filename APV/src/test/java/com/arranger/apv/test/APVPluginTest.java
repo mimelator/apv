@@ -71,8 +71,8 @@ public abstract class APVPluginTest {
         MessageModeInterceptor messageModeInterceptor = Mockito.mock(MessageModeInterceptor.class);
         SceneSelectInterceptor sceneSelectInterceptor = Mockito.mock(SceneSelectInterceptor.class);
         SceneList sceneList = Mockito.mock(SceneList.class);
-        CoreEvent coreEvent = Mockito.mock(CoreEvent.class);
-        DrawShapeEvent drawShapeEvent = Mockito.mock(DrawShapeEvent.class);
+//        CoreEvent coreEvent = Mockito.mock(CoreEvent.class);
+//        DrawShapeEvent drawShapeEvent = Mockito.mock(DrawShapeEvent.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
@@ -99,10 +99,12 @@ public abstract class APVPluginTest {
         when(parent.getSceneList()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
         when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
-        when(parent.getSetupEvent()).thenReturn(coreEvent);
-        when(parent.getDrawEvent()).thenReturn(coreEvent);
-        when(parent.getSparkEvent()).thenReturn(drawShapeEvent);
-        when(parent.getCarnivalEvent()).thenReturn(drawShapeEvent);
+        when(parent.getSetupEvent()).thenReturn(new CoreEvent(parent));
+        when(parent.getSceneCompleteEvent()).thenReturn(new CoreEvent(parent));
+        when(parent.getDrawEvent()).thenReturn(new CoreEvent(parent));
+        when(parent.getSparkEvent()).thenReturn(new DrawShapeEvent(parent));
+        when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent));
+        when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent));
         
         
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);

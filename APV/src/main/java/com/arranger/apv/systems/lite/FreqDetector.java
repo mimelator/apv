@@ -34,7 +34,7 @@ public class FreqDetector extends LiteShapeSystem {
 		float bounds = fft.avgSize();
 		int frequencyWidth = (int)(parent.width / bounds);
 		
-		Point2D pt = parent.getLocation().getCurrentPoint();
+		Point2D pt = parent.getCurrentPoint();
 		float curPosX = (float)pt.getX();
 		float curPosY = (float)pt.getY();
 		

@@ -14,8 +14,7 @@ public class InvokeAfterOneEvent extends APVPlugin {
 	
 	private EventHandler register;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public InvokeAfterOneEvent(Main parent, APVEvent event, Handler handler) {
+	public InvokeAfterOneEvent(Main parent, APVEvent<EventHandler> event, Handler handler) {
 		super(parent);
 		
 		register = event.register(() -> {

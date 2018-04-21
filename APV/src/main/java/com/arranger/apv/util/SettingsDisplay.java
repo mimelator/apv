@@ -72,7 +72,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
 		addSettingsMessage("Color: " + p.getColor().getDisplayName());
-		addSettingsMessage("Loc: " + p.getLocation().getDisplayName());
+		addSettingsMessage("Loc: " + p.getLocations().getDisplayName());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
 		addSettingsMessage("Skip Frame rate: " + p.getFrameStrober().getSkipNFrames());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));

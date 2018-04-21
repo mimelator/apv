@@ -71,7 +71,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 	@Override
 	protected LiteCycleObj createObj(int index) {
-		Point2D point = parent.getLocation().getCurrentPoint();
+		Point2D point = parent.getCurrentPoint();
 		float x = (float)point.getX();
 		float y = (float)point.getY();
 		int curSize = lcObjects.size();

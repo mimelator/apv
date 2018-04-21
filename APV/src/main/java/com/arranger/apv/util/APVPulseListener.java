@@ -1,6 +1,5 @@
 package com.arranger.apv.util;
 
-import com.arranger.apv.APVCallback;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 

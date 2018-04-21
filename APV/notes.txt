@@ -2,19 +2,26 @@ BRANCH: save-painting
 https://github.com/mimelator/apv
 
 Agent who prevents the grid background from having a split location system
-		parent.getSetupEvent().register(() -> {
-			parent.getAgent().registerHandler(() -> {
-			
-			Create an Agent base class with the api:
-				registerAgent(...
+Fix the agent system / Test it?
+Main#getLocation has logic that should be moved to an agent instead of hard coded 
 				
-			
+I need an enum for the commands.  No more raw charss
+
+
+StopTheFlickerAgent
+//see if we have a bad match
+// at first it can just be hard-coded to splitter LocationMouse with GridBackground System
+// later it can grow to be completely configurable
+
+
 
 copy and paste perfMon window
 Have to document the control modes
+Have to document the events in order to explain agents
 
 TODO:
 *****************************************************************************
+* The video game is to execute the fewest amount of commands possible.  A counter will be displayed Top Score will be kept
 * If no pulse is found, simulate one every N frames
 * More animations like light worm
 * Implement more Custom Scenes for animations

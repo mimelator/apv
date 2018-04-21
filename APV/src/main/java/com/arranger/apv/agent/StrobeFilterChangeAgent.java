@@ -7,8 +7,8 @@ public class StrobeFilterChangeAgent extends BaseAgent {
 	public StrobeFilterChangeAgent(Main parent) {
 		super(parent);
 		
-		registerAgent(() -> {
-			parent.getCommandSystem().invokeCommand('t');
+		registerAgent(getStrobeEvent(), () -> {
+			invokeCommand('t');
 		});
 	}
 }

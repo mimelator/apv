@@ -89,7 +89,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 		}
 
 		public Scribbler() {
-			Point2D currentPoint = parent.getLocation().getCurrentPoint();
+			Point2D currentPoint = parent.getCurrentPoint();
 			prevX = (float)currentPoint.getX();
 			prevY = (float)currentPoint.getY();
 			anchorX = prevX;
