@@ -1,5 +1,9 @@
 package com.arranger.apv;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import processing.core.PApplet;
 
 public enum Command {
@@ -67,8 +71,6 @@ public enum Command {
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes");
 	
-	
-	
 	private int commandKey;
 	private char charKey;
 	private String helpText;
@@ -108,5 +110,19 @@ public enum Command {
 	
 	public String getHelpText() {
 		return helpText;
+	}
+	
+	static {
+		// a static checker to see if we have duplicate commands
+		Set<String> checkMap = new HashSet<String>();
+		Arrays.asList(Command.values()).forEach(c -> {
+			String key = c.getKey();
+			if (checkMap.contains(key)) {
+				throw new RuntimeException("Duplicate keys found for command.  Key: " + key);
+			} else {
+				checkMap.add(key);
+			}
+		});
+		//All done with the check
 	}
 }

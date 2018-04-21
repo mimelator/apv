@@ -1,8 +1,7 @@
-BRANCH: save-painting
+BRANCH: master
 https://github.com/mimelator/apv
 
 				
-I need an enum for the commands.  No more raw charss
 Command: //TODO, ensure that we don't have duplicate keys for Commands
 APVCommand -> APVCallbackHelper
 	Helps objects subscribe to certain events
