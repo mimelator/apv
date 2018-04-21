@@ -1,14 +1,12 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+
+click copy and paste perfMon window
 				
-Command: //TODO, ensure that we don't have duplicate keys for Commands
+Documentation TODO:
 APVCommand -> APVCallbackHelper
 	Helps objects subscribe to certain events
-	
-
-
-copy and paste perfMon window
 Have to document the control modes
 Have to document the events in order to explain agents
 

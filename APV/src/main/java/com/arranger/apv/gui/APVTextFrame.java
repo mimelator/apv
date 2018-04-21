@@ -2,9 +2,13 @@ package com.arranger.apv.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -30,8 +34,12 @@ public class APVTextFrame extends APVFrame {
 		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * EXTRA_SCROLL_PANE_DIMENSION)));
 		outputPanel.setAutoscrolls(true);
 		JScrollPane scrollPane = new JScrollPane(outputPanel);
-		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));		
-		createFrame(title, sizeX, sizeY, scrollPane, () -> event.unregister(handler));
+		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));	
+		
+		JPanel outer = new JPanel();
+		outer.add(new JLabel("Click text area to copy to clipboard"));
+		outer.add(scrollPane);
+		createFrame(title, sizeX, sizeY, outer, () -> event.unregister(handler));
 		
 		handler = event.register(() -> {
 			outputPanel.printText(ts.getMessages());
@@ -45,7 +53,31 @@ public class APVTextFrame extends APVFrame {
 		List<String> msgs;
 
 	    public OutputPanel() {
-	        super();
+	        
+	    	addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+				}
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					//copy to clipboard
+					new ClipboardHelper(msgs.stream().collect(Collectors.joining(System.lineSeparator())));
+				}
+			});
 	    }
 	    
 		public void printText(List<String> msgs) {

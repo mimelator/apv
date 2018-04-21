@@ -27,7 +27,7 @@ public class APVCommandFrame extends APVFrame {
 
 		@Override
 		public int compareTo(CMDModel o) {
-			return command.getDisplayName().compareTo(o.command.getDisplayName());
+			return toString().compareTo(o.toString());
 		}
 
 		@Override
@@ -55,7 +55,7 @@ public class APVCommandFrame extends APVFrame {
 			public String getToolTipText(MouseEvent event) {
 				int index = locationToIndex(event.getPoint());
 				CMDModel mdl = getModel().getElementAt(index);
-				return mdl.command.getHelpText();
+				return String.format("[%1s]: %2s", mdl.command.getKey(), mdl.command.getHelpText());
 			}
 		};
 		list.addMouseListener(new MouseAdapter() {
