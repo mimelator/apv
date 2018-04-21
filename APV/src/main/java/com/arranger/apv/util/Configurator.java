@@ -272,7 +272,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		results.append(getConfigForSystem("switches"));
 		results.append(getConfigForSystem("pulseListeners"));
 		
-		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
+		parent.getFileHelper().saveFile("application.conf.bak", results.toString());
 	}
 
 	private String getConfigForPlugins(String systemName, List<? extends APVPlugin> pluginList) {
