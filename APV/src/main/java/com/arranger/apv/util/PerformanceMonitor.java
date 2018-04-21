@@ -21,7 +21,7 @@ public class PerformanceMonitor extends APVPlugin {
 	}
 
 	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
-	private static DecimalFormat decFormat = new DecimalFormat(".##");
+	private static final DecimalFormat decFormat = new DecimalFormat(".##");
 	
 	public void doMonitorCheck(Scene scene) {
 		if (parent.frameRate < FRAME_RATE_THRESHOLD) {

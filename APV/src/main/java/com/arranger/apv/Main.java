@@ -16,6 +16,7 @@ import com.arranger.apv.Switch.STATE;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.color.ColorSystem;
+import com.arranger.apv.event.CommandInvokedEvent;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
@@ -37,6 +38,7 @@ import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineHelper;
 import com.arranger.apv.util.VersionInfo;
+import com.arranger.apv.util.VideoGameDisplay;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
@@ -82,6 +84,7 @@ public class Main extends PApplet {
 	protected HelpDisplay helpDisplay;
 	protected Particles particles;
 	protected VersionInfo versionInfo;
+	protected VideoGameDisplay videoGameDisplay;
 	protected FileHelper fileHelper;
 	protected SceneList sceneList;
 	protected FontHelper fontHelper;
@@ -101,6 +104,7 @@ public class Main extends PApplet {
 					showSettingsSwitch,
 					frameStroberSwitch,
 					videoCaptureSwitch,
+					videoGameSwitch,
 					scrambleModeSwitch;
 
 	
@@ -208,6 +212,10 @@ public class Main extends PApplet {
 	
 	public DrawShapeEvent getCarnivalEvent() {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
+	}
+	
+	public CommandInvokedEvent getCommandInvokedEvent() {
+		return (CommandInvokedEvent)eventMap.get(EVENT_TYPES.COMMAND_INVOKED);
 	}
 	
 	public void setDefaultScene() {
@@ -360,6 +368,7 @@ public class Main extends PApplet {
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		versionInfo = new VersionInfo(this);
+		videoGameDisplay = new VideoGameDisplay(this);
 		
 		backDrops = new APV<BackDropSystem>(this, "backDrops");
 		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
@@ -511,6 +520,10 @@ public class Main extends PApplet {
 			drawSystem(getMessage(), "message");
 		}
 
+		if (videoGameSwitch.isEnabled()) {
+			videoGameDisplay.showStats();
+		}
+		
 		if (showSettingsSwitch.isEnabled()) {
 			settingsDisplay.drawSettingsMessages();
 		}
@@ -592,7 +605,6 @@ public class Main extends PApplet {
 	}
 	
 	protected void initializeCommands() {
-		
 		registerSimpleSwitch(helpSwitch, Command.SWITCH_HELP);
 		registerSimpleSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
 		registerSimpleSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
@@ -600,6 +612,7 @@ public class Main extends PApplet {
 		registerSimpleSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
 		registerSimpleSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
 		registerSimpleSwitch(videoCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
+		registerSimpleSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		
 		foregrounds.registerSwitchCommand(Command.SWITCH_FOREGROUNDS);
 		backgrounds.registerSwitchCommand(Command.SWITCH_BACKGROUNDS);
@@ -622,23 +635,17 @@ public class Main extends PApplet {
 		
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
-		
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
+		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this);});
 		cs.registerHandler(Command.PANIC, e -> panic());
 		cs.registerHandler(Command.MANUAL, e -> manual());	
 		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
-		cs.registerHandler(Command.SCREEN_SHOT, event -> doScreenCapture());
+		cs.registerHandler(Command.SCREEN_SHOT, e -> doScreenCapture());
 		cs.registerHandler(Command.SAVE_CONFIGURATION, event -> configurator.saveCurrentConfig());
-		
-		cs.registerHandler(Command.UP_ARROW, event -> likeCurrentScene());
-		cs.registerHandler(Command.DOWN_ARROW, event -> disLikeCurrentScene());
-		
-		cs.registerHandler(Command.TRANSITION_FRAMES_INC, 
-			(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
-		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, 
-			(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
-		
-		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this);});
+		cs.registerHandler(Command.UP_ARROW, e -> likeCurrentScene());
+		cs.registerHandler(Command.DOWN_ARROW, e -> disLikeCurrentScene());
+		cs.registerHandler(Command.TRANSITION_FRAMES_INC, e -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
+		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, e -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 	}
 
 	protected void registerSimpleSwitch(Switch s, Command command) {
@@ -679,6 +686,7 @@ public class Main extends PApplet {
 		frameStroberSwitch = switches.get("FrameStrober");
 		videoCaptureSwitch = switches.get("VideoCapture");
 		scrambleModeSwitch = switches.get("Scramble");
+		videoGameSwitch = switches.get("VideoGame");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -691,7 +699,7 @@ public class Main extends PApplet {
 	}
 	
 	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE
+		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED,
 	}
 	
 	protected void initEvents() {
@@ -700,6 +708,7 @@ public class Main extends PApplet {
 		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.SCENE_COMPLETE, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.STROBE, new CoreEvent(this));
+		eventMap.put(EVENT_TYPES.COMMAND_INVOKED, new CommandInvokedEvent(this));
 		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
 	}

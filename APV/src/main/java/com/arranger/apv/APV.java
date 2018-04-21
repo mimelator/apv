@@ -126,13 +126,13 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 	
 	public void registerSwitchCommand(Command command) {
 		parent.getCommandSystem().registerHandler(command,  
-									(event) -> {
-										if (event.isMetaDown()) {
-											sw.toggleFrozen();
-										} else {
-											sw.toggleEnabled();
-										}
-									});
+			e -> {
+				if (e.isMetaDown()) {
+					sw.toggleFrozen();
+				} else {
+					sw.toggleEnabled();
+				}
+			});
 	}
 }
 

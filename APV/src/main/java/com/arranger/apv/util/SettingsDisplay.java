@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Command;
-import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
@@ -20,7 +19,7 @@ public class SettingsDisplay extends APVPlugin {
 	private static final Logger logger = Logger.getLogger(SettingsDisplay.class.getName());
 	
 	public static final int TEXT_SIZE = 16;
-	public static final int TEXT_INDEX = 10;
+	public static final int TEXT_OFFSET = 10;
 	protected List<String> settingsMessages = new ArrayList<String>();
 	
 	public SettingsDisplay(Main parent) {
@@ -47,9 +46,9 @@ public class SettingsDisplay extends APVPlugin {
 			parent.textAlign(PApplet.LEFT, PApplet.TOP);
 			parent.textSize(TEXT_SIZE);
 			
-			int offset = TEXT_INDEX;
+			int offset = TEXT_OFFSET;
 			for (String s : msgs) {
-				parent.text(s, TEXT_INDEX, offset);
+				parent.text(s, TEXT_OFFSET, offset);
 				offset += TEXT_SIZE;
 			}
 		}).paint();
@@ -76,7 +75,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Loc: " + p.getLocations().getPlugin().getDisplayName());
 		addSettingsMessage("Color: " + p.getColor().getDisplayName());
 		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
-		addSettingsMessage("Skip Frame rate: " + p.getFrameStrober().getSkipNFrames());
+		addSettingsMessage("FrameStrober SkipRate: " + p.getFrameStrober().getSkipNFrames());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
 		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
@@ -87,9 +86,9 @@ public class SettingsDisplay extends APVPlugin {
 		}
 		
 		//Last Command
-		RegisteredCommandHandler lastCommand = p.getCommandSystem().getLastCommand();
+		Command lastCommand = p.getCommandSystem().getLastCommand();
 		if (lastCommand != null) {
-			addSettingsMessage("Last Command: " + lastCommand.getName());
+			addSettingsMessage("Last Command: " + lastCommand.name());
 		}
 		
 		addSettingsMessage(" ");

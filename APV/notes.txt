@@ -1,18 +1,17 @@
-BRANCH: master
+BRANCH: video-game-mode
 https://github.com/mimelator/apv
 
+Documentation:
+	videoGameDisplay helper object and mode
+	mode
 
-click copy and paste perfMon window
-				
-Documentation TODO:
-APVCommand -> APVCallbackHelper
-	Helps objects subscribe to certain events
-Have to document the control modes
-Have to document the events in order to explain agents
+TODO Phase 2:
+	Showing / Updating records? 
 
-TODO:
+
+
 *****************************************************************************
-* The video game is to execute the fewest amount of commands possible.  A counter will be displayed Top Score will be kept
+TODO:
 * TestCases for Agents
 * More animations like light worm
 * Implement more Custom Scenes for animations
@@ -23,8 +22,9 @@ TODO:
 *****************************************************************************
 		
 		
-AgentScripts
+
 *****************************************************************************
+AgentScripts:
 StopTheFlicker
 if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
 	invokeCommand <SPACE>
@@ -45,12 +45,12 @@ subscribe to SceneCompleteEvent
 CarnivalAgent	
 onPulse
 	if !Foreground:Carnvial
-		event.fire
+		CarnivalEvent.fire
 		
 SparkAgent
 onPulse
 	if !Background:SpraySpark
-		event.fire
+		SparkEvent.fire
 		
 GravityAgent	
 onPulse
@@ -63,10 +63,11 @@ onPulse
 *****************************************************************************			
 		
 
-Build & Release to local artifactory and github
+
 *****************************************************************************
+Build & Release to local artifactory and github
 mvn package
-mvn release:clean mvn release:prepare mvn release:perform
+mvn release:clean release:prepare release:perform
 *****************************************************************************
 
 

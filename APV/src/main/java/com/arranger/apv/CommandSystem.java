@@ -82,6 +82,8 @@ public class CommandSystem extends APVPlugin {
 		if (list != null  && !list.isEmpty()) {
 			list.forEach(c -> c.handler.onKeyPressed(keyEvent));
 			lastCommand = list.get(0);
+			
+			parent.getCommandInvokedEvent().fire();
 		}
 	}
 	
@@ -107,8 +109,8 @@ public class CommandSystem extends APVPlugin {
 		return registeredCommands;
 	}
 
-	public RegisteredCommandHandler getLastCommand() {
-		return lastCommand;
+	public Command getLastCommand() {
+		return (lastCommand != null) ? lastCommand.command : null;
 	}
 
 	public static class RegisteredCommandHandler {

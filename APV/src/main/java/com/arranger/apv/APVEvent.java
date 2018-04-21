@@ -9,10 +9,10 @@ public class APVEvent<T extends EventHandler> extends APVPlugin {
 	
 	@FunctionalInterface
 	public static interface EventHandler {
-		void OnEvent();
+		void onEvent();
 	}
 
-	private List<T> listeners = new ArrayList<T>();
+	protected List<T> listeners = new ArrayList<T>();
 	
 	public APVEvent(Main parent) {
 		super(parent);
@@ -32,6 +32,6 @@ public class APVEvent<T extends EventHandler> extends APVPlugin {
 	 * because it might be modified on the fly due to calls to {@link #unregister(EventHandler)}
 	 */
 	public void fire() {
-		new ArrayList<T>(listeners).forEach(l -> l.OnEvent());
+		new ArrayList<T>(listeners).forEach(l -> l.onEvent());
 	}
 }
