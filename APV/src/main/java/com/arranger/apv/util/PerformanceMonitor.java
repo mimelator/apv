@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
+import com.arranger.apv.gui.APVTextFrame;
 
 public class PerformanceMonitor extends APVPlugin {
 
@@ -49,8 +49,13 @@ public class PerformanceMonitor extends APVPlugin {
 		}
 	}
 	
-	public void dumpMonitorInfo() {
-		System.out.println("name, numEntries, avgTime, totalTime");
+	List<String> msgs;
+	
+	public void dumpMonitorInfo(boolean launchWindow) {
+		msgs = new ArrayList<String>();
+		StringBuffer header = new StringBuffer("name, numEntries, avgTime, totalTime").append(System.lineSeparator());
+		msgs.add(header.toString());
+		
 		for (Map.Entry<String, List<Float>> entry : monitorRecords.entrySet()) {
 			List<Float> counts = entry.getValue();
 			if (counts.size() < MIN_THRESHOLD_ENTRIES) {
@@ -58,11 +63,26 @@ public class PerformanceMonitor extends APVPlugin {
 			}
 			
 			//get the average
-			OptionalDouble average = counts.stream().mapToDouble(a -> a).average();
-			System.out.println(entry.getKey() + "," + 
-								counts.size() + "," + 
-								decFormat.format(average.getAsDouble()) + "," +
-								decFormat.format(average.getAsDouble() * counts.size()));
+			double average = counts.stream().mapToDouble(a -> a).average().getAsDouble();
+			String line = String.format("%1s, %2d, %3s, %4s", 
+					entry.getKey(), 
+					counts.size(),
+					decFormat.format(average),
+					decFormat.format(average * counts.size()));
+			
+			line += System.lineSeparator();
+			msgs.add(line);
+		}
+		
+		if (launchWindow) {
+			new APVTextFrame(parent, 
+					"perf", 
+					(int)parent.width / 6, 
+					(int)(parent.height * .8f), 
+					parent.getDrawEvent(), 
+					()-> msgs);
+		} else {
+			msgs.forEach(System.out::println);
 		}
 	}
 	

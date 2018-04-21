@@ -613,11 +613,12 @@ public class Main extends PApplet {
 		
 		CommandSystem cs = commandSystem;
 		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
-				(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+			(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
 		
 		cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
-		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", event -> perfMonitor.dumpMonitorInfo());
+		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", 
+			event -> {if (event.isShiftDown()) perfMonitor.dumpMonitorInfo(true); else perfMonitor.dumpMonitorInfo(false);});
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
 		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
 		
@@ -625,9 +626,9 @@ public class Main extends PApplet {
 		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
 		
 		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
-				(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
+			(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
-				(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+			(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 		
 		cs.registerCommand('w', "CommandWindow", "Opens a window that allows easy command access", e -> {
 			new APVCommandFrame(this);

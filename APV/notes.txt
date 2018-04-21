@@ -3,10 +3,12 @@ https://github.com/mimelator/apv
 
 Dashboard:
 
-Button and text input to launch a message
-Input char (or a picker) to invoke command
+Instant Manual mode and disable agents
 
-
+Have to document the control modes
+Have to document sending messages vs marquees
+Have to document how to prepare messages and marquees
+Already documented image packs?
 
 TODO:
 *****************************************************************************
