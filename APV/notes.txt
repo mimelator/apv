@@ -1,18 +1,15 @@
 BRANCH: video-game-mode
 https://github.com/mimelator/apv
 
-VideoGameStatsAgent
-	New file for every date stamp
-	Put the Version Info at the top
 
-Missed a tree transition  Took too long.  See first TODO below
+agents config arent written to disk
+Liked Mode isn't working
 
 Now that i have a video game mode i want to reload configurations
 
 
 *****************************************************************************
 TODO:
-* alphabatize the switches in the SettingsDisplay
 * reload config command
 *  Maybe just reload Configurator and 1 specific system
 * Should SceneCompleteAgent just fire a new TransitionToDefaultScene() event?

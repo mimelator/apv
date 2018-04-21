@@ -3,13 +3,13 @@ package com.arranger.apv.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
-import com.arranger.apv.Switch;
 import com.arranger.apv.gui.APVTextFrame;
 
 import processing.core.PApplet;
@@ -81,9 +81,9 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
 		p.getPulseListener().addSettingsMessages();
 		
-		for (Switch s : p.getSwitches()) {
-			addSettingsMessage(s.getDisplayName());
-		}
+		List<String> switchList = p.getSwitches().stream().map(s -> s.getDisplayName()).collect(Collectors.toList());
+		switchList.sort(null);
+		switchList.forEach(s -> addSettingsMessage(s));
 		
 		//Last Command
 		Command lastCommand = p.getCommandSystem().getLastCommand();

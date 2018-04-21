@@ -77,7 +77,7 @@ public class CommandSystem extends APVPlugin {
 			return;
 		}
 		
-		String key = (charKey != 0) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
+		String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
 		List<RegisteredCommandHandler> list = registeredCommands.get(key);
 		if (list != null  && !list.isEmpty()) {
 			list.forEach(c -> c.handler.onKeyPressed(keyEvent));
