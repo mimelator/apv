@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator.Context;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.VideoGameHelper;
 
 public class VideoGameStatsAgent extends PulseAgent {
@@ -28,7 +29,8 @@ public class VideoGameStatsAgent extends PulseAgent {
 		float cmdsPerSec = vg.getCommandsPerSec();
 		String timeStamp = vg.getTimeStamp();
 		//Map<String, Integer> commandStatMap = vg.getCommandStatMap();
-
+		FileHelper fh = new FileHelper(parent);
+		
 		//Create file with version info and header
 		if (fileName == null) {
 			fileName = String.format("%1s-%2s.txt", STATS_NAME, timestamp());
@@ -36,11 +38,11 @@ public class VideoGameStatsAgent extends PulseAgent {
 			buffer.append(System.lineSeparator());
 			buffer.append("NumCommands, Cmds/Sec, TotalTime");
 			buffer.append(System.lineSeparator());
-			parent.getFileHelper().saveFile(fileName, buffer.toString(), false);
+			fh.saveFile(fileName, buffer.toString(), false);
 		}
 		
 		String result = String.format("%1d, %2f, %3s", totalCmds, cmdsPerSec, timeStamp) + System.lineSeparator();
-		parent.getFileHelper().saveFile(fileName, result, true);
+		fh.saveFile(fileName, result, true);
 	}
 	
 	

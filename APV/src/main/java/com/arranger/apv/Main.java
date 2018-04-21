@@ -84,7 +84,6 @@ public class Main extends PApplet {
 	protected Particles particles;
 	protected VersionInfo versionInfo;
 	protected VideoGameHelper videoGameHelper;
-	protected FileHelper fileHelper;
 	protected SceneList sceneList;
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
@@ -143,10 +142,6 @@ public class Main extends PApplet {
 	
 	public VideoGameHelper getVideoGameHelper() {
 		return videoGameHelper;
-	}
-	
-	public FileHelper getFileHelper() {
-		return fileHelper;
 	}
 	
 	public Audio getAudio() {
@@ -358,7 +353,6 @@ public class Main extends PApplet {
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
 		commandSystem = new CommandSystem(this);
-		fileHelper = new FileHelper(this);
 		frameStrober = new FrameStrober(this);
 		fontHelper = new FontHelper(this);
 		gravity = new Gravity(this);
@@ -408,7 +402,7 @@ public class Main extends PApplet {
 
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
-		fileHelper.getFullPath(fileName);
+		new FileHelper(this).getFullPath(fileName);
 		logger.info("Saving image: " + fileName);
 		PImage pImage = get();
 		pImage.save(fileName);

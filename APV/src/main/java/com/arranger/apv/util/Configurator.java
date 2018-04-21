@@ -260,6 +260,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		
 		results.append(getConfigForPlugins("likedScenes", parent.getLikedScenes()));
 		results.append(getConfigForSystem("scenes"));
+		results.append(getConfigForSystem("agents"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));
 		results.append(getConfigForSystem("foregrounds"));
@@ -272,7 +273,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		results.append(getConfigForSystem("switches"));
 		results.append(getConfigForSystem("pulseListeners"));
 		
-		parent.getFileHelper().saveFile("application.conf.bak", results.toString());
+		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
 	}
 
 	private String getConfigForPlugins(String systemName, List<? extends APVPlugin> pluginList) {

@@ -1,17 +1,10 @@
-BRANCH: video-game-mode
+BRANCH: master
 https://github.com/mimelator/apv
-
-
-agents config arent written to disk
-Liked Mode isn't working
-
-Now that i have a video game mode i want to reload configurations
 
 
 *****************************************************************************
 TODO:
-* reload config command
-*  Maybe just reload Configurator and 1 specific system
+* reload config command -> Maybe just reload Configurator and 1 specific system
 * Should SceneCompleteAgent just fire a new TransitionToDefaultScene() event?
 * TestCases for Agents
 * More animations like light worm

@@ -53,6 +53,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 		
 		results.append(getConfigForSystem("scenes"));
 		results.append(getConfigForSystem("likedScenes"));
+		results.append(getConfigForSystem("agents"));
 		results.append(getConfigForSystem("backgrounds"));
 		results.append(getConfigForSystem("backDrops"));
 		results.append(getConfigForSystem("foregrounds"));
