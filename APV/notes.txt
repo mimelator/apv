@@ -3,7 +3,6 @@ https://github.com/mimelator/apv
 
 Dashboard:
 
-Instant Manual mode and disable agents
 
 Have to document the control modes
 Have to document sending messages vs marquees
@@ -33,4 +32,4 @@ mvn release:prepare
 mvn release:perform
 *****************************************************************************
 
--Xms512M -Xmx512M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=5	
+

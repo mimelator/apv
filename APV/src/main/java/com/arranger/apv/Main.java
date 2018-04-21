@@ -430,6 +430,14 @@ public class Main extends PApplet {
 		commandSystem.panic();
 	}
 	
+	/**
+	 * Goes to instant manual mode and disables agents
+	 */
+	public void manual() {
+		currentControlMode = CONTROL_MODES.MANUAL;
+		getAgent().getSwitch().setState(STATE.DISABLED);
+	}
+	
 	public void sendMessage(String [] messages) {
 		if (this.messages.isEnabled()) {
 			getMessage().onNewMessage(messages);
@@ -617,6 +625,7 @@ public class Main extends PApplet {
 		
 		cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things", e -> scramble());
 		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
+		cs.registerCommand('/', "Manual", "Sets mode to Manual and disabled Agents", e -> manual());	
 		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", 
 			event -> {if (event.isShiftDown()) perfMonitor.dumpMonitorInfo(true); else perfMonitor.dumpMonitorInfo(false);});
 		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
