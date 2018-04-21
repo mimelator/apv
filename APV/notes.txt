@@ -6,6 +6,7 @@ I need an enum for the commands.  No more raw charss
 Command: //TODO, ensure that we don't have duplicate keys for Commands
 APVCommand -> APVCallbackHelper
 	Helps objects subscribe to certain events
+	
 
 
 copy and paste perfMon window
@@ -15,7 +16,7 @@ Have to document the events in order to explain agents
 TODO:
 *****************************************************************************
 * The video game is to execute the fewest amount of commands possible.  A counter will be displayed Top Score will be kept
-* If no pulse is found, simulate one every N frames
+* TestCases for Agents
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * WanderingInSpace (bg better than warp?)

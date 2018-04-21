@@ -250,6 +250,10 @@ public class Main extends PApplet {
 		return filters;
 	}
 	
+	public APV<TransitionSystem> getTransitions() {
+		return transitions;
+	}
+	
 	public TransitionSystem getTransition() {
 		return transitions.getPlugin();
 	}

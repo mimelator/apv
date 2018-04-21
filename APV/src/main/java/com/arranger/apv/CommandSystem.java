@@ -77,17 +77,11 @@ public class CommandSystem extends APVPlugin {
 			return;
 		}
 		
-		if (charKey == SHIFT) {
-			return;
-		}
-		
 		String key = (charKey != 0) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
 		List<RegisteredCommandHandler> list = registeredCommands.get(key);
 		if (list != null  && !list.isEmpty()) {
 			list.forEach(c -> c.handler.onKeyPressed(keyEvent));
 			lastCommand = list.get(0);
-		} else {
-			System.out.println("No command registered for: " + key);
 		}
 	}
 	

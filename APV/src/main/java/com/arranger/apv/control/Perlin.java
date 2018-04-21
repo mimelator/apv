@@ -2,7 +2,7 @@ package com.arranger.apv.control;
 
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +13,6 @@ import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
-import com.arranger.apv.Switch;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 
 import processing.core.PApplet;
@@ -21,23 +20,10 @@ import processing.event.KeyEvent;
 
 public class Perlin extends PulseListeningControlSystem {
 	
-	private static final int DEF_PULSES_BETWEEN_COMMANDS = 16;
-
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
-	private static final Command [] AUTO_CHAR_COMMANDS = {
-			Command.SCRAMBLE, Command.SCRAMBLE, Command.SCRAMBLE, Command.SCRAMBLE,
-			Command.REVERSE,
-			Command.CYCLE_FOREGROUNDS,
-			Command.CYCLE_BACKGROUNDS,
-			Command.CYCLE_BACKDROPS,
-			Command.CYCLE_FILTERS,
-			Command.CYCLE_COLORS,
-			Command.CYCLE_TRANSITIONS,
-			Command.CYCLE_LOCATIONS,
-	};
-	
-	private static final int COMMAND_SIZE = 10;
+	private static final int DEF_PULSES_BETWEEN_COMMANDS = 16;
+	private static final int COMMAND_MAP_DIMENSION = 10;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
 	private KeyEvent [][] commandGrid = null;
@@ -80,18 +66,10 @@ public class Perlin extends PulseListeningControlSystem {
 		KeyEvent keyEvent = null;
 		while (keyEvent == null) {
 			keyEvent = getKeyEvent(offset);
-			
-			String switchName = (String)keyEvent.getNative();
-			if (switchName != null) {
-				Switch curSwitch = parent.getSwitch(switchName);
-				if (curSwitch == null) {
-					throw new RuntimeException("Unknown switch: " + switchName);
-				}
-				
-				if (curSwitch.isFrozen()) {
-					keyEvent = null;
-					offset++;
-				}
+			FrozenChecker enabledChecker = (FrozenChecker)keyEvent.getNative();
+			if (enabledChecker != null && enabledChecker.isFrozen()) {
+				keyEvent = null;
+				offset++;
 			}
 		}
 		
@@ -102,8 +80,8 @@ public class Perlin extends PulseListeningControlSystem {
 	private KeyEvent getKeyEvent(int offset) {
 		//Get the point at scale it to our grid
 		Point2D currentPoint = walker.getCurrentPoint();
-		int x = (int)(currentPoint.getX() + offset) % COMMAND_SIZE;
-		int y = (int)(currentPoint.getY() + offset) % COMMAND_SIZE;
+		int x = (int)(currentPoint.getX() + offset) % COMMAND_MAP_DIMENSION;
+		int y = (int)(currentPoint.getY() + offset) % COMMAND_MAP_DIMENSION;
 		
 		if (logger.isLoggable(Level.FINE)) {
 			DecimalFormat df2 = new DecimalFormat(".##");
@@ -131,14 +109,50 @@ public class Perlin extends PulseListeningControlSystem {
 	public CONTROL_MODES getControlMode() {
 		return CONTROL_MODES.PERLIN;
 	}
+	
+	
+	@FunctionalInterface
+	private static interface FrozenChecker {
+		boolean isFrozen();
+	}
+	
+	private class CommandChecker {
+		
+		private Command command;
+		private FrozenChecker checker;
+		
+		public CommandChecker(Command command, FrozenChecker checker) {
+			super();
+			this.command = command;
+			this.checker = checker;
+		}
+	}
+	
+	private List<CommandChecker> initializeCommands() {
+		List<CommandChecker> commandCheckers = new ArrayList<CommandChecker>();
+		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_LOCATIONS, null));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_COLORS, null));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_FOREGROUNDS, ()-> parent.getForegrounds().isFrozen()));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_BACKGROUNDS, ()-> parent.getBackgrounds().isFrozen()));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_BACKDROPS, ()-> parent.getBackDrops().isFrozen()));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_FILTERS, ()-> parent.getFilters().isFrozen()));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_TRANSITIONS, ()-> parent.getTransitions().isFrozen()));
+		return commandCheckers;
+	};
 
 	protected void initializeCommandGrid() {
-		commandGrid = new KeyEvent[COMMAND_SIZE][COMMAND_SIZE];
+		commandGrid = new KeyEvent[COMMAND_MAP_DIMENSION][COMMAND_MAP_DIMENSION];
 		
-		List<Command> cmdList = Arrays.asList(AUTO_CHAR_COMMANDS);
+		List<CommandChecker> cmdList = initializeCommands();
 		Collections.shuffle(cmdList);
 		
-		Iterator<Command> it = cmdList.iterator();
+		Iterator<CommandChecker> it = cmdList.iterator();
 		
 		//create a grid of commands for the walker to walk over
 		for (KeyEvent [] row : commandGrid) {
@@ -146,7 +160,11 @@ public class Perlin extends PulseListeningControlSystem {
 				if (!it.hasNext()) {
 					it = cmdList.iterator();
 				}
-				KeyEvent event = keyEventHelper.createKeyEvent(it.next(), parent.randomBoolean() ? 0 : PApplet.SHIFT);
+				CommandChecker cc = it.next();
+				KeyEvent event = keyEventHelper.createKeyEvent(
+						cc.command,
+						cc.checker,
+						parent.randomBoolean() ? 0 : PApplet.SHIFT);
 				row[index] = event;
 			}
 		}

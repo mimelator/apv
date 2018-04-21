@@ -17,14 +17,14 @@ public class KeyEventHelper extends APVPlugin {
 	}
 	
 	public KeyEvent createKeyEvent(Command command) {
-		return createKeyEvent(command, 0);
+		return createKeyEvent(command, command, 0);
 	}
 	
-	public KeyEvent createKeyEvent(Command command, int modifiers) {
+	public KeyEvent createKeyEvent(Command command, Object source, int modifiers) {
 		if (command.getCommandKey() != 0) {
-			return new KeyEvent(command, 0, KeyEvent.RELEASE, modifiers, (char)0, command.getCommandKey());
+			return new KeyEvent(source, 0, KeyEvent.RELEASE, modifiers, (char)0, command.getCommandKey());
 		} else {
-			return new KeyEvent(command, 0, KeyEvent.RELEASE, modifiers, command.getCharKey(), 0);
+			return new KeyEvent(source, 0, KeyEvent.RELEASE, modifiers, command.getCharKey(), 0);
 		}
 	}
 }
