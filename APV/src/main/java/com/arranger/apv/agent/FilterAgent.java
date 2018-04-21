@@ -1,5 +1,6 @@
 package com.arranger.apv.agent;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
 
@@ -15,6 +16,6 @@ public class FilterAgent extends PulseAgent {
 	
 	@Override
 	protected void onPulse() {
-		invokeCommand('t');
+		invokeCommand(Command.CYCLE_FILTERS);
 	}
 }

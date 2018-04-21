@@ -5,8 +5,9 @@ import org.testng.log4testng.Logger;
 import com.arranger.apv.APVEvent;
 import com.arranger.apv.APVEvent.EventHandler;
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.APVCallback.Handler;
+import com.arranger.apv.util.APVCallbackHelper.Handler;
 
 public class BaseAgent extends APVPlugin {
 	
@@ -17,15 +18,14 @@ public class BaseAgent extends APVPlugin {
 	}
 
 	protected void registerAgent(APVEvent<EventHandler> event, Handler handler) {
-		//I might need to regsister for a later time, but we'll see
-		event.register(() -> {
-			parent.getAgent().registerHandler(handler);
+		parent.getSetupEvent().register(() -> {
+			parent.getAgent().registerHandler(event, handler);
 		});
 	}
 	
-	protected void invokeCommand(char c) {
-		parent.getCommandSystem().invokeCommand(c);
-		logger.info(String.format("%1s invoked cmd: %2s\n", getName(), c));
+	protected void invokeCommand(Command command) {
+		parent.getCommandSystem().invokeCommand(command);
+		logger.info(String.format("%1s invoked cmd: %2s\n", getName(), command.name()));
 	}
 	
 	protected APVEvent<EventHandler> getSceneCompleteEvent() {

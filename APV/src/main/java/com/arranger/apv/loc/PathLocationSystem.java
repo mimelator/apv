@@ -5,6 +5,7 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.logging.Logger;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 import com.arranger.apv.factory.PrimitiveShapeFactory;
@@ -33,9 +34,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
-			cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things",
-					event -> reverser.reverse());
+			cs.registerHandler(Command.REVERSE, event -> reverser.reverse());
+			cs.registerHandler(Command.SCRAMBLE, event -> reverser.reverse());
 		});
 	}
 	

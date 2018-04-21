@@ -1,5 +1,6 @@
 package com.arranger.apv.agent;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 
 public class StrobeFilterChangeAgent extends BaseAgent {
@@ -8,7 +9,7 @@ public class StrobeFilterChangeAgent extends BaseAgent {
 		super(parent);
 		
 		registerAgent(getStrobeEvent(), () -> {
-			invokeCommand('t');
+			invokeCommand(Command.CYCLE_FILTERS);
 		});
 	}
 }

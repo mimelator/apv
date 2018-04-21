@@ -40,7 +40,6 @@ import com.arranger.apv.util.VersionInfo;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PImage;
 import processing.event.KeyEvent;
 
@@ -54,6 +53,7 @@ public class Main extends PApplet {
 	public static final int MAX_ALPHA = 255;
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
+	//public static final int ASCII_SPACE = 32;
 
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
@@ -433,9 +433,9 @@ public class Main extends PApplet {
 		getAgent().getSwitch().setState(STATE.DISABLED);
 	}
 	
-	public void sendMessage(String [] messages) {
-		if (this.messages.isEnabled()) {
-			getMessage().onNewMessage(messages);
+	public void sendMessage(String [] msgs) {
+		if (messages.isEnabled()) {
+			getMessage().onNewMessage(msgs);
 		}
 	}
 	
@@ -588,61 +588,57 @@ public class Main extends PApplet {
 	}
 	
 	protected void initializeCommands() {
-		registerNonFreezableSwitchCommand(helpSwitch, 'h');
-		registerNonFreezableSwitchCommand(showSettingsSwitch, 'q');
-		registerNonFreezableSwitchCommand(likedScenes.getSwitch(), 'l');
-		registerNonFreezableSwitchCommand(agent.getSwitch(), 'x');
-		registerNonFreezableSwitchCommand(pulseListener.getSwitch(), '7');
-		registerNonFreezableSwitchCommand(frameStroberSwitch, '8');
-		registerNonFreezableSwitchCommand(videoCaptureSwitch, '9');
 		
-		foregrounds.registerSwitchCommand('1');
-		backgrounds.registerSwitchCommand('2');
-		backDrops.registerSwitchCommand('3');
-		filters.registerSwitchCommand('4');
-		messages.registerSwitchCommand('5');
-		transitions.registerSwitchCommand('6');
+		registerSimpleSwitch(helpSwitch, Command.SWITCH_HELP);
+		registerSimpleSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
+		registerSimpleSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
+		registerSimpleSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
+		registerSimpleSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
+		registerSimpleSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
+		registerSimpleSwitch(videoCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
+		
+		foregrounds.registerSwitchCommand(Command.SWITCH_FOREGROUNDS);
+		backgrounds.registerSwitchCommand(Command.SWITCH_BACKGROUNDS);
+		backDrops.registerSwitchCommand(Command.SWITCH_BACKDROPS);
+		filters.registerSwitchCommand(Command.SWITCH_FILTERS);
+		messages.registerSwitchCommand(Command.SWITCH_MESSAGES);
+		transitions.registerSwitchCommand(Command.SWITCH_TRANSITIONS);
 
-		foregrounds.registerCommand('f', "Foreground", "Cycles through the foregrounds");
-		backgrounds.registerCommand('b', "Background", "Cycles through the backgrounds");
-		backDrops.registerCommand('o', "Backdrop", "Cycles through the backdrops");
-		locations.registerCommand(PConstants.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)");
-		filters.registerCommand('t', "Filter", "Cycles through the filters (reverse w/the shift key held)");
-		colors.registerCommand('c', "Colors", "Cycles through the colors (reverse w/the shift key held)");
-		transitions.registerCommand('n', "Transition", "Cycles through the transition (reverse w/the shift key held)");
-		messages.registerCommand('m', "Message", "Cycles through the message (reverse w/the shift key held)");
-		likedScenes.registerCommand(PApplet.RIGHT, "Right Arrow", "Cycles through the liked scenes", e -> likedScenes.increment());
-		likedScenes.registerCommand(PApplet.LEFT, "Left Arrow", "Cycles through the liked scenes in reverse", e -> likedScenes.decrement());
+		foregrounds.registerHandler(Command.CYCLE_FOREGROUNDS);
+		backgrounds.registerHandler(Command.CYCLE_BACKGROUNDS);
+		backDrops.registerHandler(Command.CYCLE_BACKDROPS);
+		locations.registerHandler(Command.CYCLE_LOCATIONS);
+		filters.registerHandler(Command.CYCLE_FILTERS);
+		colors.registerHandler(Command.CYCLE_COLORS);
+		transitions.registerHandler(Command.CYCLE_TRANSITIONS);
+		messages.registerHandler(Command.CYCLE_MESSAGES);
+		
+		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment());
+		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
 		
 		CommandSystem cs = commandSystem;
-		cs.registerCommand('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)", 
-			(event) -> {if (event.isShiftDown()) cycleMode(false); else cycleMode(true);});
+		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		
-		cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things", e -> scramble());
-		cs.registerCommand('?', "Panic", "Resets switches to their defaults", e -> panic());
-		cs.registerCommand('/', "Manual", "Sets mode to Manual and disabled Agents", e -> manual());	
-		cs.registerCommand('j', "Perf Monitor", "Outputs the slow monitor data to the console", 
-			event -> {if (event.isShiftDown()) perfMonitor.dumpMonitorInfo(true); else perfMonitor.dumpMonitorInfo(false);});
-		cs.registerCommand('s', "ScreenShot", "Saves the current frame to disk", event -> doScreenCapture());
-		cs.registerCommand('0', "Configuration", "Saves the current configuration to disk", event -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
+		cs.registerHandler(Command.PANIC, e -> panic());
+		cs.registerHandler(Command.MANUAL, e -> manual());	
+		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
+		cs.registerHandler(Command.SCREEN_SHOT, event -> doScreenCapture());
+		cs.registerHandler(Command.SAVE_CONFIGURATION, event -> configurator.saveCurrentConfig());
 		
-		cs.registerCommand(PApplet.UP, "Up Arrow", "Adds the current scene to the 'liked' list", event -> likeCurrentScene());
-		cs.registerCommand(PApplet.DOWN, "Down Arrow", "Removes the current scene from the 'liked' list", event -> disLikeCurrentScene());
+		cs.registerHandler(Command.UP_ARROW, event -> likeCurrentScene());
+		cs.registerHandler(Command.DOWN_ARROW, event -> disLikeCurrentScene());
 		
-		cs.registerCommand('}', "Transition Frames", "Increments the number of frames for each transition ", 
+		cs.registerHandler(Command.TRANSITION_FRAMES_INC, 
 			(event) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
-		cs.registerCommand('{', "Transition Frames", "Decrements the number of frames for each transition ", 
+		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, 
 			(event) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 		
-		cs.registerCommand('w', "CommandWindow", "Opens a window that allows easy command access", e -> {
-			new APVCommandFrame(this);
-		});
+		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this);});
 	}
 
-	protected void registerNonFreezableSwitchCommand(Switch s, char charCode) {
-		commandSystem.registerCommand(charCode, "Toggle " + s.getName(), 
-				"Toggles between enabling " + s.getName(), 
-				event -> s.toggleEnabled());
+	protected void registerSimpleSwitch(Switch s, Command command) {
+		commandSystem.registerHandler(command, event -> s.toggleEnabled());
 	}
 	
 	protected void cycleMode(boolean advance) {

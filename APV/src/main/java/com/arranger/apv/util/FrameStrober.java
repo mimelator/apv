@@ -1,6 +1,7 @@
 package com.arranger.apv.util;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
@@ -13,7 +14,7 @@ public class FrameStrober extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand('a', "SkipFrame Rate", "Increases/Decreases the frames to skip (hold shift to decrease)", 
+			cs.registerHandler(Command.FRAME_STROBER_STROBE_FRAMES, 
 					event -> {if (event.isShiftDown()) skipNFrames-- ; else skipNFrames++;});
 		});
 	}

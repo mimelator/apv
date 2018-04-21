@@ -1,5 +1,6 @@
 package com.arranger.apv.control;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
@@ -18,9 +19,9 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand(']', "Pulse++", "Increases the number of pulses to skip in auto/perlin mode",
+			cs.registerHandler(Command.PULSE_SKIP_INC,
 					event -> autoSkipPulseListener.incrementPulsesToSkip());
-			cs.registerCommand('[', "Pulse--", "Deccreases the number of pulses to skip in auto/perlin mode",
+			cs.registerHandler(Command.PULSE_SKIP_DEC,
 					event -> autoSkipPulseListener.deccrementPulsesToSkip());
 		});
 	}

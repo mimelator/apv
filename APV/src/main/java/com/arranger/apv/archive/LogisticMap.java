@@ -1,7 +1,7 @@
 package com.arranger.apv.archive;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.agent.PulseAgent;
 import com.arranger.apv.util.Configurator;
 
 /**
@@ -15,7 +15,7 @@ import com.arranger.apv.util.Configurator;
  *  where r is the 'fertility' ratio 
  *  where xsubn is the % of total possible population (between 0 and 1)
  */
-public class LogisticMap extends APVPlugin {
+public class LogisticMap extends PulseAgent {
 
 	private static final float FERTILITY_RATIO = 3.2f; // Must be between 1 & 4, but will die off below 2
 	private static final int DEFAULT_FRAMES_TO_SKIP = 50;
@@ -23,15 +23,14 @@ public class LogisticMap extends APVPlugin {
 	private float previousN = .5f;
 	
 	public LogisticMap(Main parent, int framesToSkip) {
-		super(parent);
-		
-		parent.getSetupEvent().register(() -> {
-			parent.getAgent().registerHandler(() -> {
-				doLogisticMap();
-			}, framesToSkip);
-		});
+		super(parent, framesToSkip);
 	}
 	
+	@Override
+	protected void onPulse() {
+		doLogisticMap();
+	}
+
 	public LogisticMap(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getInt(0, DEFAULT_FRAMES_TO_SKIP));
 	}

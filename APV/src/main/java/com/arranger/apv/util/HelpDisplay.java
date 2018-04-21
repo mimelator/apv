@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.CommandSystem;
-import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.Command;
+import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
 import com.arranger.apv.gui.APVTextFrame;
 
@@ -18,8 +18,7 @@ public class HelpDisplay extends APVPlugin {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
-			parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
-				"Popup window to display Help", 
+			parent.getCommandSystem().registerHandler(Command.WINDOWS, 
 				e -> createHelpWindow());
 		});
 	}
@@ -41,22 +40,25 @@ public class HelpDisplay extends APVPlugin {
 	protected List<String> getMessages() {
 		Main p = parent;
 		Set<String> messages = new HashSet<String>();
-		CommandSystem commandSystem = p.getCommandSystem();
 		
-		commandSystem.visitCommands(true, e -> {
-			List<APVCommand> cmds = e.getValue();
+		p.getCommandSystem().getCommands().entrySet().forEach(e -> {
+			List<RegisteredCommandHandler> cmds = e.getValue();
 			cmds.forEach(c -> {
-				messages.add(c.getName() + ": " + c.getHelpText());
+				String key = e.getKey();
+				if (key.length() > 1) {
+					//probably a number
+					key = c.getCommand().name();
+				}
+				
+				String msg = String.format("[%1s]  %2s: %3s", 
+						key, 
+						c.getCommand().getDisplayName(), 
+						c.getHelpText());
+				messages.add(msg);
 			});
 		});
-		commandSystem.visitCommands(false, e -> {
-			List<APVCommand> cmds = e.getValue();
-			cmds.forEach(c -> {
-				messages.add(String.valueOf(c.getCharKey()).trim() + ": " + c.getName() + ": " + c.getHelpText());
-			});
-		});
 		
-		for (String m : commandSystem.getInterceptorHelpMessages()) {
+		for (String m : p.getCommandSystem().getInterceptorHelpMessages()) {
 			messages.add(m);
 		}
 		

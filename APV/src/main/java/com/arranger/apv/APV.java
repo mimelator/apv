@@ -115,17 +115,17 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 		}
 	}
 	
-	public void registerCommand(int key, String name, String helpText, CommandHandler handler) {
-		parent.getCommandSystem().registerCommand(key, name, helpText, handler);
+	public void registerHandler(Command command) {
+		registerHandler(command, this);
 	}
 	
-	public void registerCommand(char key, String name, String helpText) {
-		parent.getCommandSystem().registerCommand(key, name, helpText, this);
+	public void registerHandler(Command command, CommandHandler handler) {
+		parent.getCommandSystem().registerHandler(command, handler);
 	}
 	
-	public void registerSwitchCommand(char charCode) {
-		parent.getCommandSystem().registerCommand(charCode, "Toggle " + getName(), 
-									"Toggles between enabling or freezing " + getName() + ".  Use Command-" + charCode + " to Freeze/UnFreeze", 
+	
+	public void registerSwitchCommand(Command command) {
+		parent.getCommandSystem().registerHandler(command,  
 									(event) -> {
 										if (event.isMetaDown()) {
 											sw.toggleFrozen();

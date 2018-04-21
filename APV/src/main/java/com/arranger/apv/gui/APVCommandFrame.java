@@ -11,31 +11,28 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
-import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
 
 public class APVCommandFrame extends APVFrame {
 
 	static class CMDModel implements Comparable<CMDModel> {
-		char c;
-		String text;
-		String helpText;
+		Command command;
 		
-		public CMDModel(char c, String text, String helpText) {
-			this.c = c;
-			this.text = text;
-			this.helpText = helpText;
+		public CMDModel(Command command) {
+			this.command = command;
 		}
 
 		@Override
 		public int compareTo(CMDModel o) {
-			return text.compareTo(o.text);
+			return command.getDisplayName().compareTo(o.command.getDisplayName());
 		}
 
 		@Override
 		public String toString() {
-			return text;
+			return command.name();
 		}
 	}
 	
@@ -47,9 +44,9 @@ public class APVCommandFrame extends APVFrame {
 		CommandSystem cs = parent.getCommandSystem();
 		
 		Vector<CMDModel> modelList = new Vector<CMDModel>();
-		cs.getCharCommands().entrySet().forEach(e -> {
-			APVCommand c = e.getValue().get(0);
-			modelList.add(new CMDModel(c.getCharKey(), c.getName(), c.getHelpText()));
+		cs.getCommands().entrySet().forEach(e -> {
+			RegisteredCommandHandler c = e.getValue().get(0);
+			modelList.add(new CMDModel(c.getCommand()));
 		});
 		
 		modelList.sort(null);
@@ -58,7 +55,7 @@ public class APVCommandFrame extends APVFrame {
 			public String getToolTipText(MouseEvent event) {
 				int index = locationToIndex(event.getPoint());
 				CMDModel mdl = getModel().getElementAt(index);
-				return mdl.helpText;
+				return mdl.command.getHelpText();
 			}
 		};
 		list.addMouseListener(new MouseAdapter() {
@@ -66,7 +63,7 @@ public class APVCommandFrame extends APVFrame {
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 					CMDModel model = list.getSelectedValue();
-					cs.invokeCommand(model.c);
+					cs.invokeCommand(model.command);
 				}
 			}
 		});

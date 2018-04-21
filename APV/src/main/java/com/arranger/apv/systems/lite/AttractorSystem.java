@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.APVShape;
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.audio.PulseListener;
@@ -84,7 +85,7 @@ public class AttractorSystem extends LiteShapeSystem {
 			ay[i] = 0;
 		}
 		
-		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> this.reverse = !reverse);
+		parent.getCommandSystem().registerHandler(Command.REVERSE, event -> this.reverse = !reverse);
 		
 		if (factory != null) {
 			shape = factory.createShape(null);

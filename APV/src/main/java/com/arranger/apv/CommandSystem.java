@@ -13,15 +13,12 @@ import processing.event.KeyEvent;
 
 public class CommandSystem extends APVPlugin {
 	
-	public static final char SCRAMBLE_COMMAND = Main.SPACE_BAR_KEY_CODE;
-	
-	protected Map<Integer, List<APVCommand>> keyCommands = new HashMap<Integer, List<APVCommand>>();
-	protected Map<Character, List<APVCommand>> charCommands = new HashMap<Character, List<APVCommand>>();
+	protected Map<String, List<RegisteredCommandHandler>> registeredCommands = new HashMap<String, List<RegisteredCommandHandler>>();
 	
 	private KeyEventHelper keyEventHelper;
 	private MessageModeInterceptor messageModeInterceptor;
 	private SceneSelectInterceptor sceneSelectInterceptor;
-	private APVCommand lastCommand;
+	private RegisteredCommandHandler lastCommand;
 	
 	public CommandSystem(Main parent) {
 		super(parent);
@@ -49,40 +46,21 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	public void invokeScramble() {
-		invokeCommand(SCRAMBLE_COMMAND);
+		invokeCommand(Command.SCRAMBLE);
 	}
 	
-	public void invokeCommand(char cmdKey) {
-		keyEvent(keyEventHelper.createKeyEvent(cmdKey, null));
+	public void invokeCommand(Command command) {
+		keyEvent(keyEventHelper.createKeyEvent(command));
 	}
 	
-	public void registerCommand(int key, String name, String helpText, CommandHandler handler) {
-		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
-		List<APVCommand> list = keyCommands.get(key);
+	public void registerHandler(Command command, CommandHandler handler) {
+		RegisteredCommandHandler rch = new RegisteredCommandHandler(command, handler);
+		List<RegisteredCommandHandler> list = registeredCommands.get(rch.command.getKey());
 		if (list == null) {
-			list = new ArrayList<APVCommand>();
-			keyCommands.put(key, list);
+			list = new ArrayList<RegisteredCommandHandler>();
+			registeredCommands.put(rch.command.getKey(), list);
 		}
-		list.add(apvCommand);
-	}
-	
-	public void registerCommand(char key, String name, String helpText, CommandHandler handler) {
-		key = Character.toLowerCase(key);
-		APVCommand apvCommand = new APVCommand(key, name, helpText, handler);
-		List<APVCommand> list = charCommands.get(key);
-		if (list == null) {
-			list = new ArrayList<APVCommand>();
-			charCommands.put(key, list);
-		}
-		list.add(apvCommand);
-	}
-	
-	public void visitCommands(boolean isKeyCommands, IVisitor visitor) {
-		if (isKeyCommands) {
-			keyCommands.entrySet().forEach(e -> visitor.visit(e));
-		} else {
-			charCommands.entrySet().forEach(e -> visitor.visit(e));
-		}
+		list.add(rch);
 	}
 	
 	public void keyEvent(KeyEvent keyEvent) {
@@ -90,33 +68,27 @@ public class CommandSystem extends APVPlugin {
 			return;
 		}
 		
-		char key = keyEvent.getKey();
-		if (messageModeInterceptor.intercept(key)) {
+		char charKey = keyEvent.getKey();
+		if (messageModeInterceptor.intercept(charKey)) {
 			return;
 		}
 		
-		if (sceneSelectInterceptor.intercept(key)) {
+		if (sceneSelectInterceptor.intercept(charKey)) {
 			return;
 		}
 		
-		if (key == SHIFT) {
+		if (charKey == SHIFT) {
 			return;
 		}
 		
-		List<APVCommand> list = keyCommands.get(keyEvent.getKeyCode());
-		if (list == null || list.isEmpty()) {
-			list = charCommands.get(Character.toLowerCase(key));
-		}
-		
+		String key = (charKey != 0) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
+		List<RegisteredCommandHandler> list = registeredCommands.get(key);
 		if (list != null  && !list.isEmpty()) {
 			list.forEach(c -> c.handler.onKeyPressed(keyEvent));
 			lastCommand = list.get(0);
+		} else {
+			System.out.println("No command registered for: " + key);
 		}
-	}
-	
-	@FunctionalInterface
-	public static interface IVisitor {
-		void visit(Map.Entry<?, List<APVCommand>> commandEntry);
 	}
 	
 	@FunctionalInterface
@@ -137,53 +109,42 @@ public class CommandSystem extends APVPlugin {
 		return results;
 	}
 	
-	public Map<Integer, List<APVCommand>> getKeyCommands() {
-		return keyCommands;
+	public Map<String, List<RegisteredCommandHandler>> getCommands() {
+		return registeredCommands;
 	}
 
-	public Map<Character, List<APVCommand>> getCharCommands() {
-		return charCommands;
-	}
-
-	public APVCommand getLastCommand() {
+	public RegisteredCommandHandler getLastCommand() {
 		return lastCommand;
 	}
 
-	public static class APVCommand {
+	public static class RegisteredCommandHandler {
 		
 		private CommandHandler handler;
-		private int commandKey;
-		private char charKey;
-		private String name, helpText;
+		private Command command;
 		
-		private APVCommand(int commandKey, String name, String helpText, CommandHandler handler) {
-			this.commandKey = commandKey;
-			this.name = name;
-			this.helpText = helpText;
+		private RegisteredCommandHandler(Command command, CommandHandler handler) {
+			this.command = command;
 			this.handler = handler;
 		}
 		
-		private APVCommand(char charKey, String name, String helpText, CommandHandler handler) {
-			this.charKey = charKey;
-			this.name = name;
-			this.helpText = helpText;
-			this.handler = handler;
+		public Command getCommand() {
+			return command;
 		}
 
 		public int getCommandKey() {
-			return commandKey;
+			return command.getCommandKey();
 		}
 
 		public char getCharKey() {
-			return charKey;
+			return command.getCharKey();
 		}
 
 		public String getName() {
-			return name;
+			return command.name();
 		}
 
 		public String getHelpText() {
-			return helpText;
+			return command.getHelpText();
 		}
 	}
 }

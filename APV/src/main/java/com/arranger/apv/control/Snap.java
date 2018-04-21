@@ -1,5 +1,6 @@
 package com.arranger.apv.control;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
@@ -19,9 +20,9 @@ public class Snap extends ControlSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand(')', "Frame++", "Increases the size of the Quiet Window in Snap mode",
+			cs.registerHandler(Command.QUIET_WINDOW_LENGTH_INC,
 					event -> snapListener.incrementFramesToSkip());
-			cs.registerCommand('(', "Frame--", "Decreases the size of the Quiet Window in Snap mode",
+			cs.registerHandler(Command.QUIET_WINDOW_LENGTH_DEC,
 					event -> snapListener.deccrementFramesToSkip());
 		});
 	}

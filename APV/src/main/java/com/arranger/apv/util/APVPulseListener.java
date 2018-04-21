@@ -3,7 +3,7 @@ package com.arranger.apv.util;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 
-public class APVPulseListener extends APVCallback {
+public class APVPulseListener extends APVCallbackHelper {
 	
 	private PulseListener pulseListener;
 	
@@ -16,6 +16,14 @@ public class APVPulseListener extends APVCallback {
 	
 	public void addSettingsMessages() {
 		pulseListener.addSettingsMessages();
+	}
+	
+	public void registerHandler(Handler handler) {
+		registerHandler(handler, 1);
+	}
+	
+	public void registerHandler(Handler handler, int numFramesToSkip) {
+		registerHandler(parent.getDrawEvent(), handler, numFramesToSkip);
 	}
 	
 	@Override

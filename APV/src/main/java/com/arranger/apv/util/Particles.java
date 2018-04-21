@@ -1,7 +1,7 @@
 package com.arranger.apv.util;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.CommandSystem;
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 
 public class Particles extends APVPlugin {
@@ -13,8 +13,7 @@ public class Particles extends APVPlugin {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
-			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand('p', "Particles", "Increases/Decreases Number Particles", (event) -> {
+			parent.getCommandSystem().registerHandler(Command.PARTICLE_SCALAR, (event) -> {
 				if (event.isShiftDown())
 					decrement();
 				else

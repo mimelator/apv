@@ -1,5 +1,6 @@
 package com.arranger.apv.agent;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
@@ -19,7 +20,7 @@ public class GravityAgent extends PulseAgent {
 	protected void onPulse() {
 		ShapeSystem fgSys = parent.getCurrentScene().getFgSys();
 		if (fgSys instanceof GravitySystem) {
-			invokeCommand('g');
+			invokeCommand(Command.GRAVITY);
 		}
 	}
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.Command;
+import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
@@ -26,8 +27,7 @@ public class SettingsDisplay extends APVPlugin {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
-				parent.getCommandSystem().registerCommand('w', "SettingsWindow", 
-					"Popup window to display Settings", 
+				parent.getCommandSystem().registerHandler(Command.WINDOWS, 
 					e -> createSettingsWindow());
 		});
 	}
@@ -70,15 +70,15 @@ public class SettingsDisplay extends APVPlugin {
 		
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
-		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
-		addSettingsMessage("Color: " + p.getColor().getDisplayName());
-		addSettingsMessage("Loc: " + p.getLocations().getDisplayName());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
+		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
+		p.getControl().addSettingsMessages();
+		addSettingsMessage("Loc: " + p.getLocations().getPlugin().getDisplayName());
+		addSettingsMessage("Color: " + p.getColor().getDisplayName());
+		addSettingsMessage("Audio: " + p.getAudio().getScaleFactor());
 		addSettingsMessage("Skip Frame rate: " + p.getFrameStrober().getSkipNFrames());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
-		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
-		p.getControl().addSettingsMessages();
 		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
 		p.getPulseListener().addSettingsMessages();
 		
@@ -87,7 +87,7 @@ public class SettingsDisplay extends APVPlugin {
 		}
 		
 		//Last Command
-		APVCommand lastCommand = p.getCommandSystem().getLastCommand();
+		RegisteredCommandHandler lastCommand = p.getCommandSystem().getLastCommand();
 		if (lastCommand != null) {
 			addSettingsMessage("Last Command: " + lastCommand.getName());
 		}

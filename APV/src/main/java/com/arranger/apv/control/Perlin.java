@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
-import com.arranger.apv.CommandSystem.APVCommand;
+import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
 import com.arranger.apv.Switch;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
@@ -24,32 +25,17 @@ public class Perlin extends PulseListeningControlSystem {
 
 	private static final Logger logger = Logger.getLogger(Perlin.class.getName());
 	
-	private static final CommandHolder [] AUTO_CHAR_COMMANDS = {
-			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
-			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
-			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
-			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
-			new CommandHolder(CommandSystem.SCRAMBLE_COMMAND, "Scramble"),
-			new CommandHolder('r', null),
-			new CommandHolder('f', "foregrounds"),  
-			new CommandHolder('b', "backgrounds"),
-			new CommandHolder('o', "backDrops"),
-			new CommandHolder('t', "filters"),
-			new CommandHolder('c', null),
-			new CommandHolder('n', "transitions"),
-			new CommandHolder('g', null),
-			new CommandHolder(PApplet.ENTER, null)
+	private static final Command [] AUTO_CHAR_COMMANDS = {
+			Command.SCRAMBLE, Command.SCRAMBLE, Command.SCRAMBLE, Command.SCRAMBLE,
+			Command.REVERSE,
+			Command.CYCLE_FOREGROUNDS,
+			Command.CYCLE_BACKGROUNDS,
+			Command.CYCLE_BACKDROPS,
+			Command.CYCLE_FILTERS,
+			Command.CYCLE_COLORS,
+			Command.CYCLE_TRANSITIONS,
+			Command.CYCLE_LOCATIONS,
 	};
-	
-	private static class CommandHolder {
-		private char c;
-		private String switchName;
-		
-		public CommandHolder(char c, String switchName) {
-			this.c = c;
-			this.switchName = switchName;
-		}
-	}
 	
 	private static final int COMMAND_SIZE = 10;
 	
@@ -62,10 +48,8 @@ public class Perlin extends PulseListeningControlSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand('>', "Walker++", "Increases the size of the Command Walker in Perlin mode",
-					event -> incWalker());
-			cs.registerCommand('<', "Walker--", "Decreases the size of the Command Walker in Perlin mode",
-					event -> decWalker());
+			cs.registerHandler(Command.WALKER_INC, event -> incWalker());
+			cs.registerHandler(Command.WALKER_DEC, event -> decWalker());
 		});
 	}
 
@@ -151,19 +135,18 @@ public class Perlin extends PulseListeningControlSystem {
 	protected void initializeCommandGrid() {
 		commandGrid = new KeyEvent[COMMAND_SIZE][COMMAND_SIZE];
 		
-		List<CommandHolder> charList = Arrays.asList(AUTO_CHAR_COMMANDS);
-		Collections.shuffle(charList);
+		List<Command> cmdList = Arrays.asList(AUTO_CHAR_COMMANDS);
+		Collections.shuffle(cmdList);
 		
-		Iterator<CommandHolder> charIterator = charList.iterator();
+		Iterator<Command> it = cmdList.iterator();
 		
 		//create a grid of commands for the walker to walk over
 		for (KeyEvent [] row : commandGrid) {
 			for (int index = 0; index < row.length; index++) {
-				if (!charIterator.hasNext()) {
-					charIterator = charList.iterator();
+				if (!it.hasNext()) {
+					it = cmdList.iterator();
 				}
-				CommandHolder ch = charIterator.next();
-				KeyEvent event = keyEventHelper.createKeyEvent(ch.c, ch.switchName, parent.randomBoolean());
+				KeyEvent event = keyEventHelper.createKeyEvent(it.next(), parent.randomBoolean() ? 0 : PApplet.SHIFT);
 				row[index] = event;
 			}
 		}
@@ -180,7 +163,7 @@ public class Perlin extends PulseListeningControlSystem {
 	@SuppressWarnings("unchecked")
 	protected void debugKeyEvent(KeyEvent keyEvent) {
 		if (logger.isLoggable(Level.FINE)) {
-			List<APVCommand> commandList = (List<APVCommand>)keyEvent.getNative();
+			List<RegisteredCommandHandler> commandList = (List<RegisteredCommandHandler>)keyEvent.getNative();
 			logger.fine("Command: " + commandList.get(0).getName() + " [shift=" + keyEvent.isShiftDown() + "]");
 		}
 	}

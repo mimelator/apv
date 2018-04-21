@@ -2,6 +2,7 @@ package com.arranger.apv.audio;
 
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.FloatScalar;
@@ -44,8 +45,8 @@ public class Audio extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 				CommandSystem cs = parent.getCommandSystem();
-				cs.registerCommand('+', "Audio", "Increases the audio sensitivity", event -> scaleFactor++);
-				cs.registerCommand('-', "Audio", "Decreases the audio sensitivity", event -> scaleFactor--);
+				cs.registerHandler(Command.AUDIO_INC, event -> scaleFactor++);
+				cs.registerHandler(Command.AUDIO_DEC, event -> scaleFactor--);
 		});
 	}
 	

@@ -2,6 +2,7 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
@@ -82,7 +83,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		reverser = new Reverser(parent, DEFAULT_REVERSE_PULSES); 
-		parent.getCommandSystem().registerCommand('r', "Reverse Path", "Changes the direction of the path", event -> reverser.reverse());
+		parent.getCommandSystem().registerHandler(Command.REVERSE, event -> reverser.reverse());
 		
 		// initialize arrays
 		fadeTable = new float[NUM_TRAILS];

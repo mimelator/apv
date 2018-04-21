@@ -1,6 +1,7 @@
 package com.arranger.apv.util;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
 
@@ -16,13 +17,13 @@ public class Gravity extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerCommand('g', "Gravity", "Increases/Decreases Gravity", (event) -> {
+			cs.registerHandler(Command.GRAVITY, (event) -> {
 				if (event.isShiftDown())
 					gravityIndex--;
 				else
 					gravityIndex++;
 			});
-			cs.registerCommand(CommandSystem.SCRAMBLE_COMMAND, "SpaceBar", "Scrambles all the things",
+			cs.registerHandler(Command.SCRAMBLE,
 					event -> gravityIndex = (int) parent.random(GRAVITY.length - 1));
 		});
 	}
