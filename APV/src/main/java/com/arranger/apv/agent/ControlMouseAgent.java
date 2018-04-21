@@ -6,6 +6,8 @@ import com.arranger.apv.Main;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 
+import processing.core.PConstants;
+
 public class ControlMouseAgent extends BaseAgent {
 
 	public ControlMouseAgent(Main parent) {
@@ -13,7 +15,7 @@ public class ControlMouseAgent extends BaseAgent {
 
 		registerAgent(getDrawEvent(), () -> {
 			if (shouldChangeLocation()) {
-				invokeCommand(RETURN);
+				invokeCommand(PConstants.ENTER);
 			}
 		});
 	}

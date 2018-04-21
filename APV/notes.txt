@@ -1,18 +1,8 @@
 BRANCH: save-painting
 https://github.com/mimelator/apv
 
-Agent who prevents the grid background from having a split location system
-Fix the agent system / Test it?
-Main#getLocation has logic that should be moved to an agent instead of hard coded 
 				
 I need an enum for the commands.  No more raw charss
-
-
-StopTheFlickerAgent
-//see if we have a bad match
-// at first it can just be hard-coded to splitter LocationMouse with GridBackground System
-// later it can grow to be completely configurable
-
 
 
 copy and paste perfMon window
@@ -30,6 +20,46 @@ TODO:
 * Add documentation to each plugin to describe it's arguments
 * reload config command
 *****************************************************************************
+		
+		
+AgentScripts
+*****************************************************************************
+StopTheFlicker
+if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
+	invokeCommand <SPACE>
+
+ControlMouseAgent
+if LocationSystem:MouseLocationSystem && !ControlSystem.AllowsMice
+	invokeCommand <RETURN>
+
+StrobeFilterChangeAgent
+subscribe to StrobeEvent
+	invokeCommand 't'
+	
+SceneCompleteAgent	
+subscribe to SceneCompleteEvent
+	startTransition
+	defaultScene
+	
+CarnivalAgent	
+onPulse
+	if !Foreground:Carnvial
+		event.fire
+		
+SparkAgent
+onPulse
+	if !Background:SpraySpark
+		event.fire
+		
+GravityAgent	
+onPulse
+	if Foreground:Gravity
+		invokeCommand 'g'
+	
+FilterAgent		
+onPulse
+	invokeCommand 't'		
+*****************************************************************************			
 		
 
 Build & Release to local artifactory and github
