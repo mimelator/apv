@@ -1,14 +1,13 @@
 package com.arranger.apv.agent;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
-public class SceneCompleteAgent extends APVPlugin {
+public class SceneCompleteAgent extends BaseAgent {
 
 	public SceneCompleteAgent(Main parent) {
 		super(parent);
 		
-		parent.getSceneCompleteEvent().register(() -> {
+		registerAgent(() -> {
 			parent.getTransition().startTransition();
 			parent.setDefaultScene();
 		});

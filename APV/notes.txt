@@ -1,35 +1,34 @@
 BRANCH: save-painting
 https://github.com/mimelator/apv
 
-Dashboard:
+Agent who prevents the grid background from having a split location system
+		parent.getSetupEvent().register(() -> {
+			parent.getAgent().registerHandler(() -> {
+			
+			Create an Agent base class with the api:
+				registerAgent(...
+				
+			
 
-
+copy and paste perfMon window
 Have to document the control modes
-Have to document sending messages vs marquees
-Have to document how to prepare messages and marquees
-Already documented image packs?
 
 TODO:
 *****************************************************************************
-* Create a message entry system using actual windows 
-* 	If no pulse is found, simulate one every N frames
-* Time for RPC.  How to listen for song playing events from ITunes, or YouTube, or anything else
+* If no pulse is found, simulate one every N frames
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * WanderingInSpace (bg better than warp?)
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
 * reload config command
-* Convert Pulse listeners to agents?
 *****************************************************************************
 		
 
 Build & Release to local artifactory and github
 *****************************************************************************
 mvn package
-mvn release:clean
-mvn release:prepare
-mvn release:perform
+mvn release:clean mvn release:prepare mvn release:perform
 *****************************************************************************
 
 

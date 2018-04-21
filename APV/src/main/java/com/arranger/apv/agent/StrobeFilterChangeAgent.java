@@ -1,14 +1,13 @@
 package com.arranger.apv.agent;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
-public class StrobeFilterChangeAgent extends APVPlugin {
+public class StrobeFilterChangeAgent extends BaseAgent {
 
 	public StrobeFilterChangeAgent(Main parent) {
 		super(parent);
 		
-		parent.getStrobeEvent().register(() -> {
+		registerAgent(() -> {
 			parent.getCommandSystem().invokeCommand('t');
 		});
 	}

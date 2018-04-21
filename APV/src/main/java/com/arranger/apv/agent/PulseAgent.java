@@ -1,24 +1,24 @@
 package com.arranger.apv.agent;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.util.Configurator;
 
-public abstract class PulseAgent extends APVPlugin {
+public abstract class PulseAgent extends BaseAgent {
 	
 	private static final int DEFAULT_PULSES_TO_SKIP = 1;
 	private PulseListener pulseListener;
 
 	public PulseAgent(Main parent, int numPulses) {
 		super(parent);
+		
+		registerAgent(() -> {
+			if (pulseListener.isNewPulse()) {
+				onPulse();
+			}
+		});
+		
 		parent.getSetupEvent().register(() -> {
-			parent.getAgent().registerHandler(() -> {
-				if (pulseListener.isNewPulse()) {
-					onPulse();
-				}
-			});
-			
 			pulseListener = new PulseListener(parent, numPulses);
 		});
 	}
