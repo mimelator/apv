@@ -18,10 +18,8 @@ public class AudioScaleTest extends APVPluginTest {
 		FloatScalar fs = new FloatScalar(parent);
 		
 		float[] values = createFloatArray(ARRAY_SIZE, 1);
-		fs.scale(values, .5f);
-		
-		assert(values.length == ARRAY_SIZE);
-		checkArraySamples(values, .5f);
+		fs.scale(values, 1);
+		checkArraySamples(values, 1);
 		
 		values = createFloatArray(ARRAY_SIZE, 1);
 		fs.scale(values, -1f);
@@ -42,6 +40,11 @@ public class AudioScaleTest extends APVPluginTest {
 		values = createFloatArray(ARRAY_SIZE, 10);
 		fs.scale(values, -2);
 		checkArraySamples(values, .1f);
+		
+		values = createFloatArray(ARRAY_SIZE, 10);
+		fs.scale(values, 2);
+		checkArraySamples(values, 100f);
+		
 	}
 	
 	protected void checkArraySamples(float [] values, float targetVal) {

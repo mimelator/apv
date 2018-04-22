@@ -56,6 +56,7 @@ public class Main extends PApplet {
 	public static final int MAX_ALPHA = 255;
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
+	private static final char [] HOT_KEYS = {'!', '@', '#', '$', '%', '^', '&', '*'}; //Shift + (1 through 8)
 
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
@@ -104,10 +105,25 @@ public class Main extends PApplet {
 	private Switch helpSwitch,
 					showSettingsSwitch,
 					frameStroberSwitch,
-					videoCaptureSwitch,
+					continuousCaptureSwitch,
 					videoGameSwitch,
 					scrambleModeSwitch;
 
+	public enum SWITCH_NAMES {
+		
+		HELP("Help"),
+		SHOW_SETTINGS("ShowSettings"),
+		FRAME_STROBER("FrameStrober"),
+		CONTINUOUS_CAPTURE("ContinuousCapture"),
+		SCRAMBLE_MODE("Scramble"),
+		VIDEO_GAME("VideoGame");
+		
+		public String name;
+
+		private SWITCH_NAMES(String name) {
+			this.name = name;
+		}
+	}
 	
 	public enum SYSTEM_NAMES {
 		
@@ -587,7 +603,7 @@ public class Main extends PApplet {
 		
 		runControlMode();
 		
-		if (videoCaptureSwitch.isEnabled()) {
+		if (continuousCaptureSwitch.isEnabled()) {
 			doScreenCapture();
 		}
 		
@@ -660,7 +676,7 @@ public class Main extends PApplet {
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
 		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
-		registerSwitch(videoCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
+		registerSwitch(continuousCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		
 		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
@@ -758,9 +774,6 @@ public class Main extends PApplet {
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
 	}
 	
-	//Shift 1 through 8
-	private static final char [] HOT_KEYS = {'!', '@', '#', '$', '%', '^', '&', '*'};
-	
 	@SuppressWarnings("unchecked")
 	protected void configureHotKeys() {
 		hotKeys = new HashMap<Command, HotKey>();
@@ -780,12 +793,12 @@ public class Main extends PApplet {
 		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
 		ss.forEach(s -> switches.put(s.name, s));
 		
-		helpSwitch = switches.get("Help");
-		showSettingsSwitch = switches.get("ShowSettings");
-		frameStroberSwitch = switches.get("FrameStrober");
-		videoCaptureSwitch = switches.get("VideoCapture");
-		scrambleModeSwitch = switches.get("Scramble");
-		videoGameSwitch = switches.get("VideoGame");
+		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
+		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
+		continuousCaptureSwitch = switches.get(SWITCH_NAMES.CONTINUOUS_CAPTURE.name);
+		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
+		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
 	}
 	
 	@SuppressWarnings("unchecked")

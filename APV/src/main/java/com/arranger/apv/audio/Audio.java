@@ -5,7 +5,6 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Command;
 import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.FloatScalar;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
@@ -20,17 +19,14 @@ import ddf.minim.analysis.FFT;
  */
 public class Audio extends APVPlugin {
 	
-	private static final float DEFAULT_PULSE_DECTECT_SCALAR = 5.0f;
-	
-	protected FloatScalar floatScalar;
 	protected BeatInfo beatInfo;
-	public float scaleFactor = DEFAULT_PULSE_DECTECT_SCALAR;
+	protected AudioSource source;
+	public float gain;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
-		floatScalar = new FloatScalar(parent);
 		Minim minim = new Minim(parent);
-		AudioSource source = minim.getLineIn(Minim.MONO, bufferSize);
+		source = minim.getLineIn(Minim.MONO, bufferSize);
 		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
@@ -42,16 +38,22 @@ public class Audio extends APVPlugin {
 				audioInput.disableMonitoring();
 			}
 		}
+		gain = source.getGain();
 		
 		parent.getSetupEvent().register(() -> {
 				CommandSystem cs = parent.getCommandSystem();
-				cs.registerHandler(Command.AUDIO_INC, event -> scaleFactor++);
-				cs.registerHandler(Command.AUDIO_DEC, event -> scaleFactor--);
+				cs.registerHandler(Command.AUDIO_INC, event -> adjustGain(gain + 1));
+				cs.registerHandler(Command.AUDIO_DEC, event -> adjustGain(gain -1));
 		});
 	}
 	
-	public float getScaleFactor() {
-		return scaleFactor;
+	public void adjustGain(float gain) {
+		this.gain = gain;
+		source.setGain(gain);
+	}
+	
+	public float getGain() {
+		return gain;
 	}
 
 	public BeatInfo getBeatInfo() {
@@ -106,7 +108,6 @@ public class Audio extends APVPlugin {
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
-					floatScalar.scale(sampsL, scaleFactor); 
 					freqDetector.detect(sampsL); 
 					pulseDetector.detect(sampsL); 
 					fft.forward(sampsL);

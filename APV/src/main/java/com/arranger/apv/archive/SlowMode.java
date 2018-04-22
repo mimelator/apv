@@ -20,7 +20,7 @@ public class SlowMode extends Fade {
 	@Override
 	public void startTransition() {
 		super.startTransition();
-		Switch s = parent.getSwitches().get("FrameStrober");
+		Switch s = parent.getSwitches().get(Main.SWITCH_NAMES.FRAME_STROBER.name);
 		if (!s.isEnabled()) {
 			s.toggleEnabled();
 		}
@@ -29,7 +29,7 @@ public class SlowMode extends Fade {
 	@Override
 	protected void onTransitionComplete() {
 		super.onTransitionComplete();
-		Switch s = parent.getSwitches().get("FrameStrober");
+		Switch s = parent.getSwitches().get(Main.SWITCH_NAMES.FRAME_STROBER.name);
 		if (s.isEnabled()) {
 			s.toggleEnabled();
 		}
