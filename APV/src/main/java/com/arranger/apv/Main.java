@@ -766,7 +766,7 @@ public class Main extends PApplet {
 		hotKeys = new HashMap<Command, HotKey>();
 		
 		int index = 0; //assign an index and add to map
-		List<HotKey> hks = (List<HotKey>)configurator.loadAVPPlugins(SYSTEM_NAMES.HOTKEYS);
+		List<HotKey> hks = (List<HotKey>)configurator.loadAVPPlugins(SYSTEM_NAMES.HOTKEYS, false);
 		for (Iterator<HotKey> it = hks.iterator(); it.hasNext();) {
 			Command cmd = Command.getCommand(HOT_KEYS[index++]);
 			hotKeys.put(cmd, it.next());
