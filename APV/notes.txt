@@ -1,14 +1,16 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+document
+WanderingInSpace
+remove FloatScalar
 
 
 *****************************************************************************
 TODO:
-* Should SceneCompleteAgent just fire a new TransitionToDefaultScene() event?
+* BeatColorSystem could fade from the pulse color back to the primary color
 * More animations like light worm
 * Implement more Custom Scenes for animations
-* WanderingInSpace (bg better than warp?)
 * BGImage && Filter, munge the background (Espeically when BGImage is in use)
 * Add documentation to each plugin to describe it's arguments
 *****************************************************************************
