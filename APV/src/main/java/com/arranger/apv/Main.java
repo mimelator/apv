@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.arranger.apv.APVEvent.EventHandler;
@@ -89,6 +90,7 @@ public class Main extends PApplet {
 	protected Map<String, Switch> switches;
 	protected Map<Command, HotKey> hotKeys;
 	protected Map<EVENT_TYPES, APVEvent<? extends EventHandler>> eventMap;
+	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
 	//Stateful data
 	private Scene currentScene;
@@ -242,20 +244,20 @@ public class Main extends PApplet {
 		return (CommandInvokedEvent)eventMap.get(EVENT_TYPES.COMMAND_INVOKED);
 	}
 	
+	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName) {
+		APV<? extends APVPlugin> apv = systemMap.get(systemName);
+		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
+		apv.setNextPlugin(plugin);
+		apv.setEnabled(true);
+	}
+	
 	public void setDefaultScene() {
 		Scene defaultScene = scenes.getList().stream().filter(e -> e.isNormal()).findFirst().get();
 		setNextScene(defaultScene);
 	}
 	
 	public void setNextScene(Scene scene) {
-		List<Scene> list = scenes.getList();
-		for (int index = 0; index < list.size(); index++) {
-			if (scene.equals(list.get(index))) {
-				scenes.setIndex(index);
-				return;
-			}
-		}
-		throw new RuntimeException("Unable to find the nextScene");
+		scenes.setNextPlugin(scene);
 	}
 	
 	public Scene getCurrentScene() {
@@ -397,17 +399,18 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
-		backDrops = new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS);
-		backgrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS);
-		colors = new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS);
-		controls = new APV<ControlSystem>(this, SYSTEM_NAMES.CONTROLS);
-		filters = new APV<Filter>(this, SYSTEM_NAMES.FILTERS);
-		foregrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.FOREGROUNDS);
-		likedScenes = new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES);
-		locations = new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS);
-		messages = new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES);	
-		scenes = new APV<Scene>(this, SYSTEM_NAMES.SCENES, false);
-		transitions = new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS);
+		systemMap = new HashMap<SYSTEM_NAMES, APV<? extends APVPlugin>>();
+		systemMap.put(SYSTEM_NAMES.BACKDROPS, backDrops = new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
+		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, backgrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
+		systemMap.put(SYSTEM_NAMES.COLORS, colors = new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS));
+		systemMap.put(SYSTEM_NAMES.CONTROLS, controls = new APV<ControlSystem>(this, SYSTEM_NAMES.CONTROLS));
+		systemMap.put(SYSTEM_NAMES.FILTERS, filters = new APV<Filter>(this, SYSTEM_NAMES.FILTERS));
+		systemMap.put(SYSTEM_NAMES.FOREGROUNDS, foregrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.FOREGROUNDS));
+		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, likedScenes = new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
+		systemMap.put(SYSTEM_NAMES.LOCATIONS, locations = new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
+		systemMap.put(SYSTEM_NAMES.MESSAGES, messages = new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
+		systemMap.put(SYSTEM_NAMES.SCENES, scenes = new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
+		systemMap.put(SYSTEM_NAMES.TRANSITIONS, transitions = new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
 		
 		initControlMode();
 		configureHotKeys();
@@ -488,8 +491,7 @@ public class Main extends PApplet {
 		try {
 			_draw(); //Processing has an unusual exception handler
 		} catch (Throwable t) {
-			System.out.println(t);
-			t.printStackTrace();
+			logger.log(Level.SEVERE, t.getMessage(), t);
 		}
 	}
 	

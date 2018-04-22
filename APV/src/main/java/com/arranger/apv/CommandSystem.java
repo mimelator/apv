@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.arranger.apv.cmd.MessageModeInterceptor;
 import com.arranger.apv.cmd.SceneSelectInterceptor;
@@ -12,6 +14,8 @@ import com.arranger.apv.util.KeyEventHelper;
 import processing.event.KeyEvent;
 
 public class CommandSystem extends APVPlugin {
+	
+	private static final Logger logger = Logger.getLogger(CommandSystem.class.getName());
 	
 	protected Map<String, List<RegisteredCommandHandler>> registeredCommands = new HashMap<String, List<RegisteredCommandHandler>>();
 	
@@ -64,26 +68,30 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	public void keyEvent(KeyEvent keyEvent) {
-		if (keyEvent.getAction() != KeyEvent.RELEASE) {
-			return;
-		}
-		
-		char charKey = keyEvent.getKey();
-		if (messageModeInterceptor.intercept(charKey)) {
-			return;
-		}
-		
-		if (sceneSelectInterceptor.intercept(charKey)) {
-			return;
-		}
-		
-		String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
-		List<RegisteredCommandHandler> list = registeredCommands.get(key);
-		if (list != null  && !list.isEmpty()) {
-			list.forEach(c -> c.handler.onKeyPressed(keyEvent));
-			lastCommand = list.get(0);
+		try {
+			if (keyEvent.getAction() != KeyEvent.RELEASE) {
+				return;
+			}
 			
-			parent.getCommandInvokedEvent().fire();
+			char charKey = keyEvent.getKey();
+			if (messageModeInterceptor.intercept(charKey)) {
+				return;
+			}
+			
+			if (sceneSelectInterceptor.intercept(charKey)) {
+				return;
+			}
+			
+			String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
+			List<RegisteredCommandHandler> list = registeredCommands.get(key);
+			if (list != null  && !list.isEmpty()) {
+				list.forEach(c -> c.handler.onKeyPressed(keyEvent));
+				lastCommand = list.get(0);
+				
+				parent.getCommandInvokedEvent().fire();
+			}
+		} catch (Throwable t) {
+			logger.log(Level.SEVERE, t.getMessage(), t);
 		}
 	}
 	

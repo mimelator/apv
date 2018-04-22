@@ -7,13 +7,11 @@ import processing.event.KeyEvent;
 
 public class HotKey extends APVPlugin implements CommandHandler {
 	
-	public enum SYSTEM {FOREGROUNDS, BACKGROUNDS, BACKDROPS, FILTERS, TRANSITIONS};
-
-	private SYSTEM system;
+	private Main.SYSTEM_NAMES system;
 	private String pluginName;
 	private Command cmd;
 	
-	public HotKey(Main parent, SYSTEM system, String pluginName) {
+	public HotKey(Main parent, Main.SYSTEM_NAMES system, String pluginName) {
 		super(parent);
 		this.system = system;
 		this.pluginName = pluginName;
@@ -21,7 +19,7 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	
 	public HotKey(Configurator.Context ctx) {
 		this(ctx.getParent(), 
-				SYSTEM.valueOf(ctx.getString(0, SYSTEM.BACKGROUNDS.name())),
+				Main.SYSTEM_NAMES.valueOf(ctx.getString(0, Main.SYSTEM_NAMES.BACKGROUNDS.name())),
 				ctx.getString(1, null));
 	}
 	
@@ -34,10 +32,7 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	@Override
 	public void onKeyPressed(KeyEvent event) {
 		System.out.printf("%1s %2s %3s\n", cmd.getKey(), system.name(), pluginName);
-		
-		// TODO Auto-generated method stub
-		//Do something good with this
-		
+		parent.activateNextPlugin(pluginName, system);
 	}
 
 	public void registerHotKey(Command cmd) {

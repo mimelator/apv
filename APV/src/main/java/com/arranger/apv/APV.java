@@ -8,7 +8,7 @@ import com.arranger.apv.Switch.STATE;
 
 import processing.event.KeyEvent;
 
-public class APV<T> extends APVPlugin implements CommandHandler {
+public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandler {
 	
 	protected Main.SYSTEM_NAMES systemName;
 	protected Switch sw; //switch is a keyword
@@ -47,6 +47,17 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 
 	public Switch getSwitch() {
 		return sw;
+	}
+	
+	public void setNextPlugin(APVPlugin plugin) {
+		for (int index = 0; index < list.size(); index++) {
+			if (plugin.equals(list.get(index))) {
+				setIndex(index);
+				return;
+			}
+		}
+		
+		throw new RuntimeException("Unable to find plugin: " + plugin.getName());
 	}
 	
 	public boolean isFrozen() {
