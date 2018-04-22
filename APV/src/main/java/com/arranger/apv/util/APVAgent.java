@@ -5,7 +5,7 @@ import com.arranger.apv.Main;
 public class APVAgent extends APVCallbackHelper {
 
 	public APVAgent(Main parent) {
-		super(parent, "agents");
+		super(parent, Main.SYSTEM_NAMES.AGENTS);
 	}
 
 }

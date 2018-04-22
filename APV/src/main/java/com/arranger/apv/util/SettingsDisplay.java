@@ -40,16 +40,27 @@ public class SettingsDisplay extends APVPlugin {
 		settingsMessages.add(msg);
 	}
 	
+	private static final float MSG_LENGTH_CUTOFF = 20;
+	
 	public void drawText(List<String> msgs) {
 		new SafePainter(parent, () -> {
+			
+			//Configure text size based on num msgs
+			float pct = 1.0f;
+			float msgCount = msgs.size();
+			if (msgCount > MSG_LENGTH_CUTOFF) {
+				pct = 1.0f - (((msgCount / MSG_LENGTH_CUTOFF) - 1.0f) / 10.0f);
+			}
+			int textSize = (int)PApplet.lerp(TEXT_SIZE / 2, TEXT_SIZE, pct);
+			
 			parent.fill(255);
 			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.textSize(TEXT_SIZE);
+			parent.textSize(textSize);
 			
 			int offset = TEXT_OFFSET;
 			for (String s : msgs) {
 				parent.text(s, TEXT_OFFSET, offset);
-				offset += TEXT_SIZE;
+				offset += textSize;
 			}
 		}).paint();
 	}
@@ -81,7 +92,8 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
 		p.getPulseListener().addSettingsMessages();
 		
-		List<String> switchList = p.getSwitches().stream().map(s -> s.getDisplayName()).collect(Collectors.toList());
+		List<String> switchList = p.getSwitches().values().
+				stream().map(s -> s.getDisplayName()).collect(Collectors.toList());
 		switchList.sort(null);
 		switchList.forEach(s -> addSettingsMessage(s));
 		

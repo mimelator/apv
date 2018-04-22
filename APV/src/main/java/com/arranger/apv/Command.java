@@ -63,14 +63,23 @@ public enum Command {
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
-	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes");
+	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
-	private boolean hasCharKey = true;
+	//Hot Keys
+	HOT_KEY_1('!', "HotKey1", "Triggers the HotKey"),
+	HOT_KEY_2('@', "HotKey2", "Triggers the HotKey"),
+	HOT_KEY_3('#', "HotKey3", "Triggers the HotKey"),
+	HOT_KEY_4('$', "HotKey4", "Triggers the HotKey"),
+	HOT_KEY_5('%', "HotKey5", "Triggers the HotKey"),
+	HOT_KEY_6('^', "HotKey6", "Triggers the HotKey"),
+	HOT_KEY_7('&', "HotKey6", "Triggers the HotKey"),
+	HOT_KEY_8('*', "HotKey8", "Triggers the HotKey");
 	
 	private int commandKey;
 	private char charKey;
 	private String helpText;
 	private String displayName;
+	private boolean hasCharKey = true;
 	
 	private Command(char charKey, String displayName, String helpText) {
 		this.charKey = charKey;
@@ -103,6 +112,26 @@ public enum Command {
 	
 	public String getHelpText() {
 		return helpText;
+	}
+	
+	/**
+	 * This is required for hotKeys to update the helpText
+	 */
+	public void setHelpText(String helpText) {
+		this.helpText = helpText;
+	}
+	
+	/**
+	 * This is required for hotKeys to update a displayName
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
+	public static Command getCommand(char key) {
+		Command command = Arrays.asList(Command.values()).stream().
+				filter(c -> c.charKey == key).findFirst().get();
+		return command;
 	}
 	
 	static {

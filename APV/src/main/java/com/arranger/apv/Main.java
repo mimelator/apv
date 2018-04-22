@@ -3,7 +3,6 @@ package com.arranger.apv;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -88,6 +87,7 @@ public class Main extends PApplet {
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
 	protected Map<String, Switch> switches;
+	protected Map<Command, HotKey> hotKeys;
 	protected Map<EVENT_TYPES, APVEvent<? extends EventHandler>> eventMap;
 	
 	//Stateful data
@@ -105,6 +105,32 @@ public class Main extends PApplet {
 					videoGameSwitch,
 					scrambleModeSwitch;
 
+	
+	public enum SYSTEM_NAMES {
+		
+		SCENES("scenes"),
+		LIKED_SCENES("likedScenes"),
+		AGENTS("agents"),
+		BACKGROUNDS("backgrounds"),
+		BACKDROPS("backDrops"),
+		FOREGROUNDS("foregrounds"),
+		LOCATIONS("locations"),
+		COLORS("colors"),
+		CONTROLS("controls"),
+		FILTERS("filters"),
+		TRANSITIONS("transitions"),
+		MESSAGES("messages"),
+		SWITCHES("switches"),
+		PULSELISTENERS("pulseListeners"),
+		HOTKEYS("hotKeys");
+		
+		public String name;
+
+		private SYSTEM_NAMES(String name) {
+			this.name = name;
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		PApplet.main(Main.class, new String[0]);
@@ -309,12 +335,16 @@ public class Main extends PApplet {
 		settingsDisplay.addSettingsMessage(msg);
 	}
 
-	public Collection<Switch> getSwitches() {
-		return switches.values();
+	public Map<String, Switch> getSwitches() {
+		return switches;
 	}
 	
-	public Switch getSwitch(String name) {
-		return switches.get(name);
+	public Map<Command, HotKey> getHotKeys() {
+		return hotKeys;
+	}
+	
+	public Switch getSwitchForSystem(Main.SYSTEM_NAMES name) {
+		return switches.get(name.name);
 	}
 	
 	public int getFrameCount() {
@@ -367,20 +397,20 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
-		backDrops = new APV<BackDropSystem>(this, "backDrops");
-		backgrounds = new APV<ShapeSystem>(this, "backgrounds");
-		colors = new APV<ColorSystem>(this, "colors");
-		controls = new APV<ControlSystem>(this, "controls");
-		filters = new APV<Filter>(this, "filters");
-		foregrounds = new APV<ShapeSystem>(this, "foregrounds");
-		likedScenes = new APV<Scene>(this, "likedScenes");
-		locations = new APV<LocationSystem>(this, "locations");
-		messages = new APV<MessageSystem>(this, "messages");	
-		scenes = new APV<Scene>(this, "scenes", false);
-		transitions = new APV<TransitionSystem>(this, "transitions");
+		backDrops = new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS);
+		backgrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS);
+		colors = new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS);
+		controls = new APV<ControlSystem>(this, SYSTEM_NAMES.CONTROLS);
+		filters = new APV<Filter>(this, SYSTEM_NAMES.FILTERS);
+		foregrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.FOREGROUNDS);
+		likedScenes = new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES);
+		locations = new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS);
+		messages = new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES);	
+		scenes = new APV<Scene>(this, SYSTEM_NAMES.SCENES, false);
+		transitions = new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS);
 		
-		//currentControlMode
 		initControlMode();
+		configureHotKeys();
 
 		setupSystems(backDrops);
 		setupSystems(backgrounds);
@@ -630,6 +660,8 @@ public class Main extends PApplet {
 		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment());
 		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
 		
+		hotKeys.forEach((k, v) -> v.registerHotKey(k));
+		
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
@@ -668,15 +700,27 @@ public class Main extends PApplet {
 		return list.get(Math.abs(index) % list.size());
 	}
 	
+	//Shift 1 through 8
+	private static final char [] HOT_KEYS = {'!', '@', '#', '$', '%', '^', '&', '*'};
+	
+	@SuppressWarnings("unchecked")
+	protected void configureHotKeys() {
+		hotKeys = new HashMap<Command, HotKey>();
+		
+		int index = 0; //assign an index and add to map
+		List<HotKey> hks = (List<HotKey>)configurator.loadAVPPlugins(SYSTEM_NAMES.HOTKEYS);
+		for (Iterator<HotKey> it = hks.iterator(); it.hasNext();) {
+			Command cmd = Command.getCommand(HOT_KEYS[index++]);
+			hotKeys.put(cmd, it.next());
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected void configureSwitches() {
-		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins("switches");
-		
-		switches = new HashMap<String, Switch>(ss.size());
-		for (Iterator<Switch> it = ss.iterator(); it.hasNext();) {
-			Switch nextSwitch = it.next();
-			switches.put(nextSwitch.name, nextSwitch);
-		}
+		switches = new HashMap<String, Switch>();
+
+		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
+		ss.forEach(s -> switches.put(s.name, s));
 		
 		helpSwitch = switches.get("Help");
 		showSettingsSwitch = switches.get("ShowSettings");
@@ -688,7 +732,7 @@ public class Main extends PApplet {
 	
 	@SuppressWarnings("unchecked")
 	protected void resetSwitches() {
-		List<Switch> configSwitches = (List<Switch>)configurator.loadAVPPlugins("switches");
+		List<Switch> configSwitches = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
 		configSwitches.forEach(cs -> {
 			Switch s = switches.get(cs.name);
 			s.setState(cs.state);

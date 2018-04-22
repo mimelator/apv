@@ -17,7 +17,7 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 	private Map<APVEvent<EventHandler>, List<CallbackHandler>> handlerMap = 
 			new HashMap<APVEvent<EventHandler>, List<CallbackHandler>>();
 	
-	public APVCallbackHelper(Main parent, String name) {
+	public APVCallbackHelper(Main parent, Main.SYSTEM_NAMES name) {
 		super(parent, name, false);
 	}
 

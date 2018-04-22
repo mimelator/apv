@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.junit.jupiter.api.Test;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Main;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 import com.typesafe.config.Config;
@@ -58,7 +59,7 @@ public class ConfiguratorTest extends APVPluginTest {
 	public void testClassLoading() throws Exception {
 		Configurator cfg = new Configurator(parent);
 		
-		List<? extends Config> scl = cfg.getSystemConfigList("backgrounds");
+		List<? extends Config> scl = cfg.getSystemConfigList(Main.SYSTEM_NAMES.BACKGROUNDS);
 		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
 			Config wrapperObj = it.next();
 			Entry<String, ConfigValue> shapeConfigObj = wrapperObj.entrySet().iterator().next();
@@ -68,19 +69,19 @@ public class ConfiguratorTest extends APVPluginTest {
 			assert(plugin instanceof ShapeSystem);
 		}
 		
-		List<? extends APVPlugin> ss = cfg.loadAVPPlugins("backgrounds");
+		List<? extends APVPlugin> ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.BACKGROUNDS);
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadAVPPlugins("colors");
+		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.COLORS);
 		assert(ss != null);
 		assert(ss.size() > 2);
 		
-		ss = cfg.loadAVPPlugins("controls");
+		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.CONTROLS);
 		assert(ss != null);
 		assert(ss.size() > 3);
 		
-		ss = cfg.loadAVPPlugins("locations");
+		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.LOCATIONS);
 		assert(ss != null);
 		assert(ss.size() > 4);
 	}

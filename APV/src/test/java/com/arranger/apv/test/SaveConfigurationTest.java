@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 
@@ -51,25 +53,14 @@ public class SaveConfigurationTest extends APVPluginTest {
 		results.append(parent.getConfig()).append(System.lineSeparator());
 		results.append(parent.getSceneList().getConfig()).append(System.lineSeparator()).append(System.lineSeparator()); 
 		
-		results.append(getConfigForSystem("scenes"));
-		results.append(getConfigForSystem("likedScenes"));
-		results.append(getConfigForSystem("agents"));
-		results.append(getConfigForSystem("backgrounds"));
-		results.append(getConfigForSystem("backDrops"));
-		results.append(getConfigForSystem("foregrounds"));
-		results.append(getConfigForSystem("locations"));
-		results.append(getConfigForSystem("colors"));
-		results.append(getConfigForSystem("controls"));
-		results.append(getConfigForSystem("filters"));
-		results.append(getConfigForSystem("transitions"));
-		results.append(getConfigForSystem("messages"));
-		results.append(getConfigForSystem("switches"));
-		results.append(getConfigForSystem("pulseListeners"));
+		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
+			results.append(getConfigForSystem(s));
+		});
 		
 		saveConfigFile("testGettingGlobalConfig.conf", results.toString());
 	}
 	
-	protected String getConfigForSystem(String systemName) {
+	protected String getConfigForSystem(Main.SYSTEM_NAMES systemName) {
 		List<? extends APVPlugin> ss = cfg.loadAVPPlugins(systemName);
 		StringBuffer buffer = new StringBuffer();
 		List<String> systems = new ArrayList<String>();
@@ -90,7 +81,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 	
 	@Test
 	public void testStoringAFewColors() throws Exception {
-		List<? extends APVPlugin> ss = cfg.loadAVPPlugins("colors");
+		List<? extends APVPlugin> ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.COLORS);
 		assert(ss != null);
 		
 		StringBuffer buffer = new StringBuffer();

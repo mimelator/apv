@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -176,11 +177,11 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		return conf;
 	}
 	
-	public List<? extends APVPlugin> loadAVPPlugins(String name) {
+	public List<? extends APVPlugin> loadAVPPlugins(Main.SYSTEM_NAMES name) {
 		return loadAVPPlugins(name, true);
 	}
 	
-	public List<? extends APVPlugin> loadAVPPlugins(String name, boolean allowScramble) {
+	public List<? extends APVPlugin> loadAVPPlugins(Main.SYSTEM_NAMES name, boolean allowScramble) {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
@@ -214,8 +215,8 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		return systems;
 	}
 	
-	public List<? extends Config> getSystemConfigList(String systemName) {
-		List<? extends Config> configList = conf.getConfigList(systemName);
+	public List<? extends Config> getSystemConfigList(Main.SYSTEM_NAMES systemName) {
+		List<? extends Config> configList = conf.getConfigList(systemName.name);
 		return configList;
 	}
 	
@@ -258,29 +259,21 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		
 		results.append(parent.getConfig()); //Constants
 		
-		results.append(getConfigForPlugins("likedScenes", parent.getLikedScenes()));
-		results.append(getConfigForSystem("scenes"));
-		results.append(getConfigForSystem("agents"));
-		results.append(getConfigForSystem("backgrounds"));
-		results.append(getConfigForSystem("backDrops"));
-		results.append(getConfigForSystem("foregrounds"));
-		results.append(getConfigForSystem("locations"));
-		results.append(getConfigForSystem("colors"));
-		results.append(getConfigForSystem("controls"));
-		results.append(getConfigForSystem("filters"));
-		results.append(getConfigForSystem("transitions"));
-		results.append(getConfigForSystem("messages"));
-		results.append(getConfigForSystem("switches"));
-		results.append(getConfigForSystem("pulseListeners"));
+		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
+			if (!s.equals(Main.SYSTEM_NAMES.LIKED_SCENES)) { //Comes from another location
+				results.append(getConfigForSystem(s));
+			}
+		});
+		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
 		
 		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
 	}
 
-	private String getConfigForPlugins(String systemName, List<? extends APVPlugin> pluginList) {
+	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> pluginList) {
 		
 		StringBuffer buffer = new StringBuffer();
 		List<String> systems = new ArrayList<String>();
-		buffer.append(systemName + " : [").append(System.lineSeparator());
+		buffer.append(systemName.name + " : [").append(System.lineSeparator());
 		for (Iterator<? extends APVPlugin> it = pluginList.iterator(); it.hasNext();) {
 			APVPlugin next = it.next();
 			systems.add("     " + next.getConfig());
@@ -295,7 +288,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		return buffer.toString();
 	}
 	
-	private String getConfigForSystem(String systemName) {
+	private String getConfigForSystem(Main.SYSTEM_NAMES systemName) {
 		return getConfigForPlugins(systemName, loadAVPPlugins(systemName));
 	}
 	

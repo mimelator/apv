@@ -10,21 +10,21 @@ import processing.event.KeyEvent;
 
 public class APV<T> extends APVPlugin implements CommandHandler {
 	
-	protected String name;
+	protected Main.SYSTEM_NAMES systemName;
 	protected Switch sw; //switch is a keyword
 	protected List<T> list;
 	protected int index = 0;
 	
-	public APV(Main parent, String name) {
+	public APV(Main parent, Main.SYSTEM_NAMES name) {
 		this(parent, name, true);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public APV(Main parent, String name, boolean allowScramble) {
+	public APV(Main parent, Main.SYSTEM_NAMES name, boolean allowScramble) {
 		super(parent);
 		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
-		this.name = name;
-		this.sw = parent.getSwitch(name);
+		this.systemName = name;
+		this.sw = parent.getSwitchForSystem(name);
 	}
 	
 	public int getIndex() {
@@ -41,8 +41,8 @@ public class APV<T> extends APVPlugin implements CommandHandler {
 		}
 	}
 
-	public String getName() {
-		return name;
+	public Main.SYSTEM_NAMES getSystemName() {
+		return systemName;
 	}
 
 	public Switch getSwitch() {

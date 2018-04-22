@@ -8,7 +8,7 @@ public class APVPulseListener extends APVCallbackHelper {
 	private PulseListener pulseListener;
 	
 	public APVPulseListener(Main parent) {
-		super(parent, "pulseListeners");
+		super(parent, Main.SYSTEM_NAMES.PULSELISTENERS);
 		parent.getSetupEvent().register(() -> {
 			pulseListener = new PulseListener(parent, 1);
 		});

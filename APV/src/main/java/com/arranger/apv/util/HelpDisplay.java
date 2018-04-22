@@ -48,6 +48,10 @@ public class HelpDisplay extends APVPlugin {
 				if (key.length() > 1) {
 					//probably a number
 					key = c.getCommand().name();
+				} else {
+					if (key.charAt(0) == '\n') {
+						key = "";
+					}
 				}
 				
 				String msg = String.format("[%1s]  %2s: %3s", 
