@@ -65,6 +65,8 @@ public enum Command {
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes");
 	
+	private boolean hasCharKey = true;
+	
 	private int commandKey;
 	private char charKey;
 	private String helpText;
@@ -80,6 +82,7 @@ public enum Command {
 		this.commandKey = commandKey;
 		this.displayName = displayName;
 		this.helpText = helpText;
+		hasCharKey = false;
 	}
 	
 	public int getCommandKey() {
@@ -95,11 +98,7 @@ public enum Command {
 	}
 	
 	public String getKey() {
-		if (charKey != 0) {
-			return String.valueOf(charKey);
-		} else {
-			return String.valueOf(commandKey);
-		}
+		return hasCharKey ? String.valueOf(charKey) : String.valueOf(commandKey);
 	}
 	
 	public String getHelpText() {

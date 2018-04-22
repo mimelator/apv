@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
@@ -74,7 +75,6 @@ public class FileHelper extends APVPlugin {
 	}
 	
 	private void debug(Exception e) {
-		e.printStackTrace();
-		logger.severe(e.getMessage());
+		logger.log(Level.SEVERE, e.getMessage(), e);
 	}
 }
