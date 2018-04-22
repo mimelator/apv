@@ -1,13 +1,10 @@
-BRANCH: hot-keys
+BRANCH: reload-config
 https://github.com/mimelator/apv
 
-* reload config command -> Maybe just reload Configurator and 1 specific system
-
-			
+		
 
 *****************************************************************************
 TODO:
-
 * Should SceneCompleteAgent just fire a new TransitionToDefaultScene() event?
 * More animations like light worm
 * Implement more Custom Scenes for animations
