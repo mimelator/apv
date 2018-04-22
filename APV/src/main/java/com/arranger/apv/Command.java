@@ -42,6 +42,7 @@ public enum Command {
 	SCRAMBLE(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things"),
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),
+	RELOAD_CONFIGURATION('u', "Reloads Configuration", "Reloads all of the current configuration"),
 	SCREEN_SHOT('s', "ScreenShot", "Saves the current frame to disk"),
 	PERF_MONITOR('j', "Perf Monitor", "Outputs the slow monitor data to the console"),
 	REVERSE('r', "Reverse Path", "Changes the direction of the path"),

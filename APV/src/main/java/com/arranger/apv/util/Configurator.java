@@ -161,15 +161,20 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 	public Configurator(Main parent) {
 		super(parent);
 		registeredClasses = new RegisteredClasses(parent);
-		conf = ConfigFactory.load();
-		initScramble();
+		reload();
 	}
-
+	
 	public Configurator(Main parent, InputStream inputStream) {
 		super(parent);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		conf = ConfigFactory.parseReader(reader);
+		initScramble();
+	}
+	
+	public void reload() {
+		ConfigFactory.invalidateCaches();
+		conf = ConfigFactory.load();
 		initScramble();
 	}
 	

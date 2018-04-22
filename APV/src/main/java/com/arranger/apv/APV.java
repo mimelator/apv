@@ -2,6 +2,7 @@ package com.arranger.apv;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import com.arranger.apv.CommandSystem.CommandHandler;
 import com.arranger.apv.Switch.STATE;
@@ -10,10 +11,15 @@ import processing.event.KeyEvent;
 
 public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandler {
 	
+	private static final Logger logger = Logger.getLogger(APV.class.getName());
+	
 	protected Main.SYSTEM_NAMES systemName;
 	protected Switch sw; //switch is a keyword
 	protected List<T> list;
 	protected int index = 0;
+	protected Command command, switchCommand;
+	protected CommandHandler handler, switchHandler;
+	
 	
 	public APV(Main parent, Main.SYSTEM_NAMES name) {
 		this(parent, name, true);
@@ -47,6 +53,14 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 
 	public Switch getSwitch() {
 		return sw;
+	}
+	
+	public Command getCommand() {
+		return command;
+	}
+	
+	public Command getSwitchCommand() {
+		return switchCommand;
 	}
 	
 	public void setNextPlugin(APVPlugin plugin) {
@@ -126,24 +140,46 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 	}
 	
+	public void unregisterHandler() {
+		CommandSystem cs = parent.getCommandSystem();
+		if (command != null && handler != null) {
+			if (!cs.unregisterHandler(command, handler)) {
+				logger.warning("Unable to unregister command: " + command.getDisplayName());
+			}
+		}
+		if (switchCommand != null) {
+			if (!cs.unregisterHandler(switchCommand, switchHandler)) {
+				logger.warning("Unable to switch command: " + switchCommand.getDisplayName());
+			}
+		}
+	}
+	
 	public void registerHandler(Command command) {
 		registerHandler(command, this);
 	}
 	
 	public void registerHandler(Command command, CommandHandler handler) {
-		parent.getCommandSystem().registerHandler(command, handler);
+		this.command = command;
+		this.handler = handler;
+		if (command != null && handler != null) {
+			parent.getCommandSystem().registerHandler(command, handler);
+		}
 	}
 	
-	
 	public void registerSwitchCommand(Command command) {
-		parent.getCommandSystem().registerHandler(command,  
-			e -> {
+		this.switchCommand = command;
+		switchHandler = new CommandHandler() {
+			@Override
+			public void onKeyPressed(KeyEvent e) {
 				if (e.isMetaDown()) {
 					sw.toggleFrozen();
 				} else {
 					sw.toggleEnabled();
 				}
-			});
+			}
+		};
+				
+		parent.getCommandSystem().registerHandler(command, switchHandler);
 	}
 }
 

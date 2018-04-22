@@ -3,6 +3,7 @@ package com.arranger.apv;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -110,26 +111,33 @@ public class Main extends PApplet {
 	
 	public enum SYSTEM_NAMES {
 		
-		SCENES("scenes"),
-		LIKED_SCENES("likedScenes"),
-		AGENTS("agents"),
+		AGENTS("agents", false),
 		BACKGROUNDS("backgrounds"),
 		BACKDROPS("backDrops"),
-		FOREGROUNDS("foregrounds"),
-		LOCATIONS("locations"),
 		COLORS("colors"),
 		CONTROLS("controls"),
 		FILTERS("filters"),
-		TRANSITIONS("transitions"),
+		FOREGROUNDS("foregrounds"),
+		HOTKEYS("hotKeys", false),
+		LIKED_SCENES("likedScenes"),
+		LOCATIONS("locations"),
 		MESSAGES("messages"),
-		SWITCHES("switches"),
-		PULSELISTENERS("pulseListeners"),
-		HOTKEYS("hotKeys");
+		PULSELISTENERS("pulseListeners", false),
+		SCENES("scenes"),
+		SWITCHES("switches", false),
+		TRANSITIONS("transitions");
+		
 		
 		public String name;
+		public boolean isFullSystem;
 
 		private SYSTEM_NAMES(String name) {
+			this(name, true);
+		}
+		
+		private SYSTEM_NAMES(String name, boolean isFullSystem) {
 			this.name = name;
+			this.isFullSystem = isFullSystem;
 		}
 	}
 	
@@ -400,29 +408,22 @@ public class Main extends PApplet {
 		videoGameHelper = new VideoGameHelper(this);
 		
 		systemMap = new HashMap<SYSTEM_NAMES, APV<? extends APVPlugin>>();
-		systemMap.put(SYSTEM_NAMES.BACKDROPS, backDrops = new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
-		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, backgrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
-		systemMap.put(SYSTEM_NAMES.COLORS, colors = new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS));
-		systemMap.put(SYSTEM_NAMES.CONTROLS, controls = new APV<ControlSystem>(this, SYSTEM_NAMES.CONTROLS));
-		systemMap.put(SYSTEM_NAMES.FILTERS, filters = new APV<Filter>(this, SYSTEM_NAMES.FILTERS));
-		systemMap.put(SYSTEM_NAMES.FOREGROUNDS, foregrounds = new APV<ShapeSystem>(this, SYSTEM_NAMES.FOREGROUNDS));
-		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, likedScenes = new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
-		systemMap.put(SYSTEM_NAMES.LOCATIONS, locations = new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
-		systemMap.put(SYSTEM_NAMES.MESSAGES, messages = new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
-		systemMap.put(SYSTEM_NAMES.SCENES, scenes = new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
-		systemMap.put(SYSTEM_NAMES.TRANSITIONS, transitions = new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
+		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
+		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
+		systemMap.put(SYSTEM_NAMES.COLORS, new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS));
+		systemMap.put(SYSTEM_NAMES.CONTROLS, new APV<ControlSystem>(this, SYSTEM_NAMES.CONTROLS));
+		systemMap.put(SYSTEM_NAMES.FILTERS, new APV<Filter>(this, SYSTEM_NAMES.FILTERS));
+		systemMap.put(SYSTEM_NAMES.FOREGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.FOREGROUNDS));
+		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
+		systemMap.put(SYSTEM_NAMES.LOCATIONS, new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
+		systemMap.put(SYSTEM_NAMES.MESSAGES, new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
+		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
+		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
 		
+		assignSystems();
 		initControlMode();
 		configureHotKeys();
-
-		setupSystems(backDrops);
-		setupSystems(backgrounds);
-		setupSystems(foregrounds);
-		setupSystems(likedScenes);
-		setupSystems(messages);
-		setupSystems(scenes);
-		setupSystems(transitions);
-		
+		setupSystems();
 		initializeCommands();
 		
 		//processing hints
@@ -510,6 +511,17 @@ public class Main extends PApplet {
 			popMatrix();
 			popStyle();
 		}
+	}
+	
+	public void reloadConfiguration() {
+		configurator.reload();
+		hotKeys.forEach((k, v) -> v.unregisterHotKey());
+		
+		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
+
+		configureHotKeys();
+		hotKeys.forEach((k, v) -> v.registerHotKey(k));
+		panic();
 	}
 	
 	protected void _draw() {
@@ -642,30 +654,23 @@ public class Main extends PApplet {
 	}
 	
 	protected void initializeCommands() {
-		registerSimpleSwitch(helpSwitch, Command.SWITCH_HELP);
-		registerSimpleSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
-		registerSimpleSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
-		registerSimpleSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
-		registerSimpleSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
-		registerSimpleSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
-		registerSimpleSwitch(videoCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
-		registerSimpleSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(helpSwitch, Command.SWITCH_HELP);
+		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
+		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
+		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
+		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
+		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
+		registerSwitch(videoCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
+		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		
-		foregrounds.registerSwitchCommand(Command.SWITCH_FOREGROUNDS);
-		backgrounds.registerSwitchCommand(Command.SWITCH_BACKGROUNDS);
-		backDrops.registerSwitchCommand(Command.SWITCH_BACKDROPS);
-		filters.registerSwitchCommand(Command.SWITCH_FILTERS);
-		messages.registerSwitchCommand(Command.SWITCH_MESSAGES);
-		transitions.registerSwitchCommand(Command.SWITCH_TRANSITIONS);
-
-		foregrounds.registerHandler(Command.CYCLE_FOREGROUNDS);
-		backgrounds.registerHandler(Command.CYCLE_BACKGROUNDS);
-		backDrops.registerHandler(Command.CYCLE_BACKDROPS);
-		locations.registerHandler(Command.CYCLE_LOCATIONS);
-		filters.registerHandler(Command.CYCLE_FILTERS);
-		colors.registerHandler(Command.CYCLE_COLORS);
-		transitions.registerHandler(Command.CYCLE_TRANSITIONS);
-		messages.registerHandler(Command.CYCLE_MESSAGES);
+		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
+		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
+		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS);
+		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS);
+		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
+		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
+		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
+		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
 		
 		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment());
 		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
@@ -681,13 +686,22 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
 		cs.registerHandler(Command.SCREEN_SHOT, e -> doScreenCapture());
 		cs.registerHandler(Command.SAVE_CONFIGURATION, event -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.RELOAD_CONFIGURATION, event -> reloadConfiguration());
 		cs.registerHandler(Command.UP_ARROW, e -> likeCurrentScene());
 		cs.registerHandler(Command.DOWN_ARROW, e -> disLikeCurrentScene());
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, e -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, e -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 	}
+	
+	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand) {
+		APV<? extends APVPlugin> apv = systemMap.get(system);
+		if (switchCommand != null) {
+			apv.registerSwitchCommand(switchCommand);
+		}
+		apv.registerHandler(handlerCommand);
+	}
 
-	protected void registerSimpleSwitch(Switch s, Command command) {
+	protected void registerSwitch(Switch s, Command command) {
 		commandSystem.registerHandler(command, event -> s.toggleEnabled());
 	}
 	
@@ -699,15 +713,49 @@ public class Main extends PApplet {
 			currentControlMode = controlMode.getPrevious();
 		}
 	}
+	
+	protected void setupSystems() {
+		systemMap.values().forEach(apv -> setupSystem(apv));
+	}
 
-	protected void setupSystems(APV<? extends ShapeSystem> apv) {
-		for (ShapeSystem system : apv.getList()) {
+	protected void setupSystem(APV<? extends APVPlugin> apv) {
+		for (APVPlugin system : apv.getList()) {
 			system.setup();
 		}
 	}
 	
 	protected APVPlugin getPlugin(List<? extends APVPlugin> list, int index) {
 		return list.get(Math.abs(index) % list.size());
+	}
+	
+	protected void reloadConfigurationForSystem(SYSTEM_NAMES system) {
+		if (!system.isFullSystem) {
+			return;
+		}
+		
+		APV<? extends APVPlugin> originalAPV = systemMap.get(system);
+		originalAPV.unregisterHandler();
+		
+		APV<APVPlugin> reloadedAPV = new APV<APVPlugin>(this, system);
+		systemMap.put(system, reloadedAPV);
+		setupSystem(reloadedAPV);
+		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand());
+		assignSystems();
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void assignSystems() {
+		backDrops = (APV<BackDropSystem>)systemMap.get(SYSTEM_NAMES.BACKDROPS);
+		backgrounds = (APV<ShapeSystem>) systemMap.get(SYSTEM_NAMES.BACKGROUNDS);
+		colors = (APV<ColorSystem>) systemMap.get(SYSTEM_NAMES.COLORS);
+		controls = (APV<ControlSystem>) systemMap.get(SYSTEM_NAMES.CONTROLS);
+		filters = (APV<Filter>) systemMap.get(SYSTEM_NAMES.FILTERS);
+		foregrounds = (APV<ShapeSystem>) systemMap.get(SYSTEM_NAMES.FOREGROUNDS);
+		likedScenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
+		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
+		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
+		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
+		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
 	}
 	
 	//Shift 1 through 8

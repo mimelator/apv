@@ -13,11 +13,6 @@ public abstract class ShapeSystem extends APVPlugin {
 	}
 	
 	/**
-	 * called once
-	 */
-	public abstract void setup();
-	
-	/**
 	 * Render loop
 	 */
 	public abstract void draw();

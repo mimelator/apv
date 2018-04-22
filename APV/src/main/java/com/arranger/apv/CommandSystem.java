@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +56,19 @@ public class CommandSystem extends APVPlugin {
 	
 	public void invokeCommand(Command command) {
 		keyEvent(keyEventHelper.createKeyEvent(command));
+	}
+	
+	public boolean unregisterHandler(Command command, CommandHandler handler) {
+		List<RegisteredCommandHandler> list = registeredCommands.get(command.getKey());
+		if (list != null) {
+			Optional<RegisteredCommandHandler> rch = list.stream().filter(e -> {return e.handler.equals(handler);}).findFirst();
+			if (rch.isPresent()) {
+				return list.remove(rch.get());
+			} else {
+				throw new RuntimeException("Unable to unregister: " + command.getDisplayName() + " for handler: " + handler.toString());
+			}
+		}
+		return false;
 	}
 	
 	public void registerHandler(Command command, CommandHandler handler) {
