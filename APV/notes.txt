@@ -1,7 +1,7 @@
-BRANCH: audio-gain
+BRANCH: master
 https://github.com/mimelator/apv
 
-See if audio is tuneable		
+
 
 *****************************************************************************
 TODO:
