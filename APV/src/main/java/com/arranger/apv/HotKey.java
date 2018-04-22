@@ -9,7 +9,6 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	
 	private Main.SYSTEM_NAMES system;
 	private String pluginName;
-	private Command cmd;
 	
 	public HotKey(Main parent, Main.SYSTEM_NAMES system, String pluginName) {
 		super(parent);
@@ -31,13 +30,10 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	
 	@Override
 	public void onKeyPressed(KeyEvent event) {
-		System.out.printf("%1s %2s %3s\n", cmd.getKey(), system.name(), pluginName);
 		parent.activateNextPlugin(pluginName, system);
 	}
 
 	public void registerHotKey(Command cmd) {
-		this.cmd = cmd;
-		
 		//update help text
 		cmd.setHelpText(String.format("Triggers the %1s plugin", pluginName));
 		cmd.setDisplayName(String.format("HotKey[%1s %2s]", system.name(), pluginName));

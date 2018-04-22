@@ -2,31 +2,9 @@ BRANCH: hot-keys
 https://github.com/mimelator/apv
 
 
-Hot key for: Freq
-			Blur background
-			Twirl background
-
-	Hot keys could be SHIFT-Number
-	Should be configured in resources.conf
-	Kind of like the Manual command
+Twirl
 	
 	
-hotKeys : [
-	{HotKey : [BACKGROUNDS, FreqDetector]}
-	{HotKey : [BACKDROPS, BlurBackDrop]}
-	{HotKey : [BACKDROPS, Twirl]}
-]	
-
-	Configuration
-	Loading
-	Settings
-	Help
-	Implementation
-	
-	
-Strongly teyped system names
-
-Fix: getMainSwitch	
 
 			
 

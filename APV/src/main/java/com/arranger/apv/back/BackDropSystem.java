@@ -22,4 +22,11 @@ public class BackDropSystem extends ShapeSystem {
 	public void drawBackground() {
 		parent.background(0);
 	}
+	
+	/**
+	 * Whether or not to push matrix and styles before and after drawing
+	 */
+	public boolean isSafe() {
+		return true;
+	}
 }

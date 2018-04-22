@@ -496,12 +496,20 @@ public class Main extends PApplet {
 	}
 	
 	public void drawSystem(ShapeSystem s, String debugName) {
-		pushStyle();
-		pushMatrix();
+		drawSystem(s, debugName, true);
+	}
+	
+	public void drawSystem(ShapeSystem s, String debugName, boolean safe) {
+		if (safe) {
+			pushStyle();
+			pushMatrix();
+		}
 		settingsDisplay.debugSystem(s, debugName);
 		s.draw();
-		popMatrix();
-		popStyle();
+		if (safe) {
+			popMatrix();
+			popStyle();
+		}
 	}
 	
 	protected void _draw() {

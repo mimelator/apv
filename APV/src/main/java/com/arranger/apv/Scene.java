@@ -80,7 +80,7 @@ public class Scene extends ShapeSystem {
 			setup(backDrop);
 			setup(bgSys);
 			setup(fgSys);
-			//setup(filter); Filters don't get any setup?
+			//setup(filter); Filters don't get any setup
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class Scene extends ShapeSystem {
 
 	public void drawScene() {
 		if (backDrop != null) {
-			parent.drawSystem(backDrop, "backDrop");
+			parent.drawSystem(backDrop, "backDrop", backDrop.isSafe());
 		}
 		
 		if (bgSys != null) {
