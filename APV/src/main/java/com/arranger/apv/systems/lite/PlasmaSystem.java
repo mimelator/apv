@@ -187,9 +187,11 @@ public class PlasmaSystem extends LiteShapeSystem {
 		result.updatePixels();
 		result.pixels = resizePixels(img.pixels, img.width, img.height, parent.width, parent.height);
 		result.loadPixels();
-		
-		parent.image(result, 0, 0);
+		parent.scale(SCALE_HACK, 1f);
+		parent.image(result, 0, 0); 
 	}
+	
+	private static final float SCALE_HACK = 1.1f; //1
 	
 	/**
 	 * Taken from http://tech-algorithm.com/articles/nearest-neighbor-image-scaling/

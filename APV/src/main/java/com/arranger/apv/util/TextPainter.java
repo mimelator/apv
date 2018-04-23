@@ -23,7 +23,6 @@ public class TextPainter extends APVPlugin {
 	
 	public void drawText(List<String> msgs, SafePainter.LOCATION location) {
 		new SafePainter(parent, () -> {
-			
 			//Configure text size based on num msgs
 			float pct = 1.0f;
 			float msgCount = msgs.size();
@@ -32,8 +31,7 @@ public class TextPainter extends APVPlugin {
 			}
 			int textSize = (int)PApplet.lerp(TEXT_SIZE / 2, TEXT_SIZE, pct);
 			
-			parent.fill(255);
-			parent.textAlign(PApplet.LEFT, PApplet.TOP);
+			parent.fill(parent.getColor().getCurrentColor().getRGB());
 			parent.textSize(textSize);
 			
 			int offset = TEXT_OFFSET;

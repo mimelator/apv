@@ -10,7 +10,15 @@ public class SafePainter extends APVPlugin {
 	private static final int INSET = 11;
 	private static final int OFFSET = TextPainter.TEXT_OFFSET;
 	
-	public enum LOCATION{UPPER_LEFT, UPPER_RIGHT, LOWER_RIGHT, LOWER_LEFT};
+	public enum LOCATION {
+		UPPER_LEFT(LEFT), UPPER_RIGHT(RIGHT), LOWER_RIGHT(RIGHT), LOWER_LEFT(LEFT);
+		
+	
+		private int alignment;
+		private LOCATION(int alignment) {
+			this.alignment = alignment;
+		}
+	};
 	
 	private Painter painter;
 	
@@ -39,6 +47,7 @@ public class SafePainter extends APVPlugin {
 			int x = (int)pt.getX();
 			int y = (int)pt.getY();
 			parent.translate(x, y);
+			parent.textAlign(location.alignment);
 			painter.paint();
 			parent.translate(-x, -y);
 		}

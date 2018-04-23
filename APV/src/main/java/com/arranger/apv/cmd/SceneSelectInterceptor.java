@@ -1,6 +1,7 @@
 package com.arranger.apv.cmd;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
 import com.arranger.apv.scene.Marquee;
+import com.arranger.apv.util.SafePainter;
+import com.arranger.apv.util.TextDrawHelper;
 
 public class SceneSelectInterceptor extends CommandInterceptor {
 	
@@ -70,6 +73,9 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 		Marquee marquee = (Marquee)sceneMap.get('m');
 		marquee.setText(text);
 		parent.setNextScene(marquee);
+		
+		//Send the message to the lower right for awhile
+		new TextDrawHelper(parent, 1200, Arrays.asList(new String[] {text}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
 	/**
