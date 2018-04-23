@@ -68,7 +68,7 @@ public class StandardMessage extends MessageSystem {
 			parent.text(msg, 0, 0);
 			parent.popMatrix();
 			
-			logger.fine(String.format("[index: %s] [msg: %s] [pct: %7] [offset: %s]", index, msg, pct, offset));
+			logger.fine(String.format("[index: %s] [msg: %s] [pct: %f] [offset: %s]", index, msg, pct, offset));
 		}
 	}
 	

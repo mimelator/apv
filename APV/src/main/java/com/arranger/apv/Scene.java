@@ -18,26 +18,12 @@ public class Scene extends ShapeSystem {
 	
 	protected int lastFrameDrawn = 0;
 	
-	private boolean loadedFromConfig = false;
-	
 	public Scene(Main parent) {
 		super(parent, null);
 	}
 	
 	public Scene(Configurator.Context ctx) {
 		this(ctx.getParent());
-		
-		if (ctx.argList.size() == 0) {
-			return;
-		}
-		
-		setSystems((BackDropSystem)ctx.loadPlugin(0),
-				(ShapeSystem)ctx.loadPlugin(1),
-				(ShapeSystem)ctx.loadPlugin(2),
-				(Filter)ctx.loadPlugin(3),
-				(ColorSystem)ctx.loadPlugin(4),
-				(LocationSystem)ctx.loadPlugin(5));
-		loadedFromConfig = true;
 	}
 	
 	public Scene(Scene o) {
@@ -46,7 +32,8 @@ public class Scene extends ShapeSystem {
 		setSystems(o.getBackDrop(), o.getBgSys(), o.getFgSys(), o.getFilter(), o.getColorSys(), o.getLocSys());
 	}
 	
-	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter,
+	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, 
+			ShapeSystem fgSys, Filter filter,
 			ColorSystem cs, LocationSystem ls) {
 		this.backDrop = backDrop;
 		this.bgSys = bgSys;
@@ -86,25 +73,6 @@ public class Scene extends ShapeSystem {
 		drawScene();
 	}
 	
-	@Override
-	public void setup() {
-		//If this Scene has been loaded from disk then it's children will not have been setup
-		if (loadedFromConfig) {
-			setup(backDrop);
-			setup(bgSys);
-			setup(fgSys);
-			setup(filter);
-			setup(colorSys);
-			setup(locSys);
-		}
-	}
-	
-	private void setup(APVPlugin ss) {
-		if (ss != null) {
-			ss.setup();
-		}
-	}
-
 	public boolean isNew() {
 		return false;
 	}

@@ -23,6 +23,7 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVCommandFrame;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.util.APVAgent;
 import com.arranger.apv.util.APVPulseListener;
 import com.arranger.apv.util.Configurator;
@@ -64,7 +65,7 @@ public class Main extends PApplet {
 	protected APV<ControlSystem> controls;	
 	protected APV<Filter> filters; 
 	protected APV<ShapeSystem> foregrounds; 
-	protected APV<Scene> likedScenes;
+	protected APV<LikedScene> likedScenes;
 	protected APV<LocationSystem> locations; 
 	protected APV<MessageSystem> messages;	
 	protected APV<Scene> scenes;	
@@ -348,7 +349,7 @@ public class Main extends PApplet {
 	}
 	
 	public void likeCurrentScene() {
-		likedScenes.getList().add(new Scene(currentScene));
+		likedScenes.getList().add(new LikedScene(currentScene));
 		sendMessage(new String[] {"Liked :)"});
 	}
 	
@@ -357,7 +358,7 @@ public class Main extends PApplet {
 		sendMessage(new String[] {"Disliked :("});
 	}
 	
-	public List<Scene> getLikedScenes() {
+	public List<LikedScene> getLikedScenes() {
 		return likedScenes.getList();
 	}	
 	
@@ -775,7 +776,7 @@ public class Main extends PApplet {
 		controls = (APV<ControlSystem>) systemMap.get(SYSTEM_NAMES.CONTROLS);
 		filters = (APV<Filter>) systemMap.get(SYSTEM_NAMES.FILTERS);
 		foregrounds = (APV<ShapeSystem>) systemMap.get(SYSTEM_NAMES.FOREGROUNDS);
-		likedScenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
+		likedScenes = (APV<LikedScene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
