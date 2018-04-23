@@ -12,14 +12,9 @@ import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.gui.APVTextFrame;
 
-import processing.core.PApplet;
-
 public class SettingsDisplay extends APVPlugin {
 	
 	private static final Logger logger = Logger.getLogger(SettingsDisplay.class.getName());
-	
-	public static final int TEXT_SIZE = 16;
-	public static final int TEXT_OFFSET = 10;
 	protected List<String> settingsMessages = new ArrayList<String>();
 	
 	public SettingsDisplay(Main parent) {
@@ -38,31 +33,6 @@ public class SettingsDisplay extends APVPlugin {
 	
 	public void addSettingsMessage(String msg) {
 		settingsMessages.add(msg);
-	}
-	
-	private static final float MSG_LENGTH_CUTOFF = 20;
-	
-	public void drawText(List<String> msgs) {
-		new SafePainter(parent, () -> {
-			
-			//Configure text size based on num msgs
-			float pct = 1.0f;
-			float msgCount = msgs.size();
-			if (msgCount > MSG_LENGTH_CUTOFF) {
-				pct = 1.0f - (((msgCount / MSG_LENGTH_CUTOFF) - 1.0f) / 10.0f);
-			}
-			int textSize = (int)PApplet.lerp(TEXT_SIZE / 2, TEXT_SIZE, pct);
-			
-			parent.fill(255);
-			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.textSize(textSize);
-			
-			int offset = TEXT_OFFSET;
-			for (String s : msgs) {
-				parent.text(s, TEXT_OFFSET, offset);
-				offset += textSize;
-			}
-		}).paint();
 	}
 	
 	public void debugSystem(ShapeSystem ss, String name) {
@@ -108,7 +78,7 @@ public class SettingsDisplay extends APVPlugin {
 	}
 
 	public void drawSettingsMessages() {
-		drawText(settingsMessages);
+		new TextPainter(parent).drawText(settingsMessages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	protected void createSettingsWindow() {

@@ -60,15 +60,8 @@ public class VideoGameHelper extends APVPlugin {
 				String.format("Last Command: %1s[%2d]", lastCommandName, cmdStatMap.get(lastCommandName)),
 				String.format("Total Count: %1d", totalCommands),
 		};
-		
-		new SafePainter(parent, () -> {
-			Main p = parent;
-			int x = SettingsDisplay.TEXT_OFFSET;
-			int y = p.height - (p.height / 11);
-			p.translate(x, y);
-			p.getSettingsDisplay().drawText(Arrays.asList(msgs));
-			p.translate(-x, -y);
-		}).paint();
+
+		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);
 	}
 	
 	private void recordLastCommand() {
