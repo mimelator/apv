@@ -45,7 +45,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	@Override
 	public String getConfig() {
 		//{CarnivalShapeSystem : [true]}
-		return String.format("{%1s : [%2b]}", getName(), useCustomColor);
+		return String.format("{%s : [%b]}", getName(), useCustomColor);
 	}
 
 	@Override

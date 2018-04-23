@@ -29,7 +29,7 @@ public class OscilatingBackDrop extends BackDropSystem {
 	@Override
 	public String getConfig() {
 		//{OscilatingBackDrop: [WHITE, BLACK]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), format(c1, true), format(c2, true));
+		return String.format("{%s : [%s, %s]}", getName(), format(c1, true), format(c2, true));
 	}	
 	
 	@Override
@@ -39,7 +39,7 @@ public class OscilatingBackDrop extends BackDropSystem {
 		parent.background(lerpColor);
 		
 		String pctString = String.format("%.0f%%", amt * 100);
-		String colors = String.format("%1s %2s", format(c1, false), format(c2, false));
+		String colors = String.format("%s %s", format(c1, false), format(c2, false));
 		parent.addSettingsMessage(" --colors: " + colors);
 		parent.addSettingsMessage(" --current: " + format(new Color(lerpColor), false));
 		parent.addSettingsMessage(" --pctString: " + pctString);

@@ -85,7 +85,7 @@ public class Perlin extends PulseListeningControlSystem {
 		
 		if (logger.isLoggable(Level.FINE)) {
 			DecimalFormat df2 = new DecimalFormat(".##");
-			String format = String.format("Looking for command at point [%1s,%2s] scaled to [%3d,%4d]", 
+			String format = String.format("Looking for command at point [%s,%s] scaled to [%d,%d]", 
 					df2.format(currentPoint.getX()), df2.format(currentPoint.getY()), x, y);
 			logger.fine(format);
 		}

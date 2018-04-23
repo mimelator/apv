@@ -61,7 +61,7 @@ public class RandomMessagePL extends APVPlugin {
 		JSONQuoter quoter = new JSONQuoter(parent);
 		String msgs = msgList.stream().map(e -> quoter.quote(e)).collect(Collectors.joining(","));
 		
-		return String.format("{%1s : [%2s, [%3s]]}", getName(), pulsesToSkip, msgs);
+		return String.format("{%s : [%s, [%s]]}", getName(), pulsesToSkip, msgs);
 	}
 	
 	private String getMessage() {

@@ -48,7 +48,7 @@ public class ScribblerShapeSystem extends LiteCycleShapeSystem {
 
 	@Override
 	public String getConfig() {
-		return String.format("{%1s : [%2s, %3s]}", getName(), numNewObjects, maxLineWidth);
+		return String.format("{%s : [%s, %s]}", getName(), numNewObjects, maxLineWidth);
 	}
 
 	@Override

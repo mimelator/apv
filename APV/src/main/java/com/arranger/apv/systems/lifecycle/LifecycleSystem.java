@@ -39,9 +39,9 @@ public abstract class LifecycleSystem extends ShapeSystem {
 		String result = null;
 		if (factory != null) {
 			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s]}", getName(), childConfig, numParticles);
+			result = String.format("{%s : [%s, %s]}", getName(), childConfig, numParticles);
 		} else {
-			result = String.format("{%1s : [%2s]}", getName(), numParticles);
+			result = String.format("{%s : [%s]}", getName(), numParticles);
 		}
 		return result;
 	}

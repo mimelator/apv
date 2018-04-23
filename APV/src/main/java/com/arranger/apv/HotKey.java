@@ -30,7 +30,7 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	@Override
 	public String getConfig() {
 		//{HotKey : [BACKGROUNDS, FreqDetector]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), system.name(), pluginName);
+		return String.format("{%s : [%s, %s]}", getName(), system.name(), pluginName);
 	}
 	
 	@Override
@@ -47,8 +47,8 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	public void registerHotKey(Command cmd) {
 		this.cmd = cmd;
 		//update help text
-		cmd.setHelpText(String.format("Triggers the %1s plugin", pluginName));
-		cmd.setDisplayName(String.format("HotKey[%1s %2s]", system.name(), pluginName));
+		cmd.setHelpText(String.format("Triggers the %s plugin", pluginName));
+		cmd.setDisplayName(String.format("HotKey[%s %s]", system.name(), pluginName));
 		
 		parent.getCommandSystem().registerHandler(cmd, this);
 	}

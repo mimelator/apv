@@ -292,6 +292,14 @@ public class Main extends PApplet {
 		return colors.getPlugin();
 	}
 	
+	public void setNextColor(ColorSystem cs) {
+		colors.setNextPlugin(cs);
+	}
+	
+	public void setNextLocation(LocationSystem ls) {
+		locations.setNextPlugin(ls);
+	}
+	
 	public APV<ShapeSystem> getBackgrounds(){
 		return backgrounds;
 	}
@@ -390,14 +398,14 @@ public class Main extends PApplet {
 	}
 
 	public String format(Color c) {
-		return String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue());
+		return String.format("(%d,%d,%d)", c.getRed(), c.getGreen(), c.getBlue());
 	}
 	
 	public String format(Color c, boolean addQuote) {
 		if (!addQuote) {
 			return format(c);
 		} else {
-			return "\"" + String.format("(%1d,%2d,%3d)", c.getRed(), c.getGreen(), c.getBlue()) + "\"";
+			return "\"" + String.format("(%d,%d,%d)", c.getRed(), c.getGreen(), c.getBlue()) + "\"";
 		}
 	}
 	
@@ -564,7 +572,7 @@ public class Main extends PApplet {
 				Filter filter = filters.getPlugin(true);
 				ShapeSystem fgSys = foregrounds.getPlugin(true);
 	
-				currentScene.setSystems(backDrop, bgSys, fgSys, filter);
+				currentScene.setSystems(backDrop, bgSys, fgSys, filter, getColor(), getLocations().getPlugin());
 			} else {
 				//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
 				if (currentScene.isNew()) {

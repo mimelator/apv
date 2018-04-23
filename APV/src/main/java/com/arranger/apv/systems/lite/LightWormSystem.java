@@ -75,7 +75,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	@Override
 	public String getConfig() {
 		//{LightWormSystem : [false, 4, 16]}
-		return String.format("{%1s : [%2b, %3s, %4s]}", getName(), useOrigColors, numDragons, colorSpeed);
+		return String.format("{%s : [%b, %s, %s]}", getName(), useOrigColors, numDragons, colorSpeed);
 	}
 
 	private static final int TOTAL_OFFSET_VALS = 8; //Hard coded for the offset table

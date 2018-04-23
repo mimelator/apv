@@ -1,15 +1,27 @@
-BRANCH: sustained-painter
+BRANCH: color-saver
 https://github.com/mimelator/apv
 
-TextPainter doc
+LikedScene
+Animation
 
+* Save color and location
+* allow anything to adjust during scene mode?
+**   One approach could be to listen to apv change events (triggered from APV) (setIndex)
+**   When Scene handles an event it could remove/shadow that system 
+
+** OR Main could duplicate the scene, but use the updated system (col,loc,fg,bg,etc...)
+**  And NOT add it into the likedScene list
+
+
+* change song-list to marquee-list in reference.conf and whatever loads it
+	(SceneList does the loading)
+	
+* update LocationMessage to use the new SafePainter and helper tools if possible
 
 *****************************************************************************
 TODO:
-* I would like the current song to displayed in the lower right hand corner
-* 	Could take a Location based safe painter (UL, UR, LR, LL, CENTER) that translates before and after the text
-* Save color and location but allow them to adjust
 * BeatColorSystem could fade from the pulse color back to the primary color
+* Any series of commands could be macros
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm

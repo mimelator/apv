@@ -29,7 +29,7 @@ public class BeatColorSystem extends ColorSystem {
 	@Override
 	public String getConfig() {
 		//{BeatColorSystem : [WHITE, GREEN]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), parent.format(primary, true), parent.format(pulse, true));
+		return String.format("{%s : [%s, %s]}", getName(), parent.format(primary, true), parent.format(pulse, true));
 	}
 
 	public Color getCurrentColor() {

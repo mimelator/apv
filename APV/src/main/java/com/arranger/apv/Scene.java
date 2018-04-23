@@ -1,7 +1,10 @@
 package com.arranger.apv;
 
 import com.arranger.apv.back.BackDropSystem;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.filter.Filter;
+import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.scene.Animation;
 import com.arranger.apv.util.Configurator;
 
 public class Scene extends ShapeSystem {
@@ -10,6 +13,9 @@ public class Scene extends ShapeSystem {
 	protected ShapeSystem bgSys;
 	protected ShapeSystem fgSys;
 	protected Filter filter;
+	protected ColorSystem colorSys;
+	protected LocationSystem locSys;
+	
 	protected int lastFrameDrawn = 0;
 	
 	private boolean loadedFromConfig = false;
@@ -28,21 +34,26 @@ public class Scene extends ShapeSystem {
 		setSystems((BackDropSystem)ctx.loadPlugin(0),
 				(ShapeSystem)ctx.loadPlugin(1),
 				(ShapeSystem)ctx.loadPlugin(2),
-				(Filter)ctx.loadPlugin(3));
+				(Filter)ctx.loadPlugin(3),
+				(ColorSystem)ctx.loadPlugin(4),
+				(LocationSystem)ctx.loadPlugin(5));
 		loadedFromConfig = true;
 	}
 	
 	public Scene(Scene o) {
 		super(o.parent, null);
 		
-		setSystems(o.getBackDrop(), o.getBgSys(), o.getFgSys(), o.getFilter());
+		setSystems(o.getBackDrop(), o.getBgSys(), o.getFgSys(), o.getFilter(), o.getColorSys(), o.getLocSys());
 	}
 	
-	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter) {
+	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, ShapeSystem fgSys, Filter filter,
+			ColorSystem cs, LocationSystem ls) {
 		this.backDrop = backDrop;
 		this.bgSys = bgSys;
 		this.fgSys = fgSys;
 		this.filter = filter;
+		this.colorSys = cs;
+		this.locSys = ls;
 	}
 	
 	public char getHotKey() {
@@ -51,11 +62,13 @@ public class Scene extends ShapeSystem {
 	
 	@Override
 	public String getConfig() {
-		return String.format("{%1s : [%2s, %3s, %4s, %5s]}", getName(),
+		return String.format("{%s : [%s, %s, %s, %s, %s, %s]}", getName(),
 					getConfig(backDrop),
 					getConfig(bgSys),
 					getConfig(fgSys),
-					getConfig(filter)
+					getConfig(filter),
+					getConfig(colorSys),
+					getConfig(locSys)
 				);
 	}
 	
@@ -80,11 +93,13 @@ public class Scene extends ShapeSystem {
 			setup(backDrop);
 			setup(bgSys);
 			setup(fgSys);
-			//setup(filter); Filters don't get any setup
+			setup(filter);
+			setup(colorSys);
+			setup(locSys);
 		}
 	}
 	
-	private void setup(ShapeSystem ss) {
+	private void setup(APVPlugin ss) {
 		if (ss != null) {
 			ss.setup();
 		}
@@ -95,10 +110,18 @@ public class Scene extends ShapeSystem {
 	}
 	
 	public boolean isNormal() {
-		return true;
+		return !(this instanceof Animation);
 	}
 
 	public void drawScene() {
+		if (colorSys != null) {
+			parent.setNextColor(colorSys);
+		}
+		
+		if (locSys != null) {
+			parent.setNextLocation(locSys);
+		}
+		
 		if (backDrop != null) {
 			parent.drawSystem(backDrop, "backDrop", backDrop.isSafe());
 		}
@@ -135,5 +158,13 @@ public class Scene extends ShapeSystem {
 
 	public Filter getFilter() {
 		return filter;
+	}
+	
+	public ColorSystem getColorSys() {
+		return colorSys;
+	}
+	
+	public LocationSystem getLocSys() {
+		return locSys;
 	}
 }

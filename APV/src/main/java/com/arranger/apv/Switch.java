@@ -28,7 +28,7 @@ public class Switch extends APVPlugin {
 	@Override
 	public String getConfig() {
 		//{Switch : [ForeGround, true]}
-		return String.format("{%1s : [%2b]}", getName(), isEnabled());
+		return String.format("{%s : [%b]}", getName(), isEnabled());
 	}
 
 	@Override

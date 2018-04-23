@@ -34,7 +34,7 @@ public class StrobeFilter extends Filter {
 	@Override
 	public String getConfig() {
 		//{StrobeFilter :[150, 10]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), strobeDuration, flashDuration);
+		return String.format("{%s : [%s, %s]}", getName(), strobeDuration, flashDuration);
 	}
 	
 	protected void onNewPulse() {

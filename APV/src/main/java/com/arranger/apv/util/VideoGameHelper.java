@@ -55,10 +55,10 @@ public class VideoGameHelper extends APVPlugin {
 	public void showStats() {
 		
 		String [] msgs = new String[] {
-				String.format("Time: %1s", getTimeStamp()),
-				String.format("Cmds/sec: %1s", decFormat.format(getCommandsPerSec())),
-				String.format("Last Command: %1s[%2d]", lastCommandName, cmdStatMap.get(lastCommandName)),
-				String.format("Total Count: %1d", totalCommands),
+				String.format("Time: %s", getTimeStamp()),
+				String.format("Cmds/sec: %s", decFormat.format(getCommandsPerSec())),
+				String.format("Last Command: %s[%d]", lastCommandName, cmdStatMap.get(lastCommandName)),
+				String.format("Total Count: %d", totalCommands),
 		};
 
 		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);

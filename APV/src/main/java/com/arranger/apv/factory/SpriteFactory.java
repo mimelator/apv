@@ -42,7 +42,7 @@ public class SpriteFactory extends ShapeFactory {
 	@Override
 	public String getConfig() {
 		//{SpriteFactory : [triangle.png, 2.5]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), file, alpha);
+		return String.format("{%s : [%s, %s]}", getName(), file, alpha);
 	}
 	
 	@Override

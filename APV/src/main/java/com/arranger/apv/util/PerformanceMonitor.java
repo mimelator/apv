@@ -64,7 +64,7 @@ public class PerformanceMonitor extends APVPlugin {
 			
 			//get the average
 			double average = counts.stream().mapToDouble(a -> a).average().getAsDouble();
-			String line = String.format("%1s, %2d, %3s, %4s", 
+			String line = String.format("%s, %d, %s, %s", 
 					entry.getKey(), 
 					counts.size(),
 					decFormat.format(average),

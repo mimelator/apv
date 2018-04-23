@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Scene;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.Tracker;
 
@@ -14,10 +13,9 @@ import processing.core.PGraphics;
 /**
  * @see https://www.openprocessing.org/sketch/498901
  */
-public class Marquee extends Scene {
+public class Marquee extends Animation {
 
 	private static final int NEW_CHARS_PER_DRAW = 120;//60;
-	private static final int FRAMES_REQUIRED_TO_RESET = 60;
 	private static final int MAX_TEXT_LENGTH = 30;
 	private static final int MAX_TEXT_LENGTH_OFFSET = 120;
 	private static final int TEXT_SIZE = 200;
@@ -54,24 +52,10 @@ public class Marquee extends Scene {
 	@Override
 	public String getConfig() {
 		//{Marquee: ["He's trying!!!"]}
-		return String.format("{%1s : [\"%2s\"]}", getName(), text); //quote the text
+		return String.format("{%s : [\"%s\"]}", getName(), text); //quote the text
 	}
 
 	@Override
-	public boolean isNormal() {
-		return false;
-	}
-
-	@Override
-	public boolean isNew() {
-		int currentFrame = parent.getFrameCount();
-		if (currentFrame > lastFrameDrawn + FRAMES_REQUIRED_TO_RESET) {
-			reset();
-		}
-		
-		return pg == null;
-	}
-
 	protected void reset() {
 		pg = null;
 	}

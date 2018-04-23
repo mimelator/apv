@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Scene;
 import com.arranger.apv.util.Tracker;
 
 import processing.core.PApplet;
@@ -14,11 +13,10 @@ import processing.core.PVector;
 /**
  * @see https://www.openprocessing.org/sketch/144159
  **/
-public class Tree extends Scene {
+public class Tree extends Animation {
 
 	private static final int GROWTH_THRESHOLD = 100;
 	
-	private static final int FRAMES_REQUIRED_TO_RESET = 60;
 	private static final float SPEED = 1.5f;
 	
 	private Tracker<Tree> tracker;
@@ -34,24 +32,10 @@ public class Tree extends Scene {
 	}
 	
 	@Override
-	public boolean isNormal() {
-		return false;
+	protected void reset() {
+		paths.clear();
 	}
-	
-	@Override
-	public boolean isNew() {
-		int currentFrame = parent.getFrameCount();
-		if (currentFrame > lastFrameDrawn + FRAMES_REQUIRED_TO_RESET) {
-			paths.clear();
-		}
-		
-		return paths.isEmpty();
-	}
-	
-	@Override
-	public void setup() {
-	}
-	
+
 	@Override
 	public void drawScene() {
 		if (isNew()) {

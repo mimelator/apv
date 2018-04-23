@@ -33,9 +33,9 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 		String result = null;
 		if (factory != null) {
 			String childConfig = factory.getConfig();
-			result = String.format("{%1s : [%2s, %3s]}", getName(), childConfig, numNewObjects);
+			result = String.format("{%s : [%s, %s]}", getName(), childConfig, numNewObjects);
 		} else {
-			result = String.format("{%1s : [%2s]}", getName(), numNewObjects);
+			result = String.format("{%s : [%s]}", getName(), numNewObjects);
 		}
 		return result;
 	}

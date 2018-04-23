@@ -58,7 +58,7 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 				map(String::valueOf).
 				collect(Collectors.joining(", "));
 		
-		return String.format("e: Scene Selector: Selects which scene will be played next.  Currently: [%1s]", result);
+		return String.format("e: Scene Selector: Selects which scene will be played next.  Currently: [%s]", result);
 	}
 	
 	public void registerScene(SceneSelectionHandler handler) {

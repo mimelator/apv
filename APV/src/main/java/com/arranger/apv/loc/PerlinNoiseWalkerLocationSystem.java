@@ -36,7 +36,7 @@ public class PerlinNoiseWalkerLocationSystem extends LocationSystem {
 	@Override
 	public String getConfig() {
 		//{PerlinNoiseWalkerLocationSystem : [2]}
-		return String.format("{%1s : [%2s]}", getName(), scale);
+		return String.format("{%s : [%s]}", getName(), scale);
 	}
 	
 	@Override

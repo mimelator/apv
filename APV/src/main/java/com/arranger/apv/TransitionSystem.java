@@ -40,7 +40,7 @@ public abstract class TransitionSystem extends ShapeSystem {
 	@Override
 	public String getConfig() {
 		//{Fade :[${TRANSITION_FRAMES}]}
-		return String.format("{%1s : [%2s]}", getName(), frameFader.getNumFramesToFade());
+		return String.format("{%s : [%s]}", getName(), frameFader.getNumFramesToFade());
 	}
 	
 	/**

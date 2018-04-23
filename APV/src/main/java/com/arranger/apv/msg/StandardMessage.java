@@ -56,7 +56,7 @@ public class StandardMessage extends MessageSystem {
 		float screenDividedByNumMessages = TEXT_OFFSET / (length * sizeMultiplier);
 		float startingHeight = (parent.height / 2) - screenDividedByNumMessages;
 		
-		logger.fine(String.format("[sdbnm: %1s] [sh: %2s]", screenDividedByNumMessages, startingHeight));
+		logger.fine(String.format("[sdbnm: %s] [sh: %s]", screenDividedByNumMessages, startingHeight));
 		for (int index = 0; index < length; index++) {
 			String msg = messages[index];
 			
@@ -68,7 +68,7 @@ public class StandardMessage extends MessageSystem {
 			parent.text(msg, 0, 0);
 			parent.popMatrix();
 			
-			logger.fine(String.format("[index: %1s] [msg: %2s] [pct: %3s] [offset: %4s]", index, msg, pct, offset));
+			logger.fine(String.format("[index: %s] [msg: %s] [pct: %7] [offset: %s]", index, msg, pct, offset));
 		}
 	}
 	

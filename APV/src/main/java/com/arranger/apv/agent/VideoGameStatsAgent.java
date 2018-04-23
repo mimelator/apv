@@ -33,7 +33,7 @@ public class VideoGameStatsAgent extends PulseAgent {
 		
 		//Create file with version info and header
 		if (fileName == null) {
-			fileName = String.format("%1s-%2s.txt", STATS_NAME, timestamp());
+			fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
 			StringBuffer buffer = new StringBuffer("APV Version: " + parent.getVersionInfo().getVersion());
 			buffer.append(System.lineSeparator());
 			buffer.append("NumCommands, Cmds/Sec, TotalTime");
@@ -41,7 +41,7 @@ public class VideoGameStatsAgent extends PulseAgent {
 			fh.saveFile(fileName, buffer.toString(), false);
 		}
 		
-		String result = String.format("%1d, %2f, %3s", totalCmds, cmdsPerSec, timeStamp) + System.lineSeparator();
+		String result = String.format("%d, %f, %s", totalCmds, cmdsPerSec, timeStamp) + System.lineSeparator();
 		fh.saveFile(fileName, result, true);
 	}
 	

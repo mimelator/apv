@@ -23,6 +23,6 @@ public class CircleImageFactory extends SpriteFactory {
 	@Override
 	public String getConfig() {
 		//{CircleImageFactory : []}
-		return String.format("{%1s : [%2s]}", getName(), scale);
+		return String.format("{%s : [%s]}", getName(), scale);
 	}
 }

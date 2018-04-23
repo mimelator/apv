@@ -25,7 +25,7 @@ public class BaseAgent extends APVPlugin {
 	
 	protected void invokeCommand(Command command) {
 		parent.getCommandSystem().invokeCommand(command);
-		logger.info(String.format("%1s invoked cmd: %2s\n", getName(), command.name()));
+		logger.info(String.format("%s invoked cmd: %s\n", getName(), command.name()));
 		//System.out.printf("%1s invoked cmd: %2s\n", getName(), command.name());
 	}
 	

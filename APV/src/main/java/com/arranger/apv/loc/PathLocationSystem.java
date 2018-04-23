@@ -41,8 +41,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 	
 	@Override
 	public String getConfig() {
-		//{CircularLocationSystem : [true]}
-		return String.format("{%1s : [%2b]}", getName(), splitter);
+		//{PathLocationSystem : [true]}
+		return String.format("{%s : [%b]}", getName(), splitter);
 	}
 	
 	public boolean isSplitter() {

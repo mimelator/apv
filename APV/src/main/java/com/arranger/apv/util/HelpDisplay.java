@@ -53,7 +53,7 @@ public class HelpDisplay extends APVPlugin {
 					}
 				}
 				
-				String msg = String.format("[%1s]  %2s: %3s", 
+				String msg = String.format("[%s]  %s: %s", 
 						key, 
 						c.getCommand().getDisplayName(), 
 						c.getHelpText());

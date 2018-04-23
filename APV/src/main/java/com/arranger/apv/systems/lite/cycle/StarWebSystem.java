@@ -74,7 +74,7 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	@Override
 	public String getConfig() {
 		//{StarWebSystem : [{SpriteFactory : [Emoji_Blitz_Star.png, 1.5]}, ${ALL_PARTICLES}, true]}
-		return String.format("{%1s : [%2s, %3s, %4b]}", 
+		return String.format("{%s : [%s, %s, %b]}", 
 				getName(), 
 				factory == null ? "{}" : factory.getConfig(), 
 				numNewObjects, 

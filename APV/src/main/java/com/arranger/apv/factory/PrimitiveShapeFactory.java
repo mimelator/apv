@@ -33,7 +33,7 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 	@Override
 	public String getConfig() {
 		//{SquareFactory : [.5]}
-		return String.format("{%1s : [%2s]}", getName(), scale);
+		return String.format("{%s : [%s]}", getName(), scale);
 	}
 	
 	protected float newShapeSize() {

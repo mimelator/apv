@@ -24,7 +24,7 @@ public class TwirlBackDrop extends BackDropSystem {
 	@Override
 	public String getConfig() {
 		//{TwirlBackDrop : [10, 100]}
-		return String.format("{%1s : [%2f, %3f]}", getName(), speed, duration);
+		return String.format("{%s : [%f, %f]}", getName(), speed, duration);
 	}
 
 	@Override

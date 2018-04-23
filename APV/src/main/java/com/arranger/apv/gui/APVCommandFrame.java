@@ -55,7 +55,7 @@ public class APVCommandFrame extends APVFrame {
 			public String getToolTipText(MouseEvent event) {
 				int index = locationToIndex(event.getPoint());
 				CMDModel mdl = getModel().getElementAt(index);
-				return String.format("[%1s]: %2s", mdl.command.getKey(), mdl.command.getHelpText());
+				return String.format("[%s]: %s", mdl.command.getKey(), mdl.command.getHelpText());
 			}
 		};
 		list.addMouseListener(new MouseAdapter() {

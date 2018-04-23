@@ -42,7 +42,7 @@ public class GridShapeSystem extends LiteShapeSystem {
 	@Override
 	public String getConfig() {
 		//{GridShapeSystem : [200, 300]}
-		return String.format("{%1s : [%2s, %3s]}", getName(), space, shapeSize);
+		return String.format("{%s : [%s, %s]}", getName(), space, shapeSize);
 	}
 	
 	@Override
@@ -91,6 +91,6 @@ public class GridShapeSystem extends LiteShapeSystem {
 
 	@Override
 	public String getDisplayName() {
-		return super.getDisplayName() + String.format("[%1s-%2s]", space, shapeSize);
+		return super.getDisplayName() + String.format("[%s-%s]", space, shapeSize);
 	}
 }

@@ -45,6 +45,6 @@ public class SceneList extends APVPlugin {
 		JSONQuoter quoter = new JSONQuoter(parent);
 		String msgs = stringList.stream().map(e -> quoter.quote(e)).collect(Collectors.joining(","));
 		
-		return String.format("song-list : [%1s]", msgs);
+		return String.format("song-list : [%s]", msgs);
 	}
 }

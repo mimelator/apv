@@ -44,7 +44,7 @@ public class BlendModeFilter extends Filter {
 	@Override
 	public String getConfig() {
 		//{BlendModeFilter : [ADD]}
-		return String.format("{%1s : [%2s]}", getName(), blendMode.name());
+		return String.format("{%s : [%s]}", getName(), blendMode.name());
 	}
 
 	@Override

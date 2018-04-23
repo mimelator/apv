@@ -36,7 +36,7 @@ public class PulseFadeFilter extends Filter {
 	@Override
 	public String getConfig() {
 		//	{PulseFadeFilter : [RED, 1]}
-		return String.format("{%1s : [%2s, %3d]}", 
+		return String.format("{%s : [%s, %d]}", 
 				getName(), 
 				parent.format(color, true), 
 				pulseFader.getPulsesToSkip());
