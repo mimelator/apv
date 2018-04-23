@@ -19,6 +19,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	protected int index = 0;
 	protected Command command, switchCommand;
 	protected CommandHandler handler, switchHandler;
+	protected T currentPlugin;
 	
 	
 	public APV(Main parent, Main.SYSTEM_NAMES name) {
@@ -31,21 +32,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
 		this.systemName = name;
 		this.sw = parent.getSwitchForSystem(name);
+		setIndex(0);
 	}
 	
-	public int getIndex() {
-		return index;
-	}
-	
-	public void setIndex(int newIndex) {
-		if (newIndex >= list.size()) {
-			index = 0;
-		} else if (newIndex < 0) {
-			index = list.size() - 1;
-		} else {
-			index = newIndex;
-		}
-	}
+
 
 	public Main.SYSTEM_NAMES getSystemName() {
 		return systemName;
@@ -63,15 +53,9 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		return switchCommand;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setNextPlugin(APVPlugin plugin) {
-		for (int index = 0; index < list.size(); index++) {
-			if (plugin.equals(list.get(index))) {
-				setIndex(index);
-				return;
-			}
-		}
-		
-		throw new RuntimeException("Unable to find plugin: " + plugin.getName());
+		currentPlugin = (T)plugin;
 	}
 	
 	public boolean isFrozen() {
@@ -121,7 +105,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	public T getPlugin(boolean checkEnabled) {
 		if (!checkEnabled  || isEnabled()) {
-			return list.get(Math.abs(index) % list.size());
+			return currentPlugin;
 		} else {
 			return null;
 		}
@@ -180,6 +164,19 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		};
 				
 		parent.getCommandSystem().registerHandler(command, switchHandler);
+	}
+	
+	protected void setIndex(int newIndex) {
+		if (newIndex >= list.size()) {
+			index = 0;
+		} else if (newIndex < 0) {
+			index = list.size() - 1;
+		} else {
+			index = newIndex;
+		}
+		
+		//set current plugin
+		currentPlugin = list.get(Math.abs(index) % list.size());
 	}
 }
 

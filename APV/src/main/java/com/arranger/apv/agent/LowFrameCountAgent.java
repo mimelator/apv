@@ -1,7 +1,5 @@
 package com.arranger.apv.agent;
 
-import java.util.List;
-
 import com.arranger.apv.APV;
 import com.arranger.apv.Main;
 import com.arranger.apv.filter.Filter;
@@ -43,16 +41,7 @@ public class LowFrameCountAgent extends BaseAgent {
 	}
 	
 	protected void setStrobeFilter(APV<Filter> filters) {
-		
-		List<Filter> list = filters.getList();
-		for (int index = 0; index < list.size(); index++) {
-			Filter next = list.get(index);
-			if (next instanceof StrobeFilter) {
-				filters.setIndex(index);
-				return;
-			}
-		}
-		
-		throw new RuntimeException("Unable to find the StrobeFilter");
+		Filter strobe = filters.getList().stream().filter(f -> f instanceof StrobeFilter).findFirst().get();
+		filters.setNextPlugin(strobe);	
 	}
 }
