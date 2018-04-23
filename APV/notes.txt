@@ -1,17 +1,18 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-document
-WanderingInSpace
-remove FloatScalar
+
 
 
 *****************************************************************************
 TODO:
+* I would like the current song to displayed in the lower right hand corner
+* 	Could take a Location based safe painter (UL, UR, LR, LL, CENTER) that translates before and after the text
+* Save color and location but allow them to adjust
 * BeatColorSystem could fade from the pulse color back to the primary color
 * More animations like light worm
 * Implement more Custom Scenes for animations
-* BGImage && Filter, munge the background (Espeically when BGImage is in use)
+* postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
 * Add documentation to each plugin to describe it's arguments
 *****************************************************************************
 		
