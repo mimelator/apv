@@ -15,7 +15,7 @@ import processing.core.PVector;
  **/
 public class Tree extends Animation {
 
-	private static final int GROWTH_THRESHOLD = 100;
+	private static final int GROWTH_THRESHOLD = 50;
 	
 	private static final float SPEED = 1.5f;
 	
@@ -33,12 +33,13 @@ public class Tree extends Animation {
 	
 	@Override
 	protected void reset() {
+		tracker = null;
 		paths.clear();
 	}
 
 	@Override
 	public void drawScene() {
-		if (isNew()) {
+		if (paths.isEmpty()) {
 			paths.add(new PathFinder());
 			tracker = new Tracker<Tree>(parent, parent.getSceneCompleteEvent());
 		}
@@ -63,6 +64,7 @@ public class Tree extends Animation {
 		}
 		
 		paths.removeIf(pf -> pf.diameter <= .5);
+		
 		if (tracker != null) {
 			if (tracker.isActive(e -> {return paths.size() > GROWTH_THRESHOLD;})) {
 				if (paths.size() < GROWTH_THRESHOLD) {
