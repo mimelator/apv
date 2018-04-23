@@ -18,7 +18,7 @@ public class GravityAgent extends PulseAgent {
 	
 	@Override
 	protected void onPulse() {
-		ShapeSystem fgSys = parent.getCurrentScene().getFgSys();
+		ShapeSystem fgSys = parent.getCurrentScene().getComponentsToDrawScene().fgSys;
 		if (fgSys instanceof GravitySystem) {
 			invokeCommand(Command.GRAVITY);
 		}

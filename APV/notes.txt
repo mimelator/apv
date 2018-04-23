@@ -1,9 +1,14 @@
 BRANCH: color-saver
 https://github.com/mimelator/apv
 
-LikedScene
-Animation
 
+Currently: When in likedScene mode, i don't have good control over the shadowedComopenents
+	When changing a filter and then changing to the next scene it resets...
+	That's a good thing, right?
+
+
+* LikedScene
+* Animation
 * Save color and location
 * allow anything to adjust during scene mode?
 **   One approach could be to listen to apv change events (triggered from APV) (setIndex)
@@ -13,9 +18,9 @@ Animation
 **  And NOT add it into the likedScene list
 
 
+* Convert CommandInvokedEvent to pass a param
 * change song-list to marquee-list in reference.conf and whatever loads it
 	(SceneList does the loading)
-	
 * update LocationMessage to use the new SafePainter and helper tools if possible
 
 *****************************************************************************

@@ -9,6 +9,7 @@ import java.util.Map;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.Scene;
+import com.arranger.apv.Scene.Components;
 import com.arranger.apv.gui.APVTextFrame;
 
 public class PerformanceMonitor extends APVPlugin {
@@ -26,10 +27,11 @@ public class PerformanceMonitor extends APVPlugin {
 	public void doMonitorCheck(Scene scene) {
 		if (parent.frameRate < FRAME_RATE_THRESHOLD) {
 			
-			APVPlugin backDrop = scene.getBackDrop();
-			APVPlugin filter = scene.getFilter();
-			APVPlugin bg = scene.getBgSys();
-			APVPlugin fg = scene.getFgSys();
+			Components c = scene.getComponentsToDrawScene();
+			APVPlugin backDrop = c.backDrop;
+			APVPlugin filter = c.filter;
+			APVPlugin bg = c.bgSys;
+			APVPlugin fg = c.fgSys;
 			
 			//This is an ugly way to build a key
 			StringBuilder builder = new StringBuilder();

@@ -11,12 +11,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.arranger.apv.APVEvent.EventHandler;
 import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.Switch.STATE;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.color.ColorSystem;
+import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.CommandInvokedEvent;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
@@ -92,7 +92,7 @@ public class Main extends PApplet {
 	protected SplineHelper splineHelper;
 	protected Map<String, Switch> switches;
 	protected Map<Command, HotKey> hotKeys;
-	protected Map<EVENT_TYPES, APVEvent<? extends EventHandler>> eventMap;
+	protected Map<EVENT_TYPES, APVEvent<?>> eventMap;
 	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
 	//Stateful data
@@ -269,6 +269,10 @@ public class Main extends PApplet {
 		return (CommandInvokedEvent)eventMap.get(EVENT_TYPES.COMMAND_INVOKED);
 	}
 	
+	public APVChangeEvent getAPVChangeEvent() {
+		return (APVChangeEvent)eventMap.get(EVENT_TYPES.APV_CHANGE);
+	}
+	
 	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
 		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
@@ -277,7 +281,7 @@ public class Main extends PApplet {
 	}
 	
 	public void setDefaultScene() {
-		Scene defaultScene = scenes.getList().stream().filter(e -> e.isNormal()).findFirst().get();
+		Scene defaultScene = scenes.getList().stream().filter(e -> !e.isAnimation()).findFirst().get();
 		setNextScene(defaultScene);
 	}
 	
@@ -457,6 +461,13 @@ public class Main extends PApplet {
 		background(Color.BLACK.getRGB());
 		
 		getSetupEvent().fire();
+		
+		//Forward messages to the currentLikedScene if applicable
+		getAPVChangeEvent().register((apv, plugin) -> {
+			if (currentScene instanceof LikedScene) {
+				((LikedScene)currentScene).onPluginChange(apv, plugin);
+			}
+		});
 	}
 
 	public void doScreenCapture() {
@@ -567,15 +578,14 @@ public class Main extends PApplet {
 			currentScene = likedScenes.getPlugin();
 		} else {
 			currentScene = scenes.getPlugin();
-			if (currentScene.isNormal()) {
+			if (!currentScene.isAnimation()) {
 				BackDropSystem backDrop = backDrops.getPlugin(true);
 				ShapeSystem bgSys = backgrounds.getPlugin(true);
 				Filter filter = filters.getPlugin(true);
 				ShapeSystem fgSys = foregrounds.getPlugin(true);
-	
 				currentScene.setSystems(backDrop, bgSys, fgSys, filter, getColor(), getLocations().getPlugin());
 			} else {
-				//using a "non-normal" scene.  See if it is brand new?  If so, start a transition
+				//using an animation.  See if it is brand new?  If so, start a transition
 				if (currentScene.isNew()) {
 					transition = prepareTransition(true);
 				}
@@ -820,11 +830,11 @@ public class Main extends PApplet {
 	}
 	
 	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED,
+		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED, APV_CHANGE
 	}
 	
 	protected void initEvents() {
-		eventMap = new HashMap<EVENT_TYPES, APVEvent<? extends EventHandler>>();
+		eventMap = new HashMap<EVENT_TYPES, APVEvent<?>>();
 		eventMap.put(EVENT_TYPES.SETUP, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
 		eventMap.put(EVENT_TYPES.SCENE_COMPLETE, new CoreEvent(this));
@@ -832,6 +842,7 @@ public class Main extends PApplet {
 		eventMap.put(EVENT_TYPES.COMMAND_INVOKED, new CommandInvokedEvent(this));
 		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
+		eventMap.put(EVENT_TYPES.APV_CHANGE, new APVChangeEvent(this));
 	}
 	
 	public String getConfig() {

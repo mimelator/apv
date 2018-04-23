@@ -34,8 +34,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.sw = parent.getSwitchForSystem(name);
 		setIndex(0);
 	}
-	
-
 
 	public Main.SYSTEM_NAMES getSystemName() {
 		return systemName;
@@ -55,9 +53,13 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	@SuppressWarnings("unchecked")
 	public void setNextPlugin(APVPlugin plugin) {
+		if (currentPlugin.equals(plugin)) {
+			return;
+		}
 		currentPlugin = (T)plugin;
+		fireEvent(plugin);
 	}
-	
+
 	public boolean isFrozen() {
 		if (sw == null) {
 			return false;
@@ -177,6 +179,11 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		
 		//set current plugin
 		currentPlugin = list.get(Math.abs(index) % list.size());
+		fireEvent(currentPlugin);
+	}
+	
+	protected void fireEvent(APVPlugin plugin) {
+		parent.getAPVChangeEvent().fire(this, plugin);
 	}
 }
 

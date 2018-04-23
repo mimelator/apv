@@ -17,7 +17,7 @@ public class SparkAgent extends PulseAgent {
 
 	@Override
 	protected void onPulse() {
-		ShapeSystem bgSys = parent.getCurrentScene().getBgSys();
+		ShapeSystem bgSys = parent.getCurrentScene().getComponentsToDrawScene().bgSys;
 		if (!(bgSys instanceof SpraySpark)) {
 			parent.getSparkEvent().fire();
 		}

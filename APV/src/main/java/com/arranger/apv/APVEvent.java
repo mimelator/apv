@@ -3,9 +3,7 @@ package com.arranger.apv;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arranger.apv.APVEvent.EventHandler;
-
-public class APVEvent<T extends EventHandler> extends APVPlugin {
+public class APVEvent<T> extends APVPlugin {
 	
 	@FunctionalInterface
 	public static interface EventHandler {
@@ -32,6 +30,6 @@ public class APVEvent<T extends EventHandler> extends APVPlugin {
 	 * because it might be modified on the fly due to calls to {@link #unregister(EventHandler)}
 	 */
 	public void fire() {
-		new ArrayList<T>(listeners).forEach(l -> l.onEvent());
+		new ArrayList<T>(listeners).forEach(l -> ((EventHandler)l).onEvent());
 	}
 }
