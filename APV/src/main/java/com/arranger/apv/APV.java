@@ -69,7 +69,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 
 	public boolean isEnabled() {
 		if (sw == null) {
-			return true; //we're not a switcher
+			return !list.isEmpty(); 
 		}
  		return sw.isEnabled() && !list.isEmpty(); 
 	}
@@ -106,7 +106,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	}
 	
 	public T getPlugin(boolean checkEnabled) {
-		if (!checkEnabled  || isEnabled()) {
+		if (!checkEnabled || isEnabled()) {
+			if (currentPlugin == null) {
+				currentPlugin = list.get(0);
+			}
 			return currentPlugin;
 		} else {
 			return null;
@@ -169,6 +172,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	}
 	
 	protected void setIndex(int newIndex) {
+		if (list.isEmpty()) {
+			return;
+		}
+		
 		if (newIndex >= list.size()) {
 			index = 0;
 		} else if (newIndex < 0) {
