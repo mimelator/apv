@@ -1,6 +1,11 @@
-BRANCH: master
+BRANCH: macros
 https://github.com/mimelator/apv
 
+WanderingInSpace behaves really wierdly in likedScene mode
+
+
+switches, hotkeys, macros (and others?) are all collections
+Share some code
 
 
 *****************************************************************************

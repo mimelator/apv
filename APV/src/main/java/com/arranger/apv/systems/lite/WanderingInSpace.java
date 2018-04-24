@@ -95,7 +95,7 @@ public class WanderingInSpace extends LiteShapeSystem {
 			parent.ellipse(0, 0, parent.width / o / 8, parent.width / o / 8);
 			parent.popMatrix();
 
-			//o -= 0.07;
+			o -= 0.07;
 			o -= oscillator.oscillate(lowSpeedScalar, highSpeedScalar, oscRate, () -> {
 				if (frameSkipper.isNewFrame()) {
 					clockwise = !clockwise;

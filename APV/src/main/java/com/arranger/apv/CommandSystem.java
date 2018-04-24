@@ -96,13 +96,14 @@ public class CommandSystem extends APVPlugin {
 				return;
 			}
 			
-			String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(keyEvent.getKeyCode());
+			String key = Command.getKeyForKeyEvent(keyEvent);
 			List<RegisteredCommandHandler> list = registeredCommands.get(key);
 			if (list != null  && !list.isEmpty()) {
-				list.forEach(c -> c.handler.onKeyPressed(keyEvent));
-				lastCommand = list.get(0);
-				
-				parent.getCommandInvokedEvent().fire(lastCommand.getCommand());
+				list.forEach(c -> {
+					c.handler.onKeyPressed(keyEvent);
+					parent.getCommandInvokedEvent().fire(c.getCommand());
+				});
+				lastCommand = list.get(list.size() - 1);
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);

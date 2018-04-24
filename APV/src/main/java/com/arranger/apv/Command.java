@@ -1,10 +1,14 @@
 package com.arranger.apv;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import processing.core.PApplet;
+import processing.event.Event;
+import processing.event.KeyEvent;
 
 public enum Command {
 	
@@ -19,13 +23,12 @@ public enum Command {
 	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
 	
-	
-	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables the foregrounds"),
-	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables the backgrounds"),
-	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables the backdrops"),
-	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables the filters"),
-	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables the messages"),
-	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables the transitions"),
+	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the foregrounds"),
+	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backgrounds"),
+	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backdrops"),
+	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables/Freezes(use <CMD>)  the filters"),
+	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables/Freezes(use <CMD>)  the messages"),
+	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>)  the transitions"),
 	
 	//Cyclers
 	CYCLE_MESSAGES('m', "Message", "Cycles through the message (reverse w/the shift key held)"),
@@ -69,27 +72,45 @@ public enum Command {
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
 	//Hot Keys
-	HOT_KEY_1('!', "HotKey1", "Triggers the HotKey"),
-	HOT_KEY_2('@', "HotKey2", "Triggers the HotKey"),
-	HOT_KEY_3('#', "HotKey3", "Triggers the HotKey"),
-	HOT_KEY_4('$', "HotKey4", "Triggers the HotKey"),
-	HOT_KEY_5('%', "HotKey5", "Triggers the HotKey"),
-	HOT_KEY_6('^', "HotKey6", "Triggers the HotKey"),
-	HOT_KEY_7('&', "HotKey6", "Triggers the HotKey"),
-	HOT_KEY_8('*', "HotKey8", "Triggers the HotKey");
+	HOT_KEY_1('!', "", ""),
+	HOT_KEY_2('@', "", ""),
+	HOT_KEY_3('#', "", ""),
+	HOT_KEY_4('$', "", ""),
+	HOT_KEY_5('%', "", ""),
+	HOT_KEY_6('^', "", ""),
+	HOT_KEY_7('&', "", ""),
+	HOT_KEY_8('*', "", ""),
+	
+	//Macros
+	MACRO_1('1', "", "", Event.CTRL),
+	MACRO_2('2', "", "", Event.CTRL),
+	MACRO_3('3', "", "", Event.CTRL),
+	MACRO_4('4', "", "", Event.CTRL),
+	MACRO_5('5', "", "", Event.CTRL),
+	MACRO_6('6', "", "", Event.CTRL),
+	MACRO_7('7', "", "", Event.CTRL),
+	MACRO_8('8', "", "", Event.CTRL);
+	
+	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	
 	private int commandKey;
 	private char charKey;
 	private String helpText;
 	private String displayName;
 	private boolean hasCharKey = true;
+	private int modifiers;
 	
 	private Command(char charKey, String displayName, String helpText) {
+		this(charKey, displayName, helpText, 0);
+	}
+
+	private Command(char charKey, String displayName, String helpText, int modifiers) {
 		this.charKey = charKey;
 		this.displayName = displayName;
 		this.helpText = helpText;
+		this.modifiers = modifiers;
 	}
-
+	
 	private Command(int commandKey, String displayName, String helpText) {
 		this.commandKey = commandKey;
 		this.displayName = displayName;
@@ -105,12 +126,24 @@ public enum Command {
 		return charKey;
 	}
 	
+	public int getModifiers() {
+		return modifiers;
+	}
+	
 	public String getDisplayName() {
 		return displayName;
 	}
 	
 	public String getKey() {
-		return hasCharKey ? String.valueOf(charKey) : String.valueOf(commandKey);
+		if (hasCharKey) {
+			if (modifiers == 0) {
+				return String.valueOf(charKey);
+			} else {
+				return String.format("%s+%d", charKey, modifiers);
+			}
+		} else {
+			return String.valueOf(commandKey);
+		}
 	}
 	
 	public String getHelpText() {
@@ -132,9 +165,26 @@ public enum Command {
 	}
 	
 	public static Command getCommand(char key) {
-		Command command = Arrays.asList(Command.values()).stream().
+		Command command = VALUES.stream().
 				filter(c -> c.charKey == key).findFirst().get();
 		return command;
+	}
+	
+	public static Command getCommand(char key, int modifier) {
+		Command command = VALUES.stream().
+				filter(c -> c.charKey == key && c.modifiers == modifier).findFirst().get();
+		return command;
+	}
+	
+	public static String getKeyForKeyEvent(KeyEvent event) {
+		char charKey = event.getKey();
+		String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(event.getKeyCode());
+		int mods = event.getModifiers();
+		if (mods == Event.CTRL) {
+			key += "+" + String.valueOf(mods);
+		}
+		
+		return key;
 	}
 	
 	static {

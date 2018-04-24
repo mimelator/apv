@@ -15,7 +15,7 @@ import com.arranger.apv.util.Configurator;
 public class LikedScene extends Scene implements APVChangeEventHandler {
 
 	private Components shadowedComponents;
-	boolean setup = false;
+	boolean needsSetup = false;
 	
 	public LikedScene(Main parent) {
 		super(parent);
@@ -34,6 +34,7 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 				(Filter)ctx.loadPlugin(3),
 				(ColorSystem)ctx.loadPlugin(4),
 				(LocationSystem)ctx.loadPlugin(5));
+		needsSetup = true;
 	}
 
 	public LikedScene(Scene o) {
@@ -42,7 +43,7 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 
 	@Override
 	public void drawScene() {
-		if (!setup) {
+		if (needsSetup) {
 			setup();
 		}
 		super.drawScene();
@@ -55,7 +56,6 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 		}
 		
 		switch (apv.getSystemName()) {
-			
 		case BACKGROUNDS:
 			shadowedComponents.bgSys = (ShapeSystem)plugin;
 			break;
@@ -94,6 +94,7 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 		setup(cc.filter);
 		setup(cc.colorSys);
 		setup(cc.locSys);
+		needsSetup = false;
 	}
 	
 	private void setup(APVPlugin ss) {

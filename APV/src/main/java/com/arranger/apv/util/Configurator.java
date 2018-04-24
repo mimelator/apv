@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Command;
 import com.arranger.apv.Main;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -90,6 +91,18 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 			} else {
 				return defaultVal;
 			}
+		}
+		
+		public List<Command> getCommandList(int index) {
+			List<Command> results = new ArrayList<Command>();
+			String [] cmdStrings = getStringArray(index, null);
+			if (cmdStrings != null) {
+				Arrays.asList(cmdStrings).forEach(cs -> {
+					results.add(Command.valueOf(cs));
+				});
+			}
+			
+			return results;
 		}
 		
 		public boolean getBoolean(int index, boolean defaultVal) {

@@ -59,6 +59,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("FrameStrober SkipRate: " + p.getFrameStrober().getSkipNFrames());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
+		addSettingsMessage("Num Liked Scenes: " + p.getLikedScenes().size());
 		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
 		p.getPulseListener().addSettingsMessages();
 		

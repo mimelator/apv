@@ -38,13 +38,13 @@ public class HotKey extends APVPlugin implements CommandHandler {
 		parent.activateNextPlugin(pluginName, system);
 	}
 	
-	public void unregisterHotKey() {
+	public void unregister() {
 		if (!parent.getCommandSystem().unregisterHandler(cmd, this)) {
 			logger.warning("Unable to unregister command: " + cmd.getDisplayName());
 		}
 	}
 	
-	public void registerHotKey(Command cmd) {
+	public void register(Command cmd) {
 		this.cmd = cmd;
 		//update help text
 		cmd.setHelpText(String.format("Triggers the %s plugin", pluginName));
