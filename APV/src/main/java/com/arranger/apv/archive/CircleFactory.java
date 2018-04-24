@@ -3,9 +3,9 @@ package com.arranger.apv.archive;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-import com.arranger.apv.APVShape;
-import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.factory.APVShape;
 import com.arranger.apv.factory.PrimitiveShapeFactory;
+import com.arranger.apv.factory.APVShape.Data;
 import com.arranger.apv.Main;
 
 /**

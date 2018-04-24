@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.arranger.apv.APVShape;
-import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.APVShape.Data;
 
 import processing.core.PShape;
 

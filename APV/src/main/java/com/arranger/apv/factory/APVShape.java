@@ -1,4 +1,6 @@
-package com.arranger.apv;
+package com.arranger.apv.factory;
+
+import com.arranger.apv.Main;
 
 import processing.core.PShape;
 

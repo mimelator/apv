@@ -10,12 +10,12 @@ import com.typesafe.config.ConfigList;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-public class SceneList extends APVPlugin {
+public class MarqueeList extends APVPlugin {
 
 	private static final String [] DEFAULT_SCENES = {"No scenes for you"};
 	private List<String> stringList;
 	
-	public SceneList(Main parent) {
+	public MarqueeList(Main parent) {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
@@ -41,7 +41,7 @@ public class SceneList extends APVPlugin {
 			stringList = Arrays.asList(DEFAULT_SCENES);
 		}
 		
-		//song-list : [${songs}]
+		//marqueeList : [${songs}]
 		JSONQuoter quoter = new JSONQuoter(parent);
 		String msgs = stringList.stream().map(e -> quoter.quote(e)).collect(Collectors.joining(","));
 		

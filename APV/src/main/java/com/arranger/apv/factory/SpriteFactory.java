@@ -2,10 +2,9 @@ package com.arranger.apv.factory;
 
 import java.awt.Color;
 
-import com.arranger.apv.APVShape;
-import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
 import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.factory.APVShape.Data;
 import com.arranger.apv.systems.lifecycle.LifecycleSystem.LifecycleData;
 import com.arranger.apv.util.Configurator;
 

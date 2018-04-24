@@ -33,12 +33,13 @@ import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
 import com.arranger.apv.util.LoggingConfig;
+import com.arranger.apv.util.MacroHelper;
+import com.arranger.apv.util.MarqueeList;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Oscillator.Listener;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.PerformanceMonitor;
 import com.arranger.apv.util.SafePainter;
-import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineHelper;
 import com.arranger.apv.util.VersionInfo;
@@ -47,7 +48,6 @@ import com.typesafe.config.Config;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.event.Event;
 import processing.event.KeyEvent;
 
 public class Main extends PApplet {
@@ -90,14 +90,14 @@ public class Main extends PApplet {
 	protected Particles particles;
 	protected VersionInfo versionInfo;
 	protected VideoGameHelper videoGameHelper;
-	protected SceneList sceneList;
+	protected MacroHelper macroHelper;
+	protected MarqueeList marqueeList;
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
 	
 	//Collections
 	protected Map<String, Switch> switches;
 	protected Map<Command, HotKey> hotKeys;
-	protected Map<Command, Macro> macros;
 	protected Map<EVENT_TYPES, APVEvent<?>> eventMap;
 	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
@@ -195,8 +195,12 @@ public class Main extends PApplet {
 		return fontHelper;
 	}
 
-	public SceneList getSceneList() {
-		return sceneList;
+	public MarqueeList getMarqueeList() {
+		return marqueeList;
+	}
+	
+	public MacroHelper getMacroHelper() {
+		return macroHelper;
 	}
 	
 	public VersionInfo getVersionInfo() {
@@ -396,10 +400,6 @@ public class Main extends PApplet {
 		return hotKeys;
 	}
 	
-	public Map<Command, Macro> getMacros() {
-		return macros;
-	}
-	
 	public Switch getSwitchForSystem(Main.SYSTEM_NAMES name) {
 		return switches.get(name.name);
 	}
@@ -452,7 +452,8 @@ public class Main extends PApplet {
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
 		pulseListener = new APVPulseListener(this);
-		sceneList = new SceneList(this);
+		macroHelper = new MacroHelper(this);
+		marqueeList = new MarqueeList(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		versionInfo = new VersionInfo(this);
@@ -474,7 +475,7 @@ public class Main extends PApplet {
 		assignSystems();
 		initControlMode();
 		configureHotKeys();
-		configureMacros();
+		macroHelper.configure();
 		setupSystems();
 		initializeCommands();
 		
@@ -566,14 +567,12 @@ public class Main extends PApplet {
 	public void reloadConfiguration() {
 		configurator.reload();
 		hotKeys.forEach((k, v) -> v.unregister());
-		macros.forEach((k, v) -> v.unregister());
 		
 		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
 
 		configureHotKeys();
-		configureMacros();
 		hotKeys.forEach((k, v) -> v.register(k));
-		macros.forEach((k, v) -> v.register(k));
+		macroHelper.reloadConfiguration();
 		reset();
 	}
 	
@@ -730,7 +729,7 @@ public class Main extends PApplet {
 		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
 		
 		hotKeys.forEach((k, v) -> v.register(k));
-		macros.forEach((k, v) -> v.register(k));
+		macroHelper.register();
 		
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
@@ -823,18 +822,6 @@ public class Main extends PApplet {
 			Command cmd = Command.getCommand(HOT_KEYS[index++]);
 			hotKeys.put(cmd, it.next());
 		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected void configureMacros() {
-		macros = new HashMap<Command, Macro>();
-		
-		int index = 1; //assign an index and add to map
-		List<Macro> mcs = (List<Macro>)configurator.loadAVPPlugins(SYSTEM_NAMES.MACROS, false);
-		for (Iterator<Macro> it = mcs.iterator(); it.hasNext();) {
-			Command cmd = Command.getCommand(String.valueOf(index).charAt(0), Event.CTRL);
-			macros.put(cmd, it.next());
-		}		
 	}
 	
 	@SuppressWarnings("unchecked")

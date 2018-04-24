@@ -43,19 +43,24 @@ public class HelpDisplay extends APVPlugin {
 		p.getCommandSystem().getCommands().entrySet().forEach(e -> {
 			List<RegisteredCommandHandler> cmds = e.getValue();
 			cmds.forEach(c -> {
-				String key = e.getKey();
-				if (key.length() > 1) {
-					//probably a number
-					key = c.getCommand().name();
-				} else {
-					if (key.charAt(0) == '\n') {
-						key = "";
+				String key = "";
+				Command cmd = c.getCommand();
+				if (cmd.hasCharKey()) {
+					if (cmd.getModifiers() != 0) {
+						key = "Ctrl+" + cmd.getCharKey();
+					} else {
+						key = e.getKey();
+						if (key.charAt(0) == '\n') {
+							key = "";
+						}
 					}
+				} else {
+					key = cmd.name();
 				}
 				
 				String msg = String.format("[%s]  %s: %s", 
 						key, 
-						c.getCommand().getDisplayName(), 
+						cmd.getDisplayName(), 
 						c.getHelpText());
 				messages.add(msg);
 			});

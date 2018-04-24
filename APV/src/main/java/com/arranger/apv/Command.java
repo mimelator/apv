@@ -118,6 +118,10 @@ public enum Command {
 		hasCharKey = false;
 	}
 	
+	public boolean hasCharKey() {
+		return hasCharKey;
+	}
+	
 	public int getCommandKey() {
 		return commandKey;
 	}

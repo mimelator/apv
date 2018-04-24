@@ -5,10 +5,9 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.logging.Logger;
 
-import com.arranger.apv.APVShape;
-import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.Main;
+import com.arranger.apv.factory.APVShape.Data;
 
 public abstract class ParametricFactory extends PrimitiveShapeFactory {
 	

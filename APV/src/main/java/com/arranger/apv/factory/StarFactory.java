@@ -2,9 +2,8 @@ package com.arranger.apv.factory;
 
 import java.awt.Shape;
 
-import com.arranger.apv.APVShape;
-import com.arranger.apv.APVShape.Data;
 import com.arranger.apv.Main;
+import com.arranger.apv.factory.APVShape.Data;
 import com.arranger.apv.util.StarMaker;
 
 import processing.core.PShape;

@@ -62,7 +62,7 @@ public class Macro extends APVPlugin implements CommandHandler {
 		//update help text
 		String commandString = commands.stream().map(c -> c.name()).collect(Collectors.joining(":"));
 		
-		cmd.setHelpText(String.format("Triggers the commands: ", commandString));
+		cmd.setHelpText("runs: " + commandString);
 		cmd.setDisplayName(String.format("Macro[%s]", displayName));
 		
 		parent.getCommandSystem().registerHandler(cmd, this);

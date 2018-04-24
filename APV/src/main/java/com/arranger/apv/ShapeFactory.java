@@ -1,6 +1,7 @@
 package com.arranger.apv;
 
-import com.arranger.apv.APVShape.Data;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.APVShape.Data;
 
 /**
  * Responsible for creating shapes
