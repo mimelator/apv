@@ -1,17 +1,10 @@
 BRANCH: macros
 https://github.com/mimelator/apv
 
-WanderingInSpace behaves really wierdly in likedScene mode
-
-
-switches, hotkeys, macros (and others?) are all collections
-Share some code
-
 
 *****************************************************************************
 TODO:
 * BeatColorSystem£ could fade from the pulse color back to the primary color
-* Any series of commands could be macros
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
@@ -19,7 +12,6 @@ TODO:
 * Follow-up on PSurfaceJOGL.drawExceptionHandler
 *****************************************************************************
 		
-https://maven.apache.org/plugins/maven-jar-plugin/examples/create-test-jar.html		
 
 *****************************************************************************
 AgentScripts:

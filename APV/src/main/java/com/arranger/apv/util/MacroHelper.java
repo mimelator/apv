@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Command;
 import com.arranger.apv.Macro;
 import com.arranger.apv.Main;
@@ -13,7 +12,7 @@ import com.arranger.apv.Main.SYSTEM_NAMES;
 
 import processing.event.Event;
 
-public class MacroHelper extends APVPlugin {
+public class MacroHelper extends APVCollectionHelper {
 
 	protected Map<Command, Macro> macros;
 	
@@ -21,12 +20,17 @@ public class MacroHelper extends APVPlugin {
 		super(parent);
 	}
 	
-	public void reloadConfiguration() {
-		unregister();
-		configure();
-		register();
+	@Override
+	public void register() {
+		macros.forEach((k, v) -> v.register(k));
 	}
 	
+	@Override
+	public void unregister() {
+		macros.forEach((k, v) -> v.unregister());
+	}
+	
+	@Override
 	@SuppressWarnings("unchecked")
 	public void configure() {
 		macros = new HashMap<Command, Macro>();
@@ -42,13 +46,5 @@ public class MacroHelper extends APVPlugin {
 
 	public Map<Command, Macro> getMacros() {
 		return macros;
-	}
-	
-	public void register() {
-		macros.forEach((k, v) -> v.register(k));
-	}
-	
-	public void unregister() {
-		macros.forEach((k, v) -> v.unregister());
 	}
 }

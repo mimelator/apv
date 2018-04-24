@@ -5,7 +5,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,6 +31,7 @@ import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.FrameStrober;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.HelpDisplay;
+import com.arranger.apv.util.HotKeyHelper;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.MacroHelper;
 import com.arranger.apv.util.MarqueeList;
@@ -60,7 +60,6 @@ public class Main extends PApplet {
 	public static final int MAX_ALPHA = 255;
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
 	public static final char SPACE_BAR_KEY_CODE = ' ';
-	private static final char [] HOT_KEYS = {'!', '@', '#', '$', '%', '^', '&', '*'}; //Shift + (1 through 8)
 
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
@@ -91,13 +90,13 @@ public class Main extends PApplet {
 	protected VersionInfo versionInfo;
 	protected VideoGameHelper videoGameHelper;
 	protected MacroHelper macroHelper;
+	protected HotKeyHelper hotKeyHelper;
 	protected MarqueeList marqueeList;
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
 	
 	//Collections
 	protected Map<String, Switch> switches;
-	protected Map<Command, HotKey> hotKeys;
 	protected Map<EVENT_TYPES, APVEvent<?>> eventMap;
 	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
@@ -201,6 +200,10 @@ public class Main extends PApplet {
 	
 	public MacroHelper getMacroHelper() {
 		return macroHelper;
+	}
+	
+	public HotKeyHelper getHotKeyHelper() {
+		return hotKeyHelper;
 	}
 	
 	public VersionInfo getVersionInfo() {
@@ -396,10 +399,6 @@ public class Main extends PApplet {
 		return switches;
 	}
 	
-	public Map<Command, HotKey> getHotKeys() {
-		return hotKeys;
-	}
-	
 	public Switch getSwitchForSystem(Main.SYSTEM_NAMES name) {
 		return switches.get(name.name);
 	}
@@ -453,6 +452,7 @@ public class Main extends PApplet {
 		perfMonitor = new PerformanceMonitor(this);
 		pulseListener = new APVPulseListener(this);
 		macroHelper = new MacroHelper(this);
+		hotKeyHelper = new HotKeyHelper(this);
 		marqueeList = new MarqueeList(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
@@ -474,7 +474,7 @@ public class Main extends PApplet {
 		
 		assignSystems();
 		initControlMode();
-		configureHotKeys();
+		hotKeyHelper.configure();
 		macroHelper.configure();
 		setupSystems();
 		initializeCommands();
@@ -566,13 +566,10 @@ public class Main extends PApplet {
 	
 	public void reloadConfiguration() {
 		configurator.reload();
-		hotKeys.forEach((k, v) -> v.unregister());
-		
 		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
 
-		configureHotKeys();
-		hotKeys.forEach((k, v) -> v.register(k));
 		macroHelper.reloadConfiguration();
+		hotKeyHelper.reloadConfiguration();
 		reset();
 	}
 	
@@ -728,7 +725,7 @@ public class Main extends PApplet {
 		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment());
 		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
 		
-		hotKeys.forEach((k, v) -> v.register(k));
+		hotKeyHelper.register();
 		macroHelper.register();
 		
 		CommandSystem cs = commandSystem;
@@ -810,18 +807,6 @@ public class Main extends PApplet {
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected void configureHotKeys() {
-		hotKeys = new HashMap<Command, HotKey>();
-		
-		int index = 0; //assign an index and add to map
-		List<HotKey> hks = (List<HotKey>)configurator.loadAVPPlugins(SYSTEM_NAMES.HOTKEYS, false);
-		for (Iterator<HotKey> it = hks.iterator(); it.hasNext();) {
-			Command cmd = Command.getCommand(HOT_KEYS[index++]);
-			hotKeys.put(cmd, it.next());
-		}
 	}
 	
 	@SuppressWarnings("unchecked")
