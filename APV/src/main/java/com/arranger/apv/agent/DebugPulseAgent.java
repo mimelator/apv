@@ -9,7 +9,6 @@ import com.arranger.apv.util.draw.TextDrawHelper;
 
 public class DebugPulseAgent extends PulseAgent {
 
-	
 	public DebugPulseAgent(Main parent) {
 		super(parent, 1);
 	}

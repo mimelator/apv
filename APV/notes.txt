@@ -1,12 +1,18 @@
-BRANCH: macros
+BRANCH: thread-death
 https://github.com/mimelator/apv
+
+
+I can set an uncaughtexceptionhandler on the thread and the group
+but junit tests won't demonstrate that it catches anything
+
+i'll tray to augment the DebugPulseAgent for a quick test
+
 
 
 
 
 *****************************************************************************
 TODO:
-* BeatColorSystem could fade from the pulse color back to the primary color
 * More animations like light worm
 * Implement more Custom Scenes for animations
 * postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
