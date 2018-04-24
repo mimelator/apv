@@ -26,7 +26,6 @@ public class BaseAgent extends APVPlugin {
 	protected void invokeCommand(Command command) {
 		parent.getCommandSystem().invokeCommand(command);
 		logger.info(String.format("%s invoked cmd: %s\n", getName(), command.name()));
-		//System.out.printf("%1s invoked cmd: %2s\n", getName(), command.name());
 	}
 	
 	protected APVEvent<EventHandler> getSceneCompleteEvent() {
@@ -51,5 +50,9 @@ public class BaseAgent extends APVPlugin {
 	
 	public APVEvent<EventHandler> getCarnivalEvent() {
 		return parent.getCarnivalEvent();
+	}
+	
+	public APVEvent<EventHandler> getTwirlEvent() {
+		return parent.getTwirlEvent();
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.Oscillator;
+import com.arranger.apv.util.SingleFrameSkipper;
 
 import processing.core.PApplet;
 
@@ -13,11 +14,13 @@ import processing.core.PApplet;
  */
 public class WanderingInSpace extends LiteShapeSystem {
 	
+	private static final double ROTATION_SPEED = 0.002;
 	private static final int OSC_RATE = 20;
 	private static final float HIGH_SPEED_SCALAR = 0.7f;
 	private static final float LOW_SPEED_SCALAR = 0.07f;
 
 	Oscillator oscillator;
+	SingleFrameSkipper frameSkipper;
 	
 	Particle[] p = new Particle[800];
 	int diagonal;
@@ -29,6 +32,7 @@ public class WanderingInSpace extends LiteShapeSystem {
 	public WanderingInSpace(Main parent, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
 		super(parent);
 		oscillator = new Oscillator(parent);
+		frameSkipper = new SingleFrameSkipper(parent);
 		this.oscRate = oscRate;
 		this.highSpeedScalar = highSpeedScalar;
 		this.lowSpeedScalar = lowSpeedScalar;
@@ -51,10 +55,12 @@ public class WanderingInSpace extends LiteShapeSystem {
 		diagonal = (int) PApplet.sqrt(parent.width * parent.width + parent.height * parent.height) / 2;
 	}
 
+	protected boolean clockwise = false;
+	
 	@Override
 	public void draw() {
 		parent.translate(parent.width / 2, parent.height / 2);
-		rotation -= 0.002;
+		rotation += (clockwise) ? - ROTATION_SPEED : 0.002;
 		parent.rotate(rotation);
 
 		for (int i = 0; i < p.length; i++) {
@@ -90,7 +96,11 @@ public class WanderingInSpace extends LiteShapeSystem {
 			parent.popMatrix();
 
 			//o -= 0.07;
-			o -= oscillator.oscillate(lowSpeedScalar, highSpeedScalar, oscRate);
+			o -= oscillator.oscillate(lowSpeedScalar, highSpeedScalar, oscRate, () -> {
+				if (frameSkipper.isNewFrame()) {
+					clockwise = !clockwise;
+				}
+			});
 		}
 
 		float drawDist() {

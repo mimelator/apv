@@ -24,9 +24,23 @@ public class Oscillator extends APVPlugin {
 	public float oscillate(float low, float high, float oscSpeed) {
 		float fr = targetFrameRate; //frameRate
 		float cos = PApplet.cos(PI * parent.getFrameCount() / fr / oscSpeed);
-		return PApplet.map(cos, -1, 1, low, high);
+		return parent.mapEx(cos, -1, 1, low, high); 
 	}
-
+	
+	@FunctionalInterface
+	public static interface Listener {
+		void onOscillate();
+	}
+	
+	public float oscillate(float low, float high, float oscSpeed, Listener l) {
+		float result = oscillate(low, high, oscSpeed);
+		if (parent.getFrameCount() % (targetFrameRate * (oscSpeed / 2)) == 0) {
+			l.onOscillate();
+		}
+		return result;
+	}
+	
+	
 	public int getTargetFrameRate() {
 		return targetFrameRate;
 	}

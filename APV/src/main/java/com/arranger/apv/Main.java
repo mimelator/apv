@@ -42,6 +42,7 @@ import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineHelper;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.VideoGameHelper;
+import com.arranger.apv.util.Oscillator.Listener;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
@@ -267,6 +268,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
 	}
 	
+	public DrawShapeEvent getTwirlEvent() {
+		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.TWIRL);
+	}
+	
 	public CommandInvokedEvent getCommandInvokedEvent() {
 		return (CommandInvokedEvent)eventMap.get(EVENT_TYPES.COMMAND_INVOKED);
 	}
@@ -402,6 +407,10 @@ public class Main extends PApplet {
 	
 	public float oscillate(float low, float high, float oscSpeed) {
 		return oscillator.oscillate(low, high, oscSpeed);
+	}
+	
+	public float oscillate(float low, float high, float oscSpeed, Listener l) {
+		return oscillator.oscillate(low, high, oscSpeed, l);
 	}
 
 	public String format(Color c) {
@@ -824,7 +833,7 @@ public class Main extends PApplet {
 	}
 	
 	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED, APV_CHANGE
+		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED, APV_CHANGE, TWIRL
 	}
 	
 	protected void initEvents() {
@@ -836,6 +845,7 @@ public class Main extends PApplet {
 		eventMap.put(EVENT_TYPES.COMMAND_INVOKED, new CommandInvokedEvent(this));
 		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
+		eventMap.put(EVENT_TYPES.TWIRL, new DrawShapeEvent(this));
 		eventMap.put(EVENT_TYPES.APV_CHANGE, new APVChangeEvent(this));
 	}
 	
