@@ -1,8 +1,27 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Video game mode should show stats in the main settings
-changing debug pusle agent to be enabled by default by changing the switch
+
+
+work on the application.conf
+update and ensure that it is easily used with the write params
+
+I'd like the settings tab to display colors
+Green when everything is nominal
+
+RedBackground when something is unusual?
+I want an at-a-glance capability
+
+RandomColor changes a bit too much and causes flashes
+	It could be the appearance of the large Warped items?
+     {LikedScene : [{RefreshBackDrop : [0.750000]}, 
+     				{WarpSystem : [{DotFactory : [7.3]}, 25]}, 
+     				{RotatorSystem : [{SpriteFactory : [Scared_face_emoji.png, 0.0]}, 100]}, 
+     				{PulseShakeFilter : []}, 
+     				{RandomColor : ["(255,255,255)", "(255,0,0)"]}, 
+     				{PerlinNoiseWalkerLocationSystem : [5]}]}
+
+
 
 *****************************************************************************
 TODO:

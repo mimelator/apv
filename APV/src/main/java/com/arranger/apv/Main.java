@@ -32,8 +32,8 @@ import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.helpers.PerformanceMonitor;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
-import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.helpers.Switch.STATE;
+import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.pl.APVPulseListener;
@@ -46,13 +46,13 @@ import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.LoggingConfig;
+import com.arranger.apv.util.Particles;
+import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
-import com.arranger.apv.util.frame.SplineHelper;
 import com.arranger.apv.util.frame.Oscillator.Listener;
-import com.arranger.apv.util.Particles;
-import com.arranger.apv.util.VersionInfo;
+import com.arranger.apv.util.frame.SplineHelper;
 import com.typesafe.config.Config;
 
 import processing.core.PApplet;
@@ -113,7 +113,8 @@ public class Main extends PApplet {
 	private SafePainter safePainter = new SafePainter(this, ()-> _draw());
 	private Scene currentScene;
 	private CONTROL_MODES currentControlMode; 
-	private boolean scrambleMode = false;	
+	private boolean scrambleMode = false;
+	private boolean screenshotMode = false;
 	private int lastScrambleFrame = 0;
 	
 	
@@ -506,12 +507,13 @@ public class Main extends PApplet {
 
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
-		new FileHelper(this).getFullPath(fileName);
+		fileName = new FileHelper(this).getFullPath(fileName);
 		logger.info("Saving image: " + fileName);
 		PImage pImage = get();
 		pImage.save(fileName);
 		
 		sendMessage(new String[] {fileName});
+		screenshotMode = false;
 	}
 	
 	public boolean isScrambleModeAvailable() {
@@ -623,7 +625,7 @@ public class Main extends PApplet {
 		postScene(helpSwitch, () -> helpDisplay.showHelp());
 		postScene(scrambleMode, () -> doScramble());
 		postScene(() -> runControlMode());
-		postScene(continuousCaptureSwitch.isEnabled(), () -> doScreenCapture());
+		postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
 		postScene(() -> getDrawEvent().fire());
 	}
 	
@@ -744,7 +746,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.RESET, e -> reset());
 		cs.registerHandler(Command.MANUAL, e -> manual());	
 		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
-		cs.registerHandler(Command.SCREEN_SHOT, e -> doScreenCapture());
+		cs.registerHandler(Command.SCREEN_SHOT, e -> screenshotMode = true); //screenshot's can only be taking during draw
 		cs.registerHandler(Command.SAVE_CONFIGURATION, event -> configurator.saveCurrentConfig());
 		cs.registerHandler(Command.RELOAD_CONFIGURATION, event -> reloadConfiguration());
 		cs.registerHandler(Command.UP_ARROW, e -> likeCurrentScene());
