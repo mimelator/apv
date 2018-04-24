@@ -40,17 +40,23 @@ public class LocationMessage extends MessageSystem {
 	protected void _draw(FadingMessage fadingMessage) {
 		String message = joinMessage(fadingMessage, ":");
 		
-		SafePainter.LOCATION loc = getCurrentLocation();
 		new SafePainter(parent, () ->  {
-			Point2D offset = getOffset(loc);
+			Point2D offset = getOffset(fadingMessage.location);
 			doStandardFade(1.0f);
 			parent.textSize(TEXT_SIZE);
 			parent.textAlign(cornerLocation.getAlignment());
 			parent.text(message, (int)offset.getX(), (int)offset.getY());
-		}).paint(loc);
+		}).paint(fadingMessage.location);
+	}
+	
+	@Override
+	protected FadingMessage createFadingMessage(String[] messages) {
+		FadingMessage fm = super.createFadingMessage(messages);
+		fm.location = calculateLocation();
+		return fm;
 	}
 
-	private SafePainter.LOCATION getCurrentLocation() {
+	private SafePainter.LOCATION calculateLocation() {
 		if (!SafePainter.LOCATION.NONE.equals(cornerLocation)) {
 			return cornerLocation;
 		}

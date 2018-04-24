@@ -26,7 +26,11 @@ public abstract class MessageSystem extends ShapeSystem {
 	
 	public void onNewMessage(String[] messages) {
 		logger.fine(String.join(",", messages));
-		fadingMessage = new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), messages);
+		fadingMessage = createFadingMessage(messages);
+	}
+
+	protected FadingMessage createFadingMessage(String[] messages) {
+		return new FadingMessage(new FrameFader(parent, DEFAULT_MESSAGE_DURATION_FRAMES), messages);
 	}
 	
 	@Override
@@ -58,6 +62,7 @@ public abstract class MessageSystem extends ShapeSystem {
 		
 		public FrameFader frameFader;
 		public String [] messages;
+		public SafePainter.LOCATION location;
 		
 		public FadingMessage(FrameFader frameFader, String [] message) {
 			frameFader.startFade();
