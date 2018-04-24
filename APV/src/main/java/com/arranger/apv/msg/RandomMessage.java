@@ -7,8 +7,8 @@ import com.arranger.apv.Main;
 public class RandomMessage extends MessageSystem {
 
 	private static final int NUM_REPEATS = 5;
-	private static final int MIN_TEXT_SIZE = 15;
-	private static final int MAX_TEXT_SIZE = 150;
+	private static final int MIN_TEXT_SIZE = 20;
+	private static final int MAX_TEXT_SIZE = 120;
 	
 	private static final int LOC_X = 0;
 	private static final int LOC_Y = 1;

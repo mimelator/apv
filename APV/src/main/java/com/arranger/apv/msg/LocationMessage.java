@@ -1,7 +1,5 @@
 package com.arranger.apv.msg;
 
-import java.awt.geom.Point2D;
-
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.draw.SafePainter;
@@ -9,7 +7,6 @@ import com.arranger.apv.util.draw.SafePainter;
 public class LocationMessage extends MessageSystem {
 	
 	private static final int TEXT_SIZE = 50;
-	private static final int OFFSET = SafePainter.OFFSET * 5;
 	
 	private SafePainter.LOCATION cornerLocation = SafePainter.LOCATION.NONE;
 	
@@ -36,16 +33,14 @@ public class LocationMessage extends MessageSystem {
 	}
 
 	@Override
-	protected void _draw(FadingMessage fadingMessage) {
-		String message = joinMessage(fadingMessage, ":");
+	protected void _draw(FadingMessage fm) {
+		String message = joinMessage(fm, ":");
 		
 		new SafePainter(parent, () ->  {
-			Point2D offset = getOffset(fadingMessage.location);
 			doStandardFade(1.0f);
 			parent.textSize(TEXT_SIZE);
-			parent.textAlign(cornerLocation.getAlignment());
-			parent.text(message, (int)offset.getX(), (int)offset.getY());
-		}).paint(fadingMessage.location);
+			parent.text(message, 0, 0);
+		}).paint(fm.location);
 	}
 	
 	@Override
@@ -67,30 +62,5 @@ public class LocationMessage extends MessageSystem {
 		}
 		
 		return result;
-	}
-	
-	private Point2D getOffset(SafePainter.LOCATION loc) {
-		float x = 0, y = 0;
-		switch (cornerLocation) {
-		case UPPER_LEFT:
-			x = OFFSET;
-			y = OFFSET;
-			break;
-		case UPPER_RIGHT:
-			x = -OFFSET;
-			y = OFFSET;
-			break;
-		case LOWER_RIGHT:
-			x = -OFFSET;
-			y = -OFFSET;
-			break;
-		case LOWER_LEFT:
-			x = OFFSET;
-			y = -OFFSET;
-			break;
-		case NONE:
-			default:
-		}
-		return new Point2D.Float(x, y);
 	}
 }

@@ -19,15 +19,20 @@ public class SafePainter extends APVPlugin {
 	public static final int OFFSET = TextPainter.TEXT_OFFSET;
 	
 	public enum LOCATION {
-		UPPER_LEFT(LEFT), UPPER_RIGHT(RIGHT), LOWER_RIGHT(RIGHT), LOWER_LEFT(LEFT), NONE(CENTER);
+		UPPER_LEFT(LEFT, TOP), UPPER_RIGHT(RIGHT, TOP), LOWER_RIGHT(RIGHT, BOTTOM), LOWER_LEFT(LEFT, BOTTOM), NONE(CENTER, CENTER);
 	
-		private int alignment;
-		private LOCATION(int alignment) {
-			this.alignment = alignment;
+		private int alignX, alignY;
+		private LOCATION(int alignX, int alignY) {
+			this.alignX = alignX;
+			this.alignY = alignY;
 		}
 		
-		public int getAlignment() {
-			return alignment;
+		public int getAlignX() {
+			return alignX;
+		}
+		
+		public int getAlignY() {
+			return alignY;
 		}
 		
 		/**
@@ -76,7 +81,7 @@ public class SafePainter extends APVPlugin {
 				int x = (int) pt.getX();
 				int y = (int) pt.getY();
 				parent.translate(x, y);
-				parent.textAlign(location.alignment);
+				parent.textAlign(location.alignX, location.alignY);
 				painter.paint();
 				parent.translate(-x, -y);
 			}
