@@ -5,7 +5,6 @@ https://github.com/mimelator/apv
 
 *****************************************************************************
 TODO:
-* Pulse debug mode especially for audio.  Little text that pops up in the ur corner
 * BeatColorSystem could fade from the pulse color back to the primary color
 * Any series of commands could be macros
 * More animations like light worm

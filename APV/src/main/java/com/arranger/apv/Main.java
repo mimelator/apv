@@ -111,7 +111,8 @@ public class Main extends PApplet {
 					frameStroberSwitch,
 					continuousCaptureSwitch,
 					videoGameSwitch,
-					scrambleModeSwitch;
+					scrambleModeSwitch,
+					debugPulseSwitch;
 
 	public enum SWITCH_NAMES {
 		
@@ -120,7 +121,8 @@ public class Main extends PApplet {
 		FRAME_STROBER("FrameStrober"),
 		CONTINUOUS_CAPTURE("ContinuousCapture"),
 		SCRAMBLE_MODE("Scramble"),
-		VIDEO_GAME("VideoGame");
+		VIDEO_GAME("VideoGame"),
+		DEBUG_PULSE("DebugPulse");
 		
 		public String name;
 
@@ -700,6 +702,7 @@ public class Main extends PApplet {
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
 		registerSwitch(continuousCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		
 		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
 		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
@@ -821,6 +824,7 @@ public class Main extends PApplet {
 		continuousCaptureSwitch = switches.get(SWITCH_NAMES.CONTINUOUS_CAPTURE.name);
 		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
 		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
+		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 	}
 	
 	@SuppressWarnings("unchecked")

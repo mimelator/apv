@@ -13,10 +13,12 @@ public enum Command {
 	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_SETTINGS('q', "SettingsSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
+	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
 	SWITCH_PULSE_LISTENER('7', "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
 	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
+	
 	
 	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables the foregrounds"),
 	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables the backgrounds"),
