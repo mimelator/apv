@@ -14,6 +14,8 @@ import processing.event.KeyEvent;
 
 public enum Command {
 	
+	FREEZE('|', "Freeze", "Used for debugging purposes"),
+	
 	//Switches
 	SWITCH_AGENT('x', "AgentSwitch", "Enables/Disables the registered agents"),
 	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen"),

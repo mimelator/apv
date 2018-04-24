@@ -3,7 +3,6 @@ https://github.com/mimelator/apv
 
 
 
-
 *****************************************************************************
 TODO:
 * More animations like light worm
@@ -11,6 +10,8 @@ TODO:
 * postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
 * Add documentation to each plugin to describe it's arguments
 * Follow-up on PSurfaceJOGL.drawExceptionHandler
+** ps -ef | grep Main
+** jstack -l 80125 >> threaddumps.log
 *****************************************************************************
 		
 
