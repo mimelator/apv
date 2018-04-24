@@ -16,7 +16,7 @@ public class AutoSceneTest extends APVPluginTest {
 	@Test
 	public void testScenes() {
 		Configurator cfg = new Configurator(parent);
-		ConfigList list = cfg.getRootConfig().getList("song-list");
+		ConfigList list = cfg.getRootConfig().getList("marqueeList");
 		assert(list != null);
 
 		List<String> collect = list.stream().map(e -> (String)e.unwrapped()).collect(Collectors.toList());
