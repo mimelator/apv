@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.util.Configurator;

@@ -14,7 +14,7 @@ import com.arranger.apv.util.draw.TextPainter;
 
 public class VideoGameHelper extends APVPlugin {
 	
-	private static final DecimalFormat decFormat = new DecimalFormat("#.###");
+	public static final DecimalFormat decFormat = new DecimalFormat("#.###");
 
 	Map<String, Integer> cmdStatMap = new HashMap<String, Integer>();
 	int totalCommands = 0;

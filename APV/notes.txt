@@ -1,7 +1,8 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
+Video game mode should show stats in the main settings
+changing debug pusle agent to be enabled by default by changing the switch
 
 *****************************************************************************
 TODO:
