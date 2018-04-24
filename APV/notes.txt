@@ -1,12 +1,5 @@
-BRANCH: thread-death
+BRANCH: master
 https://github.com/mimelator/apv
-
-
-I can set an uncaughtexceptionhandler on the thread and the group
-but junit tests won't demonstrate that it catches anything
-
-i'll tray to augment the DebugPulseAgent for a quick test
-
 
 
 
