@@ -1,28 +1,28 @@
 package com.arranger.apv.msg;
 
+import java.awt.geom.Point2D;
+
 import com.arranger.apv.Main;
 import com.arranger.apv.MessageSystem;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.SafePainter;
 
 public class LocationMessage extends MessageSystem {
 	
 	private static final int TEXT_SIZE = 50;
-
-	public enum CORNER_LOCATION {
-		UPPER_LEFT, UPPER_RIGHT, LOWER_LEFT, LOWER_RIGHT
-		};
+	private static final int OFFSET = SafePainter.OFFSET * 5;
 	
-	private CORNER_LOCATION cornerLocation = CORNER_LOCATION.UPPER_LEFT;
+	private SafePainter.LOCATION cornerLocation = SafePainter.LOCATION.NONE;
 	
-	public LocationMessage(Main parent, CORNER_LOCATION cornerLocation) {
+	public LocationMessage(Main parent, SafePainter.LOCATION cornerLocation) {
 		super(parent);
 		this.cornerLocation = cornerLocation;
 	}
 	
 	public LocationMessage(Configurator.Context ctx) {
 		this(ctx.getParent(), 
-				CORNER_LOCATION.valueOf(
-						ctx.getString(0, CORNER_LOCATION.UPPER_LEFT.name())));
+				SafePainter.LOCATION.valueOf(
+						ctx.getString(0, SafePainter.LOCATION.NONE.name())));
 	}
 
 	@Override
@@ -38,36 +38,56 @@ public class LocationMessage extends MessageSystem {
 
 	@Override
 	protected void _draw(FadingMessage fadingMessage) {
-		parent.textSize(TEXT_SIZE);
 		String message = joinMessage(fadingMessage, ":");
 		
-		doStandardFade(1.0f);
+		SafePainter.LOCATION loc = getCurrentLocation();
+		new SafePainter(parent, () ->  {
+			Point2D offset = getOffset(loc);
+			doStandardFade(1.0f);
+			parent.textSize(TEXT_SIZE);
+			parent.textAlign(cornerLocation.getAlignment());
+			parent.text(message, (int)offset.getX(), (int)offset.getY());
+		}).paint(loc);
+	}
+
+	private SafePainter.LOCATION getCurrentLocation() {
+		if (!SafePainter.LOCATION.NONE.equals(cornerLocation)) {
+			return cornerLocation;
+		}
 		
+		SafePainter.LOCATION result = null;
+		while (result == null) {
+			result = SafePainter.LOCATION.random();
+			if (SafePainter.LOCATION.NONE.equals(result)) {
+				result = null;
+			}
+		}
+		
+		return result;
+	}
+	
+	private Point2D getOffset(SafePainter.LOCATION loc) {
 		float x = 0, y = 0;
 		switch (cornerLocation) {
 		case UPPER_LEFT:
-			parent.textAlign(LEFT);
-			x = parent.width * .05f;
-			y = parent.height * .1f;
-			break;
-		case LOWER_LEFT:
-			parent.textAlign(LEFT);
-			x = parent.width * .05f;
-			y = parent.height * .9f;
+			x = OFFSET;
+			y = OFFSET;
 			break;
 		case UPPER_RIGHT:
-			parent.textAlign(RIGHT);
-			x = parent.width * .65f;
-			y = parent.height * .1f;
+			x = -OFFSET;
+			y = OFFSET;
 			break;
 		case LOWER_RIGHT:
-			parent.textAlign(RIGHT);
-			x = parent.width * .65f;
-			y = parent.height * .9f;
+			x = -OFFSET;
+			y = -OFFSET;
 			break;
+		case LOWER_LEFT:
+			x = OFFSET;
+			y = -OFFSET;
+			break;
+		case NONE:
+			default:
 		}
-		
-		parent.text(message, x, y);
+		return new Point2D.Float(x, y);
 	}
-
 }

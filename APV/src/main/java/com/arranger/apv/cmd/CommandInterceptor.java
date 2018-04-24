@@ -15,7 +15,7 @@ public abstract class CommandInterceptor extends APVPlugin {
 	public abstract String getHelpText();
 	
 	
-	public void panic() {
+	public void reset() {
 		active = false;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.logging.Logger;
 
 import com.arranger.apv.util.FrameFader;
+import com.arranger.apv.util.SafePainter;
 
 public abstract class MessageSystem extends ShapeSystem {
 
@@ -30,7 +31,6 @@ public abstract class MessageSystem extends ShapeSystem {
 	
 	@Override
 	public void draw() {
-		logger.fine("frame: " + parent.getFrameCount());
 		parent.noStroke();
 		
 		if (fadingMessage == null) {
@@ -48,7 +48,10 @@ public abstract class MessageSystem extends ShapeSystem {
 	
 		parent.addSettingsMessage("  --messages: " + joinMessages);
 		
-		_draw(fadingMessage);
+		new SafePainter(parent, () -> {
+			_draw(fadingMessage);	
+		}).paint();
+		
 	}
 	
 	protected class FadingMessage {

@@ -23,7 +23,7 @@ public class VideoGameHelper extends APVPlugin {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
-			parent.getCommandInvokedEvent().register(() -> recordLastCommand());
+			parent.getCommandInvokedEvent().register((c) -> recordLastCommand(c));
 		});
 	}
 	
@@ -64,8 +64,7 @@ public class VideoGameHelper extends APVPlugin {
 		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);
 	}
 	
-	private void recordLastCommand() {
-		Command cmd = parent.getCommandSystem().getLastCommand();
+	private void recordLastCommand(Command cmd) {
 		lastCommandName = cmd.name();
 		Integer count = cmdStatMap.get(lastCommandName);
 		if (count == null) {

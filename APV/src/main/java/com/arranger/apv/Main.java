@@ -36,6 +36,7 @@ import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Oscillator;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.PerformanceMonitor;
+import com.arranger.apv.util.SafePainter;
 import com.arranger.apv.util.SceneList;
 import com.arranger.apv.util.SettingsDisplay;
 import com.arranger.apv.util.SplineHelper;
@@ -96,6 +97,7 @@ public class Main extends PApplet {
 	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
 	//Stateful data
+	private SafePainter safePainter = new SafePainter(this, ()-> _draw());
 	private Scene currentScene;
 	private CONTROL_MODES currentControlMode; 
 	private boolean scrambleMode = false;	
@@ -499,10 +501,10 @@ public class Main extends PApplet {
 	/**
 	 * Reset all switches and control mode
 	 */
-	public void panic() {
+	public void reset() {
 		resetSwitches();
 		initControlMode();
-		commandSystem.panic();
+		commandSystem.reset();
 	}
 	
 	/**
@@ -522,14 +524,10 @@ public class Main extends PApplet {
 	public void sendMarqueeMessage(String message) {
 		getCommandSystem().getSceneSelectInterceptor().showMessageSceneWithText(message);
 	}
-
+	
 	@Override
 	public void draw() {
-		try {
-			_draw(); //Processing has an unusual exception handler
-		} catch (Throwable t) {
-			logger.log(Level.SEVERE, t.getMessage(), t);
-		}
+		safePainter.paint();
 	}
 	
 	public void drawSystem(ShapeSystem s, String debugName) {
@@ -537,16 +535,10 @@ public class Main extends PApplet {
 	}
 	
 	public void drawSystem(ShapeSystem s, String debugName, boolean safe) {
-		if (safe) {
-			pushStyle();
-			pushMatrix();
-		}
-		settingsDisplay.debugSystem(s, debugName);
-		s.draw();
-		if (safe) {
-			popMatrix();
-			popStyle();
-		}
+		new SafePainter(this, () -> {
+			settingsDisplay.debugSystem(s, debugName);
+			s.draw();
+		}).paint(null, safe);
 	}
 	
 	public void reloadConfiguration() {
@@ -557,7 +549,7 @@ public class Main extends PApplet {
 
 		configureHotKeys();
 		hotKeys.forEach((k, v) -> v.registerHotKey(k));
-		panic();
+		reset();
 	}
 	
 	protected void _draw() {
@@ -569,9 +561,7 @@ public class Main extends PApplet {
 				return;
 			}
 		}
-		
 		settingsDisplay.reset();
-		
 		TransitionSystem transition = prepareTransition(false);
 		
 		if (likedScenes.isEnabled()) {
@@ -593,40 +583,43 @@ public class Main extends PApplet {
 		}
 		
 		drawSystem(currentScene, "scene");
-		
-		perfMonitor.doMonitorCheck(currentScene);
-		
-		if (transition != null) {
-			drawSystem(transition, "transition");
-		}
-		
-		if (messages.isEnabled()) {
-			drawSystem(getMessage(), "message");
-		}
 
-		if (videoGameSwitch.isEnabled()) {
-			videoGameHelper.showStats();
+		final TransitionSystem t = transition;
+		postScene(() -> perfMonitor.doMonitorCheck(currentScene));
+		postScene(transition != null, () -> drawSystem(t, "transition"));
+		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
+		postScene(videoGameSwitch, () -> videoGameHelper.showStats());
+		postScene(showSettingsSwitch, () -> settingsDisplay.drawSettingsMessages());
+		postScene(helpSwitch, () -> helpDisplay.showHelp());
+		postScene(scrambleMode, () -> doScramble());
+		postScene(() -> runControlMode());
+		postScene(continuousCaptureSwitch.isEnabled(), () -> doScreenCapture());
+		postScene(() -> getDrawEvent().fire());
+	}
+	
+	@FunctionalInterface
+	private static interface Action {
+		void action();
+	}
+	
+	private void postScene(Action action) {
+		postScene(true, action);
+	}
+	
+	private void postScene(Switch sw, Action action) {
+		postScene(sw.isEnabled(), action);
+	}
+	
+	private void postScene(boolean isEnabled, Action action) {
+		if (!isEnabled) {
+			return;
 		}
 		
-		if (showSettingsSwitch.isEnabled()) {
-			settingsDisplay.drawSettingsMessages();
+		try {
+			action.action();
+		} catch (Throwable t) {
+			logger.log(Level.SEVERE, t.getMessage(), t);
 		}
-
-		if (helpSwitch.isEnabled()) {
-			helpDisplay.showHelp();
-		}
-		
-		if (scrambleMode) {
-			doScramble();
-		}
-		
-		runControlMode();
-		
-		if (continuousCaptureSwitch.isEnabled()) {
-			doScreenCapture();
-		}
-		
-		getDrawEvent().fire();
 	}
 	
 	protected TransitionSystem prepareTransition(boolean forceStart) {
@@ -716,7 +709,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
 		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this);});
-		cs.registerHandler(Command.PANIC, e -> panic());
+		cs.registerHandler(Command.RESET, e -> reset());
 		cs.registerHandler(Command.MANUAL, e -> manual());	
 		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
 		cs.registerHandler(Command.SCREEN_SHOT, e -> doScreenCapture());

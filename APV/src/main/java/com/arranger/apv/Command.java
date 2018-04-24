@@ -38,7 +38,7 @@ public enum Command {
 	
 	//Typical commands
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
-	PANIC('?', "Panic", "Resets switches to their defaults"),
+	RESET('?', "Reset", "Resets switches to their defaults"),
 	SCRAMBLE(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things"),
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),

@@ -42,12 +42,12 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	/**
-	 * Called from {@link Main#panic()}
+	 * Called from {@link Main#reset()}
 	 * Reset the interceptors
 	 */
-	public void panic() {
-		messageModeInterceptor.panic();
-		sceneSelectInterceptor.panic();
+	public void reset() {
+		messageModeInterceptor.reset();
+		sceneSelectInterceptor.reset();
 	}
 	
 	public void invokeScramble() {
@@ -102,7 +102,7 @@ public class CommandSystem extends APVPlugin {
 				list.forEach(c -> c.handler.onKeyPressed(keyEvent));
 				lastCommand = list.get(0);
 				
-				parent.getCommandInvokedEvent().fire();
+				parent.getCommandInvokedEvent().fire(lastCommand.getCommand());
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);

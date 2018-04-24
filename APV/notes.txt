@@ -1,30 +1,31 @@
-BRANCH: color-saver
+BRANCH: safely-caught-painting
 https://github.com/mimelator/apv
 
+DONE
+color-saver
 
-Currently: When in likedScene mode, i don't have good control over the shadowedComopenents
-	When changing a filter and then changing to the next scene it resets...
-	That's a good thing, right?
+DONE
+Convert CommandInvokedEvent to pass a param
 
+* STUCK
+PSurfaceJOGL.drawExceptionHandler waits for something to complete.  Need to 
+figure out what can be done if anything about this. 
+	* update everything to be a SafePainter with try/catch block
+	* update LocationMessage to use the new SafePainter and helper tools if possible
 
-* LikedScene
-* Animation
-* Save color and location
-* allow anything to adjust during scene mode?
-**   One approach could be to listen to apv change events (triggered from APV) (setIndex)
-**   When Scene handles an event it could remove/shadow that system 
+* TwirlBackdrop should fire an event like the Strobe does but at the appropriate intervals
+* rename Panic to be Reset but keep the ? as the key code
 
-** OR Main could duplicate the scene, but use the updated system (col,loc,fg,bg,etc...)
-**  And NOT add it into the likedScene list
-
-
-* Convert CommandInvokedEvent to pass a param
 * change song-list to marquee-list in reference.conf and whatever loads it
 	(SceneList does the loading)
-* update LocationMessage to use the new SafePainter and helper tools if possible
+	marqueeList documentation
+	
+# change the speed of the new background
+
 
 *****************************************************************************
 TODO:
+* Pulse debug mode especially for audio.  Little text that pops up in the ur corner
 * BeatColorSystem could fade from the pulse color back to the primary color
 * Any series of commands could be macros
 * More animations like light worm

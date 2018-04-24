@@ -20,7 +20,7 @@ public class SceneList extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			// get the strings
-			ConfigList configList = parent.getConfigurator().getRootConfig().getList("song-list");
+			ConfigList configList = parent.getConfigurator().getRootConfig().getList("marqueeList");
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
 			// for each string register a custom action
@@ -45,6 +45,6 @@ public class SceneList extends APVPlugin {
 		JSONQuoter quoter = new JSONQuoter(parent);
 		String msgs = stringList.stream().map(e -> quoter.quote(e)).collect(Collectors.joining(","));
 		
-		return String.format("song-list : [%s]", msgs);
+		return String.format("marqueeList : [%s]", msgs);
 	}
 }
