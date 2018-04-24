@@ -18,10 +18,6 @@ public class FrameFader extends APVPlugin {
 	private int numFramesToFade;
 	private int lastFrame = 0;
 
-	public FrameFader(Main parent) {
-		super(parent);
-	}
-	
 	public FrameFader(Main parent, int numFramesToFade) {
 		super(parent);
 		setNumFramesToFade(numFramesToFade);
