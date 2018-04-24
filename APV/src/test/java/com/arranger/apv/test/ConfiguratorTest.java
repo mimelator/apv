@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigList;

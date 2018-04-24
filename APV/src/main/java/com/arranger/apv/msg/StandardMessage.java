@@ -3,8 +3,7 @@ package com.arranger.apv.msg;
 import java.util.logging.Logger;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.MessageSystem;
-import com.arranger.apv.util.FrameFader;
+import com.arranger.apv.util.frame.FrameFader;
 
 public class StandardMessage extends MessageSystem {
 
@@ -25,6 +24,10 @@ public class StandardMessage extends MessageSystem {
 	public void setup() {
 		super.setup();
 		textSize = START_TEXT_SIZE;
+	}
+	
+	@Override
+	protected void onCreatedFadingMessage(FadingMessage fadingMessage) {
 	}
 	
 	@Override

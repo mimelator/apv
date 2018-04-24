@@ -3,13 +3,13 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.audio.PulseListener;
+import com.arranger.apv.cmd.Command;
 import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.SingleFrameSkipper;
+import com.arranger.apv.util.frame.SingleFrameSkipper;
 
 import processing.core.PApplet;
 

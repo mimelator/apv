@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 
 import processing.core.PShape;

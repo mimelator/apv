@@ -1,7 +1,6 @@
 package com.arranger.apv.scene;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Scene;
 import com.arranger.apv.util.Configurator.Context;
 
 public abstract class Animation extends Scene {

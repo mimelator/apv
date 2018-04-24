@@ -2,12 +2,12 @@ package com.arranger.apv.agent;
 
 import org.testng.log4testng.Logger;
 
-import com.arranger.apv.APVEvent;
-import com.arranger.apv.APVEvent.EventHandler;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.event.APVEvent;
+import com.arranger.apv.event.APVEvent.EventHandler;
+import com.arranger.apv.helpers.APVCallbackHelper.Handler;
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.APVCallbackHelper.Handler;
 
 public class BaseAgent extends APVPlugin {
 	

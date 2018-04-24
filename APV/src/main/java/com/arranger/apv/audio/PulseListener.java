@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.MultiFrameSkipper;
+import com.arranger.apv.util.frame.MultiFrameSkipper;
 
 import ddf.minim.analysis.BeatDetect;
 

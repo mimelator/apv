@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.Oscillator;
-import com.arranger.apv.util.SingleFrameSkipper;
+import com.arranger.apv.util.frame.Oscillator;
+import com.arranger.apv.util.frame.SingleFrameSkipper;
 
 import processing.core.PApplet;
 

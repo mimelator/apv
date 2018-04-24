@@ -3,9 +3,8 @@ package com.arranger.apv.event;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arranger.apv.APVEvent;
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
 import com.arranger.apv.event.CommandInvokedEvent.APVCommandInvokedEventHandler;
 
 public class CommandInvokedEvent extends APVEvent<APVCommandInvokedEventHandler> {

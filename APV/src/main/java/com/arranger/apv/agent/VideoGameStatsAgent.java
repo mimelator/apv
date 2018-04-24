@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.util.Configurator.Context;
 import com.arranger.apv.util.FileHelper;
-import com.arranger.apv.util.VideoGameHelper;
 
 public class VideoGameStatsAgent extends PulseAgent {
 	

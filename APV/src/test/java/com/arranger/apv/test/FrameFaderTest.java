@@ -3,7 +3,7 @@ package com.arranger.apv.test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.util.FrameFader;
+import com.arranger.apv.util.frame.FrameFader;
 
 public class FrameFaderTest extends APVPluginTest {
 	

@@ -8,8 +8,8 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.arranger.apv.util.Oscillator;
-import com.arranger.apv.util.SplineHelper;
+import com.arranger.apv.util.frame.Oscillator;
+import com.arranger.apv.util.frame.SplineHelper;
 
 public class OscillatorTest extends APVPluginTest {
 

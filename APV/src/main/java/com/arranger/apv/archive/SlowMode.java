@@ -1,7 +1,7 @@
 package com.arranger.apv.archive;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Switch;
+import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.transition.Fade;
 import com.arranger.apv.util.Configurator.Context;
 

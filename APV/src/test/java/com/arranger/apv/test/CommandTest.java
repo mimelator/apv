@@ -2,7 +2,7 @@ package com.arranger.apv.test;
 
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.Command;
+import com.arranger.apv.cmd.Command;
 
 public class CommandTest extends APVPluginTest {
 

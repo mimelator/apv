@@ -5,11 +5,11 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.logging.Logger;
 
-import com.arranger.apv.Command;
-import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.factory.PrimitiveShapeFactory;
-import com.arranger.apv.util.Reverser;
+import com.arranger.apv.util.frame.Reverser;
 
 import processing.core.PApplet;
 

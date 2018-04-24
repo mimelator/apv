@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APV;
-import com.arranger.apv.APVEvent;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.event.APVChangeEvent.APVChangeEventHandler;

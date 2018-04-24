@@ -11,10 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import com.arranger.apv.Command;
-import com.arranger.apv.CommandSystem;
-import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.cmd.CommandSystem;
+import com.arranger.apv.cmd.CommandSystem.RegisteredCommandHandler;
 
 public class APVCommandFrame extends APVFrame {
 

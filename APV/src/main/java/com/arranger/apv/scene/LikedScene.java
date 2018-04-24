@@ -3,13 +3,12 @@ package com.arranger.apv.scene;
 import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.Scene;
-import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.event.APVChangeEvent.APVChangeEventHandler;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 
 public class LikedScene extends Scene implements APVChangeEventHandler {

@@ -5,7 +5,7 @@ import java.awt.Color;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.PulseFader;
+import com.arranger.apv.util.frame.PulseFader;
 
 public class PulseFadeFilter extends Filter {
 

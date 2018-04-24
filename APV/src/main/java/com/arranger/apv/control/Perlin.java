@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.arranger.apv.Command;
-import com.arranger.apv.CommandSystem;
-import com.arranger.apv.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.cmd.CommandSystem;
+import com.arranger.apv.cmd.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
 
 import processing.core.PApplet;

@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.arranger.apv.APVEvent;
-import com.arranger.apv.APVEvent.EventHandler;
 import com.arranger.apv.Main;
+import com.arranger.apv.event.APVEvent;
+import com.arranger.apv.event.APVEvent.EventHandler;
 
 public class APVTextFrame extends APVFrame {
 	

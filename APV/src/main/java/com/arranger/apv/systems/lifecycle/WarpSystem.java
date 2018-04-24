@@ -1,7 +1,7 @@
 package com.arranger.apv.systems.lifecycle;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;

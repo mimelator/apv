@@ -1,7 +1,7 @@
 package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.util.DrawHelper;
+import com.arranger.apv.util.draw.DrawHelper;
 
 import processing.core.PApplet;
 

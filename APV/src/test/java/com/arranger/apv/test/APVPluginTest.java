@@ -17,18 +17,18 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.CommandSystem;
-import com.arranger.apv.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
+import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.MessageModeInterceptor;
 import com.arranger.apv.cmd.SceneSelectInterceptor;
+import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
-import com.arranger.apv.util.APVPulseListener;
+import com.arranger.apv.helpers.MarqueeList;
+import com.arranger.apv.pl.APVPulseListener;
 import com.arranger.apv.util.PeekIterator;
-import com.arranger.apv.util.MarqueeList;
 
 import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;

@@ -3,9 +3,9 @@ package com.arranger.apv.agent;
 import java.util.Arrays;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Switch;
-import com.arranger.apv.util.SafePainter;
-import com.arranger.apv.util.TextDrawHelper;
+import com.arranger.apv.helpers.Switch;
+import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.TextDrawHelper;
 
 public class DebugPulseAgent extends PulseAgent {
 

@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.util.PulseFader;
+import com.arranger.apv.util.frame.PulseFader;
 
 import processing.core.PApplet;
 import processing.core.PVector;

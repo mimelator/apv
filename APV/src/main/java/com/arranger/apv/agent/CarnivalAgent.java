@@ -1,7 +1,7 @@
 package com.arranger.apv.agent;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.systems.lite.cycle.CarnivalShapeSystem;
 import com.arranger.apv.util.Configurator;
 

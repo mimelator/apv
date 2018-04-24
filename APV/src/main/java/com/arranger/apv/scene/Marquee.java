@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.Tracker;
+import com.arranger.apv.util.frame.Tracker;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;

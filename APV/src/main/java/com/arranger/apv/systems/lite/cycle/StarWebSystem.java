@@ -3,8 +3,8 @@ package com.arranger.apv.systems.lite.cycle;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
 import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FFTAnalysis;
 

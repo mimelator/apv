@@ -3,7 +3,7 @@ package com.arranger.apv.test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.util.SingleFrameSkipper;
+import com.arranger.apv.util.frame.SingleFrameSkipper;
 
 
 public class SingleFrameSkipperTest extends APVPluginTest {

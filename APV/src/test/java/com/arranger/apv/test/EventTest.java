@@ -2,8 +2,8 @@ package com.arranger.apv.test;
 
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.APVEvent;
-import com.arranger.apv.APVEvent.EventHandler;
+import com.arranger.apv.event.APVEvent;
+import com.arranger.apv.event.APVEvent.EventHandler;
 
 public class EventTest extends APVPluginTest {
 

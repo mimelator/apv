@@ -2,9 +2,9 @@ package com.arranger.apv.audio;
 
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.Command;
-import com.arranger.apv.CommandSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.cmd.CommandSystem;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;

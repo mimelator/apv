@@ -3,7 +3,7 @@ package com.arranger.apv.test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.arranger.apv.util.MultiFrameSkipper;
+import com.arranger.apv.util.frame.MultiFrameSkipper;
 
 public class MultiFrameSkipperTest extends APVPluginTest {
 	private static final int FRAMES_TO_SKIP = 3;

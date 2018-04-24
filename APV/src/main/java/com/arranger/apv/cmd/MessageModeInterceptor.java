@@ -3,8 +3,8 @@ package com.arranger.apv.cmd;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arranger.apv.CommandSystem.MessageHandler;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.CommandSystem.MessageHandler;
 
 public class MessageModeInterceptor extends CommandInterceptor {
 	

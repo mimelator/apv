@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import com.arranger.apv.CommandSystem.CommandHandler;
-import com.arranger.apv.Switch.STATE;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.cmd.CommandSystem;
+import com.arranger.apv.cmd.CommandSystem.CommandHandler;
+import com.arranger.apv.helpers.Switch;
+import com.arranger.apv.helpers.Switch.STATE;
 
 import processing.event.KeyEvent;
 

@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigList;

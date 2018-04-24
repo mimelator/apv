@@ -1,8 +1,8 @@
 package com.arranger.apv.agent;
 
-import com.arranger.apv.Command;
-import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.control.ControlSystem;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.MouseLocationSystem;
 

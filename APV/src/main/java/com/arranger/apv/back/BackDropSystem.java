@@ -1,7 +1,7 @@
 package com.arranger.apv.back;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.systems.ShapeSystem;
 
 public class BackDropSystem extends ShapeSystem {
 	

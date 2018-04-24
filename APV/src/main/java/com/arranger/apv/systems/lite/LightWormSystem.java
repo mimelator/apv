@@ -2,12 +2,12 @@ package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
 
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
 import com.arranger.apv.color.BeatColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.Reverser;
+import com.arranger.apv.util.frame.Reverser;
 
 /**
  * https://www.openprocessing.org/sketch/396905

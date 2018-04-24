@@ -3,9 +3,8 @@ package com.arranger.apv.msg;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.MessageSystem;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.SafePainter;
+import com.arranger.apv.util.draw.SafePainter;
 
 public class LocationMessage extends MessageSystem {
 	
@@ -50,12 +49,10 @@ public class LocationMessage extends MessageSystem {
 	}
 	
 	@Override
-	protected FadingMessage createFadingMessage(String[] messages) {
-		FadingMessage fm = super.createFadingMessage(messages);
-		fm.location = calculateLocation();
-		return fm;
+	protected void onCreatedFadingMessage(FadingMessage fadingMessage) {
+		fadingMessage.location = calculateLocation();
 	}
-
+	
 	private SafePainter.LOCATION calculateLocation() {
 		if (!SafePainter.LOCATION.NONE.equals(cornerLocation)) {
 			return cornerLocation;

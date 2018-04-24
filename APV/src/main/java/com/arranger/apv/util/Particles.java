@@ -1,8 +1,8 @@
 package com.arranger.apv.util;
 
 import com.arranger.apv.APVPlugin;
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
+import com.arranger.apv.cmd.Command;
 
 public class Particles extends APVPlugin {
 	

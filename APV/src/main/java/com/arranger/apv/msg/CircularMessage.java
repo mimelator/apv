@@ -1,7 +1,6 @@
 package com.arranger.apv.msg;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.MessageSystem;
 
 import processing.core.PApplet;
 
@@ -19,6 +18,10 @@ public class CircularMessage extends MessageSystem {
 	
 	public CircularMessage(Main parent) {
 		super(parent);
+	}
+
+	@Override
+	protected void onCreatedFadingMessage(FadingMessage fadingMessage) {
 	}
 
 	@Override

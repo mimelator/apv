@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 import com.arranger.apv.Main;
 import com.arranger.apv.systems.lite.LiteShapeSystem;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.PulseFader;
+import com.arranger.apv.util.frame.PulseFader;
 
 /**
  * https://www.openprocessing.org/sketch/492724

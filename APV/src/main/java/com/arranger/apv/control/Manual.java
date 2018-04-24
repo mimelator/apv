@@ -1,6 +1,5 @@
 package com.arranger.apv.control;
 
-import com.arranger.apv.ControlSystem;
 import com.arranger.apv.Main;
 
 import processing.event.KeyEvent;

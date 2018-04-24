@@ -1,7 +1,7 @@
 package com.arranger.apv.systems.lite;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.systems.ShapeSystem;
 
 import processing.core.PApplet;
 

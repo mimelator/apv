@@ -4,7 +4,7 @@ import java.awt.Shape;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.factory.APVShape.Data;
-import com.arranger.apv.util.StarMaker;
+import com.arranger.apv.util.draw.StarMaker;
 
 import processing.core.PShape;
 

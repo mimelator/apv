@@ -7,7 +7,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.DrawHelper;
+import com.arranger.apv.util.draw.DrawHelper;
 
 import processing.core.PApplet;
 import processing.core.PVector;

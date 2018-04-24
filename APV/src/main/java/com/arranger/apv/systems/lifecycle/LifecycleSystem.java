@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeFactory;
-import com.arranger.apv.ShapeSystem;
 import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.factory.APVShape.Data;
+import com.arranger.apv.systems.ShapeSystem;
 
 import processing.core.PShape;
 

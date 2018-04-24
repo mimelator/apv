@@ -6,8 +6,8 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.SafePainter;
-import com.arranger.apv.util.StarMaker;
+import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.StarMaker;
 
 import processing.core.PShape;
 

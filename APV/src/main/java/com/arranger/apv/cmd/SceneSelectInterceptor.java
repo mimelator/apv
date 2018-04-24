@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Scene;
 import com.arranger.apv.scene.Marquee;
-import com.arranger.apv.util.SafePainter;
-import com.arranger.apv.util.TextDrawHelper;
+import com.arranger.apv.scene.Scene;
+import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.TextDrawHelper;
 
 public class SceneSelectInterceptor extends CommandInterceptor {
 	

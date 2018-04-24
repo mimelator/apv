@@ -4,7 +4,7 @@ import com.arranger.apv.APV;
 import com.arranger.apv.Main;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.filter.StrobeFilter;
-import com.arranger.apv.util.InvokeAfterOneEvent;
+import com.arranger.apv.util.frame.InvokeAfterOneEvent;
 
 public class LowFrameCountAgent extends BaseAgent {
 

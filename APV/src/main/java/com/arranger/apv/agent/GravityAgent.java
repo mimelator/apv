@@ -1,8 +1,8 @@
 package com.arranger.apv.agent;
 
-import com.arranger.apv.Command;
 import com.arranger.apv.Main;
-import com.arranger.apv.ShapeSystem;
+import com.arranger.apv.cmd.Command;
+import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.systems.lifecycle.GravitySystem;
 import com.arranger.apv.util.Configurator;
 
