@@ -1,29 +1,11 @@
-BRANCH: safely-caught-painting
+BRANCH: master
 https://github.com/mimelator/apv
 
-DONE
-color-saver
 
-DONE
-Convert CommandInvokedEvent to pass a param
-
-* STUCK
-PSurfaceJOGL.drawExceptionHandler waits for something to complete.  Need to 
-figure out what can be done if anything about this. 
-	* update everything to be a SafePainter with try/catch block
-	* update LocationMessage to use the new SafePainter and helper tools if possible
-* rename Panic to be Reset but keep the ? as the key code
-* change song-list to marquee-list in reference.conf and whatever loads it
-	(SceneList does the loading)
-	marqueeList documentation
-* LocationMessage doesn't randomly select corners
-** Fading message should pick a random location	
-* nocursor
 
 
 *****************************************************************************
 TODO:
-* change the speed of the new background
 * TwirlBackdrop should fire an event like the Strobe does but at the appropriate intervals
 * Pulse debug mode especially for audio.  Little text that pops up in the ur corner
 * BeatColorSystem could fade from the pulse color back to the primary color
@@ -32,6 +14,7 @@ TODO:
 * Implement more Custom Scenes for animations
 * postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
 * Add documentation to each plugin to describe it's arguments
+* Follow-up on PSurfaceJOGL.drawExceptionHandler
 *****************************************************************************
 		
 

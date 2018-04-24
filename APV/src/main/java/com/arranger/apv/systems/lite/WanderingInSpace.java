@@ -3,6 +3,8 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.Oscillator;
 
 import processing.core.PApplet;
 
@@ -10,13 +12,33 @@ import processing.core.PApplet;
  * @see https://www.openprocessing.org/sketch/492680
  */
 public class WanderingInSpace extends LiteShapeSystem {
+	
+	private static final int OSC_RATE = 20;
+	private static final float HIGH_SPEED_SCALAR = 0.7f;
+	private static final float LOW_SPEED_SCALAR = 0.07f;
 
+	Oscillator oscillator;
+	
 	Particle[] p = new Particle[800];
 	int diagonal;
 	float rotation = 0;
+	
+	int oscRate;
+	float highSpeedScalar, lowSpeedScalar;
 
-	public WanderingInSpace(Main parent) {
+	public WanderingInSpace(Main parent, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
 		super(parent);
+		oscillator = new Oscillator(parent);
+		this.oscRate = oscRate;
+		this.highSpeedScalar = highSpeedScalar;
+		this.lowSpeedScalar = lowSpeedScalar;
+	}
+	
+	public WanderingInSpace(Configurator.Context ctx) {
+		this(ctx.getParent(), 
+				ctx.getFloat(0, LOW_SPEED_SCALAR),
+				ctx.getFloat(1, HIGH_SPEED_SCALAR),
+				ctx.getInt(2, OSC_RATE));
 	}
 
 	@Override
@@ -42,8 +64,9 @@ public class WanderingInSpace extends LiteShapeSystem {
 			}
 		}
 	}
-
+	
 	class Particle {
+		
 		float n;
 		float r;
 		float o;
@@ -66,7 +89,8 @@ public class WanderingInSpace extends LiteShapeSystem {
 			parent.ellipse(0, 0, parent.width / o / 8, parent.width / o / 8);
 			parent.popMatrix();
 
-			o -= 0.07;
+			//o -= 0.07;
+			o -= oscillator.oscillate(lowSpeedScalar, highSpeedScalar, oscRate);
 		}
 
 		float drawDist() {

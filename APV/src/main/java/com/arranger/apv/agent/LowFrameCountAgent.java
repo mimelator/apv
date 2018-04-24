@@ -11,12 +11,19 @@ public class LowFrameCountAgent extends BaseAgent {
 	private static final int FRAME_RATE_LIMIT = 15;
 	private static final int FRAME_RATE_RESUME_LIMIT = 30;
 	
+	private static final int FRAME_STARTUP_ACTIVATION = 100;
+	
 	private boolean lowFrameRate = false; 
 	
 	public LowFrameCountAgent(Main parent) {
 		super(parent);
 		
 		registerAgent(getDrawEvent(), () -> {
+			if (FRAME_STARTUP_ACTIVATION > parent.getFrameCount()) {
+				return;
+			}
+			
+			
 			float currentFrameRate = parent.frameRate;
 			
 			//are we already slow?
