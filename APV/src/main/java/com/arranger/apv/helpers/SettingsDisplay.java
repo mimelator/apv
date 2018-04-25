@@ -88,10 +88,9 @@ public class SettingsDisplay extends APVPlugin {
 	
 	protected void createSettingsWindow() {
 		new APVTextFrame(parent, 
-				"settings",
+				getName(),
 				(int)(parent.width / 6),
 				(int)(parent.height * .8f),
-				parent.getDrawEvent(),
 				() -> settingsMessages);
 	}
 }

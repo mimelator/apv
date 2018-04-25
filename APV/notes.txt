@@ -4,10 +4,10 @@ https://github.com/mimelator/apv
 NEW Macro: Power Stations
 NEW: Sibling Agent and Atl strategy
 
-I'd like the settings tab to display colors
-	Green when everything is nominal
-	Red Background when something is unusual?
-	I want an at-a-glance capability
+StatusCheck Window
+
+	Shows any switch that isn't at its default
+
 
 
 *****************************************************************************

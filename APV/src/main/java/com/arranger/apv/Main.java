@@ -27,6 +27,7 @@ import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVCommandFrame;
+import com.arranger.apv.gui.SwitchStatus;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
@@ -759,7 +760,7 @@ public class Main extends PApplet {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
-		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this);});
+		cs.registerHandler(Command.WINDOWS, e -> {new APVCommandFrame(this); new SwitchStatus(this);});
 		cs.registerHandler(Command.RESET, e -> reset());
 		cs.registerHandler(Command.MANUAL, e -> manual());	
 		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
@@ -853,12 +854,11 @@ public class Main extends PApplet {
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected void resetSwitches() {
-		List<Switch> configSwitches = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
-		configSwitches.forEach(cs -> {
-			Switch s = switches.get(cs.name);
-			s.setState(cs.state);
+		configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES).forEach(cs -> {
+			Switch orig = (Switch)cs;
+			Switch s = switches.get(orig.name);
+			s.setState(orig.state);
 		});
 	}
 	

@@ -79,10 +79,9 @@ public class HelpDisplay extends APVPlugin {
 	
 	protected void createHelpWindow() {
 		new APVTextFrame(parent, 
-				"help",
+				getName(),
 				(int)(parent.width / 2),
 				(int)(parent.height * .8f),
-				parent.getDrawEvent(),
 				() -> getMessages());
 	}
 }

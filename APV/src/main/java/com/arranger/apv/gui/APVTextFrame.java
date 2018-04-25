@@ -2,8 +2,8 @@ package com.arranger.apv.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +28,10 @@ public class APVTextFrame extends APVFrame {
 		public List<String> getMessages();
 	}
 
+	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, TextSupplier ts) {
+		this(parent, title, sizeX, sizeY, parent.getDrawEvent(), ts);
+	}
+	
 	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent<EventHandler> event, TextSupplier ts) {
 		super(parent);
 		outputPanel = new OutputPanel();
@@ -53,28 +57,9 @@ public class APVTextFrame extends APVFrame {
 		List<String> msgs;
 
 	    public OutputPanel() {
-	        
-	    	addMouseListener(new MouseListener() {
-				
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-				
-				@Override
-				public void mousePressed(MouseEvent e) {
-				}
-				
-				@Override
-				public void mouseExited(MouseEvent e) {
-				}
-				
-				@Override
-				public void mouseEntered(MouseEvent e) {
-				}
-				
+	    	addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					//copy to clipboard
 					new ClipboardHelper(msgs.stream().collect(Collectors.joining(System.lineSeparator())));
 				}
 			});

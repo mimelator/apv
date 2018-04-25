@@ -24,6 +24,8 @@ public class PerformanceMonitor extends APVPlugin {
 	private Map<String, List<Float>> monitorRecords = new HashMap<String, List<Float>>();
 	private static final DecimalFormat decFormat = new DecimalFormat(".##");
 	
+	private List<String> msgs;
+	
 	public void doMonitorCheck(Scene scene) {
 		if (parent.frameRate < FRAME_RATE_THRESHOLD) {
 			
@@ -51,8 +53,6 @@ public class PerformanceMonitor extends APVPlugin {
 		}
 	}
 	
-	List<String> msgs;
-	
 	public void dumpMonitorInfo(boolean launchWindow) {
 		msgs = new ArrayList<String>();
 		StringBuffer header = new StringBuffer("name, numEntries, avgTime, totalTime").append(System.lineSeparator());
@@ -78,10 +78,9 @@ public class PerformanceMonitor extends APVPlugin {
 		
 		if (launchWindow) {
 			new APVTextFrame(parent, 
-					"perf", 
+					getName(), 
 					(int)parent.width / 6, 
 					(int)(parent.height * .8f), 
-					parent.getDrawEvent(), 
 					()-> msgs);
 		} else {
 			msgs.forEach(System.out::println);

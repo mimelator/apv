@@ -141,7 +141,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 		
 		if (event.isAltDown()) {
-			//find the next sibling
 			List<T> sibs = getSiblings(getPlugin(false));
 			T random = new RandomHelper(parent).random(sibs);
 			setNextPlugin(random, "KeyEvent");
