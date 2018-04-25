@@ -53,6 +53,7 @@ public class Macro extends APVPlugin implements CommandHandler {
 		commands.forEach(c -> {
 			cs.invokeCommand(c);
 		});
+		parent.sendMessage(new String[] {displayName});
 	}
 	
 	public void unregister() {

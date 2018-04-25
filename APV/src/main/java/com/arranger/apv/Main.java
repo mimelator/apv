@@ -322,6 +322,10 @@ public class Main extends PApplet {
 		return (APVChangeEvent)eventMap.get(EVENT_TYPES.APV_CHANGE);
 	}
 	
+	public boolean isMonitoringEnabled() {
+		return getConfigurator().getRootConfig().getBoolean("apv.monitoring.enabled");	
+	}
+	
 	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
 		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
@@ -888,7 +892,8 @@ public class Main extends PApplet {
 		addConstant(buffer, "fullScreen", String.valueOf(rootConfig.getBoolean("apv.fullScreen")));
 		addConstant(buffer, "scrambleSystems", String.valueOf(rootConfig.getBoolean("apv.scrambleSystems")));
 		addConstant(buffer, "screen.width", String.valueOf(width));
-		addConstant(buffer, "screen.height", String.valueOf(height));		
+		addConstant(buffer, "screen.height", String.valueOf(height));	
+		addConstant(buffer, "monitoring.enabled", String.valueOf(isMonitoringEnabled()));
 		
 		return buffer.toString();
 	}

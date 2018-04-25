@@ -27,22 +27,22 @@ public enum Command {
 	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
 	
-	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the foregrounds"),
-	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backgrounds"),
-	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backdrops"),
-	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables/Freezes(use <CMD>)  the filters"),
-	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables/Freezes(use <CMD>)  the messages"),
-	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>)  the transitions"),
+	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the foregrounds", false),
+	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backgrounds", false),
+	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backdrops", false),
+	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables/Freezes(use <CMD>)  the filters", false),
+	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables/Freezes(use <CMD>)  the messages", false),
+	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>)  the transitions", false),
 	
 	//Cyclers
-	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT and CTRL options)"),
-	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT and CTRL options)"),
-	CYCLE_COLORS('c', "Colors", "Cycles through the colors (SHIFT and CTRL options)"),
-	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (SHIFT and CTRL options)"),
-	CYCLE_LOCATIONS(PApplet.ENTER, "Enter", "Cycles through the locations (SHIFT and CTRL options)"),
-	CYCLE_BACKDROPS('o', "Backdrop", "Cycles through the backdrops"),
-	CYCLE_BACKGROUNDS('b', "Background", "Cycles through the backgrounds"),
-	CYCLE_FOREGROUNDS('f', "Foreground", "Cycles through the foregrounds"),
+	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT option)"),
+	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT option)"),
+	CYCLE_COLORS('c', "Colors", "Cycles through the colors (SHIFT and ALT options)"),
+	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (SHIFT and ALT options)"),
+	CYCLE_LOCATIONS(PApplet.ENTER, "Enter", "Cycles through the locations"),
+	CYCLE_BACKDROPS('o', "Backdrop", "Cycles through the backdrops (SHIFT and ALT options)"),
+	CYCLE_BACKGROUNDS('b', "Background", "Cycles through the backgrounds (SHIFT and ALT options)"),
+	CYCLE_FOREGROUNDS('f', "Foreground", "Cycles through the foregrounds (SHIFT and ALT options)"),
 	CYCLE_CONTROL_MODE('z', "Cycle Mode", "Cycles between all the available Modes (SHIFT)"),
 	
 	//Typical commands
@@ -103,16 +103,26 @@ public enum Command {
 	private String displayName;
 	private boolean hasCharKey = true;
 	private int modifiers;
+	private boolean acceptAnyModifier = true;
 	
 	private Command(char charKey, String displayName, String helpText) {
 		this(charKey, displayName, helpText, 0);
 	}
 
 	private Command(char charKey, String displayName, String helpText, int modifiers) {
+		this(charKey, displayName, helpText, modifiers, false);
+	}
+	
+	private Command(char charKey, String displayName, String helpText, boolean acceptAnyModifier) {
+		this(charKey, displayName, helpText, 0, acceptAnyModifier);
+	}
+	
+	private Command(char charKey, String displayName, String helpText, int modifiers, boolean acceptAnyModifier) {
 		this.charKey = charKey;
 		this.displayName = displayName;
 		this.helpText = helpText;
 		this.modifiers = modifiers;
+		this.acceptAnyModifier = acceptAnyModifier;
 	}
 	
 	private Command(int commandKey, String displayName, String helpText) {
@@ -144,7 +154,7 @@ public enum Command {
 	
 	public String getKey() {
 		if (hasCharKey) {
-			if (modifiers == 0) {
+			if (modifiers == 0 || acceptAnyModifier) {
 				return String.valueOf(charKey);
 			} else {
 				return String.format("%s+%d", charKey, modifiers);

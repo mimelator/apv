@@ -1,12 +1,14 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-NEW Macro: Power Stations
-NEW: Sibling Agent and alt strategy
-NEW StatusCheck Window
 
 
+Sibling hot key isn't working because CTRL handling sucks in the Command/Key registration system
 
+Macros need special commands that have CTRL so that the normal numbers aren't invoked.
+	The Macros have the same key as SWITCH_FOREGROUNDS etc, but with CTRL
+	
+	I want the CYCLE_MESSAGES to also accept a CTRL w/out caring about the key
 
 
 *****************************************************************************
@@ -16,7 +18,7 @@ Current High Score: 2686 (1hr25min)
 TODO:
 * Foregrounds: More sketches like light worm
 * Animations: 
-* Document Commands & Agents
+* Document Commands 
 * Add documentation to each plugin to describe it's arguments
 * Follow-up on PSurfaceJOGL.drawExceptionHandler
 ** ps -ef | grep Main

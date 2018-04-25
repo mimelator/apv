@@ -53,6 +53,7 @@ public class SettingsDisplay extends APVPlugin {
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
+		addSettingsMessage("Monitoring Enabled: " + p.isMonitoringEnabled());
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControl().addSettingsMessages();
 		addSettingsMessage("Cmds/Sec: " + VideoGameHelper.decFormat.format(p.getVideoGameHelper().getCommandsPerSec()));

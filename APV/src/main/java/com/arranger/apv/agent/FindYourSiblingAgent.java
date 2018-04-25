@@ -13,7 +13,9 @@ import com.arranger.apv.util.RandomHelper;
 
 public class FindYourSiblingAgent extends PulseAgent {
 
+	
 	private static final Logger logger = Logger.getLogger(FindYourSiblingAgent.class.getName());
+	private static final int MAX_ATTEMPTS = 10;
 	
 	public FindYourSiblingAgent(Main parent, int numPulses) {
 		super(parent, numPulses);
@@ -28,8 +30,8 @@ public class FindYourSiblingAgent extends PulseAgent {
 		
 		APV<? extends APVPlugin> apvSystem = null;
 		APVPlugin plugin = null;
-		while (plugin == null) {
-			//pick a random  system
+		int attempt = 0;
+		while (plugin == null && attempt++ < MAX_ATTEMPTS) {
 			SYSTEM_NAMES system = getNextCandidateSystem();
 			logger.fine("Finding siblings for system: " + system.name);
 			
