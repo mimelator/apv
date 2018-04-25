@@ -14,7 +14,7 @@ public class BeatColorSystem extends ColorSystem {
 	
 	private static final int FRAMES_TO_FADE_COLOR = 20;
 	
-	private Color primary, pulse;
+	protected Color primary, pulse;
 	
 	private FrameFader fader;
 	protected SingleFrameSkipper skipper;
@@ -47,6 +47,11 @@ public class BeatColorSystem extends ColorSystem {
 			return lastColor;
 		}
 		
+		lastColor = createColor();
+		return lastColor;
+	}
+
+	protected Color createColor() {
 		boolean isPulse =  parent.getAudio().getBeatInfo().getPulseDetector().isOnset();
 		if (isPulse) {
 			fader.startFade();
@@ -61,7 +66,6 @@ public class BeatColorSystem extends ColorSystem {
 			result = new Color(lerpColor);
 		}
 		
-		lastColor = result;
 		return result;
 	}
 }

@@ -49,6 +49,6 @@ public class LowFrameCountAgent extends BaseAgent {
 	
 	protected void setStrobeFilter(APV<Filter> filters) {
 		Filter strobe = filters.getList().stream().filter(f -> f instanceof StrobeFilter).findFirst().get();
-		filters.setNextPlugin(strobe);	
+		filters.setNextPlugin(strobe, getName());	
 	}
 }

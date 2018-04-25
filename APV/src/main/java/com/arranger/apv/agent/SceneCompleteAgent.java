@@ -9,7 +9,7 @@ public class SceneCompleteAgent extends BaseAgent {
 		
 		registerAgent(getSceneCompleteEvent(), () -> {
 			parent.getTransition().startTransition();
-			parent.setDefaultScene();
+			parent.setDefaultScene(getName());
 		});
 	}
 	

@@ -1,33 +1,30 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+NEW Macro: Power Stations
 
-
-work on the application.conf
-update and ensure that it is easily used with the write params
+I'd like an ALT-version of the main APVs to just select a random sibling
 
 I'd like the settings tab to display colors
-Green when everything is nominal
+	Green when everything is nominal
+	Red Background when something is unusual?
+	I want an at-a-glance capability
 
-RedBackground when something is unusual?
-I want an at-a-glance capability
 
-RandomColor changes a bit too much and causes flashes
-	It could be the appearance of the large Warped items?
-     {LikedScene : [{RefreshBackDrop : [0.750000]}, 
-     				{WarpSystem : [{DotFactory : [7.3]}, 25]}, 
-     				{RotatorSystem : [{SpriteFactory : [Scared_face_emoji.png, 0.0]}, 100]}, 
-     				{PulseShakeFilter : []}, 
-     				{RandomColor : ["(255,255,255)", "(255,0,0)"]}, 
-     				{PerlinNoiseWalkerLocationSystem : [5]}]}
+look for siblings agent
+after awhile it would swap one system out with a matching system with different params
+	ensure agent documentation
 
+*****************************************************************************
+Current High Score: 2686 (1hr25min)
+*****************************************************************************
 
 
 *****************************************************************************
 TODO:
-* More animations like light worm
-* Implement more Custom Scenes for animations
-* postRenderFilters: http://www.java2s.com/Code/Java/2D-Graphics-GUI/ImageFilter.htm
+* Foregrounds: More sketches like light worm
+* Animations: 
+* Document Commands
 * Add documentation to each plugin to describe it's arguments
 * Follow-up on PSurfaceJOGL.drawExceptionHandler
 ** ps -ef | grep Main
@@ -44,6 +41,10 @@ if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
 ControlMouseAgent
 if LocationSystem:MouseLocationSystem && !ControlSystem.AllowsMice
 	invokeCommand CYCLE_LOCATIONS
+	
+StopTheRandomColorAgent
+if ColorSystem instanceof RandomColor
+	(after skipped frames)invokeCommand CYCLE_COLORS
 
 StrobeFilterChangeAgent
 subscribe to StrobeEvent
@@ -76,6 +77,13 @@ onPulse
 FilterAgent		
 onPulse
 	invokeCommand CYCLE_FILTER		
+	
+	
+FindYourSiblingAgent
+onPulse
+	Pick a random System
+	Find all the similar plugins
+	Pick one at random (including the same)
 *****************************************************************************			
 		
 

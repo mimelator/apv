@@ -49,7 +49,7 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 	}
 	
 	@Override
-	public void onPluginChange(APV<? extends APVPlugin> apv, APVPlugin plugin) {
+	public void onPluginChange(APV<? extends APVPlugin> apv, APVPlugin plugin, String cause) {
 		if (shadowedComponents == null) {
 			shadowedComponents = new Components(cc); //make a copy
 		}

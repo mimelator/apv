@@ -35,7 +35,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
 		this.systemName = name;
 		this.sw = parent.getSwitchForSystem(name);
-		setIndex(0);
+		setIndex(0, "");
 	}
 
 	public Main.SYSTEM_NAMES getSystemName() {
@@ -55,12 +55,12 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void setNextPlugin(APVPlugin plugin) {
+	public void setNextPlugin(APVPlugin plugin, String cause) {
 		if (currentPlugin.equals(plugin)) {
 			return;
 		}
 		currentPlugin = (T)plugin;
-		fireEvent(plugin);
+		fireEvent(plugin, cause);
 	}
 
 	public boolean isFrozen() {
@@ -93,15 +93,15 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		if (checkSwitch && sw.isFrozen()) {
 			return;
 		}
-		setIndex((int)parent.random(list.size()));
+		setIndex((int)parent.random(list.size()), "scramble");
 	}
 	
-	public void increment() {
-		setIndex(index + 1);
+	public void increment(String cause) {
+		setIndex(index + 1, cause);
 	}
 	
-	public void decrement() {
-		setIndex(index - 1);
+	public void decrement(String cause) {
+		setIndex(index - 1, cause);
 	}
 	
 	public T getPlugin() {
@@ -126,9 +126,9 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 		
 		if (event.isShiftDown()) {
-			decrement(); 		
+			decrement("KeyEvent"); 		
 		} else {
-			increment();
+			increment("KeyEvent");
 		}
 	}
 	
@@ -174,7 +174,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		parent.getCommandSystem().registerHandler(command, switchHandler);
 	}
 	
-	protected void setIndex(int newIndex) {
+	protected void setIndex(int newIndex, String cause) {
 		if (list.isEmpty()) {
 			return;
 		}
@@ -189,11 +189,11 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		
 		//set current plugin
 		currentPlugin = list.get(Math.abs(index) % list.size());
-		fireEvent(currentPlugin);
+		fireEvent(currentPlugin, cause);
 	}
 	
-	protected void fireEvent(APVPlugin plugin) {
-		parent.getAPVChangeEvent().fire(this, plugin);
+	protected void fireEvent(APVPlugin plugin, String cause) {
+		parent.getAPVChangeEvent().fire(this, plugin, cause);
 	}
 }
 

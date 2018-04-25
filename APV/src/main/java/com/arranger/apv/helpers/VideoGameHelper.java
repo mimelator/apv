@@ -18,14 +18,20 @@ public class VideoGameHelper extends APVPlugin {
 
 	Map<String, Integer> cmdStatMap = new HashMap<String, Integer>();
 	int totalCommands = 0;
+	int totalPluginChanges = 0;
 	long startTime = System.currentTimeMillis();
 	String lastCommandName = "";
+	String lastNewPluginName = "";
 	
 	public VideoGameHelper(Main parent) {
 		super(parent);
 		
 		parent.getSetupEvent().register(() -> {
 			parent.getCommandInvokedEvent().register((c) -> recordLastCommand(c));
+			parent.getAPVChangeEvent().register((apv, plugin, cause) -> {
+				lastNewPluginName = String.format("%s [%s]", plugin.getDisplayName(), cause);
+				totalPluginChanges++;
+			});
 		});
 	}
 	
@@ -50,6 +56,14 @@ public class VideoGameHelper extends APVPlugin {
 		return lastCommandName;
 	}
 	
+	public String getLastNewPluginName() {
+		return lastNewPluginName;
+	}
+	
+	public int getTotalPluginChanges() {
+		return totalPluginChanges;
+	}
+	
 	public Map<String, Integer> getCommandStatMap() {
 		return cmdStatMap;
 	}
@@ -60,7 +74,9 @@ public class VideoGameHelper extends APVPlugin {
 				String.format("Time: %s", getTimeStamp()),
 				String.format("Cmds/sec: %s", decFormat.format(getCommandsPerSec())),
 				String.format("Last Command: %s[%d]", lastCommandName, cmdStatMap.get(lastCommandName)),
+				String.format("Last New Plugin: %s", lastNewPluginName),
 				String.format("Total Count: %d", totalCommands),
+				String.format("Total Plugin Changes: %d", totalPluginChanges),
 		};
 
 		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);

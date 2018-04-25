@@ -10,7 +10,8 @@ public class RandomColor extends BeatColorSystem {
 		super(parent);
 	}
 	
-	public Color getCurrentColor() {
+	@Override
+	protected Color createColor() {
 		float hue = parent.random(1.0f);
 		float saturation = 1;
 		float brightness = 1;

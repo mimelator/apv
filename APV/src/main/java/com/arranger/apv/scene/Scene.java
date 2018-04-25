@@ -31,6 +31,25 @@ public class Scene extends ShapeSystem {
 			this.colorSys = o.colorSys;
 			this.locSys = o.locSys;
 		}
+		
+		public APVPlugin getComponentFromSystem(Main.SYSTEM_NAMES system) {
+			switch (system) {
+			case BACKDROPS:
+				return backDrop;
+			case BACKGROUNDS:
+				return bgSys;
+			case FOREGROUNDS:
+				return fgSys;
+			case FILTERS:
+				return filter;
+			case COLORS:
+				return colorSys;
+			case LOCATIONS:
+				return locSys;
+			default:
+				throw new RuntimeException(system.name + " is not a valid component type");
+			}
+		}
 	}
 	
 	protected Components cc = new Components();
@@ -111,11 +130,11 @@ public class Scene extends ShapeSystem {
 		
 		if (isLikedScene()) {
 			if (comp.colorSys != null) {
-				parent.setNextColor(comp.colorSys);
+				parent.setNextColor(comp.colorSys, "likedScene");
 			}
 			
 			if (comp.locSys != null) {
-				parent.setNextLocation(comp.locSys);
+				parent.setNextLocation(comp.locSys, "likedScene");
 			}
 		}
 		

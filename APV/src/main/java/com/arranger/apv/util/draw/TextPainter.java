@@ -10,7 +10,7 @@ import processing.core.PApplet;
 public class TextPainter extends APVPlugin {
 	
 	private static final float MSG_LENGTH_CUTOFF = 20;
-	public static final int TEXT_SIZE = 16;
+	public static final int TEXT_SIZE = 13;
 	public static final int TEXT_OFFSET = 10;
 
 	public TextPainter(Main parent) {

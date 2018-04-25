@@ -12,15 +12,15 @@ public class APVChangeEvent extends APVEvent<APVChangeEventHandler> {
 	
 	@FunctionalInterface
 	public static interface APVChangeEventHandler {
-		void onPluginChange(APV<? extends APVPlugin> apv, APVPlugin plugin);
+		void onPluginChange(APV<? extends APVPlugin> apv, APVPlugin plugin, String cause);
 	}
 
 	public APVChangeEvent(Main parent) {
 		super(parent);
 	}
 
-	public void fire(APV<? extends APVPlugin> apv, APVPlugin plugin) {
+	public void fire(APV<? extends APVPlugin> apv, APVPlugin plugin, String cause) {
 		List<APVChangeEventHandler> temp = new ArrayList<APVChangeEventHandler>(listeners);
-		temp.forEach(l -> ((APVChangeEventHandler)l).onPluginChange(apv, plugin));
+		temp.forEach(l -> ((APVChangeEventHandler)l).onPluginChange(apv, plugin, cause));
 	}
 }

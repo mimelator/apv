@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -175,6 +177,17 @@ public class Main extends PApplet {
 			this.name = name;
 			this.isFullSystem = isFullSystem;
 		}
+		
+		/**
+		 * @see SafePainter
+		 */
+		private static final List<SYSTEM_NAMES> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		private static final int SIZE = VALUES.size();
+		private static final Random RANDOM = new Random();
+
+		public static SYSTEM_NAMES random() {
+			return VALUES.get(RANDOM.nextInt(SIZE));
+		}
 	}
 	
 	
@@ -198,6 +211,10 @@ public class Main extends PApplet {
 		}
 		
 		initEvents();
+	}
+	
+	public APV<? extends APVPlugin> getSystem(SYSTEM_NAMES name) {
+		return systemMap.get(name);
 	}
 	
 	public FontHelper getFontHelper() {
@@ -304,20 +321,20 @@ public class Main extends PApplet {
 		return (APVChangeEvent)eventMap.get(EVENT_TYPES.APV_CHANGE);
 	}
 	
-	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName) {
+	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
 		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
-		apv.setNextPlugin(plugin);
+		apv.setNextPlugin(plugin, cause);
 		apv.setEnabled(true);
 	}
 	
-	public void setDefaultScene() {
+	public void setDefaultScene(String cause) {
 		Scene defaultScene = scenes.getList().stream().filter(e -> !e.isAnimation()).findFirst().get();
-		setNextScene(defaultScene);
+		setNextScene(defaultScene, cause);
 	}
 	
-	public void setNextScene(Scene scene) {
-		scenes.setNextPlugin(scene);
+	public void setNextScene(Scene scene, String cause) {
+		scenes.setNextPlugin(scene, cause);
 	}
 	
 	public Scene getCurrentScene() {
@@ -328,12 +345,12 @@ public class Main extends PApplet {
 		return colors.getPlugin();
 	}
 	
-	public void setNextColor(ColorSystem cs) {
-		colors.setNextPlugin(cs);
+	public void setNextColor(ColorSystem cs, String cause) {
+		colors.setNextPlugin(cs, cause);
 	}
 	
-	public void setNextLocation(LocationSystem ls) {
-		locations.setNextPlugin(ls);
+	public void setNextLocation(LocationSystem ls, String cause) {
+		locations.setNextPlugin(ls, cause);
 	}
 	
 	public APV<ShapeSystem> getBackgrounds(){
@@ -498,9 +515,9 @@ public class Main extends PApplet {
 		getSetupEvent().fire();
 		
 		//Forward messages to the currentLikedScene if applicable
-		getAPVChangeEvent().register((apv, plugin) -> {
+		getAPVChangeEvent().register((apv, plugin, cause) -> {
 			if (currentScene instanceof LikedScene) {
-				((LikedScene)currentScene).onPluginChange(apv, plugin);
+				((LikedScene)currentScene).onPluginChange(apv, plugin, cause);
 			}
 		});
 	}
@@ -733,8 +750,8 @@ public class Main extends PApplet {
 		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
 		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
 		
-		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment());
-		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement());
+		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment("->"));
+		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement("<-"));
 		
 		hotKeyHelper.register();
 		macroHelper.register();

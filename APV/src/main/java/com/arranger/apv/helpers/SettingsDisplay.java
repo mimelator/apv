@@ -76,6 +76,7 @@ public class SettingsDisplay extends APVPlugin {
 		if (lastCommand != null) {
 			addSettingsMessage("Last Command: " + lastCommand.name());
 		}
+		addSettingsMessage("Newest plugin: " +  p.getVideoGameHelper().getLastNewPluginName());
 		
 		addSettingsMessage(" ");
 		addSettingsMessage("---------Live Settings-------");

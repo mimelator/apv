@@ -72,7 +72,7 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 	public void showMessageSceneWithText(String text) {
 		Marquee marquee = (Marquee)sceneMap.get('m');
 		marquee.setText(text);
-		parent.setNextScene(marquee);
+		parent.setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile
 		new TextDrawHelper(parent, 1200, Arrays.asList(new String[] {text}), SafePainter.LOCATION.LOWER_RIGHT); 
@@ -126,7 +126,7 @@ public class SceneSelectInterceptor extends CommandInterceptor {
 	protected void switchToScene(char sceneKey) {
 		Scene scene = sceneMap.get(sceneKey);
 		if (scene != null) {
-			parent.setNextScene(scene);
+			parent.setNextScene(scene, String.valueOf(sceneKey));
 		}
 	}
 	

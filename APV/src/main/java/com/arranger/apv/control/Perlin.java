@@ -133,8 +133,6 @@ public class Perlin extends PulseListeningControlSystem {
 		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_LOCATIONS, null));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_COLORS, null));
