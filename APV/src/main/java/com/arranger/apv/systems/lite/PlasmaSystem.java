@@ -3,6 +3,7 @@ package com.arranger.apv.systems.lite;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
 /**
@@ -259,6 +260,11 @@ public class PlasmaSystem extends LiteShapeSystem {
 	}
 
 	int color(int r, int g, int b) {
-		return parent.color(r, g, b, alpha);
+		//This api is called a lot so will be simplified based on comments in PGraphics#color
+		//return parent.color(r, g, b, alpha);
+		r = PApplet.constrain(r, 0, 255);
+		g = PApplet.constrain(g, 0, 255);
+		b = PApplet.constrain(b, 0, 255);
+		return (alpha << 24) | (r << 16) | (g << 8) | b;
 	}
 }
