@@ -1,5 +1,6 @@
 package com.arranger.apv;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
+import com.arranger.apv.util.RandomHelper;
 
 import processing.event.KeyEvent;
 
@@ -118,6 +120,19 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			return null;
 		}
 	}
+	
+	public List<T> getSiblings(APVPlugin plugin) {
+		List<T> results = new ArrayList<T>();
+		
+		Class<? extends APVPlugin> pluginClass = plugin.getClass();
+		forEach(p -> {
+			if (pluginClass.equals(p.getClass())) {
+				results.add(p);
+			}
+		});
+		
+		return results;
+	}
 
 	@Override
 	public void onKeyPressed(KeyEvent event) {
@@ -125,10 +140,17 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			return;
 		}
 		
-		if (event.isShiftDown()) {
-			decrement("KeyEvent"); 		
+		if (event.isAltDown()) {
+			//find the next sibling
+			List<T> sibs = getSiblings(getPlugin(false));
+			T random = new RandomHelper(parent).random(sibs);
+			setNextPlugin(random, "KeyEvent");
 		} else {
-			increment("KeyEvent");
+			if (event.isShiftDown()) {
+				decrement("KeyEvent"); 		
+			} else {
+				increment("KeyEvent");
+			}
 		}
 	}
 	

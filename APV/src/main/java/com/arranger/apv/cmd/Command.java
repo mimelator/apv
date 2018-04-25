@@ -35,15 +35,15 @@ public enum Command {
 	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>)  the transitions"),
 	
 	//Cyclers
-	CYCLE_MESSAGES('m', "Message", "Cycles through the message (reverse w/the shift key held)"),
-	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (reverse w/the shift key held)"),
-	CYCLE_COLORS('c', "Colors", "Cycles through the colors (reverse w/the shift key held)"),
-	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (reverse w/the shift key held)"),
-	CYCLE_LOCATIONS(PApplet.ENTER, "Enter", "Cycles through the locations (reverse w/the shift key held)"),
+	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT and CTRL options)"),
+	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT and CTRL options)"),
+	CYCLE_COLORS('c', "Colors", "Cycles through the colors (SHIFT and CTRL options)"),
+	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (SHIFT and CTRL options)"),
+	CYCLE_LOCATIONS(PApplet.ENTER, "Enter", "Cycles through the locations (SHIFT and CTRL options)"),
 	CYCLE_BACKDROPS('o', "Backdrop", "Cycles through the backdrops"),
 	CYCLE_BACKGROUNDS('b', "Background", "Cycles through the backgrounds"),
 	CYCLE_FOREGROUNDS('f', "Foreground", "Cycles through the foregrounds"),
-	CYCLE_CONTROL_MODE('z', "Cycle Mode", "Cycles between all the available Modes (reverse w/the shift key held)"),
+	CYCLE_CONTROL_MODE('z', "Cycle Mode", "Cycles between all the available Modes (SHIFT)"),
 	
 	//Typical commands
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),

@@ -1,6 +1,5 @@
 package com.arranger.apv.agent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,7 +38,7 @@ public class FindYourSiblingAgent extends PulseAgent {
 		}
 		
 		logger.fine("found current plugin: " + plugin.getDisplayName());
-		List<APVPlugin> siblings = getSiblings(plugin, apvSystem);
+		List<? extends APVPlugin> siblings = apvSystem.getSiblings(plugin);
 		
 		logger.fine("found siblings: " + siblings);
 		APVPlugin result =  siblings.get((int)parent.random(siblings.size()));
@@ -73,16 +72,5 @@ public class FindYourSiblingAgent extends PulseAgent {
 		}
 	}
 	
-	protected List<APVPlugin> getSiblings(APVPlugin plugin, APV<? extends APVPlugin> apvSystem) {
-		List<APVPlugin> results = new ArrayList<APVPlugin>();
-		
-		Class<? extends APVPlugin> pluginClass = plugin.getClass();
-		apvSystem.forEach(p -> {
-			if (pluginClass.equals(p.getClass())) {
-				results.add(p);
-			}
-		});
-		
-		return results;
-	}
+	
 }
