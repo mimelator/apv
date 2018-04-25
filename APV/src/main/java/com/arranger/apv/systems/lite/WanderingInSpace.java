@@ -28,6 +28,10 @@ public class WanderingInSpace extends LiteShapeSystem {
 	
 	int oscRate;
 	float highSpeedScalar, lowSpeedScalar;
+	
+	//Dont reverse every time
+	int shouldSkip = 2; //Might eventually parameterize
+	int skipped = 0;
 
 	public WanderingInSpace(Main parent, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
 		super(parent);
@@ -71,6 +75,8 @@ public class WanderingInSpace extends LiteShapeSystem {
 		}
 	}
 	
+	
+	
 	class Particle {
 		
 		float n;
@@ -98,7 +104,10 @@ public class WanderingInSpace extends LiteShapeSystem {
 			o -= 0.07;
 			o -= oscillator.oscillate(lowSpeedScalar, highSpeedScalar, oscRate, () -> {
 				if (frameSkipper.isNewFrame()) {
-					clockwise = !clockwise;
+					skipped++;
+					if (skipped % shouldSkip == 0) {
+						clockwise = !clockwise;
+					}
 				}
 			});
 		}

@@ -2,18 +2,13 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 NEW Macro: Power Stations
-
-I'd like an ALT-version of the main APVs to just select a random sibling
+NEW: Sibling Agent and Atl strategy
 
 I'd like the settings tab to display colors
 	Green when everything is nominal
 	Red Background when something is unusual?
 	I want an at-a-glance capability
 
-
-look for siblings agent
-after awhile it would swap one system out with a matching system with different params
-	ensure agent documentation
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
@@ -24,7 +19,7 @@ Current High Score: 2686 (1hr25min)
 TODO:
 * Foregrounds: More sketches like light worm
 * Animations: 
-* Document Commands
+* Document Commands & Agents
 * Add documentation to each plugin to describe it's arguments
 * Follow-up on PSurfaceJOGL.drawExceptionHandler
 ** ps -ef | grep Main

@@ -9,6 +9,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.scene.Scene.Components;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.RandomHelper;
 
 public class FindYourSiblingAgent extends PulseAgent {
 
@@ -28,7 +29,7 @@ public class FindYourSiblingAgent extends PulseAgent {
 		APV<? extends APVPlugin> apvSystem = null;
 		APVPlugin plugin = null;
 		while (plugin == null) {
-			//pick a random full system
+			//pick a random  system
 			SYSTEM_NAMES system = getNextCandidateSystem();
 			logger.fine("Finding siblings for system: " + system.name);
 			
@@ -41,7 +42,7 @@ public class FindYourSiblingAgent extends PulseAgent {
 		List<? extends APVPlugin> siblings = apvSystem.getSiblings(plugin);
 		
 		logger.fine("found siblings: " + siblings);
-		APVPlugin result =  siblings.get((int)parent.random(siblings.size()));
+		APVPlugin result = new RandomHelper(parent).random(siblings);
 		
 		logger.fine("setting next plugin: " + result);
 		apvSystem.setNextPlugin(result, getName());
