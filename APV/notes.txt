@@ -2,19 +2,16 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 NEW Macro: Power Stations
-NEW: Sibling Agent and Atl strategy
+NEW: Sibling Agent and alt strategy
+NEW StatusCheck Window
 
-StatusCheck Window
 
-	Shows any switch that isn't at its default
 
 
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
 *****************************************************************************
-
-
 *****************************************************************************
 TODO:
 * Foregrounds: More sketches like light worm
@@ -25,32 +22,34 @@ TODO:
 ** ps -ef | grep Main
 ** jstack -l 80125 >> threaddumps.log
 *****************************************************************************
-		
-
 *****************************************************************************
 AgentScripts:
+
 StopTheFlicker
-if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
-	invokeCommand SCRAMBLE
+onDrawEvent
+	if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
+		invokeCommand SCRAMBLE
 
 ControlMouseAgent
-if LocationSystem:MouseLocationSystem && !ControlSystem.AllowsMice
-	invokeCommand CYCLE_LOCATIONS
+onDrawEvent
+	if LocationSystem:MouseLocationSystem && !ControlSystem.AllowsMice
+		invokeCommand CYCLE_LOCATIONS
 	
 StopTheRandomColorAgent
-if ColorSystem instanceof RandomColor
-	(after skipped frames)invokeCommand CYCLE_COLORS
+onDrawEvent
+	if ColorSystem:RandomColor
+		invokeCommand CYCLE_COLORS  (after skipped frames)
 
 StrobeFilterChangeAgent
-subscribe to StrobeEvent
+onStrobeEvent
 	invokeCommand CYCLE_FILTERS
 	
 StopTheTwirlAgent
-subscribe to TwirlEvent
+onTwirlEvent
 	invokeCommand CYCLE_BACKDROPS	
 	
 SceneCompleteAgent	
-subscribe to SceneCompleteEvent
+onSceneCompleteEvent
 	startTransition
 	defaultScene
 	
@@ -73,16 +72,12 @@ FilterAgent
 onPulse
 	invokeCommand CYCLE_FILTER		
 	
-	
 FindYourSiblingAgent
 onPulse
 	Pick a random System
 	Find all the similar plugins
 	Pick one at random (including the same)
 *****************************************************************************			
-		
-
-
 *****************************************************************************
 Build & Release to local artifactory and github
 mvn package
