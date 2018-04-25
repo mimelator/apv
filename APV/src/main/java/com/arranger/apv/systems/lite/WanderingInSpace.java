@@ -111,8 +111,10 @@ public class WanderingInSpace extends LiteShapeSystem {
 				}
 			});
 		}
+		
 
 		float drawDist() {
+			//Math.atan takes too long.  It can be pre-computed
 			return PApplet.atan(n / o) * parent.width / HALF_PI;
 		}
 	}
