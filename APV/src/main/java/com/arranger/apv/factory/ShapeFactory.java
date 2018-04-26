@@ -27,4 +27,6 @@ public abstract class ShapeFactory extends APVPlugin {
 	}
 	
 	public abstract APVShape createShape(Data data);
+	
+	public abstract void addSettingsMessages();
 }

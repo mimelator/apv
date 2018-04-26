@@ -44,6 +44,11 @@ public class SpriteFactory extends ShapeFactory {
 	}
 	
 	@Override
+	public void addSettingsMessages() {
+		parent.addSettingsMessage("   ---file: " + file);
+	}
+
+	@Override
 	public String getDisplayName() {
 		return super.getDisplayName() + ":" + file;
 	}

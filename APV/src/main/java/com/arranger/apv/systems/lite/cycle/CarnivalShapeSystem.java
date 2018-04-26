@@ -6,10 +6,13 @@ import java.awt.geom.Point2D;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.draw.DrawHelper;
 
 import processing.core.PApplet;
+import processing.core.PShape;
 import processing.core.PVector;
 
 /**
@@ -23,13 +26,14 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	private ColorSystem colorSystem;
 	private DrawHelper drawHelper;
 
-	public CarnivalShapeSystem(Main parent) {
-		this(parent, false);
+	public CarnivalShapeSystem(Main parent, boolean useCustomColor) {
+		this(parent, null, useCustomColor);
 	}
 	
-	public CarnivalShapeSystem(Main parent, boolean useCustomColor) {
+	public CarnivalShapeSystem(Main parent, ShapeFactory factory, boolean useCustomColor) {
 		super(parent);
 		this.useCustomColor = useCustomColor;
+		this.factory = factory;
 		
 		parent.getCarnivalEvent().register(() -> {
 			if (drawHelper == null) {
@@ -39,13 +43,18 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	}
 	
 	public CarnivalShapeSystem(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getBoolean(0, false));
+		this(ctx.getParent(), 
+				(ShapeFactory)ctx.loadPlugin(0),
+				ctx.getBoolean(1, false));
 	}
 
 	@Override
 	public String getConfig() {
-		//{CarnivalShapeSystem : [true]}
-		return String.format("{%s : [%b]}", getName(), useCustomColor);
+		//{CarnivalShapeSystem : [{CarnivalShapeSystem : [Emoji_Blitz_Star.png, 1.5]}, true]}
+		return String.format("{%s : [%s, %b]}", 
+				getName(), 
+				factory == null ? "{}" : factory.getConfig(),
+				useCustomColor);
 	}
 
 	@Override
@@ -84,6 +93,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 		private boolean dead;
 		private float alpha, weight, weightRange, decay, xOfst, yOfst;
 		private int c;
+		private APVShape factoryShape;
 
 		private Particle(float x, float y, float xOfst, float yOfst) {
 			loc = new PVector(x, y);
@@ -105,6 +115,10 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 			this.xOfst = xOfst;
 			this.yOfst = yOfst;
+			
+			if (factory != null) {
+				factoryShape = factory.createShape(null);
+			}
 		}
 
 		@Override
@@ -146,15 +160,24 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 
 		@Override
 		public void display() {
-			//TODO Use Shape Factory
-			
-			parent.strokeWeight(weight + 1.5f);
-			parent.stroke(0, alpha);
-			parent.point(loc.x, loc.y);
-
-			parent.strokeWeight(weight);
-			parent.stroke(c);
-			parent.point(loc.x, loc.y);
+			if (factoryShape == null) {
+				parent.strokeWeight(weight + 1.5f);
+				parent.stroke(0, alpha);
+				parent.point(loc.x, loc.y);
+	
+				parent.strokeWeight(weight);
+				parent.stroke(c);
+				parent.point(loc.x, loc.y);
+			} else {
+				PShape drawShape = factoryShape.getShape();
+				parent.rectMode(CENTER);
+				parent.stroke(4);
+				drawShape.setFill(true);
+				factoryShape.setColor(c, alpha);
+				
+				parent.shape(drawShape, loc.x, loc.y);
+				
+			}
 		}
 	}
 }

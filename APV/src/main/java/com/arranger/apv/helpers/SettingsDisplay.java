@@ -43,6 +43,7 @@ public class SettingsDisplay extends APVPlugin {
 		ShapeFactory factory = ss.getFactory();
 		if (factory != null) {
 			addSettingsMessage("  --factory: " + factory.getName());
+			factory.addSettingsMessages();
 			addSettingsMessage("    --scale: " + factory.getScale());
 		}
 	}

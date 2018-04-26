@@ -40,6 +40,11 @@ public abstract class PrimitiveShapeFactory extends ShapeFactory {
 		return size;
 	}
 	
+	@Override
+	public void addSettingsMessages() {
+		//nothing to do
+	}
+
 	public abstract class PrimitiveShape extends APVShape {
 
 		public PrimitiveShape(Main parent, Data data) {
