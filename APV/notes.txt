@@ -2,6 +2,9 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+i could monitor a file for any change and get the first line as a title when ever it changes.
+https://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
+
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
 *****************************************************************************
