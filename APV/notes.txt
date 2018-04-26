@@ -20,60 +20,7 @@ TODO:
 ** jstack -l 80125 >> threaddumps.log
 *****************************************************************************
 *****************************************************************************
-AgentScripts:
 
-StopTheFlicker
-onDrawEvent
-	if LocationSystem:Path && LocationSystem:isSplitter && Background:Grid
-		invokeCommand SCRAMBLE
-
-ControlMouseAgent
-onDrawEvent
-	if LocationSystem:MouseLocationSystem && !ControlSystem.AllowsMice
-		invokeCommand CYCLE_LOCATIONS
-	
-StopTheRandomColorAgent
-onDrawEvent
-	if ColorSystem:RandomColor
-		invokeCommand CYCLE_COLORS  (after skipped frames)
-
-StrobeFilterChangeAgent
-onStrobeEvent
-	invokeCommand CYCLE_FILTERS
-	
-StopTheTwirlAgent
-onTwirlEvent
-	invokeCommand CYCLE_BACKDROPS	
-	
-SceneCompleteAgent	
-onSceneCompleteEvent
-	startTransition
-	defaultScene
-	
-CarnivalAgent	
-onPulse
-	if !Foreground:Carnvial
-		CarnivalEvent.fire
-		
-SparkAgent
-onPulse
-	if !Background:SpraySpark
-		SparkEvent.fire
-		
-GravityAgent	
-onPulse
-	if Foreground:Gravity
-		invokeCommand GRAVITY++
-	
-FilterAgent		
-onPulse
-	invokeCommand CYCLE_FILTER		
-	
-FindYourSiblingAgent
-onPulse
-	Pick a random System
-	Find all the similar plugins
-	Pick one at random (including the same)
 *****************************************************************************			
 *****************************************************************************
 Build & Release to local artifactory and github
