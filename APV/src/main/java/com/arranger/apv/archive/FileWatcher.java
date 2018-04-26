@@ -1,4 +1,4 @@
-package com.arranger.apv.util;
+package com.arranger.apv.archive;
 
 import java.io.File;
 import java.nio.file.FileSystems;
@@ -10,6 +10,9 @@ import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * https://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
+ */
 public class FileWatcher extends Thread {
 	
 	@FunctionalInterface

@@ -5,8 +5,8 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import com.arranger.apv.archive.FileWatcher;
 import com.arranger.apv.util.FileHelper;
-import com.arranger.apv.util.FileWatcher;
 
 public class FileWatcherTest extends APVPluginTest {
 	
