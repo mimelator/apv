@@ -1,8 +1,6 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-* better reporting on sprite factories
-
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
@@ -11,7 +9,7 @@ Current High Score: 2686 (1hr25min)
 TODO:
 * Foregrounds: More sketches like light worm
 * Animations: 
-* Document Commands 
+* Document Commands (for creating Macros)
 * Add documentation to each plugin to describe it's arguments
 	* Just document in reference.conf
 	* Add runtime when saving applicaiton.conf also save a reference.conf.bak export of reference.conf

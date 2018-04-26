@@ -34,7 +34,7 @@ private static final int TEN_SECONDS = 10000;
 	@Override
 	public String getConfig() {
 		//{MonitorAgent : [true]}
-		return String.format("{%s : [%b]", getName(), enabled);
+		return String.format("{%s : [%b]}", getName(), enabled);
 	}
 
 	public void setup() {

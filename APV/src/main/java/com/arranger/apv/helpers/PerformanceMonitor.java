@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.gui.APVTextFrame;
 import com.arranger.apv.scene.Scene;
 import com.arranger.apv.scene.Scene.Components;
@@ -41,6 +42,14 @@ public class PerformanceMonitor extends APVPlugin {
 			builder.append((filter != null) ? filter.getDisplayName() : "()").append(':');
 			builder.append((bg != null) ? bg.getDisplayName() : "()").append(':');
 			builder.append((fg != null) ? fg.getDisplayName() : "()");
+			if (fg != null) {
+				ShapeFactory factory = c.fgSys.getFactory();
+				if (factory != null) {
+					builder.append(':');
+					builder.append(factory.getDisplayName());
+				}
+			}
+			
 			String key = builder.toString();
 			
 			List<Float> frames = monitorRecords.get(key);
