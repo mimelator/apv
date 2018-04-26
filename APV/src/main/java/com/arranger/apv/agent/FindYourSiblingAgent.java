@@ -40,6 +40,11 @@ public class FindYourSiblingAgent extends PulseAgent {
 			plugin = comps.getComponentFromSystem(system);
 		}
 		
+		//Couldn't find one after MAX_ATTEMPTS
+		if (plugin == null) {
+			return;
+		}
+		
 		logger.fine("found current plugin: " + plugin.getDisplayName());
 		List<? extends APVPlugin> siblings = apvSystem.getSiblings(plugin);
 		

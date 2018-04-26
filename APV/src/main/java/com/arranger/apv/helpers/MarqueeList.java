@@ -48,4 +48,8 @@ public class MarqueeList extends APVPlugin {
 		
 		return String.format("marqueeList : [%s]", msgs);
 	}
+	
+	public List<String> getList() {
+		return stringList;
+	}
 }
