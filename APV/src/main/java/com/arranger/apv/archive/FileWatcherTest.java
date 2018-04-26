@@ -3,10 +3,9 @@ package com.arranger.apv.archive;
 import java.io.File;
 import java.util.Random;
 
-import com.arranger.apv.test.APVPluginTest;
 import com.arranger.apv.util.FileHelper;
 
-public class FileWatcherTest extends APVPluginTest {
+public class FileWatcherTest /*extends APVPluginTest*/ {
 	
 	private static final String FILE_TO_WATCH = "test.txt";
 	private boolean changed = false;
@@ -17,7 +16,7 @@ public class FileWatcherTest extends APVPluginTest {
 
 	
 	public void testFileWatcher() throws Exception {
-		FileHelper fh = new FileHelper(parent);
+		FileHelper fh = new FileHelper(null);
 		final File file = new File(fh.getFullPath(FILE_TO_WATCH));
 		System.out.println("watching: " + file.getAbsolutePath());
 		new FileWatcher(file, () -> {
@@ -40,9 +39,9 @@ public class FileWatcherTest extends APVPluginTest {
 	}
 	
 	
-	@Override
-	protected void setFrameIndexes() {
-
-	}
+//	@Override
+//	protected void setFrameIndexes() {
+//
+//	}
 
 }
