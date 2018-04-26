@@ -31,7 +31,8 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
-private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
+	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
+	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
 	
@@ -284,7 +285,7 @@ private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 		});
 		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
 		
-		new FileHelper(parent).saveFile("application.conf.bak", results.toString());
+		new FileHelper(parent).saveFile(APPLICATION_CONF_BAK, results.toString());
 	}
 
 	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> pluginList) {

@@ -2,12 +2,15 @@ package com.arranger.apv.test;
 
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +31,7 @@ import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.pl.APVPulseListener;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
@@ -45,9 +49,22 @@ public abstract class APVPluginTest {
 	protected int frameIndexStart;
 	protected int frameIndexEnd;
 	protected PeekIterator<Integer> frameIterator;
+	protected List<String> filesToRemove = new ArrayList<String>();
 	
 	protected void debug(String msg) {
 		System.out.println(msg);
+	}
+	
+	@AfterEach
+	void cleanup() {
+		FileHelper fh = new FileHelper(parent);
+		filesToRemove.forEach(f -> {
+			File file = new File(fh.getFullPath(f));
+			if (file.exists()) {
+				file.delete();
+			}
+		});
+		filesToRemove.clear();
 	}
  
     @BeforeEach

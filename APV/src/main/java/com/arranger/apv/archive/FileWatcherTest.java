@@ -1,11 +1,9 @@
-package com.arranger.apv.test;
+package com.arranger.apv.archive;
 
 import java.io.File;
 import java.util.Random;
 
-import org.junit.jupiter.api.Test;
-
-import com.arranger.apv.archive.FileWatcher;
+import com.arranger.apv.test.APVPluginTest;
 import com.arranger.apv.util.FileHelper;
 
 public class FileWatcherTest extends APVPluginTest {
@@ -18,7 +16,6 @@ public class FileWatcherTest extends APVPluginTest {
 	}
 
 	
-	@Test
 	public void testFileWatcher() throws Exception {
 		FileHelper fh = new FileHelper(parent);
 		final File file = new File(fh.getFullPath(FILE_TO_WATCH));

@@ -26,6 +26,8 @@ public class FileHelperTest extends APVPluginTest {
 		fh.saveFile(FILE_NAME, DEFAULT_TEXT, true);
 		result = fh.readFile(FILE_NAME);
 		assert(DEFAULT_TEXT.length() * 2 == result.length());
+		
+		filesToRemove.add(FILE_NAME);
 	}
 	
 	

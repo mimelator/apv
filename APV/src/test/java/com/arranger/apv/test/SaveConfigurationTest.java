@@ -21,6 +21,9 @@ import com.arranger.apv.util.FileHelper;
 
 public class SaveConfigurationTest extends APVPluginTest {
 
+	private static final String TEST_STORING_A_FEW_COLORS_CONF = "testStoringAFewColors.conf";
+	private static final String TEST_GETTING_GLOBAL_CONFIG_CONF = "testGettingGlobalConfig.conf";
+	
 	Configurator cfg;
 	
 	public SaveConfigurationTest() {
@@ -41,6 +44,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 	@Test
 	public void testConfiguratorSaveConfiguration() {
 		cfg.saveCurrentConfig();
+		filesToRemove.add(Configurator.APPLICATION_CONF_BAK);
 	}
 	
 	@Test
@@ -57,7 +61,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 			results.append(getConfigForSystem(s));
 		});
 		
-		saveConfigFile("testGettingGlobalConfig.conf", results.toString());
+		saveConfigFile(TEST_GETTING_GLOBAL_CONFIG_CONF, results.toString());
 	}
 	
 	protected String getConfigForSystem(Main.SYSTEM_NAMES systemName) {
@@ -92,7 +96,7 @@ public class SaveConfigurationTest extends APVPluginTest {
 			buffer.append("   " + pluginConfig).append("\n");
 		}
 		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator());
-		saveConfigFile("testStoringAFewColors.conf", buffer.toString());
+		saveConfigFile(TEST_STORING_A_FEW_COLORS_CONF, buffer.toString());
 	}
 	
 	protected void saveConfigFile(String fileName, String text) {
@@ -113,6 +117,8 @@ public class SaveConfigurationTest extends APVPluginTest {
 			e.printStackTrace();
 			assert(false);
 		}
+		
+		filesToRemove.add(fileName);
 	}
 	
 }
