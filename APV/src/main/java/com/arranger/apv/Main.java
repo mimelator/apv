@@ -448,12 +448,12 @@ public class Main extends PApplet {
 		return splineHelper.map(value, start, end, start1, end1);
 	}
 	
-	public float oscillate(float low, float high, float oscSpeed) {
-		return oscillator.oscillate(low, high, oscSpeed);
+	public float oscillate(float low, float high, float cycleTime) {
+		return oscillator.oscillate(low, high, cycleTime);
 	}
 	
-	public float oscillate(float low, float high, float oscSpeed, Listener l) {
-		return oscillator.oscillate(low, high, oscSpeed, l);
+	public float oscillate(float low, float high, float cycleTime, Listener l) {
+		return oscillator.oscillate(low, high, cycleTime, l);
 	}
 
 	public String format(Color c) {

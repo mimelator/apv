@@ -48,6 +48,12 @@ public class WanderingInSpace extends LiteShapeSystem {
 				ctx.getFloat(1, HIGH_SPEED_SCALAR),
 				ctx.getInt(2, OSC_RATE));
 	}
+	
+	@Override
+	public String getConfig() {
+		//{WanderingInSpace : [.01f, .06f, 20]}
+		return String.format("{%s : [%f, %f, %d]}", getName(), lowSpeedScalar, highSpeedScalar, oscRate);
+	}
 
 	@Override
 	public void setup() {

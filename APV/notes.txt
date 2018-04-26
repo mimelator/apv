@@ -1,7 +1,6 @@
-BRANCH: master
+BRANCH: sketches
 https://github.com/mimelator/apv
 
-marqueeListLauncher
 
 
 *****************************************************************************
@@ -9,7 +8,6 @@ Current High Score: 2686 (1hr25min)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* new sketches
 * Foregrounds: More sketches like light worm
 * Animations: 
 * Document Commands (for creating Macros)
