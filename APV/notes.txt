@@ -1,4 +1,4 @@
-BRANCH: sketches -> automate the agents
+BRANCH: more-sketches
 https://github.com/mimelator/apv
 
 
