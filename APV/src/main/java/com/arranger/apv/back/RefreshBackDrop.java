@@ -35,7 +35,7 @@ public class RefreshBackDrop extends BackDropSystem {
 	@Override
 	public String getConfig() {
 		//{RefreshBackDrop : [.95]}
-		return String.format("{%s : [%f]}", getName(), bgRefreshPct);
+		return String.format("{%s : [%s]}", getName(), bgRefreshPct);
 	}
 	
 	/**

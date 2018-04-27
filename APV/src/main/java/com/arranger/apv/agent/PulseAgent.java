@@ -27,6 +27,15 @@ public abstract class PulseAgent extends BaseAgent {
 		this(ctx.getParent(), ctx.getInt(0, DEFAULT_PULSES_TO_SKIP));
 	}
 	
+	@Override
+	public String getConfig() {
+		if (pulseListener != null) {
+			return String.format("{%s : [%d]}", getName(), pulseListener.getPulsesToSkip());
+		} else {
+			return super.getConfig();
+		}
+	}
+	
 	protected abstract void onPulse();
 	
 }

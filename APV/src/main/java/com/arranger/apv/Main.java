@@ -22,9 +22,11 @@ import com.arranger.apv.control.ControlSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.APVEvent;
+import com.arranger.apv.event.APVEvent.EventHandler;
 import com.arranger.apv.event.CommandInvokedEvent;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
+import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVCommandFrame;
 import com.arranger.apv.gui.APVMarqueeLauncher;
@@ -110,7 +112,7 @@ public class Main extends PApplet {
 	
 	//Collections
 	protected Map<String, Switch> switches;
-	protected Map<EVENT_TYPES, APVEvent<?>> eventMap;
+	protected Map<EventTypes, APVEvent<?>> eventMap;
 	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
 	
 	//Stateful data
@@ -287,40 +289,45 @@ public class Main extends PApplet {
 		return currentControlMode;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public APVEvent<EventHandler> getEventForType(EventTypes type) {
+		 return (APVEvent<EventHandler>)eventMap.get(type);
+	}
+	
 	public CoreEvent getSetupEvent() {
-		return (CoreEvent)eventMap.get(EVENT_TYPES.SETUP);
+		return (CoreEvent)eventMap.get(EventTypes.SETUP);
 	}
 	
 	public CoreEvent getDrawEvent() {
-		return (CoreEvent)eventMap.get(EVENT_TYPES.DRAW);
+		return (CoreEvent)eventMap.get(EventTypes.DRAW);
 	}
 	
 	public CoreEvent getSceneCompleteEvent() {
-		return (CoreEvent)eventMap.get(EVENT_TYPES.SCENE_COMPLETE);
+		return (CoreEvent)eventMap.get(EventTypes.SCENE_COMPLETE);
 	}
 	
 	public CoreEvent getStrobeEvent() {
-		return (CoreEvent)eventMap.get(EVENT_TYPES.STROBE);
+		return (CoreEvent)eventMap.get(EventTypes.STROBE);
 	}
 	
 	public DrawShapeEvent getSparkEvent() {
-		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.SPARK);
+		return (DrawShapeEvent)eventMap.get(EventTypes.SPARK);
 	}
 	
 	public DrawShapeEvent getCarnivalEvent() {
-		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.CARNIVAL);
+		return (DrawShapeEvent)eventMap.get(EventTypes.CARNIVAL);
 	}
 	
 	public DrawShapeEvent getTwirlEvent() {
-		return (DrawShapeEvent)eventMap.get(EVENT_TYPES.TWIRL);
+		return (DrawShapeEvent)eventMap.get(EventTypes.TWIRL);
 	}
 	
 	public CommandInvokedEvent getCommandInvokedEvent() {
-		return (CommandInvokedEvent)eventMap.get(EVENT_TYPES.COMMAND_INVOKED);
+		return (CommandInvokedEvent)eventMap.get(EventTypes.COMMAND_INVOKED);
 	}
 	
 	public APVChangeEvent getAPVChangeEvent() {
-		return (APVChangeEvent)eventMap.get(EVENT_TYPES.APV_CHANGE);
+		return (APVChangeEvent)eventMap.get(EventTypes.APV_CHANGE);
 	}
 	
 	public boolean isMonitoringEnabled() {
@@ -867,21 +874,17 @@ public class Main extends PApplet {
 		});
 	}
 	
-	protected enum EVENT_TYPES {
-		SETUP, DRAW, SPARK, CARNIVAL, STROBE, SCENE_COMPLETE, COMMAND_INVOKED, APV_CHANGE, TWIRL
-	}
-	
 	protected void initEvents() {
-		eventMap = new HashMap<EVENT_TYPES, APVEvent<?>>();
-		eventMap.put(EVENT_TYPES.SETUP, new CoreEvent(this));
-		eventMap.put(EVENT_TYPES.DRAW, new CoreEvent(this));
-		eventMap.put(EVENT_TYPES.SCENE_COMPLETE, new CoreEvent(this));
-		eventMap.put(EVENT_TYPES.STROBE, new CoreEvent(this));
-		eventMap.put(EVENT_TYPES.COMMAND_INVOKED, new CommandInvokedEvent(this));
-		eventMap.put(EVENT_TYPES.SPARK, new DrawShapeEvent(this));
-		eventMap.put(EVENT_TYPES.CARNIVAL, new DrawShapeEvent(this));
-		eventMap.put(EVENT_TYPES.TWIRL, new DrawShapeEvent(this));
-		eventMap.put(EVENT_TYPES.APV_CHANGE, new APVChangeEvent(this));
+		eventMap = new HashMap<EventTypes, APVEvent<?>>();
+		eventMap.put(EventTypes.SETUP, new CoreEvent(this));
+		eventMap.put(EventTypes.DRAW, new CoreEvent(this));
+		eventMap.put(EventTypes.SCENE_COMPLETE, new CoreEvent(this));
+		eventMap.put(EventTypes.STROBE, new CoreEvent(this));
+		eventMap.put(EventTypes.COMMAND_INVOKED, new CommandInvokedEvent(this));
+		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 	}
 	
 	public String getConfig() {

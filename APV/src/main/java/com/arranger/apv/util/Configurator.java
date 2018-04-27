@@ -75,6 +75,17 @@ public class Configurator extends APVPlugin {
 			}
 		}
 		
+		public Main.SYSTEM_NAMES getSystemName(int index, Main.SYSTEM_NAMES defaultVal) {
+			if (argList.size() > index) {
+				String res = getString(index, null);
+				if (res == null) {
+					return defaultVal;
+				}
+				return Main.SYSTEM_NAMES.valueOf(res);
+			}
+			return defaultVal;
+		}
+		
 		public String [] getStringArray(int index, String [] defaultVal) {
 			if (argList.size() > index) {
 				ConfigValue configValue = argList.get(index);

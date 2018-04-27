@@ -52,7 +52,7 @@ public class WanderingInSpace extends LiteShapeSystem {
 	@Override
 	public String getConfig() {
 		//{WanderingInSpace : [.01f, .06f, 20]}
-		return String.format("{%s : [%f, %f, %d]}", getName(), lowSpeedScalar, highSpeedScalar, oscRate);
+		return String.format("{%s : [%s, %s, %d]}", getName(), lowSpeedScalar, highSpeedScalar, oscRate);
 	}
 
 	@Override
