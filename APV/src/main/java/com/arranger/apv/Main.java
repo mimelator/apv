@@ -330,6 +330,10 @@ public class Main extends PApplet {
 		return (APVChangeEvent)eventMap.get(EventTypes.APV_CHANGE);
 	}
 	
+	public CoreEvent getLocationEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.LOCATION);
+	}
+	
 	public boolean isMonitoringEnabled() {
 		return getConfigurator().getRootConfig().getBoolean("apv.monitoring.enabled");	
 	}
@@ -885,6 +889,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
+		eventMap.put(EventTypes.LOCATION, new CoreEvent(this));
 	}
 	
 	public String getConfig() {

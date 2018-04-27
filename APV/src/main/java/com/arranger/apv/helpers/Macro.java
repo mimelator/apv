@@ -51,7 +51,7 @@ public class Macro extends APVPlugin implements CommandHandler {
 	public void onKeyPressed(KeyEvent event) {
 		CommandSystem cs = parent.getCommandSystem();
 		commands.forEach(c -> {
-			cs.invokeCommand(c);
+			cs.invokeCommand(c, displayName);
 		});
 		parent.sendMessage(new String[] {displayName});
 	}

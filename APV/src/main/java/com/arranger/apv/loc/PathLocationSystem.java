@@ -10,6 +10,7 @@ import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.factory.PrimitiveShapeFactory;
 import com.arranger.apv.util.frame.Reverser;
+import com.arranger.apv.util.frame.SingleFrameSkipper;
 
 import processing.core.PApplet;
 
@@ -23,6 +24,9 @@ public abstract class PathLocationSystem extends LocationSystem {
 	private int startTime;
 	private Reverser reverser;
 	private boolean splitter = true;
+	
+	private SingleFrameSkipper skipper = new SingleFrameSkipper(parent);
+	private Point2D lastAnswer = new Point2D.Float();
 	
 	public PathLocationSystem(Main parent, boolean splitter) {
 		super(parent);
@@ -54,11 +58,23 @@ public abstract class PathLocationSystem extends LocationSystem {
 	protected abstract Shape createPath();
 	
 	public Point2D getCurrentPoint() {
+		 //only want to respond once / frame
+		if (skipper.isNewFrame()) {
+			lastAnswer = _getCurrentPoint();
+		}
+		return lastAnswer;
+	}
+		
+	protected Point2D _getCurrentPoint() {	
 		if (splitter) {
 			reverser.reverse();
 		}
 		
 		float pct = getPercentagePathComplete();
+		if (Math.abs(1 - pct) < 0.01f) {
+			parent.getLocationEvent().fire();
+		}
+		
 		float result = PApplet.lerp(0, points.length - 1, pct);
 
 		int indexFloor = (int)Math.floor(result);
@@ -74,7 +90,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 		float x = PApplet.lerp(x1, x2, pct2);
 		float y = PApplet.lerp(y1, y2, pct2);
 		
-		return new Point2D.Float(x, y);
+		lastAnswer = new Point2D.Float(x, y);
+		return lastAnswer;
 	}
 
 	protected float getPercentagePathComplete() {

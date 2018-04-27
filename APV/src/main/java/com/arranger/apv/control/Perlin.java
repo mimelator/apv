@@ -73,8 +73,9 @@ public class Perlin extends PulseListeningControlSystem {
 			}
 		}
 		
+		//clone this on the way out but change the source
 		debugKeyEvent(keyEvent);
-		return keyEvent;
+		return keyEventHelper.createKeyEvent(keyEvent, getName());
 	}
 	
 	private KeyEvent getKeyEvent(int offset) {

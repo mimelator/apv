@@ -284,6 +284,8 @@ public class SpraySpark extends LiteShapeSystem {
 	 * @author Gregory Bush
 	 */
 	public class Canvas3D {
+		private static final int MAX_LINE_WIDTH = 5;
+
 		private final float focalLength;
 
 		private final float interactionPlane;
@@ -318,7 +320,8 @@ public class SpraySpark extends LiteShapeSystem {
 		 * its diameter on the screen.
 		 */
 		public float scaleToScreen(float diameter, float distance) {
-			return diameter * focalLength / distance;
+			float results = diameter * focalLength / distance;
+			return PApplet.constrain(results, 0, MAX_LINE_WIDTH);
 		}
 
 		private void drawLine(Point2D from, Point2D to) {
@@ -328,7 +331,7 @@ public class SpraySpark extends LiteShapeSystem {
 		private void drawPoint(Point2D p) {
 			parent.point(p.x, p.y);
 		}
-
+		
 		/**
 		 * Draw a line between 3D points.
 		 */

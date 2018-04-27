@@ -28,7 +28,10 @@ public class VideoGameStatsAgent extends PulseAgent {
 		int totalCmds = vg.getTotalCommands();
 		float cmdsPerSec = vg.getCommandsPerSec();
 		String timeStamp = vg.getTimeStamp();
-		//Map<String, Integer> commandStatMap = vg.getCommandStatMap();
+		//Map<String, Integer> commandMap = vg.getCommandStatMap();
+		//Map<String, Integer> commandSourceMap = vg.getCommandStatMap();
+		//Map<String, Integer> pluginMap = vg.getCommandStatMap();
+		//Map<String, Integer> pluginSourceMap = vg.getCommandStatMap();
 		FileHelper fh = new FileHelper(parent);
 		
 		//Create file with version info and header

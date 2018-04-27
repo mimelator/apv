@@ -12,11 +12,19 @@ public class KeyEventHelper extends APVPlugin {
 		super(parent);
 	}
 	
-	public KeyEvent createScramble() {
-		return createKeyEvent(Command.SCRAMBLE);
+	public String getSource(KeyEvent keyEvent) {
+		String source = keyEvent.getNative().toString();
+		if (source.contains("EVENT")) { // this is extra data
+			source = "KeyEvent";
+		}
+		return source;
 	}
 	
-	public KeyEvent createKeyEvent(Command command) {
+	public KeyEvent createScramble(String source) {
+		return createKeyEvent(Command.SCRAMBLE, source, 0);
+	}
+	
+	public KeyEvent createKeyEvent(Command command, String source) {
 		return createKeyEvent(command, command, 0);
 	}
 	
@@ -26,5 +34,14 @@ public class KeyEventHelper extends APVPlugin {
 		} else {
 			return new KeyEvent(source, 0, KeyEvent.RELEASE, modifiers, command.getCharKey(), 0);
 		}
+	}
+	
+	public KeyEvent createKeyEvent(KeyEvent evt, String source) {
+		return new KeyEvent(source, 
+				evt.getMillis(), 
+				evt.getAction(), 
+				evt.getModifiers(), 
+				evt.getKey(), 
+				evt.getKeyCode());
 	}
 }

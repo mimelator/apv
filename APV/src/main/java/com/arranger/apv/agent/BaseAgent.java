@@ -23,9 +23,9 @@ public class BaseAgent extends APVPlugin {
 		});
 	}
 	
-	protected void invokeCommand(Command command) {
-		parent.getCommandSystem().invokeCommand(command);
-		logger.info(String.format("%s invoked cmd: %s\n", getName(), command.name()));
+	public void invokeCommand(Command command) {
+		parent.getCommandSystem().invokeCommand(command, getDisplayName());
+		logger.info(String.format("%s invoked cmd: %s\n", getDisplayName(), command.name()));
 	}
 	
 	protected APVEvent<EventHandler> getSceneCompleteEvent() {

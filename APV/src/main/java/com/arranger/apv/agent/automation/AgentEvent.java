@@ -9,10 +9,12 @@ import com.arranger.apv.event.APVEvent.EventHandler;
 import com.arranger.apv.helpers.APVCallbackHelper.Handler;
 import com.arranger.apv.util.Configurator;
 
-public class AgentEvent extends BaseAgent {
+public class AgentEvent extends BaseAgent implements Handler {
 
 	private APVEvent<EventHandler> event;
 	private int numToSkip;
+	private int skipped = 0;
+	private Handler handler;
 	
 	public AgentEvent(Main parent, APVEvent<EventHandler> event, int numToSkip) {
 		super(parent);
@@ -35,17 +37,27 @@ public class AgentEvent extends BaseAgent {
 	}
 	
 	public void setHandler(Handler handler) {
+		this.handler = handler;
 		if (event == null) {
-			new PulseAgent(parent, numToSkip) {
+			new PulseAgent(parent, 0) {
 				protected void onPulse() {
-					handler.handle();
+					handle();
 				}
 			};
 		} else {
-			registerAgent(event, handler);
+			registerAgent(event, this);
 		}
 	}
 	
+	@Override
+	public void handle() {
+		//skip N, then invoke
+		if (++skipped >= numToSkip) {
+			handler.handle();
+			skipped = 0;
+		}
+	}
+
 	/**
 	 * I can't place this function into context because it leaks the logic about "PULSE:
 	 * It is static because it is called from the constructor

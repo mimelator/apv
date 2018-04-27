@@ -50,12 +50,12 @@ public class CommandSystem extends APVPlugin {
 		sceneSelectInterceptor.reset();
 	}
 	
-	public void invokeScramble() {
-		invokeCommand(Command.SCRAMBLE);
+	public void invokeScramble(String source) {
+		invokeCommand(Command.SCRAMBLE, source);
 	}
 	
-	public void invokeCommand(Command command) {
-		keyEvent(keyEventHelper.createKeyEvent(command));
+	public void invokeCommand(Command command, String source) {
+		keyEvent(keyEventHelper.createKeyEvent(command, source, 0));
 	}
 	
 	public boolean unregisterHandler(Command command, CommandHandler handler) {
@@ -101,9 +101,9 @@ public class CommandSystem extends APVPlugin {
 			if (list != null  && !list.isEmpty()) {
 				list.forEach(c -> {
 					c.handler.onKeyPressed(keyEvent);
-					parent.getCommandInvokedEvent().fire(c.getCommand());
 				});
 				lastCommand = list.get(list.size() - 1);
+				parent.getCommandInvokedEvent().fire(lastCommand.getCommand(), keyEventHelper.getSource(keyEvent));
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);

@@ -41,7 +41,7 @@ public class AgentAction extends APVPlugin {
 	public void doAction(AutomationAgent agent) {
 		switch (action) {
 		case COMMAND:
-			parent.getCommandSystem().invokeCommand(Command.valueOf(val1));
+			agent.invokeCommand(Command.valueOf(val1));
 			break;
 		case FIRE:
 			parent.getEventForType(EventTypes.valueOf(val1)).fire();

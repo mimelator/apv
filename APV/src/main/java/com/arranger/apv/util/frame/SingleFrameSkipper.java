@@ -5,7 +5,15 @@ import com.arranger.apv.Main;
 
 /**
  * Use this class when you only want to perform an action once / frame
- * This class is very stateful, and shouldn't be shared by any other client
+ * This class is very stateful, and shouldn't be shared by any other client.
+ * 
+ * Usage:
+ * 		//only want to respond once / frame
+		if (frameSkipper.isNewFrame()) {
+			lastAnswer = _isSnap();
+		}
+		return lastAnswer;
+ * 
  */
 public class SingleFrameSkipper extends APVPlugin {
 	protected int lastFrameSkipped = -1;

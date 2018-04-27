@@ -32,7 +32,7 @@ public class LowFrameCountAgent extends BaseAgent {
 				if (currentFrameRate > FRAME_RATE_RESUME_LIMIT) {
 					
 					new InvokeAfterOneEvent(parent, parent.getStrobeEvent(), () -> {
-						parent.getCommandSystem().invokeScramble();
+						parent.getCommandSystem().invokeScramble(getName());
 					});
 					
 					//Ensure Strobe Filter is primed; Frame Count has increased, so lfr is false

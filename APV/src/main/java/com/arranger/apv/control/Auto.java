@@ -24,6 +24,6 @@ public class Auto extends PulseListeningControlSystem {
 
 	@Override
 	protected KeyEvent _getNextCommand() {
-		return keyEventHelper.createScramble();
+		return keyEventHelper.createScramble(getName());
 	}
 }

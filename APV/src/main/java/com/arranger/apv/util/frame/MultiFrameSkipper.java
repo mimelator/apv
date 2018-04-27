@@ -44,6 +44,8 @@ public class MultiFrameSkipper extends SingleFrameSkipper {
 	}
 	
 	public void reset(int framesToSkip) {
+		framesToSkip = (framesToSkip < 1) ? 1 : framesToSkip;
+		
 		lastFrameSkipped = parent.getFrameCount();
 		this.framesToSkip = framesToSkip;
 	}

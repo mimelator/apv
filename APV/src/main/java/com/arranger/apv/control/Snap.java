@@ -39,7 +39,7 @@ public class Snap extends ControlSystem {
 	@Override
 	public KeyEvent getNextCommand() {
 		if (snapListener.isSnap()) {
-			return keyEventHelper.createScramble();
+			return keyEventHelper.createScramble(getName());
 		} else {
 			return null;
 		}

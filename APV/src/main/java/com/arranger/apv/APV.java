@@ -10,6 +10,7 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
+import com.arranger.apv.util.KeyEventHelper;
 import com.arranger.apv.util.RandomHelper;
 
 import processing.event.KeyEvent;
@@ -25,6 +26,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	protected Command command, switchCommand;
 	protected CommandHandler handler, switchHandler;
 	protected T currentPlugin;
+	protected KeyEventHelper keyEventHelper;
 	
 	
 	public APV(Main parent, Main.SYSTEM_NAMES name) {
@@ -37,6 +39,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
 		this.systemName = name;
 		this.sw = parent.getSwitchForSystem(name);
+		keyEventHelper = new KeyEventHelper(parent);
 		setIndex(0, "");
 	}
 
@@ -140,15 +143,16 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			return;
 		}
 		
+		String cause = keyEventHelper.getSource(event);
 		if (event.isAltDown()) {
 			List<T> sibs = getSiblings(getPlugin(false));
 			T random = new RandomHelper(parent).random(sibs);
-			setNextPlugin(random, "KeyEvent");
+			setNextPlugin(random, cause);
 		} else {
 			if (event.isShiftDown()) {
-				decrement("KeyEvent"); 		
+				decrement(cause); 		
 			} else {
-				increment("KeyEvent");
+				increment(cause);
 			}
 		}
 	}
