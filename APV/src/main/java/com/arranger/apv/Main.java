@@ -55,6 +55,7 @@ import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.StarPainter;
 import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
@@ -109,6 +110,7 @@ public class Main extends PApplet {
 	protected MarqueeList marqueeList;
 	protected FontHelper fontHelper;
 	protected SplineHelper splineHelper;
+	protected StarPainter starPainter;
 	
 	//Collections
 	protected Map<String, Switch> switches;
@@ -318,6 +320,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EventTypes.CARNIVAL);
 	}
 	
+	public DrawShapeEvent getStarEvent() {
+		return (DrawShapeEvent)eventMap.get(EventTypes.STAR);
+	}
+	
 	public DrawShapeEvent getTwirlEvent() {
 		return (DrawShapeEvent)eventMap.get(EventTypes.TWIRL);
 	}
@@ -500,6 +506,7 @@ public class Main extends PApplet {
 		marqueeList = new MarqueeList(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
+		starPainter = new StarPainter(this);
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
@@ -887,6 +894,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.COMMAND_INVOKED, new CommandInvokedEvent(this));
 		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.STAR, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this));
