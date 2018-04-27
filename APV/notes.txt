@@ -1,9 +1,8 @@
 BRANCH: more-sketches
 https://github.com/mimelator/apv
 
-When LiteBee is active i can't twirl because of the agent.
-I want to add multiple Conditions that can be and'd or or'd together
 
+Scribbler needs to alternate between blur and no blur
 
 
 *****************************************************************************

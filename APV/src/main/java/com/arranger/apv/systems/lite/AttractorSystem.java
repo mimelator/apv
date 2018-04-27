@@ -4,12 +4,10 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.factory.APVShape;
 import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.frame.SingleFrameSkipper;
 
 import processing.core.PApplet;
 
@@ -40,8 +38,6 @@ public class AttractorSystem extends LiteShapeSystem {
 	private float radius;
 	private float gensoku = 0.95f;
 	
-	private PulseListener pulseListener;
-	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = true;
 	private APVShape shape = null;
 	private int numShapes = NUM_SHAPES;
@@ -90,17 +86,10 @@ public class AttractorSystem extends LiteShapeSystem {
 		if (factory != null) {
 			shape = factory.createShape(null);
 		}
-		
-		pulseListener = new PulseListener(parent, 8); 
-		frameSkipper = new SingleFrameSkipper(parent);
 	}
 
 	@Override
 	public void draw() {
-		if (frameSkipper.isNewFrame() && pulseListener.isNewPulse()) {
-			reverse = !reverse;
-		}
-		
 		if (parent.getFrameCount() % RESET_FRAMES == 0) {
 			setup();
 		}
@@ -111,7 +100,6 @@ public class AttractorSystem extends LiteShapeSystem {
 		parent.addSettingsMessage("  --magnetism: " + magnetism);
 		parent.addSettingsMessage("  --radius: " + radius);
 		parent.addSettingsMessage("  --reverse: " + reverse);
-		pulseListener.addSettingsMessages();
 		
 		parent.noStroke();
 
