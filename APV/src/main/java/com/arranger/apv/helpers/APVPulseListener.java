@@ -1,8 +1,8 @@
-package com.arranger.apv.pl;
+package com.arranger.apv.helpers;
 
+import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.audio.PulseListener;
-import com.arranger.apv.helpers.APVCallbackHelper;
 
 public class APVPulseListener extends APVCallbackHelper {
 	
@@ -19,16 +19,16 @@ public class APVPulseListener extends APVCallbackHelper {
 		pulseListener.addSettingsMessages();
 	}
 	
-	public void registerHandler(Handler handler) {
-		registerHandler(handler, 1);
+	public void registerHandler(Handler handler, APVPlugin pluginToCheck) {
+		registerHandler(handler, 1, pluginToCheck);
 	}
 	
-	public void registerHandler(Handler handler, int numFramesToSkip) {
-		registerHandler(parent.getDrawEvent(), handler, numFramesToSkip);
+	public void registerHandler(Handler handler, int numFramesToSkip, APVPlugin pluginToCheck) {
+		registerHandler(parent.getDrawEvent(), handler, numFramesToSkip, pluginToCheck);
 	}
 	
 	@Override
 	public boolean isEnabled() {
-		return super.isEnabled() && pulseListener.isNewPulse();
+		return pulseListener.isNewPulse();
 	}
 }

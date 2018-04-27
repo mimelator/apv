@@ -35,7 +35,7 @@ public class Surfin extends LiteShapeSystem {
 		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				setParticles();
-			}, DEFAULT_PULSES_TO_SKIP);
+			}, DEFAULT_PULSES_TO_SKIP, this);
 		});
 	}
 	

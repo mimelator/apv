@@ -50,6 +50,30 @@ public class Scene extends ShapeSystem {
 				throw new RuntimeException(system.name + " is not a valid component type");
 			}
 		}
+		
+		public boolean contains(APVPlugin plugin) {
+			boolean found = false;
+			if (backDrop != null) {
+				found = backDrop.equals(plugin);
+			}
+			if (!found && bgSys != null) {
+				found = bgSys.equals(plugin);
+			}
+			if (!found && fgSys != null) {
+				found = fgSys.equals(plugin);
+			}
+			if (!found && filter != null) {
+				found = filter.equals(plugin);
+			}
+			if (!found && colorSys != null) {
+				found = colorSys.equals(plugin);
+			}
+			if (!found && locSys != null) {
+				found = locSys.equals(plugin);
+			}
+			
+			return found;
+		}
 	}
 	
 	protected Components cc = new Components();

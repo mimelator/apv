@@ -24,7 +24,7 @@ public class PulseFader extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				fader.startFade();
-			}, pulsesToSkip);
+			}, pulsesToSkip, null);
 		});
 	}
 	

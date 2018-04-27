@@ -26,27 +26,27 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 		public void handle();
 	}
 	
-	public void registerHandler(APVEvent<EventHandler> event, Handler handler) {
-		registerHandler(event, handler, 1);
+	protected void registerHandler(APVEvent<EventHandler> event, Handler handler, APVPlugin pluginToCheck) {
+		registerHandler(event, handler, 1, pluginToCheck);
 	}
 	
-	public void registerHandler(APVEvent<EventHandler> event, Handler handler, int framesToSkip) {
+	protected void registerHandler(APVEvent<EventHandler> event, Handler handler, int framesToSkip, APVPlugin pluginToCheck) {
 		List<CallbackHandler> handlerList = handlerMap.get(event);
 		if (handlerList == null) {
 			handlerList = new ArrayList<CallbackHandler>();
-			handlerList.add(new CallbackHandler(handler, framesToSkip));
+			handlerList.add(new CallbackHandler(handler, framesToSkip, pluginToCheck));
 			handlerMap.put(event, handlerList);
 			
 			event.register(() -> {
 				if (isEnabled()) {
 					handlerMap.get(event).forEach(h -> {
-					if (h.checkFrameCount()) {
+					if (h.readyToHandle()) {
 						h.handler.handle();
 					}});
 				}
 			});
 		} else {
-			handlerList.add(new CallbackHandler(handler, framesToSkip));
+			handlerList.add(new CallbackHandler(handler, framesToSkip, pluginToCheck));
 		}
 	}
 	
@@ -54,15 +54,23 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 		private Handler handler;
 		private int frameCount = 0;
 		private int framesToSkip;
+		private APVPlugin pluginToCheck;
 		
-		CallbackHandler(Handler handler, int framesToSkip) {
+		CallbackHandler(Handler handler, int framesToSkip, APVPlugin pluginToCheck) {
 			this.handler = handler;
 			this.framesToSkip = framesToSkip;
+			this.pluginToCheck = pluginToCheck;
 		}
 		
-		boolean checkFrameCount() {
+		boolean readyToHandle() {
 			frameCount++;
-			return (frameCount % framesToSkip == 0);
+			boolean result = (frameCount % framesToSkip == 0);
+			
+			if (pluginToCheck != null && result) {
+				result = parent.getCurrentScene().getComponentsToDrawScene().contains(pluginToCheck);
+			}
+			
+			return result;
 		}
 	}
 }

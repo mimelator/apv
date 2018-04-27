@@ -31,6 +31,7 @@ import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVCommandFrame;
 import com.arranger.apv.gui.APVMarqueeLauncher;
 import com.arranger.apv.gui.SwitchStatus;
+import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
@@ -42,7 +43,6 @@ import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.msg.MessageSystem;
-import com.arranger.apv.pl.APVPulseListener;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Scene;
 import com.arranger.apv.systems.ShapeSystem;
@@ -54,6 +54,7 @@ import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
+import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.StarPainter;
 import com.arranger.apv.util.frame.FrameStrober;
@@ -109,6 +110,7 @@ public class Main extends PApplet {
 	protected HotKeyHelper hotKeyHelper;
 	protected MarqueeList marqueeList;
 	protected FontHelper fontHelper;
+	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	
@@ -324,6 +326,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EventTypes.STAR);
 	}
 	
+	public DrawShapeEvent getRandomMessageEvent() {
+		return (DrawShapeEvent)eventMap.get(EventTypes.RANDOM_MESSAGE);
+	}
+	
 	public DrawShapeEvent getTwirlEvent() {
 		return (DrawShapeEvent)eventMap.get(EventTypes.TWIRL);
 	}
@@ -504,6 +510,7 @@ public class Main extends PApplet {
 		macroHelper = new MacroHelper(this);
 		hotKeyHelper = new HotKeyHelper(this);
 		marqueeList = new MarqueeList(this);
+		randomMessagePainter = new RandomMessagePainter(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		starPainter = new StarPainter(this);
@@ -895,6 +902,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.STAR, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.RANDOM_MESSAGE, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this));

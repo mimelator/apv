@@ -23,10 +23,11 @@ public class SpraySpark extends LiteShapeSystem {
 	public SpraySpark(Main parent) {
 		super(parent);
 		
+		//When active, spark is only called with a pulse 
 		parent.getSetupEvent().register(() -> {
 			parent.getPulseListener().registerHandler(() -> {
 				spark();
-			});
+			}, this);
 		});
 		
 		parent.getSparkEvent().register(() -> {

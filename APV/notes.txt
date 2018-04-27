@@ -2,11 +2,7 @@ BRANCH: sketches -> automate the agents
 https://github.com/mimelator/apv
 
 
-convert pulse listeners to agents (better be automation)
-
-Listen for location system cycles and fire events
-Every 10 location cycles change the foreground
-Every 15 location cycles change the background
+LastNew Plugin: "E
 
 
 *****************************************************************************
