@@ -2,8 +2,6 @@ BRANCH: sketches -> automate the agents
 https://github.com/mimelator/apv
 
 
-LastNew Plugin: "E
-
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
