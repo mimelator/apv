@@ -8,19 +8,19 @@ import com.arranger.apv.util.Configurator;
 public class AutomationAgent extends BaseAgent implements Handler {
 	
 	private AgentEvent agentEvent;
-	private Condition condition;
+	private Conditions conditions;
 	private AgentAction action;
 	private String displayName;
 
 	public AutomationAgent(Main parent, 
 			String displayName, 
 			AgentEvent agentEvent,
-			Condition condition,
+			Conditions conditions,
 			AgentAction action) {
 		super(parent);
 		
 		this.displayName = displayName;
-		this.condition = condition;
+		this.conditions = conditions;
 		this.action = action;
 		this.agentEvent = agentEvent;
 		
@@ -31,7 +31,7 @@ public class AutomationAgent extends BaseAgent implements Handler {
 		this(ctx.getParent(), 
 					ctx.getString(0, AutomationAgent.class.getSimpleName()),
 					(AgentEvent)ctx.loadPlugin(1),
-					(Condition)ctx.loadPlugin(2),
+					(Conditions)ctx.loadPlugin(2),
 					(AgentAction)ctx.loadPlugin(3));
 	}
 
@@ -39,19 +39,19 @@ public class AutomationAgent extends BaseAgent implements Handler {
 	public String getConfig() {
 	//	{AutomationAgent : [StrobeFilterChangeAgent
 	//						{AgentEvent : PULSE, 5}	
-	//	            		{Condition : [true]}
+	//	            		{Conditions : [{Condition : [true]}]}
 	//	            		{Action : [COMMAND, CYCLE_FILTERS}
 	//	            	]}
 		return String.format("{%s : [%s, %s, %s, %s]}", getName(),
 				getDisplayName(),
 				agentEvent.getConfig(),
-				condition.getConfig(),
+				conditions.getConfig(),
 				action.getConfig());
 	}
 
 	@Override
 	public void handle() {
-		if (condition.isTrue()) {
+		if (conditions.isTrue()) {
 			action.doAction(this);
 		}
 	}

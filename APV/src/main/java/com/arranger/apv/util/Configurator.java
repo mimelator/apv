@@ -150,13 +150,23 @@ public class Configurator extends APVPlugin {
 				}
 			}
 			
-			
 			try {
 			    Field field = Color.class.getField(colorName);
 			    return (Color)field.get(null);
 			} catch (Exception e) {
 			    return null;
 			}
+		}
+		
+		public List<? extends APVPlugin> loadRemainingPlugins(int index) {
+			List<APVPlugin> plugins = new ArrayList<APVPlugin>();
+			
+			while (index < argList.size()) {
+				plugins.add(loadPlugin(index));
+				index++;
+			}
+			
+			return plugins;
 		}
 		
 		public APVPlugin loadPlugin(int index) {
