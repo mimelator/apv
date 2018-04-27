@@ -34,7 +34,7 @@ public class AgentAction extends APVPlugin {
 		if (val2 != null) {
 			return String.format("{%s : [%s, %s, %s]}", getName(), action.name(), val1, val2);
 		} else {
-			return String.format("{%s : [%s, %s}", getName(), action.name(), val1);
+			return String.format("{%s : [%s, %s]}", getName(), action.name(), val1);
 		}
 	}
 	
