@@ -25,8 +25,10 @@ public class SwitchStatus extends APVFrame {
 	
 	private List<SwitchPanel> panelList = new ArrayList<SwitchPanel>();
 	private EventHandler handler;
+	private JPanel panel;
+	private CoreEvent event;
 	
-	public SwitchStatus(Main parent) {
+	public SwitchStatus(Main parent, boolean launchWindow) {
 		super(parent);
 		
 		//fetch original settings
@@ -37,8 +39,8 @@ public class SwitchStatus extends APVFrame {
 			origStateMap.put(sw.name, sw.state);
 		});
 		
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		CoreEvent event = parent.getDrawEvent();
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		event = parent.getDrawEvent();
 		Collection<Switch> values = parent.getSwitches().values();
 		
 		values.forEach((sw) -> {
@@ -47,13 +49,29 @@ public class SwitchStatus extends APVFrame {
 			panel.add(switchPanel);
 		});
 		
-		createFrame(getName(), 250, 150, panel, () -> event.unregister(handler));
+		if (launchWindow) {
+			createFrame(getName(), 250, 150, panel, () -> event.unregister(handler));
+		}
 		
 		handler = event.register(() -> {
 			panelList.forEach(sp -> sp.updateColor());
 		});
 	}
 	
+	public SwitchStatus(Main parent) {
+		this(parent, true);
+	}
+	
+	@Override
+	public JPanel getPanel() {
+		return panel;
+	}
+	
+	@Override
+	public void onClose() {
+		event.unregister(handler);
+	}
+
 	@SuppressWarnings("serial")
 	protected class SwitchPanel extends JLabel {
 		

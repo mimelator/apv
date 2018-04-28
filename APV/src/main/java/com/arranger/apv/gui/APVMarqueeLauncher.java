@@ -14,8 +14,9 @@ import com.arranger.apv.Main;
 public class APVMarqueeLauncher extends APVFrame {
 
 	private JList<String> list;
+	private JPanel panel;
 	
-	public APVMarqueeLauncher(Main parent) {
+	public APVMarqueeLauncher(Main parent, boolean launchFrame) {
 		super(parent);
 		
 		Vector<String> modelList = new Vector<String>();
@@ -34,10 +35,21 @@ public class APVMarqueeLauncher extends APVFrame {
 			}
 		});
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(new JScrollPane(list), BorderLayout.PAGE_START);
 		
-		createFrame("Commands", 300, 300, panel, () -> {}).pack();
+		if (launchFrame) {
+			createFrame("Commands", 300, 300, panel, () -> {}).pack();
+		}
+	}
+	
+	public APVMarqueeLauncher(Main parent) {
+		this(parent, true);
+	}
+
+	@Override
+	public JPanel getPanel() {
+		return panel;
 	}
 }

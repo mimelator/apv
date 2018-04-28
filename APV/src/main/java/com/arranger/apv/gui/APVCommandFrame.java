@@ -18,28 +18,11 @@ import com.arranger.apv.cmd.CommandSystem.RegisteredCommandHandler;
 
 public class APVCommandFrame extends APVFrame {
 
-	static class CMDModel implements Comparable<CMDModel> {
-		Command command;
-		
-		public CMDModel(Command command) {
-			this.command = command;
-		}
-
-		@Override
-		public int compareTo(CMDModel o) {
-			return toString().compareTo(o.toString());
-		}
-
-		@Override
-		public String toString() {
-			return command.name();
-		}
-	}
-	
 	private JList<CMDModel> list;
+	private JPanel panel;
 	
 	@SuppressWarnings("serial")
-	public APVCommandFrame(Main parent) {
+	public APVCommandFrame(Main parent, boolean launchFrame) {
 		super(parent);
 		CommandSystem cs = parent.getCommandSystem();
 		
@@ -74,7 +57,7 @@ public class APVCommandFrame extends APVFrame {
 			parent.sendMarqueeMessage(textField.getText());
 		});
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(new JScrollPane(list), BorderLayout.PAGE_START);
 		
@@ -83,6 +66,36 @@ public class APVCommandFrame extends APVFrame {
 		p.add(button);
 		panel.add(p, BorderLayout.PAGE_END);
 		
-		createFrame("Commands", 300, 300, panel, () -> {}).pack();
+		if (launchFrame) {
+			createFrame("Commands", 300, 300, panel, () -> {}).pack();
+		}
 	}
+	
+	public APVCommandFrame(Main parent) {
+		this(parent, true);
+	}
+	
+	@Override
+	public JPanel getPanel() {
+		return panel;
+	}
+	
+	static class CMDModel implements Comparable<CMDModel> {
+		Command command;
+		
+		public CMDModel(Command command) {
+			this.command = command;
+		}
+
+		@Override
+		public int compareTo(CMDModel o) {
+			return toString().compareTo(o.toString());
+		}
+
+		@Override
+		public String toString() {
+			return command.name();
+		}
+	}
+	
 }

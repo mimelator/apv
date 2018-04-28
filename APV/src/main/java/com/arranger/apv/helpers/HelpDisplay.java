@@ -11,18 +11,19 @@ import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.gui.APVTextFrame;
+import com.arranger.apv.gui.APVTextFrame.TextSupplier;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.TextPainter;
 
-public class HelpDisplay extends APVPlugin {
+public class HelpDisplay extends APVPlugin implements TextSupplier {
 
 	public HelpDisplay(Main parent) {
 		super(parent);
 		
-		parent.getSetupEvent().register(() -> {
-			parent.getCommandSystem().registerHandler(Command.WINDOWS, 
-				e -> createHelpWindow());
-		});
+//		parent.getSetupEvent().register(() -> {
+//			parent.getCommandSystem().registerHandler(Command.WINDOWS, 
+//				e -> createHelpWindow());
+//		});
 	}
 
 	public void showHelp() {
@@ -38,7 +39,7 @@ public class HelpDisplay extends APVPlugin {
 		}).paint();
 	}
 
-	protected List<String> getMessages() {
+	public List<String> getMessages() {
 		Main p = parent;
 		Set<String> messages = new HashSet<String>();
 		

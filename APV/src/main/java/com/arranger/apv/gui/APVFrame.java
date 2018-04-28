@@ -5,6 +5,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -19,7 +20,15 @@ public class APVFrame extends APVPlugin {
 	public APVFrame(Main parent) {
 		super(parent);
 	}
+	
+	public JPanel getPanel() {
+		return null;
+	}
 
+	public void onClose() {
+		
+	}
+	
 	protected JFrame createFrame(String title, int sizeX, int sizeY, JComponent content, WindowClosing wc) {
 		JFrame frame = new JFrame(title);
 		frame.setSize(sizeX, sizeY);

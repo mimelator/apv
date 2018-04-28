@@ -1,8 +1,16 @@
-BRANCH: more-sketches
+BRANCH: window
 https://github.com/mimelator/apv
 
+Toggle Messages
+Toggle Foregrounds w/every pulse for 1 minute
+Toggle Foregrounds off for 1 minute
 
-Scribbler needs to alternate between blur and no blur
+Explore beginning any BlurBackDrop with a quick Refresh Screen
+
+
+
+
+Each APV could have a quiet window where it doesn't accept plugin changes
 
 
 *****************************************************************************
@@ -10,6 +18,7 @@ Current High Score: 2686 (1hr25min)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* load a config file from disk
 * Foregrounds: More sketches like light worm
 * Animations: 
 * Document Commands (for creating Macros)

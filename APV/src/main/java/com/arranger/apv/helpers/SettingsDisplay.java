@@ -10,11 +10,12 @@ import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.gui.APVTextFrame;
+import com.arranger.apv.gui.APVTextFrame.TextSupplier;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.TextPainter;
 
-public class SettingsDisplay extends APVPlugin {
+public class SettingsDisplay extends APVPlugin implements TextSupplier {
 	
 	private static final Logger logger = Logger.getLogger(SettingsDisplay.class.getName());
 	protected List<String> settingsMessages = new ArrayList<String>();
@@ -22,12 +23,17 @@ public class SettingsDisplay extends APVPlugin {
 	public SettingsDisplay(Main parent) {
 		super(parent);
 		
-		parent.getSetupEvent().register(() -> {
-				parent.getCommandSystem().registerHandler(Command.WINDOWS, 
-					e -> createSettingsWindow());
-		});
+//		parent.getSetupEvent().register(() -> {
+//				parent.getCommandSystem().registerHandler(Command.WINDOWS, 
+//					e -> createSettingsWindow());
+//		});
 	}
 	
+	@Override
+	public List<String> getMessages() {
+		return settingsMessages;
+	}
+
 	public void reset() {
 		settingsMessages.clear();
 		addPrimarySettingsMessages();

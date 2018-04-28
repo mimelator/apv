@@ -20,8 +20,10 @@ public class APVTextFrame extends APVFrame {
 	
 	private static final float EXTRA_SCROLL_PANE_DIMENSION = 1.5f;
 	
+	private APVEvent<EventHandler> event;
 	private OutputPanel outputPanel;
 	private EventHandler handler;
+	private JPanel panel;
 	
 	@FunctionalInterface
 	public static interface TextSupplier {
@@ -29,10 +31,10 @@ public class APVTextFrame extends APVFrame {
 	}
 
 	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, TextSupplier ts) {
-		this(parent, title, sizeX, sizeY, parent.getDrawEvent(), ts);
+		this(parent, title, sizeX, sizeY, parent.getDrawEvent(), ts, true);
 	}
 	
-	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent<EventHandler> event, TextSupplier ts) {
+	public APVTextFrame(Main parent, String title, int sizeX, int sizeY, APVEvent<EventHandler> event, TextSupplier ts, boolean launchWindow) {
 		super(parent);
 		outputPanel = new OutputPanel();
 		outputPanel.setPreferredSize(new Dimension((int)(sizeX * EXTRA_SCROLL_PANE_DIMENSION), (int)(sizeY * EXTRA_SCROLL_PANE_DIMENSION)));
@@ -40,16 +42,32 @@ public class APVTextFrame extends APVFrame {
 		JScrollPane scrollPane = new JScrollPane(outputPanel);
 		scrollPane.setPreferredSize(new Dimension(sizeX, sizeY));	
 		
-		JPanel outer = new JPanel();
-		outer.add(new JLabel("Click text area to copy to clipboard"));
-		outer.add(scrollPane);
-		createFrame(title, sizeX, sizeY, outer, () -> event.unregister(handler));
+		panel = new JPanel();
+		if (launchWindow) {
+			panel.add(new JLabel("Click text area to copy to clipboard"));
+		}
+		panel.add(scrollPane);
+		if (launchWindow) {
+			createFrame(title, sizeX, sizeY, panel, () -> event.unregister(handler));
+		}
 		
 		handler = event.register(() -> {
 			outputPanel.printText(ts.getMessages());
 		});
+		
+		this.event = event;
 	}
 	
+	@Override
+	public JPanel getPanel() {
+		return panel;
+	}
+	
+	@Override
+	public void onClose() {
+		event.unregister(handler);
+	}
+
 	@SuppressWarnings("serial")
 	class OutputPanel extends JPanel {
 
