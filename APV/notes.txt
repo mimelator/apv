@@ -20,9 +20,6 @@ TODO:
 	* Add runtime when saving applicaiton.conf also save a reference.conf.bak export of reference.conf
 	* or maybe just copy the liked scenes into the reference.conf.bak
 * VideoGameStatsAgent record the available CounterMaps
-* Follow-up on PSurfaceJOGL.drawExceptionHandler
-** ps -ef | grep Main
-** jstack -l 80125 >> threaddumps.log
 *****************************************************************************
 *****************************************************************************
 
