@@ -2,6 +2,7 @@ package com.arranger.apv.util;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -20,6 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
@@ -31,6 +34,7 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
+	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
 	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 
@@ -292,13 +296,14 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig() {
+		saveCurrentConfig(true);
+	}
+	
+	public void saveCurrentConfig(boolean alsoSaveOrig) {
 		StringBuffer results = new StringBuffer();
-		
 		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
 		results.append(System.lineSeparator()).append(System.lineSeparator());
-		
 		results.append(parent.getConfig()); //Constants
-		
 		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
 			if (!s.equals(Main.SYSTEM_NAMES.LIKED_SCENES)) { //Comes from another location
 				results.append(getConfigForSystem(s));
@@ -306,7 +311,16 @@ public class Configurator extends APVPlugin {
 		});
 		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
 		
-		new FileHelper(parent).saveFile(APPLICATION_CONF_BAK, results.toString());
+		//save application.conf.bak
+		FileHelper fh = new FileHelper(parent);
+		fh.saveFile(APPLICATION_CONF_BAK, results.toString());
+		
+		//save reference.conf
+		if (alsoSaveOrig) {
+			fh.getResourceAsStream(REFERENCE_CONF, (stream) -> {
+				FileUtils.copyInputStreamToFile(stream, new File(fh.getFullPath(REFERENCE_CONF)));
+			});
+		}
 	}
 
 	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> pluginList) {

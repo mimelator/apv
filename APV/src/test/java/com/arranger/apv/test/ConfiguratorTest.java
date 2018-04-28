@@ -41,7 +41,7 @@ public class ConfiguratorTest extends APVPluginTest {
 	@Test
 	public void testLoadOtherConfig() throws Exception {
 		
-		getInputStream(CONFIG, inputStream -> {
+		getResourceAsStream(CONFIG, inputStream -> {
 			loadConfigurator(inputStream);
 		});
 		

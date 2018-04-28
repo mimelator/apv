@@ -25,7 +25,7 @@ public class LogTest extends APVPluginTest {
 	@BeforeEach
 	public void configLogger() {
 		LogManager logManager = LogManager.getLogManager();
-		getInputStream(CONFIG, inputStream -> {
+		getResourceAsStream(CONFIG, inputStream -> {
 			logManager.readConfiguration(inputStream);
 		});
 		

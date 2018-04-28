@@ -1,6 +1,8 @@
 package com.arranger.apv.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,6 +74,31 @@ public class FileHelper extends APVPlugin {
 			debug(e);
 		}
 		return result;
+	}
+	
+	@FunctionalInterface
+	public static interface StreamConsumer {
+		public void consumeInputStream(InputStream is) throws Exception;
+	}
+	
+	public void getResourceAsStream(String resource, StreamConsumer handler) {
+		InputStream inputStream = null;
+		try {
+			logger.info("Loading resource: " + resource);
+			inputStream = getClass().getClassLoader().getResourceAsStream(resource);
+		    assert(inputStream != null);
+		    handler.consumeInputStream(inputStream);
+		} catch (Exception e) {
+			debug(e);
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException ioe) {
+					debug(ioe);
+				}
+			}
+		}
 	}
 	
 	private void debug(Exception e) {

@@ -3,8 +3,6 @@ package com.arranger.apv.test;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +30,7 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FileHelper.StreamConsumer;
 import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
@@ -141,31 +140,7 @@ public abstract class APVPluginTest {
     	return IntStream.rangeClosed(startFrame, endFrame).boxed().collect(Collectors.toList());
     }
     
-	@FunctionalInterface
-	public static interface StreamConsumer {
-		public void consumeInputStream(InputStream is) throws Exception;
-	}
-	
-	
-	protected void getInputStream(String resource, StreamConsumer handler) {
-		InputStream inputStream = null;
-		try {
-			debug("Loading resource: " + resource);
-			inputStream = getClass().getClassLoader().getResourceAsStream(resource);
-		    assert(inputStream != null);
-		    handler.consumeInputStream(inputStream);
-		} catch (Exception ex) {
-		    System.out.println(ex.getMessage());
-		    ex.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-				    e.printStackTrace();
-				}
-			}
-		}
+	protected void getResourceAsStream(String resource, StreamConsumer handler) {
+		new FileHelper(parent).getResourceAsStream(resource, handler);
 	}
 }
