@@ -23,7 +23,6 @@ public class LowFrameCountAgent extends BaseAgent {
 				return;
 			}
 			
-			
 			float currentFrameRate = parent.frameRate;
 			
 			//are we already slow?
