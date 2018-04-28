@@ -7,9 +7,6 @@ Toggle Foregrounds off for 1 minute
 
 Explore beginning any BlurBackDrop with a quick Refresh Screen
 
-
-
-
 Each APV could have a quiet window where it doesn't accept plugin changes
 
 

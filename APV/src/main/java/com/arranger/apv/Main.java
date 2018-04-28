@@ -921,6 +921,7 @@ public class Main extends PApplet {
 		addConstant(buffer, "screen.width", String.valueOf(width));
 		addConstant(buffer, "screen.height", String.valueOf(height));	
 		addConstant(buffer, "monitoring.enabled", String.valueOf(isMonitoringEnabled()));
+		addConstant(buffer, "quietWindowSize", String.valueOf(rootConfig.getInt("apv.quietWindowSize")));
 		
 		return buffer.toString();
 	}

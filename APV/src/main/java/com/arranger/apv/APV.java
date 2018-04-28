@@ -12,12 +12,16 @@ import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.util.KeyEventHelper;
 import com.arranger.apv.util.RandomHelper;
+import com.arranger.apv.util.frame.QuietWindow;
 
 import processing.event.KeyEvent;
 
 public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandler {
 	
 	private static final Logger logger = Logger.getLogger(APV.class.getName());
+	
+	private static final int DEFAULT_QUIET_WINDOW = 30;
+	private static final String KEY = "apv.quietWindowSize";
 	
 	protected Main.SYSTEM_NAMES systemName;
 	protected Switch sw; //switch is a keyword
@@ -27,6 +31,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	protected CommandHandler handler, switchHandler;
 	protected T currentPlugin;
 	protected KeyEventHelper keyEventHelper;
+	protected QuietWindow quietWindow;
+	protected int quietWindowSize = DEFAULT_QUIET_WINDOW;
 	
 	
 	public APV(Main parent, Main.SYSTEM_NAMES name) {
@@ -40,6 +46,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.systemName = name;
 		this.sw = parent.getSwitchForSystem(name);
 		keyEventHelper = new KeyEventHelper(parent);
+		quietWindow = new QuietWindow(parent, quietWindowSize);
+		quietWindowSize = parent.getConfigurator().getRootConfig().getInt(KEY);
 		setIndex(0, "");
 	}
 
@@ -64,8 +72,15 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		if (currentPlugin.equals(plugin)) {
 			return;
 		}
+		
+		if (quietWindow.isInQuietWindow()) {
+			logger.fine(String.format("Rejected changing %s for %s due to quiet window", getSystemName(), cause));
+			return;
+		}
+		
 		currentPlugin = (T)plugin;
 		fireEvent(plugin, cause);
+		quietWindow.reset(quietWindowSize);
 	}
 
 	public boolean isFrozen() {
@@ -204,6 +219,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			return;
 		}
 		
+		//not checking for quiet window here. Only in the activate function
+		
 		if (newIndex >= list.size()) {
 			index = 0;
 		} else if (newIndex < 0) {
@@ -215,6 +232,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		//set current plugin
 		currentPlugin = list.get(Math.abs(index) % list.size());
 		fireEvent(currentPlugin, cause);
+		
+		quietWindow.reset(quietWindowSize);
 	}
 	
 	protected void fireEvent(APVPlugin plugin, String cause) {
