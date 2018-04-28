@@ -201,6 +201,11 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>ch.bildspur</groupId>
+			<artifactId>postfx</artifactId>
+			<version>0.0.13</version>
+		</dependency>
 	</dependencies>
   <reporting>
     <plugins>

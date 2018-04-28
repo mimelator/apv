@@ -61,9 +61,11 @@ import com.arranger.apv.util.frame.Oscillator.Listener;
 import com.arranger.apv.util.frame.SplineHelper;
 import com.typesafe.config.Config;
 
+import ch.bildspur.postfx.builder.PostFX;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.KeyEvent;
+import processing.opengl.PShader;
 
 public class Main extends PApplet {
 	
@@ -111,6 +113,7 @@ public class Main extends PApplet {
 	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
+	protected PostFX postFx;
 	
 	//Collections
 	protected Map<String, Switch> switches;
@@ -497,6 +500,17 @@ public class Main extends PApplet {
 		return PApplet.lerp(0, MAX_ALPHA, pct);
 	}
 	
+	/**
+	 * The PostFX library has an odd way of loading resources.  Fortunately i can work around that
+	 */
+	public PShader loadShader(String fragFilename) {
+		int indexOf = fragFilename.indexOf("shader/");
+		if (indexOf != -1 && indexOf != 0) {
+			fragFilename = fragFilename.substring(indexOf, fragFilename.length());
+		}
+		return super.loadShader(fragFilename);
+	}
+	
 	public void setup() {
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
@@ -508,6 +522,7 @@ public class Main extends PApplet {
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
+		postFx  = new PostFX(this);
 		pulseListener = new APVPulseListener(this);
 		macroHelper = new MacroHelper(this);
 		hotKeyHelper = new HotKeyHelper(this);
@@ -669,6 +684,13 @@ public class Main extends PApplet {
 		}
 		
 		drawSystem(currentScene, "scene");
+		
+		// add bloom filter
+		  postFx.render()
+		    .sobel()
+		    .bloom(0.5f, 20, 30)
+		    //.chromaticAberration()
+		    .compose();
 
 		final TransitionSystem t = transition;
 		postScene(() -> perfMonitor.doMonitorCheck(currentScene));

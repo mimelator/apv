@@ -8,17 +8,10 @@ Current High Score: 2686 (1hr25min)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Low frame count fire an event
-	* one agent could perform the existing tasks of strobing and scrambling
-	* one agent could turn off foreground
-* load a config file from disk
 * Foregrounds: More sketches like light worm
 * Animations: 
 * Document Commands (for creating Macros)
-* Add documentation to each plugin to describe it's arguments
-	* Just document in reference.conf
-	* Add runtime when saving applicaiton.conf also save a reference.conf.bak export of reference.conf
-	* or maybe just copy the liked scenes into the reference.conf.bak
+* Add documentation in reference.conf to each plugin to describe it's arguments
 * VideoGameStatsAgent record the available CounterMaps
 *****************************************************************************
 *****************************************************************************
