@@ -1,9 +1,16 @@
 package com.arranger.apv.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import com.arranger.apv.Main;
@@ -27,8 +34,27 @@ public class APVWindow extends APVFrame {
 		APVTextFrame help = createTextFrame(parent.getHelpDisplay());
 		
 		master.add(switchStatus.getPanel(), BorderLayout.PAGE_START);
-		master.add(apvCommandFrame.getPanel(), BorderLayout.PAGE_END);
-		master.add(apvMarqueeLauncher.getPanel(), BorderLayout.CENTER);
+		
+		//Big Center Panel
+		Panel centerPanel = new Panel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.add(apvCommandFrame.getPanel());
+		centerPanel.add(apvMarqueeLauncher.getPanel());
+		apvCommandFrame.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+		apvMarqueeLauncher.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+		JButton button = new JButton("Load Config");
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
+				}
+			}
+		});
+		centerPanel.add(button);
+		
+		master.add(centerPanel, BorderLayout.CENTER);
 		master.add(settings.getPanel(), BorderLayout.LINE_START);
 		master.add(help.getPanel(), BorderLayout.LINE_END);
 		

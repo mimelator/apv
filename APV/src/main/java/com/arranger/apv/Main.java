@@ -626,7 +626,11 @@ public class Main extends PApplet {
 	}
 	
 	public void reloadConfiguration() {
-		configurator.reload();
+		reloadConfiguration(null);
+	}
+	
+	public void reloadConfiguration(String file) {
+		configurator.reload(file);
 		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
 
 		macroHelper.reloadConfiguration();

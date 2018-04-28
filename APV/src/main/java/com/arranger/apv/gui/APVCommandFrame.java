@@ -1,10 +1,11 @@
 package com.arranger.apv.gui;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -58,13 +59,18 @@ public class APVCommandFrame extends APVFrame {
 		});
 		
 		panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.add(new JScrollPane(list), BorderLayout.PAGE_START);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JScrollPane jScrollPane = new JScrollPane(list);
+		jScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel.add(jScrollPane);
 		
 		JPanel p = new JPanel();
+		textField.setAlignmentX(Component.LEFT_ALIGNMENT);
+		button.setAlignmentX(Component.LEFT_ALIGNMENT);
 		p.add(textField);
 		p.add(button);
-		panel.add(p, BorderLayout.PAGE_END);
+		p.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel.add(p);
 		
 		if (launchFrame) {
 			createFrame("Commands", 300, 300, panel, () -> {}).pack();

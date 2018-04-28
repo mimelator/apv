@@ -212,8 +212,17 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void reload() {
+		reload(null);
+	}
+	
+	public void reload(String file) {
 		ConfigFactory.invalidateCaches();
-		conf = ConfigFactory.load();
+		if (file == null) {
+			conf = ConfigFactory.load();
+		} else {
+			conf = ConfigFactory.load(file);
+		}
+		
 		initScramble();
 	}
 	
