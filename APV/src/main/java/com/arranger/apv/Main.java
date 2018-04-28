@@ -43,6 +43,7 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Scene;
+import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
 import com.arranger.apv.util.Configurator;
@@ -88,6 +89,7 @@ public class Main extends PApplet {
 	protected APV<LocationSystem> locations; 
 	protected APV<MessageSystem> messages;	
 	protected APV<Scene> scenes;	
+	protected APV<Shader> shaders;	
 	protected APV<TransitionSystem> transitions;
 	
 	//Useful helper classes
@@ -113,7 +115,7 @@ public class Main extends PApplet {
 	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
-	protected PostFX postFx;
+	protected PostFX postFX;
 	
 	//Collections
 	protected Map<String, Switch> switches;
@@ -171,6 +173,7 @@ public class Main extends PApplet {
 		MESSAGES("messages"),
 		PULSELISTENERS("pulseListeners", false),
 		SCENES("scenes"),
+		SHADERS("shaders"),
 		SWITCHES("switches", false),
 		TRANSITIONS("transitions");
 		
@@ -290,6 +293,10 @@ public class Main extends PApplet {
 		return particles;
 	}
 	
+	public PostFX getPostFX() {
+		return postFX;
+	}
+	
 	public SettingsDisplay getSettingsDisplay() {
 		return settingsDisplay;
 	}
@@ -403,6 +410,10 @@ public class Main extends PApplet {
 		return filters;
 	}
 	
+	public APV<Shader> getShaders() {
+		return shaders;
+	}
+	
 	public APV<TransitionSystem> getTransitions() {
 		return transitions;
 	}
@@ -505,7 +516,7 @@ public class Main extends PApplet {
 	 */
 	public PShader loadShader(String fragFilename) {
 		int indexOf = fragFilename.indexOf("shader/");
-		if (indexOf != -1 && indexOf != 0) {
+		if (indexOf > 0) {
 			fragFilename = fragFilename.substring(indexOf, fragFilename.length());
 		}
 		return super.loadShader(fragFilename);
@@ -522,7 +533,7 @@ public class Main extends PApplet {
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
-		postFx  = new PostFX(this);
+		postFX  = new PostFX(this);
 		pulseListener = new APVPulseListener(this);
 		macroHelper = new MacroHelper(this);
 		hotKeyHelper = new HotKeyHelper(this);
@@ -545,6 +556,7 @@ public class Main extends PApplet {
 		systemMap.put(SYSTEM_NAMES.LOCATIONS, new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
 		systemMap.put(SYSTEM_NAMES.MESSAGES, new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
 		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
+		systemMap.put(SYSTEM_NAMES.SHADERS, new APV<Shader>(this, SYSTEM_NAMES.SHADERS));
 		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
 		
 		assignSystems();
@@ -685,14 +697,8 @@ public class Main extends PApplet {
 		
 		drawSystem(currentScene, "scene");
 		
-		// add bloom filter
-		  postFx.render()
-		    .sobel()
-		    .bloom(0.5f, 20, 30)
-		    //.chromaticAberration()
-		    .compose();
-
 		final TransitionSystem t = transition;
+		postScene(shaders.isEnabled(), () -> drawSystem(getShaders().getPlugin(), "shaders"));
 		postScene(() -> perfMonitor.doMonitorCheck(currentScene));
 		postScene(transition != null, () -> drawSystem(t, "transition"));
 		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
@@ -756,6 +762,7 @@ public class Main extends PApplet {
 			foregrounds.scramble(true);
 			backgrounds.scramble(true);
 			backDrops.scramble(true);
+			shaders.scramble(true);
 			filters.scramble(true);
 			messages.scramble(true);
 		}
@@ -776,6 +783,10 @@ public class Main extends PApplet {
 			
 			if (backgrounds.isEnabled()) {
 				msgs.add(getBackgrounds().getPlugin().getDisplayName());
+			}
+			
+			if (shaders.isEnabled()) {
+				msgs.add(getShaders().getPlugin().getDisplayName());
 			}
 			
 			sendMessage(msgs.toArray(new String[msgs.size()]));
@@ -807,6 +818,7 @@ public class Main extends PApplet {
 		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
 		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
 		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
+		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
 		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
 		
 		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment("->"));
@@ -893,6 +905,7 @@ public class Main extends PApplet {
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
+		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
 	}
 	

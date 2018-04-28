@@ -23,16 +23,17 @@ public enum Command {
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
-	SWITCH_PULSE_LISTENER('7', "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
+	SWITCH_PULSE_LISTENER(';', "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
 	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
 	
 	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the foregrounds", false),
-	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backgrounds", false),
-	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables/Freezes(use <CMD>)  the backdrops", false),
-	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables/Freezes(use <CMD>)  the filters", false),
-	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables/Freezes(use <CMD>)  the messages", false),
-	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>)  the transitions", false),
+	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the backgrounds", false),
+	SWITCH_BACKDROPS('3', "BackdropsSwitch", "Enables/Disables/Freezes(use <CMD>) the backdrops", false),
+	SWITCH_FILTERS('4', "FiltersSwitch", "Enables/Disables/Freezes(use <CMD>) the filters", false),
+	SWITCH_MESSAGES('5', "MessagesSwitch", "Enables/Disables/Freezes(use <CMD>) the messages", false),
+	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>) the transitions", false),
+	SWITCH_SHADERS('7', "ShadersSwitch", "Enables/Disables/Freezes(use <CMD>) the shader", false),
 	
 	//Cyclers
 	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT option)"),
@@ -43,6 +44,7 @@ public enum Command {
 	CYCLE_BACKDROPS('o', "Backdrop", "Cycles through the backdrops (SHIFT and ALT options)"),
 	CYCLE_BACKGROUNDS('b', "Background", "Cycles through the backgrounds (SHIFT and ALT options)"),
 	CYCLE_FOREGROUNDS('f', "Foreground", "Cycles through the foregrounds (SHIFT and ALT options)"),
+	CYCLE_SHADERS('s', "Shader", "Cycles through the shaders (SHIFT and ALT options)"),
 	CYCLE_CONTROL_MODE('z', "Cycle Mode", "Cycles between all the available Modes (SHIFT)"),
 	
 	//Typical commands
@@ -52,7 +54,7 @@ public enum Command {
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),
 	RELOAD_CONFIGURATION('u', "Reloads Configuration", "Reloads all of the current configuration"),
-	SCREEN_SHOT('s', "ScreenShot", "Saves the current frame to disk"),
+	SCREEN_SHOT('i', "ScreenShot", "Saves the current frame to disk"),
 	PERF_MONITOR('j', "Perf Monitor", "Outputs the slow monitor data to the console"),
 	REVERSE('r', "Reverse Path", "Changes the direction of the path"),
 	AUDIO_INC('+', "Audio++", "Increases the audio sensitivity"),
