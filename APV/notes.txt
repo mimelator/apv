@@ -1,8 +1,6 @@
 BRANCH: perf-monitor
 https://github.com/mimelator/apv
 
-Show APV Flags
-
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
