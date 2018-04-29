@@ -1,11 +1,8 @@
-BRANCH: master
+BRANCH: perf-monitor
 https://github.com/mimelator/apv
 
-config-choices
-more-sketches
-shaders (w/auto sobel)
-windows
 
+performance on the big window
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)

@@ -52,7 +52,7 @@ public class Scene extends ShapeSystem {
 			case LOCATIONS:
 				return locSys;
 			default:
-				throw new RuntimeException(system.name + " is not a valid component type");
+				return null;
 			}
 		}
 		

@@ -8,6 +8,7 @@ import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
+import com.arranger.apv.scene.Scene.Components;
 import com.arranger.apv.util.CounterMap;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.TextPainter;
@@ -21,7 +22,7 @@ public class VideoGameHelper extends APVPlugin {
 	CounterMap commandSourceMap = new CounterMap();
 	CounterMap pluginMap = new CounterMap();
 	CounterMap pluginSourceMap = new CounterMap();
-	
+	CounterMap sceneComponents = new CounterMap();
 	
 	int totalCommands = 0;
 	int totalPluginChanges = 0;
@@ -35,9 +36,30 @@ public class VideoGameHelper extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			parent.getCommandInvokedEvent().register((c, s) -> recordLastCommand(c, s));
 			parent.getAPVChangeEvent().register((apv, plugin, cause) -> recordPluginChange(apv, plugin, cause));
+			parent.getDrawEvent().register(() -> recordScene());
 		});
 	}
 	
+	public CounterMap getCommandMap() {
+		return commandMap;
+	}
+
+	public CounterMap getCommandSourceMap() {
+		return commandSourceMap;
+	}
+
+	public CounterMap getPluginMap() {
+		return pluginMap;
+	}
+
+	public CounterMap getPluginSourceMap() {
+		return pluginSourceMap;
+	}
+
+	public CounterMap getSceneComponents() {
+		return sceneComponents;
+	}
+
 	public int getTotalCommands() {
 		return totalCommands;
 	}
@@ -94,6 +116,16 @@ public class VideoGameHelper extends APVPlugin {
 		commandMap.add(cmd.name());
 		lastCommandName = cmd.name();
 		totalCommands++;
+	}
+	
+	private void recordScene() {
+		Components comps = parent.getCurrentScene().getComponentsToDrawScene();
+		Main.SYSTEM_NAMES.VALUES.forEach(s -> {
+			APVPlugin comp = comps.getComponentFromSystem(s);
+			if (comp != null) {
+				sceneComponents.add(comp.getDisplayName());
+			}
+		});
 	}
 	
 	/**

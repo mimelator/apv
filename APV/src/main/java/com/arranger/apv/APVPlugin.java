@@ -30,6 +30,12 @@ public class APVPlugin implements PConstants {
 		for (String erase : CLASS_NAMES_TO_ERASE) {
 			n = n.replaceAll(erase, "");
 		}
+		
+		//erase too much?
+		if (n.isEmpty()) {
+			n = getClass().getSimpleName();
+		}
+		
 		return n;
 	}
 	

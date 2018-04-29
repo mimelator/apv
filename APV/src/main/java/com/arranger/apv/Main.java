@@ -193,8 +193,8 @@ public class Main extends PApplet {
 		/**
 		 * @see SafePainter
 		 */
-		private static final List<SYSTEM_NAMES> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
-		private static final int SIZE = VALUES.size();
+		public static final List<SYSTEM_NAMES> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		public static final int SIZE = VALUES.size();
 		private static final Random RANDOM = new Random();
 
 		public static SYSTEM_NAMES random() {
@@ -364,6 +364,10 @@ public class Main extends PApplet {
 	
 	public boolean isAutoAddSobleEnabled() {
 		return getConfigurator().getRootConfig().getBoolean("apv.autoAddSoble");
+	}
+	
+	public boolean isDebugSystemMessages() {
+		return getConfigurator().getRootConfig().getBoolean("apv.debugSystemMessages");
 	}
 	
 	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
@@ -775,7 +779,7 @@ public class Main extends PApplet {
 		colors.scramble(false);
 		
 		//send out a cool message about the new system
-		if (messages.isEnabled()) {
+		if (messages.isEnabled() && isDebugSystemMessages()) {
 			List<String> msgs = new ArrayList<String>();
 			if (backDrops.isEnabled()) {
 				msgs.add(getBackDrops().getPlugin().getDisplayName());
@@ -966,6 +970,7 @@ public class Main extends PApplet {
 		addConstant(buffer, "monitoring.enabled", String.valueOf(isMonitoringEnabled()));
 		addConstant(buffer, "quietWindowSize", String.valueOf(rootConfig.getInt("apv.quietWindowSize")));
 		addConstant(buffer, "autoAddSoble", String.valueOf(isAutoAddSobleEnabled()));
+		addConstant(buffer, "debugSystemMessages", String.valueOf(isDebugSystemMessages()));
 		
 		return buffer.toString();
 	}

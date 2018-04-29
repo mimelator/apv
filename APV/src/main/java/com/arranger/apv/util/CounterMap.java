@@ -11,6 +11,11 @@ public class CounterMap {
 	}
 
 	public void add(String key) {
+		if (key == null || key.isEmpty()) {
+			System.out.println("Uh oh");
+			return;
+		}
+		
 		Integer count = map.get(key);
 		if (count == null) {
 			map.put(key, new Integer(1));
