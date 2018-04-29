@@ -135,6 +135,7 @@ public class Perlin extends PulseListeningControlSystem {
 		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
+		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_LOCATIONS, null));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_COLORS, null));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_FOREGROUNDS, ()-> parent.getForegrounds().isFrozen()));
@@ -142,6 +143,7 @@ public class Perlin extends PulseListeningControlSystem {
 		commandCheckers.add(new CommandChecker(Command.CYCLE_BACKDROPS, ()-> parent.getBackDrops().isFrozen()));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_FILTERS, ()-> parent.getFilters().isFrozen()));
 		commandCheckers.add(new CommandChecker(Command.CYCLE_TRANSITIONS, ()-> parent.getTransitions().isFrozen()));
+		commandCheckers.add(new CommandChecker(Command.CYCLE_SHADERS, ()-> parent.getShaders().isFrozen()));
 		return commandCheckers;
 	};
 

@@ -1,7 +1,10 @@
-BRANCH: shaders
+BRANCH: master
 https://github.com/mimelator/apv
 
-configure shader
+config-choices
+more-sketches
+shaders (w/auto sobel)
+windows
 
 
 *****************************************************************************

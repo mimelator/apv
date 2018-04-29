@@ -55,6 +55,13 @@ public class Shader extends ShapeSystem {
 		super(parent, null);
 		this.shaders = shaders;
 		this.displayName = displayName;
+		
+		//if we don't have a sobel, add one
+		if (parent.isAutoAddSobleEnabled()) {
+			if (!shaders.contains(SHADERS.SOBEL)) {
+				shaders.add(0, SHADERS.SOBEL);
+			}
+		}
 	}
 	
 	public Shader(Configurator.Context ctx) {

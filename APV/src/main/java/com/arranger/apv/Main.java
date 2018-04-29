@@ -362,6 +362,10 @@ public class Main extends PApplet {
 		return getConfigurator().getRootConfig().getBoolean("apv.monitoring.enabled");	
 	}
 	
+	public boolean isAutoAddSobleEnabled() {
+		return getConfigurator().getRootConfig().getBoolean("apv.autoAddSoble");
+	}
+	
 	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
 		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
@@ -961,6 +965,7 @@ public class Main extends PApplet {
 		addConstant(buffer, "screen.height", String.valueOf(height));	
 		addConstant(buffer, "monitoring.enabled", String.valueOf(isMonitoringEnabled()));
 		addConstant(buffer, "quietWindowSize", String.valueOf(rootConfig.getInt("apv.quietWindowSize")));
+		addConstant(buffer, "autoAddSoble", String.valueOf(isAutoAddSobleEnabled()));
 		
 		return buffer.toString();
 	}
