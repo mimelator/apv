@@ -139,6 +139,31 @@ public class Main extends PApplet {
 					videoGameSwitch,
 					scrambleModeSwitch,
 					debugPulseSwitch;
+	
+	public enum FLAGS {
+		
+		CONTROL_MODE("controlMode"),
+		FULL_SCREEN("fullScreen"),
+		SCRAMBLE_SYSTEMS("scrambleSystems"),
+		SCREEN_WIDTH("screen.width"),
+		SCREEN_HEIGHT("screen.height"),
+		MONITORING_ENABLED("monitoring.enabled"),
+		QUIET_WINDOW_SIZE("quietWindowSize"),
+		AUTO_ADD_SOBLE("autoAddSoble"),
+		DEBUG_SYS_MESSAGES("debugSystemMessages");
+		
+		public String name;
+		private FLAGS(String name) {
+			this.name = name;
+		}
+		
+		public String apvName() {
+			return "apv." + name;
+		}
+		
+		public static final List<FLAGS> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		public static final int SIZE = VALUES.size();
+	}
 
 	public enum SWITCH_NAMES {
 		
@@ -223,6 +248,18 @@ public class Main extends PApplet {
 		}
 		
 		initEvents();
+	}
+	
+	public String getConfigValueForFlag(FLAGS flag) {
+		return configurator.getRootConfig().getString(flag.apvName());
+	}
+	
+	public String getConfigString(String path) {
+		return configurator.getRootConfig().getString(path);
+	}
+	
+	public boolean getConfigBoolean(String path) {
+		return configurator.getRootConfig().getBoolean(path);
 	}
 	
 	public APV<? extends APVPlugin> getSystem(SYSTEM_NAMES name) {
@@ -359,15 +396,15 @@ public class Main extends PApplet {
 	}
 	
 	public boolean isMonitoringEnabled() {
-		return getConfigurator().getRootConfig().getBoolean("apv.monitoring.enabled");	
+		return getConfigBoolean(FLAGS.MONITORING_ENABLED.apvName());	
 	}
 	
 	public boolean isAutoAddSobleEnabled() {
-		return getConfigurator().getRootConfig().getBoolean("apv.autoAddSoble");
+		return getConfigBoolean(FLAGS.AUTO_ADD_SOBLE.apvName());
 	}
 	
 	public boolean isDebugSystemMessages() {
-		return getConfigurator().getRootConfig().getBoolean("apv.debugSystemMessages");
+		return getConfigBoolean(FLAGS.DEBUG_SYS_MESSAGES.apvName());
 	}
 	
 	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
@@ -805,7 +842,7 @@ public class Main extends PApplet {
 	}
 
 	protected void initControlMode() {
-		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(configurator.getRootConfig().getString("apv.controlMode"));
+		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(getConfigString(FLAGS.CONTROL_MODE.apvName()));
 	}
 	
 	protected void initializeCommands() {
@@ -962,21 +999,21 @@ public class Main extends PApplet {
 		Config rootConfig = getConfigurator().getRootConfig();
 		
 		//Constants
-		addConstant(buffer, "controlMode", getCurrentControlMode().name());
-		addConstant(buffer, "fullScreen", String.valueOf(rootConfig.getBoolean("apv.fullScreen")));
-		addConstant(buffer, "scrambleSystems", String.valueOf(rootConfig.getBoolean("apv.scrambleSystems")));
-		addConstant(buffer, "screen.width", String.valueOf(width));
-		addConstant(buffer, "screen.height", String.valueOf(height));	
-		addConstant(buffer, "monitoring.enabled", String.valueOf(isMonitoringEnabled()));
-		addConstant(buffer, "quietWindowSize", String.valueOf(rootConfig.getInt("apv.quietWindowSize")));
-		addConstant(buffer, "autoAddSoble", String.valueOf(isAutoAddSobleEnabled()));
-		addConstant(buffer, "debugSystemMessages", String.valueOf(isDebugSystemMessages()));
+		addConstant(buffer, FLAGS.CONTROL_MODE, getCurrentControlMode().name());
+		addConstant(buffer, FLAGS.FULL_SCREEN, String.valueOf(getConfigBoolean(FLAGS.FULL_SCREEN.apvName())));
+		addConstant(buffer, FLAGS.SCRAMBLE_SYSTEMS, String.valueOf(getConfigBoolean(FLAGS.SCRAMBLE_SYSTEMS.apvName())));
+		addConstant(buffer, FLAGS.SCREEN_WIDTH, String.valueOf(width));
+		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
+		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
+		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(rootConfig.getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
+		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
+		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		
 		return buffer.toString();
 	}
 	
-	private void addConstant(StringBuffer buffer, String name, String value) {
-		buffer.append("apv." + name + " = " + value);
+	private void addConstant(StringBuffer buffer, FLAGS flag, String value) {
+		buffer.append("apv." + flag.name + " = " + value);
 		buffer.append(System.lineSeparator());
 	}
 }

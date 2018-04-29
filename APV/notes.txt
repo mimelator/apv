@@ -1,8 +1,8 @@
 BRANCH: perf-monitor
 https://github.com/mimelator/apv
 
+Show APV Flags
 
-performance on the big window
 
 *****************************************************************************
 Current High Score: 2686 (1hr25min)
@@ -13,7 +13,6 @@ TODO:
 * Animations: 
 * Document Commands (for creating Macros)
 * Add documentation in reference.conf to each plugin to describe it's arguments
-* VideoGameStatsAgent record the available CounterMaps
 *****************************************************************************
 *****************************************************************************
 

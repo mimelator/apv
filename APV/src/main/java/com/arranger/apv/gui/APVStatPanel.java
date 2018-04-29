@@ -1,16 +1,20 @@
 package com.arranger.apv.gui;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -20,8 +24,8 @@ import com.arranger.apv.util.CounterMap;
 public class APVStatPanel extends APVFrame {
 
 	CounterMapTableModel model;
-	
 	JPanel panel;
+	Dimension preferredSize = new Dimension(200, 300);
 	
 	public APVStatPanel(Main parent, CounterMap map) {
 		super(parent);
@@ -30,6 +34,12 @@ public class APVStatPanel extends APVFrame {
 		panel = new JPanel();
 		
 		JTable table = new JTable(model);
+		DefaultTableCellRenderer leftTCR = new DefaultTableCellRenderer();
+		leftTCR.setHorizontalAlignment(JLabel.LEFT);
+		table.setDefaultRenderer(String.class, leftTCR);
+		table.setDefaultRenderer(Integer.class, leftTCR);
+		
+		table.setAlignmentX(Component.LEFT_ALIGNMENT);
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
@@ -37,8 +47,9 @@ public class APVStatPanel extends APVFrame {
 		sorter.setSortKeys(sortKeys);
 		table.setRowSorter(sorter);
 		
-		panel.add(new JScrollPane(table));
-		
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel.add(scrollPane);
 		
 		panel.addComponentListener(new ComponentAdapter() {
 			public void componentShown(ComponentEvent e) {
@@ -46,14 +57,20 @@ public class APVStatPanel extends APVFrame {
 			}
 
 			public void componentHidden(ComponentEvent e) {
-				//System.out.println("Component hidden");
 			}
 		});
+		
+		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel.setPreferredSize(preferredSize);
 	}
 	
 	public void update() {
 		model.reload();
 		model.fireTableDataChanged();
+	}
+	
+	public JPanel getPanel() {
+		return panel;
 	}
 	
 	@SuppressWarnings("serial")
@@ -108,8 +125,4 @@ public class APVStatPanel extends APVFrame {
             }
         }
     }
-	
-	public JPanel getPanel() {
-		return panel;
-	}
 }

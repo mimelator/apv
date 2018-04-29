@@ -65,6 +65,7 @@ public class APVCommandFrame extends APVFrame {
 		panel.add(jScrollPane);
 		
 		JPanel p = new JPanel();
+		p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
 		textField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		button.setAlignmentX(Component.LEFT_ALIGNMENT);
 		p.add(textField);
