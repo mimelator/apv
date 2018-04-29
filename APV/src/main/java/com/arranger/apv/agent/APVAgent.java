@@ -18,4 +18,9 @@ public class APVAgent extends APVCallbackHelper {
 	public void registerHandler(APVEvent<EventHandler> event, Handler handler, int framesToSkip) {
 		super.registerHandler(event, handler, framesToSkip, null);
 	}
+	
+	public void reloadConfiguration() {
+		resetHandlerMap();
+		initialize(parent, Main.SYSTEM_NAMES.AGENTS, false);
+	}
 }

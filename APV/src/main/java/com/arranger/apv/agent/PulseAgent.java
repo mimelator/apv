@@ -13,14 +13,16 @@ public abstract class PulseAgent extends BaseAgent {
 		super(parent);
 		
 		registerAgent(getDrawEvent(), () -> {
+			if (pulseListener == null) {
+				pulseListener = new PulseListener(parent, numPulses);
+				return;
+			}
+			
 			if (pulseListener.isNewPulse()) {
 				onPulse();
 			}
 		});
-		
-		parent.getSetupEvent().register(() -> {
-			pulseListener = new PulseListener(parent, numPulses);
-		});
+
 	}
 
 	public PulseAgent(Configurator.Context ctx) {

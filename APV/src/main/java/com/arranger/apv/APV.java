@@ -39,16 +39,20 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this(parent, name, true);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public APV(Main parent, Main.SYSTEM_NAMES name, boolean allowScramble) {
 		super(parent);
+		initialize(parent, name, allowScramble);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void initialize(Main parent, Main.SYSTEM_NAMES name, boolean allowScramble) {
 		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
 		this.systemName = name;
 		this.sw = parent.getSwitchForSystem(name);
 		keyEventHelper = new KeyEventHelper(parent);
 		quietWindow = new QuietWindow(parent, quietWindowSize);
 		quietWindowSize = parent.getConfigurator().getRootConfig().getInt(KEY);
-		setIndex(0, "");
+		setIndex(0, "initialize");
 	}
 
 	public Main.SYSTEM_NAMES getSystemName() {
@@ -176,12 +180,12 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		CommandSystem cs = parent.getCommandSystem();
 		if (command != null && handler != null) {
 			if (!cs.unregisterHandler(command, handler)) {
-				logger.warning("Unable to unregister command: " + command.getDisplayName());
+				throw new RuntimeException("Unable to unregister command: " + command.getDisplayName());
 			}
 		}
 		if (switchCommand != null) {
 			if (!cs.unregisterHandler(switchCommand, switchHandler)) {
-				logger.warning("Unable to switch command: " + switchCommand.getDisplayName());
+				throw new RuntimeException("Unable to switch command: " + switchCommand.getDisplayName());
 			}
 		}
 	}

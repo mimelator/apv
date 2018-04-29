@@ -114,8 +114,6 @@ public class RotatorSystem extends LifecycleSystem {
 			if (shape != null && shape.getShape() != null) {
 				shape.resetMatrix();
 				shape.translate((float)p.getX(), (float)p.getY());
-			} else {
-				//System.out.println("uh oh");
 			}
 		}
 	}

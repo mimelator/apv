@@ -12,8 +12,7 @@ public class CounterMap {
 
 	public void add(String key) {
 		if (key == null || key.isEmpty()) {
-			System.out.println("Uh oh");
-			return;
+			throw new RuntimeException("No key!");
 		}
 		
 		Integer count = map.get(key);

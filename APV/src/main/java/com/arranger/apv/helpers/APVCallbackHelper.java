@@ -17,6 +17,9 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 	private Map<APVEvent<EventHandler>, List<CallbackHandler>> handlerMap = 
 			new HashMap<APVEvent<EventHandler>, List<CallbackHandler>>();
 	
+	private Map<APVEvent<EventHandler>, EventHandler> registeredHandlersMap = 
+			new HashMap<APVEvent<EventHandler>, EventHandler>();
+	
 	public APVCallbackHelper(Main parent, Main.SYSTEM_NAMES name) {
 		super(parent, name, false);
 	}
@@ -24,6 +27,18 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 	@FunctionalInterface
 	public static interface Handler {
 		public void handle();
+	}
+	
+	protected void resetHandlerMap() {
+		registeredHandlersMap.entrySet().forEach(entry -> {
+			APVEvent<EventHandler> event = entry.getKey();
+			EventHandler registered = entry.getValue();
+			if (!event.unregister(registered)) {
+				throw new RuntimeException("unable to unregister handler for event: " + event.getName());
+			}
+		});
+		
+		handlerMap.clear();
 	}
 	
 	protected void registerHandler(APVEvent<EventHandler> event, Handler handler, APVPlugin pluginToCheck) {
@@ -37,7 +52,9 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 			handlerList.add(new CallbackHandler(handler, framesToSkip, pluginToCheck));
 			handlerMap.put(event, handlerList);
 			
-			event.register(() -> {
+			//Only registering once per event type.
+			// With one callback iterate through all the other registered handlers for the same type of event
+			EventHandler register = event.register(() -> {
 				if (isEnabled()) {
 					handlerMap.get(event).forEach(h -> {
 					if (h.readyToHandle()) {
@@ -45,6 +62,9 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 					}});
 				}
 			});
+			
+			registeredHandlersMap.put(event, register);
+			
 		} else {
 			handlerList.add(new CallbackHandler(handler, framesToSkip, pluginToCheck));
 		}

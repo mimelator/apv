@@ -24,8 +24,12 @@ public class APVEvent<T> extends APVPlugin {
 		return listener;
 	}
 	
-	public void unregister(T registered) {
-		listeners.remove(registered);
+	public boolean unregister(T registered) {
+		return listeners.remove(registered);
+	}
+	
+	public void reset() {
+		listeners.clear();
 	}
 	
 	/**

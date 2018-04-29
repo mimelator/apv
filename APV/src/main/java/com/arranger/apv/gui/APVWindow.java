@@ -83,8 +83,8 @@ public class APVWindow extends APVFrame {
 		JPanel commandFramePanel = apvCommandFrame.getPanel();
 		JPanel marqueeLauncherPanel = apvMarqueeLauncher.getPanel();
 		JPanel sPanel = createStats();
-		JButton button = new JButton("Load Config");
-		button.addActionListener(new ActionListener() {
+		JButton loadConfigButton = new JButton("Load Config");
+		loadConfigButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
@@ -94,16 +94,30 @@ public class APVWindow extends APVFrame {
 			}
 		});
 		
+		JButton agentInfoButton = new JButton("Agent Information");
+		agentInfoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new APVTextFrame(parent, "Agents", 400, 400, () -> {
+					return parent.getAgent().getList().stream().
+							map(a -> a.getDisplayName() + ":" + a.getConfig()).
+							collect(Collectors.toList());
+				});
+			}
+		});
+		
 		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		marqueeLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		sPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		button.setAlignmentX(Component.LEFT_ALIGNMENT);
+		loadConfigButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+		agentInfoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		centerPanel.add(commandFramePanel);
 		centerPanel.add(marqueeLauncherPanel);
 		centerPanel.add(sPanel);
-		centerPanel.add(button);
+		centerPanel.add(loadConfigButton);
+		centerPanel.add(agentInfoButton);
 		
 		return centerPanel;
 	}

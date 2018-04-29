@@ -1,17 +1,17 @@
 package com.arranger.apv.agent;
 
-import org.testng.log4testng.Logger;
+import java.util.logging.Logger;
 
+import com.arranger.apv.APVPlugin;
+import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.event.APVEvent;
 import com.arranger.apv.event.APVEvent.EventHandler;
 import com.arranger.apv.helpers.APVCallbackHelper.Handler;
-import com.arranger.apv.APVPlugin;
-import com.arranger.apv.Main;
 
 public class BaseAgent extends APVPlugin {
 	
-	private static Logger logger = Logger.getLogger(BaseAgent.class);
+	private static Logger logger = Logger.getLogger(BaseAgent.class.getName());
 
 	public BaseAgent(Main parent) {
 		super(parent);

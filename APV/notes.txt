@@ -1,5 +1,7 @@
-BRANCH: perf-monitor
+BRANCH: fix-config-reload
 https://github.com/mimelator/apv
+
+monitor active agents
 
 
 *****************************************************************************
@@ -7,6 +9,7 @@ Current High Score: 2686 (1hr25min)
 *****************************************************************************
 *****************************************************************************
 TODO:
+
 * Foregrounds: More sketches like light worm
 * Animations: 
 * Document Commands (for creating Macros)

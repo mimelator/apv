@@ -617,7 +617,7 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
 		
-		getSetupEvent().fire();
+		fireSetupEvent();
 		
 		//Forward messages to the currentLikedScene if applicable
 		getAPVChangeEvent().register((apv, plugin, cause) -> {
@@ -704,10 +704,20 @@ public class Main extends PApplet {
 	public void reloadConfiguration(String file) {
 		configurator.reload(file);
 		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
-
+		
 		macroHelper.reloadConfiguration();
 		hotKeyHelper.reloadConfiguration();
+		agent.reloadConfiguration();
 		reset();
+		
+		registerSystemCommands();
+		fireSetupEvent();
+	}
+
+	protected void fireSetupEvent() {
+		CoreEvent setupEvent = getSetupEvent();
+		setupEvent.fire();
+		setupEvent.reset();
 	}
 	
 	protected void _draw() {
@@ -846,6 +856,18 @@ public class Main extends PApplet {
 	}
 	
 	protected void initializeCommands() {
+		registerMainSwitches();
+		registerSystemCommands();
+		
+		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment("->"));
+		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement("<-"));
+		
+		hotKeyHelper.register();
+		macroHelper.register();
+		registerMainCommands();
+	}
+
+	protected void registerMainSwitches() {
 		registerSwitch(helpSwitch, Command.SWITCH_HELP);
 		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
 		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
@@ -855,23 +877,9 @@ public class Main extends PApplet {
 		registerSwitch(continuousCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
-		
-		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
-		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
-		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS);
-		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS);
-		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
-		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
-		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
-		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
-		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
-		
-		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment("->"));
-		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement("<-"));
-		
-		hotKeyHelper.register();
-		macroHelper.register();
-		
+	}
+
+	protected void registerMainCommands() {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
@@ -886,6 +894,18 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.DOWN_ARROW, e -> disLikeCurrentScene());
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, e -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, e -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+	}
+
+	protected void registerSystemCommands() {
+		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
+		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
+		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS);
+		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS);
+		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
+		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
+		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
+		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
+		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
 	}
 	
 	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand) {
