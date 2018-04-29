@@ -35,11 +35,13 @@ public class PerformanceMonitor extends APVPlugin {
 			APVPlugin filter = c.filter;
 			APVPlugin bg = c.bgSys;
 			APVPlugin fg = c.fgSys;
+			APVPlugin shader = c.shader;
 			
 			//This is an ugly way to build a key
 			StringBuilder builder = new StringBuilder();
 			builder.append((backDrop != null) ? backDrop.getDisplayName() : "()").append(':'); 
 			builder.append((filter != null) ? filter.getDisplayName() : "()").append(':');
+			builder.append((shader != null) ? shader.getDisplayName() : "()").append(':');
 			builder.append((bg != null) ? bg.getDisplayName() : "()").append(':');
 			builder.append((fg != null) ? fg.getDisplayName() : "()");
 			if (fg != null) {

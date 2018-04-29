@@ -8,6 +8,7 @@ import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.event.APVChangeEvent.APVChangeEventHandler;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 
@@ -31,8 +32,9 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 				(ShapeSystem)ctx.loadPlugin(1),
 				(ShapeSystem)ctx.loadPlugin(2),
 				(Filter)ctx.loadPlugin(3),
-				(ColorSystem)ctx.loadPlugin(4),
-				(LocationSystem)ctx.loadPlugin(5));
+				(Shader)ctx.loadPlugin(4),
+				(ColorSystem)ctx.loadPlugin(5),
+				(LocationSystem)ctx.loadPlugin(6));
 		needsSetup = true;
 	}
 
@@ -67,6 +69,9 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 		case FILTERS:
 			shadowedComponents.filter = (Filter)plugin;
 			break;
+		case SHADERS:
+			shadowedComponents.shader = (Shader)plugin;
+			break;
 		case FOREGROUNDS:
 			shadowedComponents.fgSys = (ShapeSystem)plugin;
 			break;
@@ -91,6 +96,7 @@ public class LikedScene extends Scene implements APVChangeEventHandler {
 		setup(cc.bgSys);
 		setup(cc.fgSys);
 		setup(cc.filter);
+		setup(cc.shader);
 		setup(cc.colorSys);
 		setup(cc.locSys);
 		needsSetup = false;

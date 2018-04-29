@@ -2,7 +2,6 @@ package com.arranger.apv.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
@@ -17,16 +16,10 @@ import com.arranger.apv.util.draw.TextPainter;
 
 public class SettingsDisplay extends APVPlugin implements TextSupplier {
 	
-	private static final Logger logger = Logger.getLogger(SettingsDisplay.class.getName());
 	protected List<String> settingsMessages = new ArrayList<String>();
 	
 	public SettingsDisplay(Main parent) {
 		super(parent);
-		
-//		parent.getSetupEvent().register(() -> {
-//				parent.getCommandSystem().registerHandler(Command.WINDOWS, 
-//					e -> createSettingsWindow());
-//		});
 	}
 	
 	@Override
@@ -44,11 +37,10 @@ public class SettingsDisplay extends APVPlugin implements TextSupplier {
 	}
 	
 	public void debugSystem(ShapeSystem ss, String name) {
-		logger.fine("Drawing system [" + name + "] [" + ss.getName() +"]");
-		addSettingsMessage(name +": " + ss.getName());
+		addSettingsMessage(name +": " + ss.getDisplayName());
 		ShapeFactory factory = ss.getFactory();
 		if (factory != null) {
-			addSettingsMessage("  --factory: " + factory.getName());
+			addSettingsMessage("  --factory: " + factory.getDisplayName());
 			factory.addSettingsMessages();
 			addSettingsMessage("    --scale: " + factory.getScale());
 		}

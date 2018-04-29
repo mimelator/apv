@@ -1,6 +1,7 @@
-BRANCH: window
+BRANCH: shaders
 https://github.com/mimelator/apv
 
+configure shader
 
 
 *****************************************************************************

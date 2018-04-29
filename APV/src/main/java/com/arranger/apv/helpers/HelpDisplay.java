@@ -19,11 +19,6 @@ public class HelpDisplay extends APVPlugin implements TextSupplier {
 
 	public HelpDisplay(Main parent) {
 		super(parent);
-		
-//		parent.getSetupEvent().register(() -> {
-//			parent.getCommandSystem().registerHandler(Command.WINDOWS, 
-//				e -> createHelpWindow());
-//		});
 	}
 
 	public void showHelp() {

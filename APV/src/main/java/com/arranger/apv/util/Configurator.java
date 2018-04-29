@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
+import com.arranger.apv.shader.Shader;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigList;
@@ -115,6 +116,22 @@ public class Configurator extends APVPlugin {
 			if (cmdStrings != null) {
 				Arrays.asList(cmdStrings).forEach(cs -> {
 					results.add(Command.valueOf(cs));
+				});
+			}
+			
+			return results;
+		}
+		
+		
+		/**
+		 * I'd like to refactor this and {@link #getCommandList(int)} into a generic function
+		 */
+		public List<Shader.SHADERS> getShaderList(int index) {
+			List<Shader.SHADERS> results = new ArrayList<Shader.SHADERS>();
+			String [] cmdStrings = getStringArray(index, null);
+			if (cmdStrings != null) {
+				Arrays.asList(cmdStrings).forEach(cs -> {
+					results.add(Shader.SHADERS.valueOf(cs.toUpperCase()));
 				});
 			}
 			

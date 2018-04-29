@@ -686,7 +686,8 @@ public class Main extends PApplet {
 				ShapeSystem bgSys = backgrounds.getPlugin(true);
 				Filter filter = filters.getPlugin(true);
 				ShapeSystem fgSys = foregrounds.getPlugin(true);
-				currentScene.setSystems(backDrop, bgSys, fgSys, filter, getColor(), getLocations().getPlugin());
+				Shader shader = shaders.getPlugin(true);
+				currentScene.setSystems(backDrop, bgSys, fgSys, filter, shader, getColor(), getLocations().getPlugin());
 			} else {
 				//using an animation.  See if it is brand new?  If so, start a transition
 				if (currentScene.isNew()) {
@@ -698,7 +699,6 @@ public class Main extends PApplet {
 		drawSystem(currentScene, "scene");
 		
 		final TransitionSystem t = transition;
-		postScene(shaders.isEnabled(), () -> drawSystem(getShaders().getPlugin(), "shaders"));
 		postScene(() -> perfMonitor.doMonitorCheck(currentScene));
 		postScene(transition != null, () -> drawSystem(t, "transition"));
 		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
