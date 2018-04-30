@@ -5,8 +5,8 @@ import com.arranger.apv.event.APVEvent.EventHandler;
 
 public class DrawShapeEvent extends APVEvent<EventHandler> {
 	
-	public DrawShapeEvent(Main parent) {
-		super(parent);
+	public DrawShapeEvent(Main parent, EventTypes eventType) {
+		super(parent, eventType);
 	}
 
 }

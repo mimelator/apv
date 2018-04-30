@@ -83,6 +83,10 @@ public class Shader extends ShapeSystem {
 
 	@Override
 	public void draw() {
+		if (shaders.isEmpty()) {
+			return;
+		}
+		
 		PostFXBuilder render = parent.getPostFX().render();
 		shaders.forEach(s -> {
 			s.shaderPass.addPass(render);

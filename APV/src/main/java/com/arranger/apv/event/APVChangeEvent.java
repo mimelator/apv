@@ -16,7 +16,7 @@ public class APVChangeEvent extends APVEvent<APVChangeEventHandler> {
 	}
 
 	public APVChangeEvent(Main parent) {
-		super(parent);
+		super(parent, EventTypes.APV_CHANGE);
 	}
 
 	public void fire(APV<? extends APVPlugin> apv, APVPlugin plugin, String cause) {

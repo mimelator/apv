@@ -32,7 +32,7 @@ public class AgentEvent extends BaseAgent implements Handler {
 		if (event == null) {
 			return String.format("{%s : [PULSE, %d]}", getName(), numToSkip);
 		} else {
-			return String.format("{%s : [%s, %d]}", getName(), event.getName(), numToSkip);
+			return String.format("{%s : [%s, %d]}", getName(), event.getEventType().name(), numToSkip);
 		}
 	}
 	

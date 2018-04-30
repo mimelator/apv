@@ -18,7 +18,7 @@ public class CommandInvokedEvent extends APVEvent<APVCommandInvokedEventHandler>
 	}
 
 	public CommandInvokedEvent(Main parent) {
-		super(parent);
+		super(parent, EventTypes.COMMAND_INVOKED);
 	}
 	
 	public void fire(Command cmd, String source) {

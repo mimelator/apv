@@ -4,24 +4,26 @@ https://github.com/mimelator/apv
 DONE: Cursor on for APVWindow
 
 
-DONE? : Alright, AgentActions that Activate a plugin need a frickin quiet window
+DONE : Alright, AgentActions that Activate a plugin need a frickin quiet window
 			: Maybe all agents should have a default quiet window.  Like apv.quietWindowSize = 30
 
 
-Can't switch to a shader because the display name on Main#activatePlugin
-I'd like to turn off shaders for the Plasma Background
-Need an action: Set STATE (ENABLED, DISABLED, FROZEN) for any given System
+DONE Can't switch to a shader because the display name on Main#activatePlugin
+??? Need an action: Set STATE (ENABLED, DISABLED, FROZEN) for any given System
+
+DONE HotKey for specific shaders: {HotKey : [SHADERS, Chrom]} 
+
+DONE Agent Event isn't serializing correctly
 
 
-HotKey for specific shaders: {HotKey : [SHADERS, Chrom]} 
+DONE Need a NoShader just like BackDropSystem.  Should Rename to NoBackDrop
 
-Need a NoShader just like BackDropSystem.  Should Rename to NoBackDrop
+
 Change Command Firing strategy to once per event not once per handler
-
-
 
 The new Marquee is a countup to 7 or 8
 
+run a perf test looking for hot spots
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)

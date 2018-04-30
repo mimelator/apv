@@ -49,7 +49,8 @@ public class Condition extends APVPlugin {
 			Components comps = parent.getCurrentScene().getComponentsToDrawScene();
 			APVPlugin comp = comps.getComponentFromSystem(system);
 			if (comp != null) {
-				return target == comp.getName().equals(pluginName);
+				boolean nameMatches = comp.getName().equals(pluginName) || comp.getDisplayName().equals(pluginName);
+				return target == nameMatches;
 			}
 		}
 		return target;

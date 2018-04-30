@@ -27,6 +27,7 @@ import com.arranger.apv.cmd.SceneSelectInterceptor;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
+import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.util.FileHelper;
@@ -94,17 +95,14 @@ public abstract class APVPluginTest {
         when(beatInfo.getFFT()).thenReturn(fft);
         assert(parent.getAudio().getBeatInfo() != null);
         
-        //mock audio's pulse detector and more
         when(beatInfo.getPulseDetector()).thenReturn(beatDetect);
         when(beatDetect.isOnset()).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getPulseDetector() != null);
-        
-        //mock audio's freq detector
+
         when(beatInfo.getFreqDetector()).thenReturn(beatDetect);
         when(beatDetect.isRange(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
         
-        //mock Main's default pulse listener and command listener
         when(parent.getPulseListener()).thenReturn(apvPulseListener);
         when(parent.getCommandSystem()).thenReturn(commandSystem);
         when(parent.getConfig()).thenCallRealMethod();
@@ -114,12 +112,12 @@ public abstract class APVPluginTest {
         when(parent.format(Mockito.any())).thenCallRealMethod();
         when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
         when(parent.getConfigValueForFlag(Mockito.any())).thenCallRealMethod();
-        when(parent.getSetupEvent()).thenReturn(new CoreEvent(parent));
-        when(parent.getSceneCompleteEvent()).thenReturn(new CoreEvent(parent));
-        when(parent.getDrawEvent()).thenReturn(new CoreEvent(parent));
-        when(parent.getSparkEvent()).thenReturn(new DrawShapeEvent(parent));
-        when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent));
-        when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent));
+        when(parent.getSetupEvent()).thenReturn(new CoreEvent(parent, EventTypes.SETUP));
+        when(parent.getSceneCompleteEvent()).thenReturn(new CoreEvent(parent, EventTypes.SCENE_COMPLETE));
+        when(parent.getDrawEvent()).thenReturn(new CoreEvent(parent, EventTypes.DRAW));
+        when(parent.getSparkEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.SPARK));
+        when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.CARNIVAL));
+        when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
         
         
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);

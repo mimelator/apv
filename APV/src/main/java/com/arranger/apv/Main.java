@@ -118,9 +118,9 @@ public class Main extends PApplet {
 	protected PostFX postFX;
 	
 	//Collections
-	protected Map<String, Switch> switches;
-	protected Map<EventTypes, APVEvent<?>> eventMap;
-	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap;
+	protected Map<String, Switch> switches = new HashMap<String, Switch>();
+	protected Map<EventTypes, APVEvent<?>> eventMap = new HashMap<EventTypes, APVEvent<?>>();
+	protected Map<SYSTEM_NAMES, APV<? extends APVPlugin>> systemMap = new HashMap<SYSTEM_NAMES, APV<? extends APVPlugin>>();
 	
 	//Stateful data
 	private SafePainter safePainter = new SafePainter(this, ()-> _draw());
@@ -597,7 +597,6 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
-		systemMap = new HashMap<SYSTEM_NAMES, APV<? extends APVPlugin>>();
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
 		systemMap.put(SYSTEM_NAMES.COLORS, new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS));
@@ -983,8 +982,6 @@ public class Main extends PApplet {
 	
 	@SuppressWarnings("unchecked")
 	protected void configureSwitches() {
-		switches = new HashMap<String, Switch>();
-
 		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
 		ss.forEach(s -> switches.put(s.name, s));
 		
@@ -1006,19 +1003,18 @@ public class Main extends PApplet {
 	}
 	
 	protected void initEvents() {
-		eventMap = new HashMap<EventTypes, APVEvent<?>>();
-		eventMap.put(EventTypes.SETUP, new CoreEvent(this));
-		eventMap.put(EventTypes.DRAW, new CoreEvent(this));
-		eventMap.put(EventTypes.SCENE_COMPLETE, new CoreEvent(this));
-		eventMap.put(EventTypes.STROBE, new CoreEvent(this));
+		eventMap.put(EventTypes.SETUP, new CoreEvent(this, EventTypes.SETUP));
+		eventMap.put(EventTypes.DRAW, new CoreEvent(this, EventTypes.DRAW));
+		eventMap.put(EventTypes.SCENE_COMPLETE, new CoreEvent(this, EventTypes.SCENE_COMPLETE));
+		eventMap.put(EventTypes.STROBE, new CoreEvent(this, EventTypes.STROBE));
 		eventMap.put(EventTypes.COMMAND_INVOKED, new CommandInvokedEvent(this));
-		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this));
-		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this));
-		eventMap.put(EventTypes.STAR, new DrawShapeEvent(this));
-		eventMap.put(EventTypes.RANDOM_MESSAGE, new DrawShapeEvent(this));
-		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this));
+		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this, EventTypes.SPARK));
+		eventMap.put(EventTypes.CARNIVAL, new DrawShapeEvent(this, EventTypes.CARNIVAL));
+		eventMap.put(EventTypes.STAR, new DrawShapeEvent(this, EventTypes.STAR));
+		eventMap.put(EventTypes.RANDOM_MESSAGE, new DrawShapeEvent(this, EventTypes.RANDOM_MESSAGE));
+		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this, EventTypes.TWIRL));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
-		eventMap.put(EventTypes.LOCATION, new CoreEvent(this));
+		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 	}
 	
 	public String getConfig() {

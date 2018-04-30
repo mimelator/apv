@@ -13,10 +13,12 @@ public class APVEvent<T> extends APVPlugin {
 		void onEvent();
 	}
 
+	protected EventTypes eventType;
 	protected List<T> listeners = new ArrayList<T>();
 	
-	public APVEvent(Main parent) {
+	public APVEvent(Main parent, EventTypes eventType) {
 		super(parent);
+		this.eventType = eventType;
 	}
 	
 	public T register(T listener) {
@@ -32,6 +34,10 @@ public class APVEvent<T> extends APVPlugin {
 		listeners.clear();
 	}
 	
+	public EventTypes getEventType() {
+		return eventType;
+	}
+
 	/**
 	 * Need a temp copy of the list
 	 * because it might be modified on the fly due to calls to {@link #unregister(EventHandler)}

@@ -5,8 +5,8 @@ import com.arranger.apv.event.APVEvent.EventHandler;
 
 public class CoreEvent extends APVEvent<EventHandler> {
 	
-	public CoreEvent(Main parent) {
-		super(parent);
+	public CoreEvent(Main parent, EventTypes eventType) {
+		super(parent, eventType);
 	}
 
 }
