@@ -10,9 +10,7 @@ DONE HotKey for specific shaders: {HotKey : [SHADERS, Chrom]}
 DONE Agent Event isn't serializing correctly
 DONE Need a NoShader just like BackDropSystem.  Should Rename to NoBackDrop
 DONE Change Command Firing strategy to once per event not once per handler
-
-
-IN Progress The new Marquee is a countup to 7 or 8
+DONE The new Marquee is a countup to 7 or 8
 	I can make a Countdown Scene.  How would that be used from the Marquee?
 	Convert the Countdown to a StarPainter like thing
 
