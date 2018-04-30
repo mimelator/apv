@@ -53,9 +53,16 @@ public class APVCommandFrame extends APVFrame {
 		});
 		
 		JTextField textField = new JTextField(30); //max length of Marquee
+		textField.addActionListener(e -> {
+				parent.sendMarqueeMessage(textField.getText());
+				textField.setText("");
+			}
+		);
+		
 		JButton button = new JButton("Send Message");
 		button.addActionListener(l -> {
 			parent.sendMarqueeMessage(textField.getText());
+			textField.setText("");
 		});
 		
 		panel = new JPanel();

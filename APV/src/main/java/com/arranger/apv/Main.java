@@ -251,15 +251,15 @@ public class Main extends PApplet {
 	}
 	
 	public String getConfigValueForFlag(FLAGS flag) {
-		return configurator.getRootConfig().getString(flag.apvName());
+		return getConfigurator().getRootConfig().getString(flag.apvName());
 	}
 	
 	public String getConfigString(String path) {
-		return configurator.getRootConfig().getString(path);
+		return getConfigurator().getRootConfig().getString(path);
 	}
 	
 	public boolean getConfigBoolean(String path) {
-		return configurator.getRootConfig().getBoolean(path);
+		return getConfigurator().getRootConfig().getBoolean(path);
 	}
 	
 	public APV<? extends APVPlugin> getSystem(SYSTEM_NAMES name) {
@@ -407,9 +407,16 @@ public class Main extends PApplet {
 		return getConfigBoolean(FLAGS.DEBUG_SYS_MESSAGES.apvName());
 	}
 	
-	public void activateNextPlugin(String pluginName, SYSTEM_NAMES systemName, String cause) {
+	public void activateNextPlugin(String pluginDisplayName, SYSTEM_NAMES systemName, String cause) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
-		APVPlugin plugin = apv.getList().stream().filter(p -> p.getName().equals(pluginName)).findFirst().get();
+		APVPlugin plugin = apv.getList().stream().filter(p -> {
+			String displayName = p.getDisplayName();
+			String name = p.getName();
+			boolean b1 = pluginDisplayName.equalsIgnoreCase(displayName);
+			boolean b2 = pluginDisplayName.equalsIgnoreCase(name);
+			return b1 || b2;
+			
+		}).findFirst().get();
 		apv.setNextPlugin(plugin, cause);
 		apv.setEnabled(true);
 	}

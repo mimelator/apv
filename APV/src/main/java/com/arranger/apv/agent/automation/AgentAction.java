@@ -47,7 +47,12 @@ public class AgentAction extends APVPlugin {
 			parent.getEventForType(EventTypes.valueOf(val1)).fire();
 			break;
 		case ACTIVATE:
-			parent.activateNextPlugin(val2, Main.SYSTEM_NAMES.valueOf(val1), agent.getDisplayName());
+			try {
+				parent.activateNextPlugin(val2, Main.SYSTEM_NAMES.valueOf(val1), agent.getDisplayName());
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
 			break;
 		}
 	}

@@ -1,5 +1,6 @@
 package com.arranger.apv.gui;
 
+import java.awt.Cursor;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -30,6 +31,8 @@ public class APVFrame extends APVPlugin {
 	}
 	
 	protected JFrame createFrame(String title, int sizeX, int sizeY, JComponent content, WindowClosing wc) {
+		content.setCursor(Cursor.getDefaultCursor());
+		
 		JFrame frame = new JFrame(title);
 		frame.setSize(sizeX, sizeY);
 		frame.setResizable(true);

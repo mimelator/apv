@@ -6,9 +6,11 @@ import com.arranger.apv.event.APVEvent.EventHandler;
 import com.arranger.apv.helpers.APVCallbackHelper;
 
 public class APVAgent extends APVCallbackHelper {
+	
 
 	public APVAgent(Main parent) {
 		super(parent, Main.SYSTEM_NAMES.AGENTS);
+		
 	}
 
 	public void registerHandler(APVEvent<EventHandler> event, Handler handler) {

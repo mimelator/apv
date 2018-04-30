@@ -113,8 +113,7 @@ public abstract class APVPluginTest {
         when(parent.getMarqueeList()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
         when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
-        when(parent.loadShader(Mockito.anyString())).thenCallRealMethod();
-        when(parent.createInputRaw(Mockito.anyString())).thenCallRealMethod();
+        when(parent.getConfigValueForFlag(Mockito.any())).thenCallRealMethod();
         when(parent.getSetupEvent()).thenReturn(new CoreEvent(parent));
         when(parent.getSceneCompleteEvent()).thenReturn(new CoreEvent(parent));
         when(parent.getDrawEvent()).thenReturn(new CoreEvent(parent));

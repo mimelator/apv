@@ -58,7 +58,7 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 				if (isEnabled()) {
 					handlerMap.get(event).forEach(h -> {
 					if (h.readyToHandle()) {
-						h.handler.handle();
+						onCallbackHandler(h);
 					}});
 				}
 			});
@@ -70,19 +70,27 @@ public class APVCallbackHelper extends APV<APVPlugin> {
 		}
 	}
 	
-	class CallbackHandler {
+	protected void onCallbackHandler(CallbackHandler callbackHandler) {
+		callbackHandler.handler.handle();
+	}
+	
+	protected class CallbackHandler {
 		private Handler handler;
 		private int frameCount = 0;
 		private int framesToSkip;
 		private APVPlugin pluginToCheck;
 		
-		CallbackHandler(Handler handler, int framesToSkip, APVPlugin pluginToCheck) {
+		public Handler getHandler() {
+			return handler;
+		}
+
+		private CallbackHandler(Handler handler, int framesToSkip, APVPlugin pluginToCheck) {
 			this.handler = handler;
 			this.framesToSkip = framesToSkip;
 			this.pluginToCheck = pluginToCheck;
 		}
 		
-		boolean readyToHandle() {
+		private boolean readyToHandle() {
 			frameCount++;
 			boolean result = (frameCount % framesToSkip == 0);
 			
