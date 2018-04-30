@@ -17,8 +17,6 @@ public class StarPainter extends APVPlugin {
 	private float scaleSmall = SCALE_SMALL, scaleLarge = SCALE_LARGE;
 
 	public StarPainter(Main parent) {
-		//Who initializes this StarPainter?  The StarAgent?
-		
 		super(parent);
 		star = new StarMaker(parent).createStar();
 		

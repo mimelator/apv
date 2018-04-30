@@ -55,4 +55,8 @@ public class BaseAgent extends APVPlugin {
 	public APVEvent<EventHandler> getTwirlEvent() {
 		return parent.getTwirlEvent();
 	}
+	
+	public APVEvent<EventHandler> getMarqueeEvent() {
+		return parent.getMarqueeEvent();
+	}
 }

@@ -48,7 +48,7 @@ public class AgentAction extends APVPlugin {
 			parent.getEventForType(EventTypes.valueOf(val1)).fire();
 			break;
 		case ACTIVATE:
-			parent.activateNextPlugin(val2, Main.SYSTEM_NAMES.valueOf(val1), agent.getDisplayName());
+			parent.activateNextPlugin(Main.SYSTEM_NAMES.valueOf(val1), val2, agent.getDisplayName());
 			break;
 		case SET_STATE:
 			Main.SYSTEM_NAMES system = Main.SYSTEM_NAMES.valueOf(val1);

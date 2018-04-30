@@ -67,9 +67,10 @@ public class Marquee extends Animation {
 	@Override
 	public void drawScene() {
 		if (pg == null) {
-			init();
+			initOffScreenGraphics();
 			drawCount = 0;
 			tracker = new Tracker<Marquee>(parent, parent.getSceneCompleteEvent());
+			parent.getMarqueeEvent().fire();
 		}
 		
 		//draw background frame always the same size
@@ -110,7 +111,7 @@ public class Marquee extends Animation {
 		}
 	}
 	
-	protected void init() {
+	protected void initOffScreenGraphics() {
 		//adjust the textSize based on the length of the text
 		int textOffset = (int)PApplet.map(text.length(), 1, MAX_TEXT_LENGTH, 0, MAX_TEXT_LENGTH_OFFSET);
 		int textSize = TEXT_SIZE - textOffset;

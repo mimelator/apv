@@ -38,12 +38,7 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	
 	@Override
 	public void onKeyPressed(KeyEvent event) {
-		try {
-			parent.activateNextPlugin(pluginName, system, "hotKey");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
+		parent.activateNextPlugin(system, pluginName, "hotKey");
 	}
 	
 	public void unregister() {

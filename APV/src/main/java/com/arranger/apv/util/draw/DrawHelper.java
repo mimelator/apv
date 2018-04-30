@@ -40,4 +40,8 @@ public class DrawHelper extends APVPlugin {
 			}
 		});
 	}
+	
+	public void complete() {
+		frameFader.stopFade();
+	}
 }

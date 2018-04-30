@@ -31,6 +31,10 @@ public class FrameFader extends APVPlugin {
 		this.numFramesToFade = numFramesToFade;
 		startFade();
 	}
+	
+	public void stopFade() {
+		lastFrame = 0;
+	}
 
 	public void startFade() {
 		lastFrame = parent.getFrameCount();

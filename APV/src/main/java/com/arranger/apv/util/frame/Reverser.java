@@ -17,6 +17,7 @@ public class Reverser extends APVPlugin {
 	private PulseListener pulseListener;
 	private SingleFrameSkipper frameSkipper;
 	private boolean reverse = false;
+	private boolean enabled = true;
 	
 	public Reverser(Main parent, int numPulses) {
 		super(parent);
@@ -29,13 +30,14 @@ public class Reverser extends APVPlugin {
 	 * Only automatically reverse once / frame
 	 */
 	public boolean isReverse() {
-		boolean newFrame = frameSkipper.isNewFrame();
-		boolean newPulse = pulseListener.isNewPulse();
-		
-		logger.fine("Reverser [newFrame, newPulse]: [" + newFrame + ", " + newPulse + "]");
-		
-		if (newFrame && newPulse) {
-			reverse = !reverse;
+		if (enabled) {
+			boolean newFrame = frameSkipper.isNewFrame();
+			boolean newPulse = pulseListener.isNewPulse();
+			logger.fine("Reverser [newFrame, newPulse]: [" + newFrame + ", " + newPulse + "]");
+			
+			if (newFrame && newPulse) {
+				reverse = !reverse;
+			}
 		}
 		
 		return reverse;
@@ -47,5 +49,9 @@ public class Reverser extends APVPlugin {
 	
 	public void reverse() {
 		this.reverse = !reverse;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

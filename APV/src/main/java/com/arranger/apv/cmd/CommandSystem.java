@@ -102,9 +102,9 @@ public class CommandSystem extends APVPlugin {
 			if (list != null  && !list.isEmpty()) {
 				list.forEach(c -> {
 					c.handler.onKeyPressed(keyEvent);
-					parent.getCommandInvokedEvent().fire(c.command, source);
 				});
 				lastCommand = list.get(list.size() - 1);
+				parent.getCommandInvokedEvent().fire(lastCommand.command, source);
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);

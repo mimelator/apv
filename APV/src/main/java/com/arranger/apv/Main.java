@@ -383,6 +383,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EventTypes.TWIRL);
 	}
 	
+	public DrawShapeEvent getMarqueeEvent() {
+		return (DrawShapeEvent)eventMap.get(EventTypes.MARQUEE);
+	}
+	
 	public CommandInvokedEvent getCommandInvokedEvent() {
 		return (CommandInvokedEvent)eventMap.get(EventTypes.COMMAND_INVOKED);
 	}
@@ -407,9 +411,15 @@ public class Main extends PApplet {
 		return getConfigBoolean(FLAGS.DEBUG_SYS_MESSAGES.apvName());
 	}
 	
-	public void activateNextPlugin(String pluginDisplayName, SYSTEM_NAMES systemName, String cause) {
+	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
-		APVPlugin plugin = apv.getList().stream().filter(p -> {
+		APVPlugin plugin  = getPluginByName(apv, pluginDisplayName);
+		apv.setNextPlugin(plugin, cause);
+		apv.setEnabled(true);
+	}
+	
+	public APVPlugin getPluginByName(APV<? extends APVPlugin> apv, String pluginDisplayName) {
+		return apv.getList().stream().filter(p -> {
 			String displayName = p.getDisplayName();
 			String name = p.getName();
 			boolean b1 = pluginDisplayName.equalsIgnoreCase(displayName);
@@ -417,8 +427,6 @@ public class Main extends PApplet {
 			return b1 || b2;
 			
 		}).findFirst().get();
-		apv.setNextPlugin(plugin, cause);
-		apv.setEnabled(true);
 	}
 	
 	public void setDefaultScene(String cause) {
@@ -1013,6 +1021,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.STAR, new DrawShapeEvent(this, EventTypes.STAR));
 		eventMap.put(EventTypes.RANDOM_MESSAGE, new DrawShapeEvent(this, EventTypes.RANDOM_MESSAGE));
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this, EventTypes.TWIRL));
+		eventMap.put(EventTypes.MARQUEE, new DrawShapeEvent(this, EventTypes.MARQUEE));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 	}

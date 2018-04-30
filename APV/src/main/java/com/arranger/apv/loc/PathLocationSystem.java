@@ -53,6 +53,10 @@ public abstract class PathLocationSystem extends LocationSystem {
 		return splitter;
 	}
 	
+	public void setReverseEnabled(boolean enabled) {
+		reverser.setEnabled(enabled);
+	}
+	
 	public abstract int getLoopInSeconds();
 	
 	protected abstract Shape createPath();
