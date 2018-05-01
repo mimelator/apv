@@ -15,12 +15,12 @@ public abstract class PointsLocationSystem extends PathLocationSystem {
 	
 	private static final float SCALER = .9f;
 
-	public PointsLocationSystem(Main parent, boolean splitter) {
-		super(parent, splitter);
+	public PointsLocationSystem(Main parent, boolean splitter, boolean allowRotation) {
+		super(parent, splitter, allowRotation);
 	}
 
 	public PointsLocationSystem(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getBoolean(0, false));
+		super(ctx);
 	}
 	
 	protected abstract double [][] getPoints();

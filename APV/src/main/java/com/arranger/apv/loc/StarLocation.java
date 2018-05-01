@@ -14,12 +14,12 @@ public class StarLocation extends PointsLocationSystem {
 	private static final int LOOP_IN_SECONDS = 5;
 	
 	
-	public StarLocation(Main parent, boolean splitter) {
-		super(parent, splitter);
+	public StarLocation(Main parent, boolean splitter, boolean allowRotation) {
+		super(parent, splitter, allowRotation);
 	}
 	
 	public StarLocation(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getBoolean(0, false));
+		super(ctx);
 	}
 
 	@Override

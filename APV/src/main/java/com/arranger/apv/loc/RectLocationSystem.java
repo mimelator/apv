@@ -11,12 +11,12 @@ public class RectLocationSystem extends PathLocationSystem {
 	private static final int LOOP_IN_SECONDS = 5;
 	private static final float SCALE = .75f;
 	
-	public RectLocationSystem(Main parent, boolean splitter) {
-		super(parent, splitter);
+	public RectLocationSystem(Main parent, boolean splitter, boolean allowRotation) {
+		super(parent, splitter, allowRotation);
 	}
 	
 	public RectLocationSystem(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getBoolean(0, false));
+		super(ctx);
 	}
 
 	public int getLoopInSeconds() {

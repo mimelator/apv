@@ -10,8 +10,8 @@ public class ArcLocation extends PointsLocationSystem {
 		    { 0, 0 }, { 100, 0 }, { 100, 100 }, { 0, 100 }, { 0, 0 },
 		};
 	
-	public ArcLocation(Main parent, boolean splitter) {
-		super(parent, splitter);
+	public ArcLocation(Main parent, boolean splitter, boolean allowRotation) {
+		super(parent, splitter, allowRotation);
 	}
 
 	public ArcLocation(Context ctx) {

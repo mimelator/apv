@@ -2,6 +2,7 @@
 package com.arranger.apv.loc;
 
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.factory.PrimitiveShapeFactory;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.frame.Reverser;
 import com.arranger.apv.util.frame.SingleFrameSkipper;
 
@@ -24,16 +26,18 @@ public abstract class PathLocationSystem extends LocationSystem {
 	private int startTime;
 	private Reverser reverser;
 	private boolean splitter = true;
+	private boolean allowRotation = false;
 	
 	private SingleFrameSkipper skipper = new SingleFrameSkipper(parent);
 	private Point2D lastAnswer = new Point2D.Float();
 	
-	public PathLocationSystem(Main parent, boolean splitter) {
+	public PathLocationSystem(Main parent, boolean splitter, boolean allowRotation) {
 		super(parent);
 		this.secondsPerPath = getLoopInSeconds();
 		points = PrimitiveShapeFactory.flattenShape(createPath());
 		startTime = parent.millis();
 		this.splitter = splitter;
+		this.allowRotation = allowRotation;
 		reverser = new Reverser(parent, DEFAULT_PULSES_TO_REVERSE);
 		
 		parent.getSetupEvent().register(() -> {
@@ -43,10 +47,14 @@ public abstract class PathLocationSystem extends LocationSystem {
 		});
 	}
 	
+	public PathLocationSystem(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getBoolean(0, false), ctx.getBoolean(1, false));
+	}
+	
 	@Override
 	public String getConfig() {
 		//{PathLocationSystem : [true]}
-		return String.format("{%s : [%b]}", getName(), splitter);
+		return String.format("{%s : [%b, %b]}", getName(), splitter, allowRotation);
 	}
 	
 	public boolean isSplitter() {
@@ -64,12 +72,25 @@ public abstract class PathLocationSystem extends LocationSystem {
 	public Point2D getCurrentPoint() {
 		 //only want to respond once / frame
 		if (skipper.isNewFrame()) {
-			lastAnswer = _getCurrentPoint();
+			lastAnswer = rotatePoint(generatePoint());
 		}
 		return lastAnswer;
 	}
+	
+	protected Point2D rotatePoint(Point2D pt) {	
+		if (!allowRotation) {
+			return pt;
+		}
+
+		Point2D result = new Point2D.Double();
+		AffineTransform tra = AffineTransform.getTranslateInstance(parent.width / 2, parent.height / 2);
+		tra.rotate(PApplet.sin(parent.getFrameCount()));
+		tra.translate(-parent.width / 2, -parent.height / 2);
+		tra.transform(pt, result);
+		return result;
+	}
 		
-	protected Point2D _getCurrentPoint() {	
+	protected Point2D generatePoint() {	
 		if (splitter) {
 			reverser.reverse();
 		}

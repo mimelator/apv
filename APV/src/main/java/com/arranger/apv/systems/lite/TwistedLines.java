@@ -15,6 +15,7 @@ import processing.core.PApplet;
  */
 public class TwistedLines extends LiteShapeSystem {
 
+	private static final int ALPHA = 127;
 	private static final int LINE_WIDTH = 5;
 	private static final int NUM_LINES = 3;
 	private static final int LOUD_AMP = 3;
@@ -50,7 +51,7 @@ public class TwistedLines extends LiteShapeSystem {
 		parent.strokeWeight(LINE_WIDTH);
 		for (int i = 0; i < NUM_LINES; i++) {
 			Color useCol = colors[i];
-			parent.stroke(useCol.getRed(), useCol.getGreen(), useCol.getBlue());
+			parent.stroke(useCol.getRed(), useCol.getGreen(), useCol.getBlue(), ALPHA);
 			parent.beginShape();
 			for (int w = -20; w < parent.width + 20; w += 5) {
 				int h = parent.height / 2;

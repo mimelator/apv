@@ -1,8 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
-* run a perf test looking for hot spots
+have the points based location system rotate
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)

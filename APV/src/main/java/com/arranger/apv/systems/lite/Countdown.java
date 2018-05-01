@@ -37,16 +37,16 @@ public class Countdown extends LiteShapeSystem {
 		int options = (int)random(4);
 		switch (options) {
 		case 0:
-			pls = new ArcLocation(parent, false);
+			pls = new ArcLocation(parent, false, true);
 			break;
 		case 1:
-			pls = new StarLocation(parent, false);
+			pls = new StarLocation(parent, false, true);
 			break;
 		case 2:
-			pls = new CircularLocationSystem(parent, false);
+			pls = new CircularLocationSystem(parent, false, false);
 			break;
 		case 3:
-			pls = new RectLocationSystem(parent, false);
+			pls = new RectLocationSystem(parent, false, false);
 			break;
 			default:
 				throw new RuntimeException("Unknown option: " + options);

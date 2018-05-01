@@ -57,7 +57,7 @@ public class Shader extends ShapeSystem {
 		this.displayName = displayName;
 		
 		//if we don't have a sobel, add one
-		if (parent.isAutoAddSobleEnabled()) {
+		if (parent.isAutoAddSobleEnabled() && shaders != null) {
 			if (!shaders.contains(SHADERS.SOBEL)) {
 				shaders.add(0, SHADERS.SOBEL);
 			}
