@@ -1,6 +1,8 @@
 package com.arranger.apv.audio;
 
 
+import java.util.stream.IntStream;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
@@ -21,7 +23,7 @@ public class Audio extends APVPlugin {
 	
 	protected BeatInfo beatInfo;
 	protected AudioSource source;
-	public float gain;
+	public int db = 0;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
@@ -38,22 +40,16 @@ public class Audio extends APVPlugin {
 				audioInput.disableMonitoring();
 			}
 		}
-		gain = source.getGain();
 		
 		parent.getSetupEvent().register(() -> {
 				CommandSystem cs = parent.getCommandSystem();
-				cs.registerHandler(Command.AUDIO_INC, event -> adjustGain(gain + 1));
-				cs.registerHandler(Command.AUDIO_DEC, event -> adjustGain(gain -1));
+				cs.registerHandler(Command.AUDIO_INC, event -> db++);
+				cs.registerHandler(Command.AUDIO_DEC, event -> db--);
 		});
 	}
 	
-	public void adjustGain(float gain) {
-		this.gain = gain;
-		source.setGain(gain);
-	}
-	
-	public float getGain() {
-		return gain;
+	public float getDB() {
+		return db;
 	}
 
 	public BeatInfo getBeatInfo() {
@@ -102,9 +98,10 @@ public class Audio extends APVPlugin {
 		protected void addListeners(AudioSource source) {
 			source.addListener(new AudioListener() {
 				public void samples(float[] samps) {
-					pulseDetector.detect(source.mix);
-					freqDetector.detect(source.mix);
-					fft.forward(source.mix);
+					scale(samps, db);
+					pulseDetector.detect(samps);
+					freqDetector.detect(samps);
+					fft.forward(samps);
 				}
 
 				public void samples(float[] sampsL, float[] sampsR) {
@@ -114,7 +111,12 @@ public class Audio extends APVPlugin {
 				}
 			});
 		}
-		
-
+	}
+	
+	protected void scale(float [] samples, float dBvalue) {
+		float scalar = (float)Math.pow(10.0, (0.05 * dBvalue));
+		IntStream.range(0, samples.length).forEach(i -> {
+			samples[i] *= scalar;
+		});
 	}
 }

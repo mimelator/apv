@@ -58,7 +58,7 @@ public class SettingsDisplay extends APVPlugin implements TextSupplier {
 		addSettingsMessage("Cmds/Sec: " + VideoGameHelper.decFormat.format(p.getVideoGameHelper().getCommandsPerSec()));
 		addSettingsMessage("Loc: " + p.getLocations().getPlugin().getDisplayName());
 		addSettingsMessage("Color: " + p.getColor().getDisplayName());
-		addSettingsMessage("Gain: " + p.getAudio().getGain());
+		addSettingsMessage("db: " + p.getAudio().getDB());
 		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
 		addSettingsMessage("Num Liked Scenes: " + p.getLikedScenes().size());
 		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);

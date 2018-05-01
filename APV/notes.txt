@@ -1,19 +1,6 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-DONE: Cursor on for APVWindow
-DONE : Alright, AgentActions that Activate a plugin need a frickin quiet window
-			: Maybe all agents should have a default quiet window.  Like apv.quietWindowSize = 30
-DONE Can't switch to a shader because the display name on Main#activatePlugin
-DONE Need an automation agent action: Set STATE (ENABLED, DISABLED, FROZEN) for any given System
-DONE HotKey for specific shaders: {HotKey : [SHADERS, Chrom]} 
-DONE Agent Event isn't serializing correctly
-DONE Need a NoShader just like BackDropSystem.  Should Rename to NoBackDrop
-DONE Change Command Firing strategy to once per event not once per handler
-DONE The new Marquee is a countup to 7 or 8
-	I can make a Countdown Scene.  How would that be used from the Marquee?
-	Convert the Countdown to a StarPainter like thing
-
 
 * run a perf test looking for hot spots
 
