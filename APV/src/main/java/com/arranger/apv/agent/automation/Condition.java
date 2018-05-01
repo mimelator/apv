@@ -51,6 +51,8 @@ public class Condition extends APVPlugin {
 			if (comp != null) {
 				boolean nameMatches = comp.getName().equals(pluginName) || comp.getDisplayName().equals(pluginName);
 				return target == nameMatches;
+			} else {
+				return !target;
 			}
 		}
 		return target;

@@ -32,15 +32,15 @@ public class Countdown extends LiteShapeSystem {
 	}
 
 	private PathLocationSystem createLocationSystem() {
-		PathLocationSystem pls = null;;
+		PathLocationSystem pls = null;
 		
 		int options = (int)random(4);
 		switch (options) {
 		case 0:
-			pls = new ArcLocation(parent, false, true);
+			pls = new ArcLocation(parent, false, false);
 			break;
 		case 1:
-			pls = new StarLocation(parent, false, true);
+			pls = new StarLocation(parent, false, false);
 			break;
 		case 2:
 			pls = new CircularLocationSystem(parent, false, false);

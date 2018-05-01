@@ -46,12 +46,12 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 
 	@SuppressWarnings("unchecked")
 	protected void initialize(Main parent, Main.SYSTEM_NAMES name, boolean allowScramble) {
-		this.list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
-		this.systemName = name;
-		this.sw = parent.getSwitchForSystem(name);
+		list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
+		systemName = name;
+		sw = parent.getSwitchForSystem(name);
 		keyEventHelper = new KeyEventHelper(parent);
 		quietWindow = new QuietWindow(parent, quietWindowSize);
-		quietWindowSize = parent.getConfigurator().getRootConfig().getInt(KEY);
+		quietWindowSize = parent.getConfigInt(KEY);
 		setIndex(0, "initialize");
 	}
 
@@ -73,6 +73,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	@SuppressWarnings("unchecked")
 	public void setNextPlugin(APVPlugin plugin, String cause) {
+		if (plugin.getDisplayName().contains("Chrom")) {
+			System.out.println("break point here");
+		}
+		
 		if (currentPlugin.equals(plugin)) {
 			return;
 		}
@@ -224,7 +228,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 		
 		//not checking for quiet window here. Only in the activate function
-		
 		if (newIndex >= list.size()) {
 			index = 0;
 		} else if (newIndex < 0) {
@@ -236,7 +239,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		//set current plugin
 		currentPlugin = list.get(Math.abs(index) % list.size());
 		fireEvent(currentPlugin, cause);
-		
 		quietWindow.reset(quietWindowSize);
 	}
 	

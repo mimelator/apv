@@ -227,7 +227,6 @@ public class Main extends PApplet {
 		}
 	}
 	
-	
 	public static void main(String[] args) {
 		PApplet.main(Main.class, new String[0]);
 	}
@@ -256,6 +255,10 @@ public class Main extends PApplet {
 	
 	public String getConfigString(String path) {
 		return getConfigurator().getRootConfig().getString(path);
+	}
+	
+	public int getConfigInt(String path) {
+		return getConfigurator().getRootConfig().getInt(path);
 	}
 	
 	public boolean getConfigBoolean(String path) {

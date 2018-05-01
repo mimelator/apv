@@ -13,6 +13,9 @@ public class StarPainter extends APVPlugin {
 	private static final float SCALE_SMALL = .5f;
 	private static final float SCALE_LARGE = 2.5f;
 	
+	private static final int ALPHA_LOW = 50;
+	private static final int ALPHA_HIGH = 200;
+	
 	private PShape star;
 	private float scaleSmall = SCALE_SMALL, scaleLarge = SCALE_LARGE;
 
@@ -32,9 +35,13 @@ public class StarPainter extends APVPlugin {
 			int x = (int)point.getX();
 			int y = (int)point.getY();
 			
-			//color
+			//color w/transparency
 			Color c = parent.getColor().getCurrentColor();
-			star.setFill(c.getRGB());
+			Color t = new Color(c.getRed(), 
+								c.getGreen(), 
+								c.getBlue(), 
+								(int)parent.random(ALPHA_LOW, ALPHA_HIGH));
+			star.setFill(t.getRGB());
 			
 			//scale
 			star.scale(parent.random(scaleSmall, scaleLarge));
