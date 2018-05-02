@@ -106,11 +106,24 @@ public class APVWindow extends APVFrame {
 			}
 		});
 		
+		JButton loadSetListButton = new JButton("Load Set List");
+		loadSetListButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					parent.playSetList(fc.getSelectedFile());
+				}
+			}
+		});
+		
 		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		marqueeLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		sPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		loadConfigButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		agentInfoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+		loadSetListButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		centerPanel.add(commandFramePanel);
@@ -118,6 +131,7 @@ public class APVWindow extends APVFrame {
 		centerPanel.add(sPanel);
 		centerPanel.add(loadConfigButton);
 		centerPanel.add(agentInfoButton);
+		centerPanel.add(loadSetListButton);
 		
 		return centerPanel;
 	}

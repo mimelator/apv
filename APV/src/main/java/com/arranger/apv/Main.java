@@ -2,6 +2,7 @@ package com.arranger.apv;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,6 +47,7 @@ import com.arranger.apv.scene.Scene;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
+import com.arranger.apv.util.APVSetList;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
@@ -95,6 +97,7 @@ public class Main extends PApplet {
 	//Useful helper classes
 	protected APVAgent agent;
 	protected APVPulseListener pulseListener;
+	protected APVSetList setList;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
 	protected Audio audio;
@@ -150,7 +153,8 @@ public class Main extends PApplet {
 		MONITORING_ENABLED("monitoring.enabled"),
 		QUIET_WINDOW_SIZE("quietWindowSize"),
 		AUTO_ADD_SOBLE("autoAddSoble"),
-		DEBUG_SYS_MESSAGES("debugSystemMessages");
+		DEBUG_SYS_MESSAGES("debugSystemMessages"),
+		SET_LIST("setList");
 		
 		public String name;
 		private FLAGS(String name) {
@@ -321,6 +325,10 @@ public class Main extends PApplet {
 		return pulseListener;
 	}
 	
+	public APVSetList getSetList() {
+		return setList;
+	}
+	
 	public APVAgent getAgent() {
 		return agent;
 	}
@@ -412,6 +420,10 @@ public class Main extends PApplet {
 	
 	public boolean isDebugSystemMessages() {
 		return getConfigBoolean(FLAGS.DEBUG_SYS_MESSAGES.apvName());
+	}
+	
+	public boolean isSetList() {
+		return getConfigBoolean(FLAGS.SET_LIST.apvName());
 	}
 	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
@@ -642,6 +654,28 @@ public class Main extends PApplet {
 				((LikedScene)currentScene).onPluginChange(apv, plugin, cause);
 			}
 		});
+		
+		if (isSetList()) {
+			try {
+				setList = new APVSetList(this);
+				setList.play();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+	}
+	
+	public void playSetList(File directory) {
+		try {
+			if (setList != null) {
+				setList.stop();
+			} else {
+				setList = new APVSetList(this);
+			}
+			setList.play(directory);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 	}
 
 	public void doScreenCapture() {
@@ -1043,6 +1077,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(rootConfig.getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
+		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		
 		return buffer.toString();
 	}

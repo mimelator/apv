@@ -23,11 +23,12 @@ public class Audio extends APVPlugin {
 	
 	protected BeatInfo beatInfo;
 	protected AudioSource source;
-	public int db = 0;
+	protected Minim minim;
+	protected int db = 0;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
-		Minim minim = new Minim(parent);
+		minim = new Minim(parent);
 		source = minim.getLineIn(Minim.MONO, bufferSize);
 		
 		beatInfo = new BeatInfo(source);
@@ -50,6 +51,10 @@ public class Audio extends APVPlugin {
 	
 	public float getDB() {
 		return db;
+	}
+	
+	public Minim getMinim() {
+		return minim;
 	}
 
 	public BeatInfo getBeatInfo() {

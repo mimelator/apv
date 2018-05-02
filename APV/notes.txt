@@ -1,8 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-don't allow GridShapeSystem to use a split location system (too strobey)
-have the points based location system rotate
+
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
@@ -10,8 +9,6 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 TODO:
 * System Debug.  The selected system name should appear until dismissed
-* Foregrounds: More sketches like light worm
-* Animations: 
 * Document Commands (for creating Macros)
 * Add documentation in reference.conf to each plugin to describe it's arguments
 *****************************************************************************
