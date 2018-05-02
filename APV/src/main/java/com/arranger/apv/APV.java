@@ -73,10 +73,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	@SuppressWarnings("unchecked")
 	public void setNextPlugin(APVPlugin plugin, String cause) {
-		if (plugin.getDisplayName().contains("Chrom")) {
-			System.out.println("break point here");
-		}
-		
 		if (currentPlugin.equals(plugin)) {
 			return;
 		}

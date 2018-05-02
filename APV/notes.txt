@@ -1,6 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+don't allow GridShapeSystem to use a split location system (too strobey)
 have the points based location system rotate
 
 *****************************************************************************
