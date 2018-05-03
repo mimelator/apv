@@ -1,6 +1,7 @@
-package com.arranger.apv.systems.lite;
+package com.arranger.apv.archive;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.systems.lite.LiteShapeSystem;
 
 import processing.opengl.PShader;
 

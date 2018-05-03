@@ -61,6 +61,8 @@ public class AttractorSystem extends LiteShapeSystem {
 		this(ctx.getParent(), (ShapeFactory) ctx.loadPlugin(0), ctx.getInt(1, NUM_SHAPES));
 	}
 	
+	//TODO Config?
+	
 	@Override
 	public void setup() {
 		

@@ -3,6 +3,8 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.SingleFrameSkipper;
@@ -21,6 +23,7 @@ public class WanderingInSpace extends LiteShapeSystem {
 
 	Oscillator oscillator;
 	SingleFrameSkipper frameSkipper;
+	APVShape shape = null;
 	
 	Particle[] p = new Particle[800];
 	int diagonal;
@@ -33,8 +36,9 @@ public class WanderingInSpace extends LiteShapeSystem {
 	int shouldSkip = 2; //Might eventually parameterize
 	int skipped = 0;
 
-	public WanderingInSpace(Main parent, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
+	public WanderingInSpace(Main parent, ShapeFactory shapeFactory, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
 		super(parent);
+		this.factory = shapeFactory;
 		oscillator = new Oscillator(parent);
 		frameSkipper = new SingleFrameSkipper(parent);
 		this.oscRate = oscRate;
@@ -44,15 +48,20 @@ public class WanderingInSpace extends LiteShapeSystem {
 	
 	public WanderingInSpace(Configurator.Context ctx) {
 		this(ctx.getParent(), 
-				ctx.getFloat(0, LOW_SPEED_SCALAR),
-				ctx.getFloat(1, HIGH_SPEED_SCALAR),
-				ctx.getInt(2, OSC_RATE));
+				(ShapeFactory)ctx.loadPlugin(0),
+				ctx.getFloat(1, LOW_SPEED_SCALAR),
+				ctx.getFloat(2, HIGH_SPEED_SCALAR),
+				ctx.getInt(3, OSC_RATE));
 	}
 	
 	@Override
 	public String getConfig() {
 		//{WanderingInSpace : [.01f, .06f, 20]}
-		return String.format("{%s : [%s, %s, %d]}", getName(), lowSpeedScalar, highSpeedScalar, oscRate);
+		if (factory != null) {
+			return String.format("{%s : [%s, %s, %s, %d]}", getName(), factory.getConfig(), lowSpeedScalar, highSpeedScalar, oscRate);
+		} else {
+			return String.format("{%s : [{}, %s, %s, %d]}", getName(), lowSpeedScalar, highSpeedScalar, oscRate);
+		}
 	}
 
 	@Override
@@ -63,6 +72,10 @@ public class WanderingInSpace extends LiteShapeSystem {
 		}
 
 		diagonal = (int) PApplet.sqrt(parent.width * parent.width + parent.height * parent.height) / 2;
+		
+		if (factory != null) {
+			shape = factory.createShape(null);
+		}
 	}
 
 	protected boolean clockwise = false;
@@ -81,8 +94,6 @@ public class WanderingInSpace extends LiteShapeSystem {
 		}
 	}
 	
-	
-	
 	class Particle {
 		
 		float n;
@@ -100,11 +111,17 @@ public class WanderingInSpace extends LiteShapeSystem {
 		void draw() {
 			Color c = parent.getColor().getCurrentColor();
 			l++;
+			
 			parent.pushMatrix();
 			parent.rotate(r);
 			parent.translate(drawDist(), 0);
-			parent.fill(c.getRGB(), PApplet.min(l, 255));
-			parent.ellipse(0, 0, parent.width / o / 8, parent.width / o / 8);
+			if (shape != null) {
+				shape.setColor(c.getRGB(), PApplet.min(l, 255));
+				parent.shape(shape.getShape(), 0, 0, parent.width / o / 8, parent.width / o / 8);
+			} else {
+				parent.fill(c.getRGB(), PApplet.min(l, 255));
+				parent.ellipse(0, 0, parent.width / o / 8, parent.width / o / 8);
+			}
 			parent.popMatrix();
 
 			o -= 0.07;
