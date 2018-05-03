@@ -120,7 +120,7 @@ public class Audio extends APVPlugin {
 	
 	protected void scale(float [] samples, float dBvalue) {
 		float scalar = (float)Math.pow(10.0, (0.05 * dBvalue));
-		IntStream.range(0, samples.length).forEach(i -> {
+		IntStream.range(0, samples.length).parallel().forEach(i -> {
 			samples[i] *= scalar;
 		});
 	}

@@ -77,6 +77,11 @@ public enum Command {
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
+	//Set List Commands
+	FFWD(java.awt.event.KeyEvent.VK_F9, "FwdSong", "Play the next song"),
+	PLAY_PAUSE(java.awt.event.KeyEvent.VK_F8, "Play/Pause Song", "Plays or Pauses the song"),
+	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
+	
 	//Hot Keys
 	HOT_KEY_1('!', "", ""),
 	HOT_KEY_2('@', "", ""),

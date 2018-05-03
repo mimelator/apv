@@ -2,6 +2,12 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+I think the manual should put the mouse in manual mode (a pause button)
+Change the speed of location services based on tempo
+
+Is it possible to blend postFx together for transitions
+
+
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)

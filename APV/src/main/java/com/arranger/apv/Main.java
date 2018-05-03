@@ -154,7 +154,8 @@ public class Main extends PApplet {
 		QUIET_WINDOW_SIZE("quietWindowSize"),
 		AUTO_ADD_SOBLE("autoAddSoble"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages"),
-		SET_LIST("setList");
+		SET_LIST("setList"),
+		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha");
 		
 		public String name;
 		private FLAGS(String name) {
@@ -424,6 +425,10 @@ public class Main extends PApplet {
 	
 	public boolean isSetList() {
 		return getConfigBoolean(FLAGS.SET_LIST.apvName());
+	}
+	
+	public int getDefaultShapeSystemAlpha() {
+		return getConfigInt(FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA.apvName());
 	}
 	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
@@ -720,6 +725,7 @@ public class Main extends PApplet {
 	public void manual() {
 		currentControlMode = CONTROL_MODES.MANUAL;
 		getAgent().getSwitch().setState(STATE.DISABLED);
+		activateNextPlugin(SYSTEM_NAMES.LOCATIONS, "Mouse", Command.MANUAL.name());
 	}
 	
 	public void sendMessage(String [] msgs) {
@@ -1077,6 +1083,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(rootConfig.getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
+		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		
 		return buffer.toString();

@@ -25,12 +25,15 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	protected List<APVShape> particles = new ArrayList<APVShape>();
 	protected PShape groupShape = null;
 	private int numParticles;
+	private int alpha;
 	
 	protected abstract LifecycleData createData();
 	
 	public LifecycleSystem(Main parent, ShapeFactory factory, int numParticles) {
 		super(parent, factory);
 		this.numParticles = numParticles;
+		
+		alpha = parent.getDefaultShapeSystemAlpha();
 	}
 	
 	@Override
@@ -145,7 +148,7 @@ public abstract class LifecycleSystem extends ShapeSystem {
 			
 			//update color
 			int result = parent.color(color.getRed(), color.getGreen(), color.getBlue(), lifespan);
-			shape.setColor(result);
+			shape.setColor(result, alpha);
 		}
 
 		/**
