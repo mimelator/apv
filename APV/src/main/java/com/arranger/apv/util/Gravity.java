@@ -7,7 +7,6 @@ import com.arranger.apv.cmd.CommandSystem;
 
 public class Gravity extends APVPlugin {
 	
-
 	private static final float [] GRAVITY = {.5f, .25f, .1f, .05f, .001f};
 	
 	protected int gravityIndex = 0;
@@ -18,10 +17,15 @@ public class Gravity extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerHandler(Command.GRAVITY, (event) -> {
-				if (event.isShiftDown())
+				if (event.isShiftDown()) {
 					gravityIndex--;
-				else
+				} else {
 					gravityIndex++;
+				}
+				
+				if (gravityIndex % GRAVITY.length == 0) {
+					parent.getEarthquakeEvent().fire();
+				}
 			});
 			cs.registerHandler(Command.SCRAMBLE,
 					event -> gravityIndex = (int) parent.random(GRAVITY.length - 1));

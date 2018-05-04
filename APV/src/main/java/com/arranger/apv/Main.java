@@ -399,6 +399,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EventTypes.MARQUEE);
 	}
 	
+	public DrawShapeEvent getEarthquakeEvent() {
+		return (DrawShapeEvent)eventMap.get(EventTypes.EARTHQUAKE);
+	}
+	
 	public CommandInvokedEvent getCommandInvokedEvent() {
 		return (CommandInvokedEvent)eventMap.get(EventTypes.COMMAND_INVOKED);
 	}
@@ -1073,6 +1077,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.RANDOM_MESSAGE, new DrawShapeEvent(this, EventTypes.RANDOM_MESSAGE));
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this, EventTypes.TWIRL));
 		eventMap.put(EventTypes.MARQUEE, new DrawShapeEvent(this, EventTypes.MARQUEE));
+		eventMap.put(EventTypes.EARTHQUAKE, new DrawShapeEvent(this, EventTypes.EARTHQUAKE));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 	}

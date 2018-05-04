@@ -102,7 +102,9 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	}
 	
 	public void setEnabled(boolean isEnabled) {
-		sw.setState(isEnabled ? STATE.ENABLED : STATE.DISABLED);
+		if (sw != null) {
+			sw.setState(isEnabled ? STATE.ENABLED : STATE.DISABLED);
+		}
 	}
 	
 	public List<T> getList() {

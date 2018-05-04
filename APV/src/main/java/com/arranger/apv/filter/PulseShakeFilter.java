@@ -5,14 +5,13 @@ import com.arranger.apv.Main;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 
-public class PulseShakeFilter extends Filter {
+public class PulseShakeFilter extends EarthquakeFilter {
 	
 	private static final float SHAKE_SIZE = 1.5f;
-	
 	private static final float SIZE_SCALAR_SMALL = .8f;
 	private static final float SIZE_SCALAR_LARGE = 3.0f;
-	
 	private static final float OSC_SCALAR = 5f;
+
 	protected BeatDetect pulseDetector;
 	
 	public PulseShakeFilter(Main parent) {
@@ -30,18 +29,23 @@ public class PulseShakeFilter extends Filter {
 		shakeSize *= scalar;
 		
 		if (pulseDetector.isOnset()) {
-			int x = parent.width / 2;
-			int y = parent.height / 2;
-			parent.translate(x, y);
-			if (parent.randomBoolean()) {
-				parent.rotate(PApplet.radians(shakeSize));
-			} else {
-				parent.rotate(PApplet.radians(-shakeSize));
-			}
-			
-			parent.translate(-x, -y);
+			shake(shakeSize);
 		}
+		
 		parent.addSettingsMessage("  --scalar: " + scalar);
 		parent.addSettingsMessage("  --shakeSize: " + shakeSize);
+	}
+	
+	protected void shake(float shakeSize) {
+		int x = parent.width / 2;
+		int y = parent.height / 2;
+		parent.translate(x, y);
+		if (parent.randomBoolean()) {
+			parent.rotate(PApplet.radians(shakeSize));
+		} else {
+			parent.rotate(PApplet.radians(-shakeSize));
+		}
+		
+		parent.translate(-x, -y);
 	}
 }

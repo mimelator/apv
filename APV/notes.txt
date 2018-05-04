@@ -1,7 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Don't let agents change plugins that are frozen
+Earthquake event
 
 
 *****************************************************************************
