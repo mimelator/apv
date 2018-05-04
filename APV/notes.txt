@@ -1,6 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Don't let agents change plugins that are frozen
 
 
 *****************************************************************************
@@ -8,9 +9,6 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Change the speed of location services based on tempo
-* Is it possible to blend postFx together for transitions
-* Transport commands
 * System Debug.  The selected system name should appear until dismissed
 * Document Commands (for creating Macros)
 * Add documentation in reference.conf to each plugin to describe it's arguments

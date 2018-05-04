@@ -432,7 +432,15 @@ public class Main extends PApplet {
 	}
 	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
+		activateNextPlugin(systemName, pluginDisplayName, cause, false);
+	}
+	
+	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause, boolean checkFrozen) {
 		APV<? extends APVPlugin> apv = systemMap.get(systemName);
+		if (checkFrozen && apv.isFrozen()) {
+			return;
+		}
+		
 		APVPlugin plugin  = getPluginByName(apv, pluginDisplayName);
 		apv.setNextPlugin(plugin, cause);
 		apv.setEnabled(true);
