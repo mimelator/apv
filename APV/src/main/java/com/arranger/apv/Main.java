@@ -617,10 +617,11 @@ public class Main extends PApplet {
 	 * The PostFX library has an odd way of loading resources.  Fortunately i can work around that
 	 */
 	public PShader loadShader(String fragFilename) {
-		int indexOf = fragFilename.indexOf("shader/");
+		int indexOf = fragFilename.indexOf("shader");
 		if (indexOf > 0) {
 			fragFilename = fragFilename.substring(indexOf, fragFilename.length());
 		}
+		
 		return super.loadShader(fragFilename);
 	}
 	

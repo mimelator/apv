@@ -20,6 +20,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.gui.APVTextFrame.TextSupplier;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.util.CounterMap;
+import com.arranger.apv.util.FileHelper;
 
 public class APVWindow extends APVFrame {
 
@@ -30,11 +31,13 @@ public class APVWindow extends APVFrame {
 	private static final String SCENE_COMPONENTS = "Scene Components";
 	private static final String [] CARD_NAMES = {COMMANDS, COMMAND_SOURCES, PLUGINS, PLUGIN_SOURCES, SCENE_COMPONENTS};
 	
+	private FileHelper fileHelper;
 	private JPanel statsPanel;
 	private List<APVFrame> children = new ArrayList<APVFrame>();
 	
 	public APVWindow(Main parent) {
 		super(parent);
+		fileHelper = new FileHelper(parent);
 		
 		//Create all the panels and add them to a GridLayout?
 		JPanel master = new JPanel();
@@ -83,7 +86,7 @@ public class APVWindow extends APVFrame {
 		JPanel sPanel = createStats();
 		JButton loadConfigButton = new JButton("Load Config");
 		loadConfigButton.addActionListener(e -> {
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = fileHelper.getJFileChooser();
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
 			}
@@ -100,7 +103,7 @@ public class APVWindow extends APVFrame {
 		
 		JButton loadSetListButton = new JButton("Load Set List");
 		loadSetListButton.addActionListener(e -> {
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = fileHelper.getJFileChooser();
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				parent.playSetList(fc.getSelectedFile());

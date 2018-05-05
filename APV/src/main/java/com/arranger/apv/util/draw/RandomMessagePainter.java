@@ -23,7 +23,9 @@ public class RandomMessagePainter extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			FontHelper fh = parent.getFontHelper();
 			PFont font = fh.createFontForText(msgList.stream().collect(Collectors.joining()));
-			fh.setDefaultFont(font);
+			if (font != null) {
+				fh.setDefaultFont(font);
+			}
 		});
 		
 		parent.getRandomMessageEvent().register(() -> {

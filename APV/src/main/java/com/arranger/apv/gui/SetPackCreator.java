@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.ImageHelper;
 
 import processing.core.PImage;
@@ -53,12 +54,15 @@ public class SetPackCreator extends APVFrame {
 		}
 	}
 	
+	FileHelper fileHelper;
 	List<SetPackPanel> panels = new ArrayList<SetPackPanel>();
 	JButton demoButton;
 	boolean demoMode = false;
 
 	public SetPackCreator(Main parent) {
 		super(parent);
+		
+		fileHelper = new FileHelper(parent);
 		
 		panels.add(new IconsPanel());
 		panels.add(new ColorsPanel());
@@ -162,7 +166,7 @@ public class SetPackCreator extends APVFrame {
 			
 			JButton changeBtn = new JButton("Change");
 			changeBtn.addActionListener(evt -> {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = fileHelper.getJFileChooser();
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				fc.setMultiSelectionEnabled(false);
 				fc.setFileFilter(new FileNameExtensionFilter("PNGs", "png"));
@@ -261,10 +265,25 @@ public class SetPackCreator extends APVFrame {
 	class ColorsPanel extends SetPackPanel {
 		ColorsPanel() {
 			super(PANELS.COLORS, true);
+			
+			//TODO
+			//Figure out all the places where we want to swap colors
+			//For each place, display a little opaque square
+			//When clicked
+			
+			//color.pair.1 through color.pair.8
+			//color.filter.1 through color.filter.3
+			
+			
+//			JColorChooser chooser = new JColorChooser();
+//			chooser.getColor();
+			
+			
+			
 		}
 		
 		void updateForDemo(boolean isDemoActive) {
-			
+			//TODO
 		}
 	}
 	
@@ -316,7 +335,7 @@ public class SetPackCreator extends APVFrame {
 			JButton removeButton = new JButton("Remove");
 			
 			addButton.addActionListener(evt -> {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = fileHelper.getJFileChooser();
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				fc.setMultiSelectionEnabled(true);
 				fc.setFileFilter(new FileNameExtensionFilter("MP3s", "mp3"));

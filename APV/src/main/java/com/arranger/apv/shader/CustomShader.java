@@ -10,7 +10,7 @@ import processing.core.PApplet;
 import processing.opengl.PShader;
 
 public class CustomShader extends Shader {
-	
+
 	private static final float ALPHA = .5f;
 	
 	private CustomShaderPass pass;

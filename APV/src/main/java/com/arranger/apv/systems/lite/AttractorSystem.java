@@ -53,7 +53,9 @@ public class AttractorSystem extends LiteShapeSystem {
 	public AttractorSystem(Main parent, ShapeFactory shapeFactory, int numShapes) {
 		super(parent);
 		this.factory = shapeFactory;
-		this.factory.setShapeSystem(this);
+		if (this.factory != null) {
+			this.factory.setShapeSystem(this);
+		}
 		this.numShapes = numShapes;
 	}
 

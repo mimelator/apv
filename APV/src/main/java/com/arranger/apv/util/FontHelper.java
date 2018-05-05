@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -19,9 +20,12 @@ import processing.core.PFont;
  */
 public class FontHelper extends APVPlugin {
 	
+	private static final Logger logger = Logger.getLogger(FontHelper.class.getName());
+	
 	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
 	private static final int DEFAULT_FONT_SIZE = 32;
 	private static final String DEFAULT_FONT_NAME = "ArialUnicodeMS";
+	private static final String BACKUP_FONT_NAME = "Arial";
 	private static final int DEFAULT_CHARS = 2000; //Grab the first 2k chars covers about 10 code blocks
 	
 	
@@ -58,7 +62,11 @@ public class FontHelper extends APVPlugin {
 		
 		Font instance = fontMap.get(fontName);
 		if (instance == null) {
-			throw new RuntimeException("Unable to find font: " + fontName);
+			instance = fontMap.get(BACKUP_FONT_NAME);
+			if (instance == null) {
+				logger.warning("Unable to find font: " + fontName + " or " + BACKUP_FONT_NAME);
+				return null;
+			}
 		}
 		
 		String resultText = defaultCharSet + text; 

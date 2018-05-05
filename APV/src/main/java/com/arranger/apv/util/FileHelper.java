@@ -10,6 +10,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFileChooser;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
@@ -99,6 +101,28 @@ public class FileHelper extends APVPlugin {
 				}
 			}
 		}
+	}
+	
+	private JFileChooser fileChooser;
+	private File directory;
+	
+	public JFileChooser getJFileChooser() {
+		if (fileChooser == null) {
+			fileChooser = new JFileChooser();
+			
+			fileChooser.addActionListener(evt -> {
+				if (evt.getActionCommand() == JFileChooser.APPROVE_SELECTION) {
+					directory = fileChooser.getCurrentDirectory();
+				}
+			});
+			
+		}
+		
+		if (directory != null) {
+			fileChooser.setCurrentDirectory(directory);
+		}
+		
+		return fileChooser;
 	}
 	
 	private void debug(Exception e) {

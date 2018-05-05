@@ -32,6 +32,7 @@ import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
+import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
 
 import ddf.minim.analysis.BeatDetect;
@@ -104,6 +105,7 @@ public abstract class APVPluginTest {
         assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
         
         when(parent.getPulseListener()).thenReturn(apvPulseListener);
+        when(parent.getImageHelper()).thenReturn(new ImageHelper(parent));
         when(parent.getCommandSystem()).thenReturn(commandSystem);
         when(parent.getConfig()).thenCallRealMethod();
         when(parent.createShape()).thenReturn(new PShape());
