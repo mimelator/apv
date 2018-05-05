@@ -49,7 +49,12 @@ public class APVSetList extends APVPlugin {
 	}
 	
 	public void play(File directory) throws IOException {
-		Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
+		if (directory.isDirectory()) {
+			Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
+		} else {
+			setList.add(directory.toPath());
+		}
+		
 		final Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {
 			try {
