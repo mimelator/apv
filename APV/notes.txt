@@ -1,16 +1,30 @@
-BRANCH: master
+BRANCH: setListMaker
 https://github.com/mimelator/apv
 
 
+Need to pick:
+* icons
+* colors
+* emojis/messages
+* songs
+and animate them with Demo scenes to show them in action
+
+
+This might be a tabbed interface:
+ At the bottom of each tab would be reset, demo, save
+ When Demoing you can use either a default demo scene or choose your own custom scene
+ The scene will run indefinitely until you stop it
+ 
+ 
+
+Then it will save a version of reference.conf including comments for the startup script
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Tool to build a set pack
-* System Debug.  The selected system name should appear until dismissed
-* Document Commands (for creating Macros)
+* Document Commands (for creating Macros and Hot Keys and Agents)
 * Add documentation in reference.conf to each plugin to describe it's arguments
 *****************************************************************************
 *****************************************************************************

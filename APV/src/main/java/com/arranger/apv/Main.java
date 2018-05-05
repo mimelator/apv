@@ -537,6 +537,10 @@ public class Main extends PApplet {
 		throw new RuntimeException("Unable to find current control system: " + currentControlMode);
 	}
 	
+	public RandomMessagePainter getRandomMessagePainter() {
+		return randomMessagePainter;
+	}
+	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		sendMessage(new String[] {"Liked :)"});

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,38 +82,34 @@ public class APVWindow extends APVFrame {
 		JPanel marqueeLauncherPanel = apvMarqueeLauncher.getPanel();
 		JPanel sPanel = createStats();
 		JButton loadConfigButton = new JButton("Load Config");
-		loadConfigButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
-				}
+		loadConfigButton.addActionListener(e -> {
+			JFileChooser fc = new JFileChooser();
+			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
 			}
 		});
 		
 		JButton agentInfoButton = new JButton("Agent Information");
-		agentInfoButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new APVTextFrame(parent, "Agents", 400, 400, () -> {
-					return parent.getAgent().getList().stream().
-							map(a -> a.getDisplayName() + ":" + a.getConfig()).
-							collect(Collectors.toList());
-				});
-			}
+		agentInfoButton.addActionListener(e -> {
+			new APVTextFrame(parent, "Agents", 400, 400, () -> {
+				return parent.getAgent().getList().stream().
+						map(a -> a.getDisplayName() + ":" + a.getConfig()).
+						collect(Collectors.toList());
+			});
 		});
 		
 		JButton loadSetListButton = new JButton("Load Set List");
-		loadSetListButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					parent.playSetList(fc.getSelectedFile());
-				}
+		loadSetListButton.addActionListener(e -> {
+			JFileChooser fc = new JFileChooser();
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				parent.playSetList(fc.getSelectedFile());
 			}
+		});
+		
+		JButton createSetPack = new JButton("Create Set Pack");
+		createSetPack.addActionListener(e -> {
+			new SetPackCreator(parent);
 		});
 		
 		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -124,6 +118,7 @@ public class APVWindow extends APVFrame {
 		loadConfigButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		agentInfoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		loadSetListButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+		createSetPack.setAlignmentX(Component.LEFT_ALIGNMENT);
 		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		centerPanel.add(commandFramePanel);
@@ -132,6 +127,7 @@ public class APVWindow extends APVFrame {
 		centerPanel.add(loadConfigButton);
 		centerPanel.add(agentInfoButton);
 		centerPanel.add(loadSetListButton);
+		centerPanel.add(createSetPack);
 		
 		return centerPanel;
 	}
@@ -147,11 +143,11 @@ public class APVWindow extends APVFrame {
         });
 		
 		statsPanel = new JPanel(new CardLayout());
-		statsPanel.add(createPanel(vg.getCommandMap()).getPanel(), COMMANDS);
-		statsPanel.add(createPanel(vg.getCommandSourceMap()).getPanel(), COMMAND_SOURCES);
-		statsPanel.add(createPanel(vg.getPluginMap()).getPanel(), PLUGINS);
-		statsPanel.add(createPanel(vg.getPluginSourceMap()).getPanel(), PLUGIN_SOURCES);
-		statsPanel.add(createPanel(vg.getSceneComponents()).getPanel(), SCENE_COMPONENTS);
+		statsPanel.add(createStatsPanel(vg.getCommandMap()).getPanel(), COMMANDS);
+		statsPanel.add(createStatsPanel(vg.getCommandSourceMap()).getPanel(), COMMAND_SOURCES);
+		statsPanel.add(createStatsPanel(vg.getPluginMap()).getPanel(), PLUGINS);
+		statsPanel.add(createStatsPanel(vg.getPluginSourceMap()).getPanel(), PLUGIN_SOURCES);
+		statsPanel.add(createStatsPanel(vg.getSceneComponents()).getPanel(), SCENE_COMPONENTS);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -163,7 +159,7 @@ public class APVWindow extends APVFrame {
 		return panel;
 	}
 	
-	protected APVStatPanel createPanel(CounterMap map) {
+	protected APVStatPanel createStatsPanel(CounterMap map) {
 		return new APVStatPanel(parent, map);
 	}
 	

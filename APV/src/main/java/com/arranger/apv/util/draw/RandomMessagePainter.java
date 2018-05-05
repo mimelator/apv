@@ -31,6 +31,14 @@ public class RandomMessagePainter extends APVPlugin {
 		});
 	}
 
+	public List<String> getMsgList() {
+		return msgList;
+	}
+	
+	public void setMsgList(List<String> msgList) {
+		this.msgList = msgList;
+	}
+	
 	private String getMessage() {
 		return msgList.get((int)parent.random(msgList.size()));
 	}
