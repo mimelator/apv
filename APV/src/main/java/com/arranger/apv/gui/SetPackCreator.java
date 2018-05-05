@@ -1,16 +1,20 @@
 package com.arranger.apv.gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -27,6 +31,7 @@ import com.arranger.apv.Main;
 public class SetPackCreator extends APVFrame {
 
 	private static final Dimension PREFERRED_TAB_PANE_SIZE = new Dimension(500, 500);
+	private static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
 	
 	private static final int FRAME_HEIGHT = 650;
 	private static final int FRAME_WIDTH = 600;
@@ -51,8 +56,6 @@ public class SetPackCreator extends APVFrame {
 	public SetPackCreator(Main parent) {
 		super(parent);
 		
-		JPanel panel = new JPanel();
-		
 		panels.add(new IconsPanel());
 		panels.add(new ColorsPanel());
 		panels.add(new EmojisPanel());
@@ -62,6 +65,8 @@ public class SetPackCreator extends APVFrame {
 		panels.forEach(pnl -> {
 			tabbedPane.addTab(pnl.panel.title, pnl);
 		});
+		
+		JPanel panel = new JPanel();
 		panel.add(tabbedPane);
 		
 		JPanel btnPanel = new JPanel();
@@ -75,12 +80,10 @@ public class SetPackCreator extends APVFrame {
 			createSetPack();
 		});
 		btnPanel.add(createButton);
-		
 		panel.add(btnPanel);
 		
 		createFrame(getName(), FRAME_WIDTH, FRAME_HEIGHT, panel, () -> {});
 	}
-	
 	
 	void toggleDemoMode() {
 		demoMode = !demoMode;
@@ -96,14 +99,144 @@ public class SetPackCreator extends APVFrame {
 		throw new RuntimeException("Not implemented yet");
 	}
 	
+	enum ICON_NAMES {
+		SPRITE("sprite"),
+		PURPLE("purple"),
+		TRIANGLE("triangle"),
+		GRADIENT_TRIANGLE("gradient-triangle"),
+		SWIRL("swirl"),
+		WARNING("warning"),
+		THREE_D_CUBE("3dcube"),
+		SILLY("Silly_Emoji"),
+		SCARED("Scared_face_emoji"),
+		ISLAND("emoji-island"),
+		BLITZ("Emoji_Blitz_Star"),
+		CIRCLE("simpleCircle"),
+		THREE_D_STAR("3dstar");
+		
+		String title;
+		ICON_NAMES(String title) {
+			this.title = title;
+		}
+		
+		static final List<ICON_NAMES> VALUES = Arrays.asList(ICON_NAMES.values());
+	}
+	
 	@SuppressWarnings("serial")
 	class IconsPanel extends SetPackPanel {
+		
+		Map<ICON_NAMES, Icon> iconMap = new HashMap<ICON_NAMES, Icon>();
+		JLabel label;
+		int index = 0;
+		
 		IconsPanel() {
-			super(PANELS.ICONS, true);
+			super(PANELS.ICONS, false);
+			
+			ICON_NAMES.VALUES.forEach(icon -> {
+				String iconFile = parent.getConfigString(icon.title + ".png");
+				Image img = parent.loadImage(iconFile).getImage();
+				iconMap.put(icon, new Icon(iconFile, img));
+			});
+			
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			
+			label = new JLabel();
+			label.setPreferredSize(PREFERRED_ICON_SIZE);
+			label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+			label.setAlignmentX(CENTER_ALIGNMENT);
+			add(label);
+			
+			JButton prevBtn = new JButton("Prev");
+			prevBtn.addActionListener(evt -> updateLabel(--index));
+			
+			JButton nextBtn = new JButton("Next");
+			nextBtn.addActionListener(evt -> updateLabel(++index));
+			
+			JButton changeBtn = new JButton("Change");
+			changeBtn.addActionListener(evt -> {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.setMultiSelectionEnabled(false);
+				fc.setFileFilter(new FileNameExtensionFilter("PNGs", "png"));
+				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					 updateCurrentIcon(fc.getSelectedFile());
+				}
+			});
+			
+			JPanel btnPanel = new JPanel();
+			btnPanel.add(prevBtn);
+			btnPanel.add(nextBtn);
+			btnPanel.add(changeBtn);
+			btnPanel.setAlignmentX(CENTER_ALIGNMENT);
+			add(btnPanel);
+			
+			updateLabel(index);
+		}
+		
+		private void updateCurrentIcon(File newIconFile) {
+			Icon icon = getCurrentIcon();
+			icon.setFile(newIconFile);
+			updateLabel(index);
+		}
+
+		private void updateLabel(int idx) {
+			if (idx < 0) {
+				idx += ICON_NAMES.VALUES.size();
+			} else if (idx > ICON_NAMES.VALUES.size() - 1) {
+				idx -= ICON_NAMES.VALUES.size();
+			}
+			index = idx;
+			
+			Icon icon = getCurrentIcon();
+			label.setIcon(icon.getImageIcon());
+		}
+		
+		private Icon getCurrentIcon() {
+			ICON_NAMES i = ICON_NAMES.VALUES.get(index);
+			return iconMap.get(i);
 		}
 		
 		void updateForDemo(boolean isDemoActive) {
 			
+			
+			
+			//TODO
+		}
+		
+		class Icon {
+			File file;
+			Image image;
+			String configPath;
+			
+			Icon(String configPath, Image image) {
+				this.configPath = configPath;
+				this.image = image;
+			}
+			
+			Icon(File file) {
+				this.file = file;
+			}
+			
+			void setFile(File file) {
+				this.file = file;
+				image = null;
+				configPath = null;
+			}
+
+			Image getImage() {
+				if (image == null) {
+					image = parent.loadImage(file.getAbsolutePath()).getImage();
+				}
+				return image;
+			}
+			
+			ImageIcon getImageIcon() {
+				Image img = getImage();
+				
+				//scale it
+				Image scaled = img.getScaledInstance(PREFERRED_ICON_SIZE.width, PREFERRED_ICON_SIZE.height, Image.SCALE_SMOOTH);
+				return new ImageIcon(scaled);
+			}
 		}
 	}
 	
@@ -182,7 +315,6 @@ public class SetPackCreator extends APVFrame {
 			});
 			
 			JScrollPane jScrollPane = new JScrollPane(songList);
-			//jScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			add(jScrollPane);
 			
