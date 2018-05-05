@@ -52,6 +52,7 @@ import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
+import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
@@ -102,6 +103,7 @@ public class Main extends PApplet {
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
+	protected ImageHelper imageHelper;
 	protected FrameStrober frameStrober;
 	protected PerformanceMonitor perfMonitor;
 	protected SettingsDisplay settingsDisplay;
@@ -308,6 +310,10 @@ public class Main extends PApplet {
 	
 	public FrameStrober getFrameStrober() {
 		return frameStrober;
+	}
+	
+	public ImageHelper getImageHelper() {
+		return imageHelper;
 	}
 	
 	public Configurator getConfigurator() {
@@ -623,6 +629,7 @@ public class Main extends PApplet {
 		audio = new Audio(this, BUFFER_SIZE);
 		commandSystem = new CommandSystem(this);
 		frameStrober = new FrameStrober(this);
+		imageHelper = new ImageHelper(this);
 		fontHelper = new FontHelper(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);

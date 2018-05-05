@@ -39,6 +39,7 @@ public class WanderingInSpace extends LiteShapeSystem {
 	public WanderingInSpace(Main parent, ShapeFactory shapeFactory, float lowSpeedScalar, float highSpeedScalar, int oscRate) {
 		super(parent);
 		this.factory = shapeFactory;
+		this.factory.setShapeSystem(this);
 		oscillator = new Oscillator(parent);
 		frameSkipper = new SingleFrameSkipper(parent);
 		this.oscRate = oscRate;
@@ -76,6 +77,12 @@ public class WanderingInSpace extends LiteShapeSystem {
 		if (factory != null) {
 			shape = factory.createShape(null);
 		}
+	}
+	
+	@Override
+	public void onFactoryUpdate() {
+		super.onFactoryUpdate();
+		shape = factory.createShape(null);
 	}
 
 	protected boolean clockwise = false;

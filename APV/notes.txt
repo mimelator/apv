@@ -2,6 +2,13 @@ BRANCH: setListMaker
 https://github.com/mimelator/apv
 
 
+anything loading images will need a registry of
+names to images
+
+when the images are updated, they need to reload the appropriate images
+This will be done by registering an event
+
+
 Need to pick:
 * icons
 * colors

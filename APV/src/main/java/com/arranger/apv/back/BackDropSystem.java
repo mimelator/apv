@@ -29,4 +29,8 @@ public class BackDropSystem extends ShapeSystem {
 	public boolean isSafe() {
 		return true;
 	}
+
+	@Override
+	public void onFactoryUpdate() {
+	}
 }

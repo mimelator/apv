@@ -16,19 +16,17 @@ public class BGImage extends LiteShapeSystem {
 	private float scaleX = 1, scaleY = 1;
 
 	public BGImage(Main parent, SpriteFactory factory) {
-		super(parent);
-		this.factory = factory;
+		this(parent, factory, 1);
 	}
 	
 	public BGImage(Main parent, SpriteFactory factory, float alpha) {
-		super(parent);
-		this.factory = factory;
-		this.alpha = alpha;
+		this(parent, factory, 1, 1, 1);
 	}
 	
 	public BGImage(Main parent, SpriteFactory factory, float alpha, float scaleX, float scaleY) {
 		super(parent);
 		this.factory = factory;
+		this.factory.setShapeSystem(this);
 		this.alpha = alpha;
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
@@ -47,20 +45,28 @@ public class BGImage extends LiteShapeSystem {
 	public void setup() {
 		
 	}
+	
+	@Override
+	public void onFactoryUpdate() {
+		super.onFactoryUpdate();
+		createShape();
+	}
 
 	@Override
 	public void draw() {
-		
-		if (shape == null) {
-			SpriteFactory sf = (SpriteFactory)factory;
-			shape = sf.createShape(null);
-			
-		}
+		createShape();
 		
 		float a = parent.lerpAlpha(alpha);
 		
 		shape.setColor(parent.getColor().getCurrentColor().getRGB(), a);
 		parent.shape(shape.getShape(), 0, 0, parent.width * scaleX, parent.height * scaleY);
+	}
+
+	protected void createShape() {
+		if (shape == null) {
+			SpriteFactory sf = (SpriteFactory)factory;
+			shape = sf.createShape(null);
+		}
 	}
 
 }

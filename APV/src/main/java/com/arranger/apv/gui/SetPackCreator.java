@@ -27,6 +27,10 @@ import javax.swing.ListModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.util.ImageHelper;
+
+import processing.core.PImage;
 
 public class SetPackCreator extends APVFrame {
 
@@ -119,13 +123,17 @@ public class SetPackCreator extends APVFrame {
 			this.title = title;
 		}
 		
+		String getFullTitle() {
+			return title + ".png";
+		}
+		
 		static final List<ICON_NAMES> VALUES = Arrays.asList(ICON_NAMES.values());
 	}
 	
 	@SuppressWarnings("serial")
 	class IconsPanel extends SetPackPanel {
 		
-		Map<ICON_NAMES, Icon> iconMap = new HashMap<ICON_NAMES, Icon>();
+		Map<ICON_NAMES, ImageHolder> iconMap = new HashMap<ICON_NAMES, ImageHolder>();
 		JLabel label;
 		int index = 0;
 		
@@ -133,9 +141,9 @@ public class SetPackCreator extends APVFrame {
 			super(PANELS.ICONS, false);
 			
 			ICON_NAMES.VALUES.forEach(icon -> {
-				String iconFile = parent.getConfigString(icon.title + ".png");
+				String iconFile = parent.getConfigString(icon.getFullTitle());
 				Image img = parent.loadImage(iconFile).getImage();
-				iconMap.put(icon, new Icon(iconFile, img));
+				iconMap.put(icon, new ImageHolder(iconFile, img));
 			});
 			
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -174,7 +182,7 @@ public class SetPackCreator extends APVFrame {
 		}
 		
 		private void updateCurrentIcon(File newIconFile) {
-			Icon icon = getCurrentIcon();
+			ImageHolder icon = getCurrentIcon();
 			icon.setFile(newIconFile);
 			updateLabel(index);
 		}
@@ -187,40 +195,41 @@ public class SetPackCreator extends APVFrame {
 			}
 			index = idx;
 			
-			Icon icon = getCurrentIcon();
+			ImageHolder icon = getCurrentIcon();
 			label.setIcon(icon.getImageIcon());
 		}
 		
-		private Icon getCurrentIcon() {
+		private ImageHolder getCurrentIcon() {
 			ICON_NAMES i = ICON_NAMES.VALUES.get(index);
 			return iconMap.get(i);
 		}
 		
 		void updateForDemo(boolean isDemoActive) {
-			
-			
-			
-			//TODO
+			ImageHelper ih = parent.getImageHelper();
+			ICON_NAMES.VALUES.forEach(icon -> {
+				ImageHolder imgHolder = iconMap.get(icon);
+				ih.updateImage(icon.getFullTitle(), isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage());
+			});
 		}
 		
-		class Icon {
+		class ImageHolder {
 			File file;
-			Image image;
+			Image image, origImage;
 			String configPath;
 			
-			Icon(String configPath, Image image) {
+			ImageHolder(String configPath, Image image) {
 				this.configPath = configPath;
 				this.image = image;
+				this.origImage = image;
 			}
 			
-			Icon(File file) {
+			ImageHolder(File file) {
 				this.file = file;
 			}
 			
 			void setFile(File file) {
 				this.file = file;
 				image = null;
-				configPath = null;
 			}
 
 			Image getImage() {
@@ -228,6 +237,14 @@ public class SetPackCreator extends APVFrame {
 					image = parent.loadImage(file.getAbsolutePath()).getImage();
 				}
 				return image;
+			}
+			
+			PImage getOriginalImage() {
+				return new PImage(origImage);
+			}
+			
+			PImage getPImage() {
+				return new PImage(getImage());
 			}
 			
 			ImageIcon getImageIcon() {
@@ -342,7 +359,10 @@ public class SetPackCreator extends APVFrame {
 					parent.playSetList(song.songFile);
 				}
 			} else {
-				parent.getSetList().stop();
+				APVSetList setList = parent.getSetList();
+				if (setList != null) {
+					setList.stop();
+				}
 			}
 		}
 		

@@ -23,4 +23,8 @@ public class TextDrawHelper extends ShapeSystem {
 		new TextPainter(parent).drawText(msgs, location);
 	}
 
+	@Override
+	public void onFactoryUpdate() {
+
+	}
 }

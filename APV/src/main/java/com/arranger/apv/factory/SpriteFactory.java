@@ -6,12 +6,13 @@ import com.arranger.apv.Main;
 import com.arranger.apv.factory.APVShape.Data;
 import com.arranger.apv.systems.lifecycle.LifecycleSystem.LifecycleData;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.ImageHelper.ImageChangeHandler;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PShape;
 
-public class SpriteFactory extends ShapeFactory {
+public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 	
 	protected PImage sprite;  
 	protected float alpha;
@@ -20,7 +21,7 @@ public class SpriteFactory extends ShapeFactory {
 	public SpriteFactory(Main parent, String file) {
 		super(parent);
 		this.file = file;
-		sprite = parent.loadImage(file);
+		sprite = parent.getImageHelper().loadImage(file, this);
 	}
 	
 	public SpriteFactory(Main parent, String file, float scale) {
@@ -33,10 +34,18 @@ public class SpriteFactory extends ShapeFactory {
 		
 		//look for file, scale 
 		this.file = ctx.getString(0, null);
-		sprite = parent.loadImage(file);
+		sprite = parent.getImageHelper().loadImage(file, this);
 		this.alpha = ctx.getFloat(1, 0);
 	}
 	
+	@Override
+	public void onImageChange(PImage image) {
+		sprite = image;
+		if (shapeSystem != null) {
+			shapeSystem.onFactoryUpdate();
+		}
+	}
+
 	@Override
 	public String getConfig() {
 		//{SpriteFactory : [triangle.png, 2.5]}

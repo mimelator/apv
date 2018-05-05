@@ -143,6 +143,10 @@ public class Scene extends ShapeSystem {
 		drawScene();
 	}
 	
+	@Override
+	public void onFactoryUpdate() {
+	}
+
 	public boolean isNew() {
 		return false;
 	}

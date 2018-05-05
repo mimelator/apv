@@ -62,6 +62,11 @@ public abstract class MessageSystem extends ShapeSystem {
 		
 	}
 	
+	@Override
+	public void onFactoryUpdate() {
+	
+	}
+
 	protected class FadingMessage {
 		
 		public FrameFader frameFader;

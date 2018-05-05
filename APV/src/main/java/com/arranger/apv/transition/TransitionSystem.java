@@ -75,6 +75,11 @@ public abstract class TransitionSystem extends ShapeSystem {
 	}
 	
 	@Override
+	public void onFactoryUpdate() {
+		
+	}
+
+	@Override
 	public void draw() {
 		onDrawStop();
 	}

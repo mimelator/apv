@@ -95,4 +95,8 @@ public class Shader extends ShapeSystem {
 		
 		render.compose();
 	}
+
+	@Override
+	public void onFactoryUpdate() {
+	}
 }

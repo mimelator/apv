@@ -53,6 +53,12 @@ public abstract class LifecycleSystem extends ShapeSystem {
 	public void setup() {
 		
 	}
+	
+
+	@Override
+	public void onFactoryUpdate() {
+		particles.clear();
+	}
 
 	protected void _setup() {
 		groupShape = parent.createShape(PShape.GROUP);

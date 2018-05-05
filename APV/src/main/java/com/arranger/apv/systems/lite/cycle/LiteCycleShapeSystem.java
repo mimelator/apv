@@ -82,7 +82,13 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 		}
 	}
 	
-	protected  void reset() {
+	@Override
+	public void onFactoryUpdate() {
+		super.onFactoryUpdate();
+		reset();
+	}
+
+	protected void reset() {
 		lcObjects.clear();
 	}
 

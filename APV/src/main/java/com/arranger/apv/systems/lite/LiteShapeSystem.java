@@ -30,4 +30,9 @@ public abstract class LiteShapeSystem extends ShapeSystem {
 	protected float random(float low, float high) {
 		return parent.random(low, high);
 	}
+
+	@Override
+	public void onFactoryUpdate() {
+		//Most instances of LiteShapeSystem don't use a ShapeFactory
+	}
 }

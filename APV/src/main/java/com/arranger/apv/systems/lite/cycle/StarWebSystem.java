@@ -60,6 +60,9 @@ public class StarWebSystem extends LiteCycleShapeSystem {
 	public StarWebSystem(Main parent, ShapeFactory factory, int numNewObjects, boolean doRotateScale) {
 		super(parent, numNewObjects);
 		this.factory = factory;
+		if (this.factory != null) {
+			this.factory.setShapeSystem(this);
+		}
 		this.doRotateScale = doRotateScale;
 		fftAnalysis = new FFTAnalysis(parent);
 	}

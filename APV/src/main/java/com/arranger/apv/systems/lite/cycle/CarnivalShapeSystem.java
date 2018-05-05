@@ -34,6 +34,9 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 		super(parent);
 		this.useCustomColor = useCustomColor;
 		this.factory = factory;
+		if (this.factory != null) {
+			this.factory.setShapeSystem(this);
+		}
 		
 		parent.getCarnivalEvent().register(() -> {
 			if (drawHelper == null) {
