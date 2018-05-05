@@ -48,6 +48,7 @@ import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
 import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
@@ -103,6 +104,7 @@ public class Main extends PApplet {
 	protected CommandSystem commandSystem;
 	protected Audio audio;
 	protected Gravity gravity;
+	protected ColorHelper colorHelper;
 	protected ImageHelper imageHelper;
 	protected FrameStrober frameStrober;
 	protected PerformanceMonitor perfMonitor;
@@ -314,6 +316,10 @@ public class Main extends PApplet {
 	
 	public ImageHelper getImageHelper() {
 		return imageHelper;
+	}
+	
+	public ColorHelper getColorHelper() {
+		return colorHelper;
 	}
 	
 	public Configurator getConfigurator() {
@@ -631,6 +637,7 @@ public class Main extends PApplet {
 		commandSystem = new CommandSystem(this);
 		frameStrober = new FrameStrober(this);
 		imageHelper = new ImageHelper(this);
+		colorHelper = new ColorHelper(this);
 		fontHelper = new FontHelper(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);

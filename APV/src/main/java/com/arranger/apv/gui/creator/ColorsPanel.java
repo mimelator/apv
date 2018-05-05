@@ -6,38 +6,43 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.ColorHelper;
 
 @SuppressWarnings("serial")
 public class ColorsPanel extends SetPackPanel {
 	
-	private static final Dimension LABEL_SIZE = new Dimension(20, 20);
+	private static final Dimension LABEL_SIZE = new Dimension(40, 40);
+	private static final int NUM_COLOR_PAIRS = 8;
+	private static final int NUM_COLOR_FILTERS = 3;
+	
+	private static final String COLOR_PAIR_PATTERN = "color.pair.";
+	private static final String COLOR_FILTER_PATTERN = "color.filter.";
 	
 	private List<ColorEntry> colorEntries = new ArrayList<ColorEntry>();
 	
 	public ColorsPanel(Main parent) {
 		super(parent, PANELS.COLORS);
+		ColorHelper colorHelper = parent.getColorHelper();
 		
-
-		int index = 1;
-		add(createColorPanel(index++, Color.WHITE, Color.BLACK));
-		add(createColorPanel(index++, Color.BLACK, Color.WHITE));
-		add(createColorPanel(index++, Color.GREEN, Color.BLACK));
-		add(createColorPanel(index++, Color.BLACK, Color.RED));
-		add(createColorPanel(index++, Color.BLACK, Color.BLUE));
-		add(createColorPanel(index++, Color.WHITE, Color.RED));
-		add(createColorPanel(index++, Color.WHITE, Color.GREEN));
-		add(createColorPanel(index++, Color.RED, new Color(128, 0, 128)));
+		IntStream.rangeClosed(1, NUM_COLOR_PAIRS).forEach(i -> {
+			List<String> stringList = parent.getConfigurator().getRootConfig().getStringList(COLOR_PAIR_PATTERN + i);
+			Color c1 = colorHelper.decode(stringList.get(0));
+			Color c2  = colorHelper.decode(stringList.get(1));
+			add(createColorPanel(i, c1, c2));
+		});
 		
-		add(createColorPanel(index++, Color.BLACK));
-		add(createColorPanel(index++, Color.BLUE));
-		add(createColorPanel(index++, Color.RED));
-		
+		IntStream.rangeClosed(1, NUM_COLOR_FILTERS).forEach(i -> {
+			String colorName = parent.getConfigString(COLOR_FILTER_PATTERN + i);
+			Color color = colorHelper.decode(colorName);
+			add(createColorPanel(i + NUM_COLOR_PAIRS, color));
+		});
 	}
 	
 	protected JPanel createColorPanel(int index, Color color) {

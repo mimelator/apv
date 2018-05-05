@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +16,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -44,6 +41,7 @@ public class Configurator extends APVPlugin {
 	private Config conf;
 	private RegisteredClasses registeredClasses;
 	private boolean shouldScrambleInitialSystems;
+	private ColorHelper colorHelper;
 	
 	public class Context {
 		public ConfigList argList;
@@ -149,34 +147,16 @@ public class Configurator extends APVPlugin {
 		public Color getColor(int index, Color defaultVal) {
 			if (argList.size() > index) {
 				String colorString = argList.get(index).unwrapped().toString();
-				Color c = decode(colorString);
+				if (colorHelper == null) {
+					colorHelper = new ColorHelper(parent);
+				}
+				
+				Color c = colorHelper.decode(colorString);
 				if (c != null) {
 					return c;
 				}
 			}
 			return defaultVal;
-		}
-		
-		private static final String DECODE_COLOR_REGEX = "\\Q(\\E(\\d+),\\s?(\\d+),\\s?(\\d+)\\Q)\\E";
-		private final Pattern COLOR_PATTERN = Pattern.compile(DECODE_COLOR_REGEX);
-		
-		private Color decode(String colorName) {
-			if (colorName.contains("(")) {
-				Matcher matcher = COLOR_PATTERN.matcher(colorName);
-				if (matcher.matches()) {
-					String r = matcher.group(1);
-					String g = matcher.group(2);
-					String b = matcher.group(3);
-					return new Color(Integer.parseInt(r), Integer.parseInt(g), Integer.parseInt(b));
-				}
-			}
-			
-			try {
-			    Field field = Color.class.getField(colorName);
-			    return (Color)field.get(null);
-			} catch (Exception e) {
-			    return null;
-			}
 		}
 		
 		public List<? extends APVPlugin> loadRemainingPlugins(int index) {
