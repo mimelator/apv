@@ -7,9 +7,11 @@ I'd like to import either a folder
 need loadSetPack
 
 colors are stored,
-messages aren't stored: apvMessages
-Scene:scene is messed up a bit
+messages are stored,
+song list?
+
 the replacements for images are missing
+
 
 
 Need to pick:

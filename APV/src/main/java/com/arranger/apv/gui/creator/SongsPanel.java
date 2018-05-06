@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -13,7 +16,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
@@ -23,6 +25,7 @@ import com.arranger.apv.util.FileHelper;
 @SuppressWarnings("serial")
 public class SongsPanel extends SetPackPanel {
 	
+	private static final String SONGS_DIR = "songs";
 	private FileHelper fileHelper;
 	private JList<SongModel> songList;
 	private DefaultListModel<SongModel> modelList = new DefaultListModel<SongModel>();
@@ -65,20 +68,28 @@ public class SongsPanel extends SetPackPanel {
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
 		//copy all of the items in the song list to the parentDirectory
-		for (int index= 0; index < modelList.size(); index++) {
-			SongModel songModel = modelList.get(index);
+		Path songFolder = parentDirectory.resolve(SONGS_DIR);
+		Files.createDirectories(songFolder);
+		for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
+			SongModel songModel = elements.nextElement();
 			Path srcPath = songModel.songFile.toPath();
-			Path destPath = parentDirectory.resolve(songModel.songFile.getName());
+			Path destPath = songFolder.resolve(songModel.songFile.getName());
 			Files.copy(srcPath, destPath);
 		}
 	}
 	
 	public void updateForDemo(boolean isDemoActive) {
 		if (isDemoActive) {
-			SongModel song = getSelectedSong();
-			if (song != null) {
-				parent.playSetList(song.songFile);
+			int index = songList.getSelectedIndex();
+			if (index < 0) {
+				index = 0;
 			}
+			
+			List<File> filesToPlay = new ArrayList<File>();
+			for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
+				filesToPlay.add(elements.nextElement().songFile);
+			}
+			parent.play(filesToPlay, index);
 		} else {
 			APVSetList setList = parent.getSetList();
 			if (setList != null) {
@@ -86,18 +97,7 @@ public class SongsPanel extends SetPackPanel {
 			}
 		}
 	}
-	
-	private SongModel getSelectedSong() {
-		SongModel song = songList.getSelectedValue();
-		if (song == null) {
-			ListModel<SongModel> model = songList.getModel();
-			if (model.getSize() > 0) {
-				song = model.getElementAt(0);
-			}
-		}
-		return song;
-	}
-	
+
 	private class SongModel  {
 		private File songFile;
 

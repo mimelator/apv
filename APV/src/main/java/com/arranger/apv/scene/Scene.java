@@ -118,15 +118,18 @@ public class Scene extends ShapeSystem {
 	
 	@Override
 	public String getConfig() {
-		return String.format("{%s : [%s, %s, %s, %s, %s, %s, %s]}", getName(),
-					getConfig(cc.backDrop),
-					getConfig(cc.bgSys),
-					getConfig(cc.fgSys),
-					getConfig(cc.filter),
-					getConfig(cc.shader),
-					getConfig(cc.colorSys),
-					getConfig(cc.locSys)
-				);
+		if (isLikedScene()) {
+			return String.format("{%s : [%s, %s, %s, %s, %s, %s, %s]}", getName(),
+						getConfig(cc.backDrop),
+						getConfig(cc.bgSys),
+						getConfig(cc.fgSys),
+						getConfig(cc.filter),
+						getConfig(cc.shader),
+						getConfig(cc.colorSys),
+						getConfig(cc.locSys));
+		} else {
+			return super.getConfig();
+		}
 	}
 	
 	private String getConfig(APVPlugin plugin) {

@@ -690,30 +690,31 @@ public class Main extends PApplet {
 				((LikedScene)currentScene).onPluginChange(apv, plugin, cause);
 			}
 		});
-		
+
+		ensureSetListReadyToPlay();
 		if (isSetList()) {
-			try {
-				setList = new APVSetList(this);
-				setList.play();
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
+			setList.play();
 		}
 	}
 	
 	public void playSetList(File directory) {
-		try {
-			if (setList != null) {
-				setList.stop();
-			} else {
-				setList = new APVSetList(this);
-			}
-			setList.play(directory);
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-		}
+		ensureSetListReadyToPlay();
+		setList.play(directory);
+	}
+	
+	public void play(List<File> files, int indexToStart) {
+		ensureSetListReadyToPlay();
+		setList.play(files, indexToStart);
 	}
 
+	protected void ensureSetListReadyToPlay() {
+		if (setList != null) {
+			setList.stop();
+		} else {
+			setList = new APVSetList(this);
+		}
+	}
+	
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
 		fileName = new FileHelper(this).getFullPath(fileName);
@@ -1116,13 +1117,21 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
-		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
+		
+		if (setList.getSetList().isEmpty()) {
+			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
+		} else {
+			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(true));
+		}
+		
+		//setList
+		buffer.append(setList.getConfig());
 		
 		//Messages
 		buffer.append(randomMessagePainter.getConfig());
-		
-		//TODO images?
-		
+	
+		//image list
+		//TODO
 		return buffer.toString();
 	}
 	
