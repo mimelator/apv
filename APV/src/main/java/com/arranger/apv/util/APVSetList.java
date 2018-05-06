@@ -8,7 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -47,7 +48,9 @@ public class APVSetList extends APVPlugin {
 
 	public void play() {
 		String configString = parent.getConfigString(KEY);
-		play(new File(configString));
+		FileHelper fh = new FileHelper(parent);
+		String fullPath = fh.getFullPath(configString);
+		play(new File(fullPath));
 	}
 	
 	public void stop() {
