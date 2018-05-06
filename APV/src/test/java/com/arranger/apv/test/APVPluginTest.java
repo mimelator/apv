@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
 import com.arranger.apv.cmd.CommandSystem;
@@ -30,12 +31,16 @@ import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.helpers.APVPulseListener;
+import com.arranger.apv.helpers.HotKeyHelper;
+import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.MarqueeList;
+import com.arranger.apv.util.APVSetList;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
+import com.arranger.apv.util.draw.RandomMessagePainter;
 
 import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;
@@ -86,10 +91,7 @@ public abstract class APVPluginTest {
         BeatInfo beatInfo = Mockito.mock(BeatInfo.class);
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
         FFT fft = Mockito.mock(FFT.class);
-        APVPulseListener apvPulseListener = Mockito.mock(APVPulseListener.class);
         CommandSystem commandSystem = Mockito.mock(CommandSystem.class);
-        MessageModeInterceptor messageModeInterceptor = Mockito.mock(MessageModeInterceptor.class);
-        SceneSelectInterceptor sceneSelectInterceptor = Mockito.mock(SceneSelectInterceptor.class);
         MarqueeList sceneList = Mockito.mock(MarqueeList.class);
         
         //mock audio and beat info
@@ -106,7 +108,7 @@ public abstract class APVPluginTest {
         when(beatDetect.isRange(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
         
-        when(parent.getPulseListener()).thenReturn(apvPulseListener);
+        when(parent.getPulseListener()).thenReturn(Mockito.mock(APVPulseListener.class));
         when(parent.getColorHelper()).thenReturn(new ColorHelper(parent));
         when(parent.getImageHelper()).thenReturn(new ImageHelper(parent));
         when(parent.getCommandSystem()).thenReturn(commandSystem);
@@ -124,10 +126,14 @@ public abstract class APVPluginTest {
         when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.CARNIVAL));
         when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
         when(parent.getAPVChangeEvent()).thenReturn(new APVChangeEvent(parent));
+        when(parent.getSetList()).thenReturn(new APVSetList(parent));
+        when(parent.getRandomMessagePainter()).thenReturn(Mockito.mock(RandomMessagePainter.class));
+        when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
+        when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
+        when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));
         
-        
-        when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);
-        when(commandSystem.getSceneSelectInterceptor()).thenReturn(sceneSelectInterceptor);
+        when(commandSystem.getMessageModeInterceptor()).thenReturn(Mockito.mock(MessageModeInterceptor.class));
+        when(commandSystem.getSceneSelectInterceptor()).thenReturn(Mockito.mock(SceneSelectInterceptor.class));
         when(sceneList.getConfig()).thenCallRealMethod();
     }
     

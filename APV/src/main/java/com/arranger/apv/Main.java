@@ -1118,17 +1118,20 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		
-		if (setList.getSetList().isEmpty()) {
+		//setList
+		APVSetList sl = getSetList();
+		if (sl != null && sl.getSetList().isEmpty()) {
 			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
+			buffer.append(sl.getConfig());
 		} else {
 			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(true));
 		}
 		
-		//setList
-		buffer.append(setList.getConfig());
-		
 		//Messages
-		buffer.append(randomMessagePainter.getConfig());
+		String config = getRandomMessagePainter().getConfig();
+		if (config != null) {
+			buffer.append(config);
+		}
 	
 		//image list
 		//TODO

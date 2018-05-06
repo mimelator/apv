@@ -51,7 +51,6 @@ public class SaveConfigurationTest extends APVPluginTest {
 		when(parent.getSystem(Mockito.any())).thenAnswer(answer);
 	}
 	
-	
 	@Override
 	protected void setFrameIndexes() {
 
