@@ -18,4 +18,9 @@ public class RandomColor extends BeatColorSystem {
 		
 		return Color.getHSBColor(hue, saturation, brightness);
 	}
+	
+	@Override
+	protected boolean listenForColorChanges() {
+		return false;
+	}
 }

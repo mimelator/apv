@@ -44,6 +44,8 @@ public class Surfin extends LiteShapeSystem {
 		this.colorMode = colorMode;
 		this.startColor = startColor;
  		this.endColor = endColor;
+ 		
+// 		registerListener();
 	}
 	
 	public Surfin(Configurator.Context ctx) {
@@ -66,8 +68,22 @@ public class Surfin extends LiteShapeSystem {
 		}
 		
 		if (colorMode == COLOR_MODE.CUSTOM) {
-			throw new RuntimeException("Unsupported mode yet.  Too many fixes requried");
+			throw new RuntimeException("Unsupported mode yet");
 		}
+		
+		//registerListener();
+	}
+	
+//	protected void registerListener() {
+//		parent.getColorHelper().register(getDisplayName(), startColor, endColor, (col1, col2) -> {
+//			this.startColor = col1;
+//			this.endColor = col2;
+//		});
+//	}
+	
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + id;
 	}
 	
 	/**

@@ -11,7 +11,6 @@ public class PulseFadeFilter extends Filter {
 
 	private static final int FADE_OUT_FRAMES = 40;
 	
-	
 	protected Color color = Color.BLACK;
 	protected float alpha = 0;
 	protected PulseFader pulseFader;
@@ -25,12 +24,21 @@ public class PulseFadeFilter extends Filter {
 		this.color = color;
 		
 		pulseFader = new PulseFader(parent, FADE_OUT_FRAMES, Main.MAX_ALPHA, 0, pulsesToSkip);
+		
+		parent.getColorHelper().register(getDisplayName(), color, col -> {
+			this.color = col;
+		});
 	}
 	
 	public PulseFadeFilter(Configurator.Context ctx) {
 		this(ctx.getParent(),
 				ctx.getColor(0, Color.BLACK),
 				ctx.getInt(1, PulseListener.DEFAULT_PULSES_TO_SKIP));
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + id;
 	}
 	
 	@Override

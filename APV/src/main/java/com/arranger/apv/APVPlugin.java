@@ -4,6 +4,8 @@ import processing.core.PConstants;
 
 public class APVPlugin implements PConstants {
 	
+	private static int ID = 0;
+	
 	/**
 	 * Used for {@link #getDisplayName()}
 	 */
@@ -12,9 +14,11 @@ public class APVPlugin implements PConstants {
 	};
 	
 	protected Main parent;
+	protected int id;
 
 	public APVPlugin(Main parent) {
 		this.parent = parent;
+		this.id = ID++;
 	}
 	
 	public String getName() {

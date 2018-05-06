@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
@@ -14,16 +13,16 @@ import javax.swing.JPanel;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.ColorHelper;
+import com.arranger.apv.util.ColorHelper.ColorHolder;
+import com.arranger.apv.util.ColorHelper.ColorHolder2;
 
 @SuppressWarnings("serial")
 public class ColorsPanel extends SetPackPanel {
 	
 	private static final Dimension LABEL_SIZE = new Dimension(40, 40);
-	private static final int NUM_COLOR_PAIRS = 8;
-	private static final int NUM_COLOR_FILTERS = 3;
 	
-	private static final String COLOR_PAIR_PATTERN = "color.pair.";
-	private static final String COLOR_FILTER_PATTERN = "color.filter.";
+//	private static final String COLOR_PAIR_PATTERN = "color.pair.";
+//	private static final String COLOR_FILTER_PATTERN = "color.filter.";
 	
 	private List<ColorEntry> colorEntries = new ArrayList<ColorEntry>();
 	
@@ -31,36 +30,35 @@ public class ColorsPanel extends SetPackPanel {
 		super(parent, PANELS.COLORS);
 		ColorHelper colorHelper = parent.getColorHelper();
 		
-		IntStream.rangeClosed(1, NUM_COLOR_PAIRS).forEach(i -> {
-			List<String> stringList = parent.getConfigurator().getRootConfig().getStringList(COLOR_PAIR_PATTERN + i);
-			Color c1 = colorHelper.decode(stringList.get(0));
-			Color c2  = colorHelper.decode(stringList.get(1));
-			add(createColorPanel(i, c1, c2));
+		colorHelper.getHandlerMap2().entrySet().forEach(entry -> {
+			String key = entry.getKey();
+			ColorHolder2 value = entry.getValue();
+			add(createColorPanel(key, value.getCol1(), value.getCol2()));
 		});
 		
-		IntStream.rangeClosed(1, NUM_COLOR_FILTERS).forEach(i -> {
-			String colorName = parent.getConfigString(COLOR_FILTER_PATTERN + i);
-			Color color = colorHelper.decode(colorName);
-			add(createColorPanel(i + NUM_COLOR_PAIRS, color));
+		colorHelper.getHandlerMap().entrySet().forEach(entry -> {
+			String key = entry.getKey();
+			ColorHolder value = entry.getValue();
+			add(createColorPanel(key, value.getColor()));
 		});
 	}
 	
-	protected JPanel createColorPanel(int index, Color color) {
+	protected JPanel createColorPanel(String key, Color color) {
 		JPanel row = new JPanel();
-		ColorEntry ce = new ColorEntry(color);
+		ColorEntry ce = new ColorEntry(key, color);
 		colorEntries.add(ce);
 		
-		row.add(new JLabel("Filter " + index));
+		row.add(new JLabel("Filter"));
 		row.add(getColorLabel(ce, true));
 		return row;
 	}
 	
-	protected JPanel createColorPanel(int index, Color c1, Color c2) {
+	protected JPanel createColorPanel(String key, Color c1, Color c2) {
 		JPanel row = new JPanel();
-		ColorEntry ce = new ColorEntry(c1, c2);
+		ColorEntry ce = new ColorEntry(key, c1, c2);
 		colorEntries.add(ce);
 		
-		row.add(new JLabel("Pair " + index));
+		row.add(new JLabel("Pair"));
 		row.add(getColorLabel(ce, true));
 		row.add(getColorLabel(ce, false));
 		return row;
@@ -90,18 +88,30 @@ public class ColorsPanel extends SetPackPanel {
 	}
 	
 	public void updateForDemo(boolean isDemoActive) {
-		//TODO
+		ColorHelper colorHelper = parent.getColorHelper();
+		colorEntries.forEach(ce -> {
+			if (ce.has2Colors) {
+				colorHelper.updateColor(ce.key, ce.c1, ce.c2);
+			} else {
+				colorHelper.updateColor(ce.key, ce.c1);
+			}
+		});
 	}
 	
-	static class ColorEntry {
+	class ColorEntry {
+		boolean has2Colors = false;
+		String key;
 		Color c1, c2;
 		
-		public ColorEntry(Color c1, Color c2) {
+		public ColorEntry(String key, Color c1, Color c2) {
+			this.key = key;
 			this.c1 = c1;
 			this.c2 = c2;
+			has2Colors = true;
 		}
 		
-		public ColorEntry(Color c1) {
+		public ColorEntry(String key, Color c1) {
+			this.key = key;
 			this.c1 = c1;
 		}
 	}

@@ -30,10 +30,22 @@ public class BeatColorSystem extends ColorSystem {
 		this.pulse = pulse;
 		fader = new FrameFader(parent, FRAMES_TO_FADE_COLOR);
 		skipper = new SingleFrameSkipper(parent);
+		
+		if (listenForColorChanges()) {
+			parent.getColorHelper().register(getDisplayName(), primary, pulse, (col1, col2) -> {
+				this.primary = col1;
+				this.pulse = col2;
+			});
+		}
 	}
 	
 	public BeatColorSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getColor(0, Color.WHITE), ctx.getColor(1, Color.RED));
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + id;
 	}
 
 	@Override
@@ -51,6 +63,10 @@ public class BeatColorSystem extends ColorSystem {
 		return lastColor;
 	}
 
+	protected boolean listenForColorChanges() {
+		return true;
+	}
+	
 	protected Color createColor() {
 		boolean isPulse =  parent.getAudio().getBeatInfo().getPulseDetector().isOnset();
 		if (isPulse) {

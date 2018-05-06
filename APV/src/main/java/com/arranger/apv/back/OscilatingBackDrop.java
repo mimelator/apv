@@ -18,12 +18,22 @@ public class OscilatingBackDrop extends BackDropSystem {
 		this.c2 = c2;
 		
 		oscSpeed = parent.random(SPEED_LOW, SPEED_HIGH);
+		
+		parent.getColorHelper().register(getDisplayName(), c1, c2, (col1, col2) -> {
+			this.c1 = col1;
+			this.c2 = col2;
+		});
 	}
 	
 	public OscilatingBackDrop(Configurator.Context ctx) {
 		this(ctx.getParent(),
 				ctx.getColor(0, Color.BLACK),
 				ctx.getColor(1, Color.BLACK));
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return super.getDisplayName() + id;
 	}
 	
 	@Override
