@@ -1118,6 +1118,11 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		
+		//Messages
+		buffer.append(randomMessagePainter.getConfig());
+		
+		//TODO images?
+		
 		return buffer.toString();
 	}
 	

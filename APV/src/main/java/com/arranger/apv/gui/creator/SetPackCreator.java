@@ -84,6 +84,9 @@ public class SetPackCreator extends APVFrame {
 		
 		//get the name
 		String setPackName = JOptionPane.showInputDialog("Please enter the set pack name");
+		if (setPackName == null) {
+			return;
+		}
 		
 		//get the file chooser
 		JFileChooser fc = fileHelper.getJFileChooser();
@@ -104,7 +107,7 @@ public class SetPackCreator extends APVFrame {
 		Files.createDirectories(parentDirectoryPath);
 		
 		String referenceText = parent.getConfigurator().generateCurrentConfig();
-		Path referencePath = parentDirectoryPath.resolve(Configurator.REFERENCE_CONF);
+		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
 		Files.write(referencePath, referenceText.getBytes());
 		final Path parentFolderPath = parentDirectoryPath;
 		

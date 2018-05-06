@@ -6,8 +6,10 @@ I'd like to export a folder
 I'd like to import either a folder
 need loadSetPack
 
-files are being stored and reference.conf is generated
-No evidence of emojis, songs, colors or icons being written to the reference.conf
+colors are stored,
+messages aren't stored: apvMessages
+Scene:scene is messed up a bit
+the replacements for images are missing
 
 
 Need to pick:

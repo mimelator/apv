@@ -48,7 +48,7 @@ public class ColorsPanel extends SetPackPanel {
 	public void updateForDemo(boolean isDemoActive) {
 		ColorHelper colorHelper = parent.getColorHelper();
 		colorEntries.forEach(ce -> {
-			ce.update(colorHelper, isDemoActive);
+			ce.update(colorHelper, !isDemoActive);
 		});
 	}
 	

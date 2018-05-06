@@ -23,6 +23,11 @@ import org.apache.commons.io.FileUtils;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
+import com.arranger.apv.helpers.HotKey;
+import com.arranger.apv.helpers.HotKeyHelper;
+import com.arranger.apv.helpers.Macro;
+import com.arranger.apv.helpers.MacroHelper;
+import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.shader.Shader;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -33,6 +38,7 @@ import com.typesafe.config.ConfigValue;
 public class Configurator extends APVPlugin {
 
 	public static final String REFERENCE_CONF = "reference.conf";
+	public static final String APPLICATION_CONF = "application.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
 	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 
@@ -235,8 +241,7 @@ public class Configurator extends APVPlugin {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
-		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
-			Config wrapperObj = it.next();
+		scl.forEach(wrapperObj -> {
 			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next();
 			String key = configObj.getKey();
 			ConfigList argList = (ConfigList)configObj.getValue();
@@ -256,7 +261,7 @@ public class Configurator extends APVPlugin {
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
 			systems.add(plugin);
-		}
+		});
 		
 		if (shouldScrambleInitialSystems && allowScramble) {
 			Collections.shuffle(systems);
@@ -326,40 +331,72 @@ public class Configurator extends APVPlugin {
 		results.append(System.lineSeparator()).append(System.lineSeparator());
 		results.append(parent.getConfig()); //Constants
 		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
-			if (!s.equals(Main.SYSTEM_NAMES.LIKED_SCENES)) { //Comes from another location
-				results.append(getConfigForSystem(s));
-			}
+			results.append(getConfigForSystem(s));
 		});
-		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
 		return results.toString();
 	}
 	
-	public void saveReferenceConfig(File directory) {
-		
-		
-	}
-
-	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> pluginList) {
-		
+	public String generateConfig(String name, List<String> entries, boolean sort, boolean shouldQuote) {
 		StringBuffer buffer = new StringBuffer();
-		List<String> systems = new ArrayList<String>();
-		buffer.append(systemName.name + " : [").append(System.lineSeparator());
-		for (Iterator<? extends APVPlugin> it = pluginList.iterator(); it.hasNext();) {
-			APVPlugin next = it.next();
-			systems.add("     " + next.getConfig());
-		}
+		List<String> resultList = new ArrayList<String>();
+		buffer.append(name + " : [").append(System.lineSeparator());
+		entries.forEach(entry -> {
+			if (shouldQuote) {
+				resultList.add("     " + "\"" + entry + "\"");
+			} else {
+				resultList.add("     " + entry);
+			}
+		});
 		
 		//sort the lines
-		systems.sort(Comparator.naturalOrder());
+		if (sort) {
+			resultList.sort(Comparator.naturalOrder());
+		}
 		
-		String result = systems.stream().collect(Collectors.joining(System.lineSeparator()));
+		String result = resultList.stream().collect(Collectors.joining(System.lineSeparator()));
 		buffer.append(result);
 		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator()).append(System.lineSeparator());
 		return buffer.toString();
 	}
 	
 	private String getConfigForSystem(Main.SYSTEM_NAMES systemName) {
-		return getConfigForPlugins(systemName, loadAVPPlugins(systemName));
+		List<? extends APVPlugin> pluginList = null;
+		switch (systemName) {
+			case AGENTS:
+				pluginList = parent.getAgent().getList();
+				break;
+			case PULSELISTENERS:
+				pluginList = parent.getPulseListener().getList();
+				break;
+			case HOTKEYS:
+				HotKeyHelper hotKeyHelper = parent.getHotKeyHelper();
+				pluginList = new ArrayList<HotKey>(hotKeyHelper.getHotKeys().values());
+				break;
+			case MACROS:
+				MacroHelper macroHelper = parent.getMacroHelper();
+				pluginList = new ArrayList<Macro>(macroHelper.getMacros().values());
+				break;
+			case SWITCHES:
+				pluginList = new ArrayList<Switch>(parent.getSwitches().values());
+				break;
+			case LIKED_SCENES:
+				pluginList = parent.getLikedScenes();
+				break;
+			default:
+				if (systemName.isFullSystem) {
+					pluginList = parent.getSystem(systemName).getList();
+				} else {
+					throw new RuntimeException("Unknown non full system: " + systemName.name);
+				}
+		}
+		return getConfigForPlugins(systemName, pluginList);
+	}
+
+	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> list) {
+		return generateConfig(systemName.name, 
+				list.stream().map(p -> p.getConfig()).collect(Collectors.toList()), 
+				true,
+				false);
 	}
 	
 	private Constructor<?> findConstructor(Class<?> targetClass, Class<?> targetParamType) {

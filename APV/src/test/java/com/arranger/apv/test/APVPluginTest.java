@@ -25,6 +25,7 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.MessageModeInterceptor;
 import com.arranger.apv.cmd.SceneSelectInterceptor;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
+import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.CoreEvent;
 import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.event.EventTypes;
@@ -122,6 +123,7 @@ public abstract class APVPluginTest {
         when(parent.getSparkEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.SPARK));
         when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.CARNIVAL));
         when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
+        when(parent.getAPVChangeEvent()).thenReturn(new APVChangeEvent(parent));
         
         
         when(commandSystem.getMessageModeInterceptor()).thenReturn(messageModeInterceptor);

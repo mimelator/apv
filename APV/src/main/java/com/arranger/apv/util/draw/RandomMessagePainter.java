@@ -32,6 +32,11 @@ public class RandomMessagePainter extends APVPlugin {
 			parent.sendMessage(new String[]{getMessage()});
 		});
 	}
+	
+	@Override
+	public String getConfig() {
+		return parent.getConfigurator().generateConfig(MESSAGE_KEY, msgList, false, true);
+	}
 
 	public List<String> getMsgList() {
 		return msgList;
