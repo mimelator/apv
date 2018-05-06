@@ -25,6 +25,7 @@ public class ColorsPanel extends SetPackPanel {
 //	private static final String COLOR_FILTER_PATTERN = "color.filter.";
 	
 	private List<ColorEntry> colorEntries = new ArrayList<ColorEntry>();
+	private JColorChooser colorChooser = new JColorChooser();
 	
 	public ColorsPanel(Main parent) {
 		super(parent, PANELS.COLORS);
@@ -74,13 +75,15 @@ public class ColorsPanel extends SetPackPanel {
 		label.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Color newColor = JColorChooser.showDialog(null, "Change Color", color);
-				label.setBackground(newColor);
-				if (firstColor) {
-					ce.c1 = newColor;
-				} else {
-					ce.c2 = newColor;
-				}
+				JColorChooser.createDialog(null, "ColorPicker", true, colorChooser, evt -> {
+					Color newColor = colorChooser.getColor();
+					label.setBackground(newColor);
+					if (firstColor) {
+						ce.c1 = newColor;
+					} else {
+						ce.c2 = newColor;
+					}
+				}, null).setVisible(true);
 			}
 		});
 		

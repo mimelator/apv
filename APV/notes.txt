@@ -2,13 +2,6 @@ BRANCH: setListMaker
 https://github.com/mimelator/apv
 
 
-anything loading images will need a registry of
-names to images
-
-when the images are updated, they need to reload the appropriate images
-This will be done by registering an event
-
-
 Need to pick:
 * icons
 * colors
@@ -22,8 +15,6 @@ This might be a tabbed interface:
  When Demoing you can use either a default demo scene or choose your own custom scene
  The scene will run indefinitely until you stop it
  
- 
-
 Then it will save a version of reference.conf including comments for the startup script
 
 *****************************************************************************
