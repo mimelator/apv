@@ -48,8 +48,8 @@ public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 
 	@Override
 	public String getConfig() {
-		//{SpriteFactory : [triangle.png, 2.5]}
-		return String.format("{%s : [%s, %s]}", getName(), file, alpha);
+		//{SpriteFactory : [${triangle.png}, 2.5]}
+		return String.format("{%s : [${%s}, %s]}", getName(), file, alpha);
 	}
 	
 	@Override

@@ -1133,8 +1133,10 @@ public class Main extends PApplet {
 			buffer.append(config);
 		}
 	
-		//image list
-		//TODO
+		config = getImageHelper().getConfig();
+		if (config != null) {
+			buffer.append(config);
+		}
 		return buffer.toString();
 	}
 	

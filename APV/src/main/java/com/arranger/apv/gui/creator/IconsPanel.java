@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.ImageHelper;
+import com.arranger.apv.util.ImageHelper.ICON_NAMES;
 
 import processing.core.PImage;
 
@@ -34,36 +33,7 @@ import processing.core.PImage;
 public class IconsPanel extends SetPackPanel {
 
 	private static final Logger logger = Logger.getLogger(IconsPanel.class.getName());
-	
 	private static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
-	
-	private enum ICON_NAMES {
-		SPRITE("sprite"),
-		PURPLE("purple"),
-		TRIANGLE("triangle"),
-		GRADIENT_TRIANGLE("gradient-triangle"),
-		SWIRL("swirl"),
-		WARNING("warning"),
-		THREE_D_CUBE("3dcube"),
-		SILLY("Silly_Emoji"),
-		SCARED("Scared_face_emoji"),
-		ISLAND("emoji-island"),
-		BLITZ("Emoji_Blitz_Star"),
-		CIRCLE("simpleCircle"),
-		THREE_D_STAR("3dstar");
-		
-		private String title;
-		ICON_NAMES(String title) {
-			this.title = title;
-		}
-		
-		String getFullTitle() {
-			return title + ".png";
-		}
-		
-		static final List<ICON_NAMES> VALUES = Arrays.asList(ICON_NAMES.values());
-	}
-	
 
 	private FileHelper fileHelper;
 	private Map<ICON_NAMES, ImageHolder> iconMap = new HashMap<ICON_NAMES, ImageHolder>();
@@ -119,7 +89,14 @@ public class IconsPanel extends SetPackPanel {
 		ImageHelper ih = parent.getImageHelper();
 		ICON_NAMES.VALUES.forEach(icon -> {
 			ImageHolder imgHolder = iconMap.get(icon);
-			ih.updateImage(icon.getFullTitle(), isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage());
+			
+			PImage image = isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage();
+			String pathName = icon.getFullTitle();
+			if (isDemoActive && imgHolder.file != null) {
+				pathName = imgHolder.file.getName();
+			}
+			
+			ih.updateImage(icon, image, pathName);
 		});
 	}
 	

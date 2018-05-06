@@ -127,6 +127,7 @@ public abstract class APVPluginTest {
         when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
         when(parent.getAPVChangeEvent()).thenReturn(new APVChangeEvent(parent));
         when(parent.getSetList()).thenReturn(new APVSetList(parent));
+        when(parent.getImageHelper()).thenReturn(Mockito.mock(ImageHelper.class));
         when(parent.getRandomMessagePainter()).thenReturn(Mockito.mock(RandomMessagePainter.class));
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
