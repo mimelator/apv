@@ -1,6 +1,8 @@
 package com.arranger.apv.gui.creator;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import javax.swing.JPanel;
 
@@ -40,6 +42,8 @@ public abstract class SetPackPanel extends JPanel {
 	public PANELS getPanel() {
 		return panel;
 	}
+	
+	public abstract void createFilesForSetPack(Path parentDirectory) throws IOException;
 
 	public abstract void updateForDemo(boolean isDemoActive);
 }

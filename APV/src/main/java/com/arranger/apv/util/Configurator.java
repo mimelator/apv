@@ -306,16 +306,7 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {
-		StringBuffer results = new StringBuffer();
-		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
-		results.append(System.lineSeparator()).append(System.lineSeparator());
-		results.append(parent.getConfig()); //Constants
-		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
-			if (!s.equals(Main.SYSTEM_NAMES.LIKED_SCENES)) { //Comes from another location
-				results.append(getConfigForSystem(s));
-			}
-		});
-		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
+		String results = generateCurrentConfig();
 		
 		//save application.conf.bak
 		FileHelper fh = new FileHelper(parent);
@@ -327,6 +318,25 @@ public class Configurator extends APVPlugin {
 				FileUtils.copyInputStreamToFile(stream, new File(fh.getFullPath(REFERENCE_CONF)));
 			});
 		}
+	}
+
+	public String generateCurrentConfig() {
+		StringBuffer results = new StringBuffer();
+		results.append("#Config saved on: " + new Timestamp(System.currentTimeMillis()).toString());
+		results.append(System.lineSeparator()).append(System.lineSeparator());
+		results.append(parent.getConfig()); //Constants
+		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
+			if (!s.equals(Main.SYSTEM_NAMES.LIKED_SCENES)) { //Comes from another location
+				results.append(getConfigForSystem(s));
+			}
+		});
+		results.append(getConfigForPlugins(Main.SYSTEM_NAMES.LIKED_SCENES, parent.getLikedScenes()));
+		return results.toString();
+	}
+	
+	public void saveReferenceConfig(File directory) {
+		
+		
 	}
 
 	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> pluginList) {

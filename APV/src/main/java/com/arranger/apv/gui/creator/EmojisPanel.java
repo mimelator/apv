@@ -1,5 +1,6 @@
 package com.arranger.apv.gui.creator;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class EmojisPanel extends SetPackPanel {
 		} else {
 			parent.getRandomMessagePainter().setMsgList(origMsgList);
 		}
+	}
+	
+	@Override
+	public void createFilesForSetPack(Path parentDirectory) {
+		//No files to create
 	}
 	
 	private List<String> getMsgList() {

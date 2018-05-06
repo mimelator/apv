@@ -4,10 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,10 +32,12 @@ import processing.core.PImage;
 
 @SuppressWarnings("serial")
 public class IconsPanel extends SetPackPanel {
+
+	private static final Logger logger = Logger.getLogger(IconsPanel.class.getName());
 	
 	private static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
 	
-	enum ICON_NAMES {
+	private enum ICON_NAMES {
 		SPRITE("sprite"),
 		PURPLE("purple"),
 		TRIANGLE("triangle"),
@@ -107,6 +115,30 @@ public class IconsPanel extends SetPackPanel {
 		updateLabel(index);
 	}
 	
+	public void updateForDemo(boolean isDemoActive) {
+		ImageHelper ih = parent.getImageHelper();
+		ICON_NAMES.VALUES.forEach(icon -> {
+			ImageHolder imgHolder = iconMap.get(icon);
+			ih.updateImage(icon.getFullTitle(), isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage());
+		});
+	}
+	
+	@Override
+	public void createFilesForSetPack(Path parentDirectory) throws IOException {
+		ICON_NAMES.VALUES.forEach(icon -> {
+			ImageHolder imgHolder = iconMap.get(icon);
+			if (imgHolder.file != null) {
+				Path srcPath = imgHolder.file.toPath();
+				Path destPath = parentDirectory.resolve(imgHolder.file.getName());
+				try {
+					Files.copy(srcPath, destPath, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+		});
+	}
+	
 	private void updateCurrentIcon(File newIconFile) {
 		ImageHolder icon = getCurrentIcon();
 		icon.setFile(newIconFile);
@@ -130,50 +162,40 @@ public class IconsPanel extends SetPackPanel {
 		return iconMap.get(i);
 	}
 	
-	public void updateForDemo(boolean isDemoActive) {
-		ImageHelper ih = parent.getImageHelper();
-		ICON_NAMES.VALUES.forEach(icon -> {
-			ImageHolder imgHolder = iconMap.get(icon);
-			ih.updateImage(icon.getFullTitle(), isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage());
-		});
-	}
-	
-	class ImageHolder {
+	private class ImageHolder {
 		File file;
 		Image image, origImage;
-		String configPath;
 		
-		ImageHolder(String configPath, Image image) {
-			this.configPath = configPath;
+		private ImageHolder(String configPath, Image image) {
 			this.image = image;
 			this.origImage = image;
 		}
 		
-		ImageHolder(File file) {
+		private ImageHolder(File file) {
 			this.file = file;
 		}
 		
-		void setFile(File file) {
+		private void setFile(File file) {
 			this.file = file;
 			image = null;
 		}
 
-		Image getImage() {
+		private Image getImage() {
 			if (image == null) {
 				image = parent.loadImage(file.getAbsolutePath()).getImage();
 			}
 			return image;
 		}
 		
-		PImage getOriginalImage() {
+		private PImage getOriginalImage() {
 			return new PImage(origImage);
 		}
 		
-		PImage getPImage() {
+		private PImage getPImage() {
 			return new PImage(getImage());
 		}
 		
-		ImageIcon getImageIcon() {
+		private ImageIcon getImageIcon() {
 			Image img = getImage();
 			
 			//scale it

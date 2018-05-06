@@ -1,6 +1,9 @@
 package com.arranger.apv.gui.creator;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import javax.swing.BoxLayout;
@@ -59,15 +62,15 @@ public class SongsPanel extends SetPackPanel {
 		add(btnPanel);
 	}
 	
-	private SongModel getSelectedSong() {
-		SongModel song = songList.getSelectedValue();
-		if (song == null) {
-			ListModel<SongModel> model = songList.getModel();
-			if (model.getSize() > 0) {
-				song = model.getElementAt(0);
-			}
+	@Override
+	public void createFilesForSetPack(Path parentDirectory) throws IOException {
+		//copy all of the items in the song list to the parentDirectory
+		for (int index= 0; index < modelList.size(); index++) {
+			SongModel songModel = modelList.get(index);
+			Path srcPath = songModel.songFile.toPath();
+			Path destPath = parentDirectory.resolve(songModel.songFile.getName());
+			Files.copy(srcPath, destPath);
 		}
-		return song;
 	}
 	
 	public void updateForDemo(boolean isDemoActive) {
@@ -84,10 +87,21 @@ public class SongsPanel extends SetPackPanel {
 		}
 	}
 	
-	class SongModel  {
-		File songFile;
+	private SongModel getSelectedSong() {
+		SongModel song = songList.getSelectedValue();
+		if (song == null) {
+			ListModel<SongModel> model = songList.getModel();
+			if (model.getSize() > 0) {
+				song = model.getElementAt(0);
+			}
+		}
+		return song;
+	}
+	
+	private class SongModel  {
+		private File songFile;
 
-		SongModel(File songFile) {
+		private SongModel(File songFile) {
 			this.songFile = songFile;
 		}
 		

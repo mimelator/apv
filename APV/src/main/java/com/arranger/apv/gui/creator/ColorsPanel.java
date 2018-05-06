@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,18 @@ public class ColorsPanel extends SetPackPanel {
 			ColorHolder value = entry.getValue();
 			add(createColorPanel(key, value.getColor()));
 		});
+	}
+	
+	public void updateForDemo(boolean isDemoActive) {
+		ColorHelper colorHelper = parent.getColorHelper();
+		colorEntries.forEach(ce -> {
+			ce.update(colorHelper, isDemoActive);
+		});
+	}
+	
+	@Override
+	public void createFilesForSetPack(Path parentDirectory) {
+		//No files to create
 	}
 	
 	protected JPanel createColorPanel(String key, Color color) {
@@ -90,32 +103,41 @@ public class ColorsPanel extends SetPackPanel {
 		return label;
 	}
 	
-	public void updateForDemo(boolean isDemoActive) {
-		ColorHelper colorHelper = parent.getColorHelper();
-		colorEntries.forEach(ce -> {
-			if (ce.has2Colors) {
-				colorHelper.updateColor(ce.key, ce.c1, ce.c2);
-			} else {
-				colorHelper.updateColor(ce.key, ce.c1);
-			}
-		});
-	}
-	
-	class ColorEntry {
-		boolean has2Colors = false;
-		String key;
-		Color c1, c2;
+	private class ColorEntry {
+		private boolean has2Colors = false;
+		private String key;
+		private Color orig1, orig2;
+		private Color c1, c2;
 		
-		public ColorEntry(String key, Color c1, Color c2) {
+		ColorEntry(String key, Color c1) {
 			this.key = key;
+			this.orig1 = c1;
+			this.c1 = c1;
+		}
+		
+		ColorEntry(String key, Color c1, Color c2) {
+			this.key = key;
+			this.orig1 = c1;
+			this.orig2 = c2;
 			this.c1 = c1;
 			this.c2 = c2;
 			has2Colors = true;
 		}
 		
-		public ColorEntry(String key, Color c1) {
-			this.key = key;
-			this.c1 = c1;
+		void update(ColorHelper helper, boolean useOrig) {
+			if (useOrig) {
+				if (has2Colors) {
+					helper.updateColor(key, orig1, orig2);
+				} else {
+					helper.updateColor(key, orig1);
+				}
+			} else {
+				if (has2Colors) {
+					helper.updateColor(key, c1, c2);
+				} else {
+					helper.updateColor(key, c1);
+				}
+			}
 		}
 	}
 }

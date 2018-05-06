@@ -14,7 +14,7 @@ import com.arranger.apv.Main;
 public class APVFrame extends APVPlugin {
 
 	@FunctionalInterface
-	interface WindowClosing {
+	protected interface WindowClosing {
 		void onWindowClose();
 	}
 	
