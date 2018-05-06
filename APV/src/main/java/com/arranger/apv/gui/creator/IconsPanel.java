@@ -115,7 +115,7 @@ public class IconsPanel extends SetPackPanel {
 		updateLabel(index);
 	}
 	
-	public void updateForDemo(boolean isDemoActive) {
+	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		ImageHelper ih = parent.getImageHelper();
 		ICON_NAMES.VALUES.forEach(icon -> {
 			ImageHolder imgHolder = iconMap.get(icon);

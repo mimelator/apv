@@ -45,5 +45,5 @@ public abstract class SetPackPanel extends JPanel {
 	
 	public abstract void createFilesForSetPack(Path parentDirectory) throws IOException;
 
-	public abstract void updateForDemo(boolean isDemoActive);
+	public abstract void updateForDemo(boolean isDemoActive, Path parentDirectory);
 }

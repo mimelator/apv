@@ -68,7 +68,7 @@ public class SongsPanel extends SetPackPanel {
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
 		//copy all of the items in the song list to the parentDirectory
-		Path songFolder = parentDirectory.resolve(SONGS_DIR);
+		Path songFolder = getSongsDirectoryPath(parentDirectory);
 		Files.createDirectories(songFolder);
 		for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
 			SongModel songModel = elements.nextElement();
@@ -77,8 +77,13 @@ public class SongsPanel extends SetPackPanel {
 			Files.copy(srcPath, destPath);
 		}
 	}
+
+	protected Path getSongsDirectoryPath(Path parentDirectory) {
+		Path songFolder = parentDirectory.resolve(SONGS_DIR);
+		return songFolder;
+	}
 	
-	public void updateForDemo(boolean isDemoActive) {
+	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		if (isDemoActive) {
 			int index = songList.getSelectedIndex();
 			if (index < 0) {
@@ -88,6 +93,10 @@ public class SongsPanel extends SetPackPanel {
 			List<File> filesToPlay = new ArrayList<File>();
 			for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
 				filesToPlay.add(elements.nextElement().songFile);
+			}
+			if (parentDirectory != null) {
+				Path songFolder = getSongsDirectoryPath(parentDirectory);
+				parent.getSetList().setConfigDirectory(songFolder.toString());
 			}
 			parent.play(filesToPlay, index);
 		} else {

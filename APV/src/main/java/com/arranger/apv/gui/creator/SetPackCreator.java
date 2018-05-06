@@ -73,15 +73,11 @@ public class SetPackCreator extends APVFrame {
 		demoButton.setBackground(demoMode ? Color.RED : null);
 		
 		panels.forEach(pnl -> {
-			pnl.updateForDemo(demoMode);
+			pnl.updateForDemo(demoMode, null);
 		});
 	}
 	
 	private void createSetPack() {
-		panels.forEach(pnl -> {
-			pnl.updateForDemo(true);
-		});
-		
 		//get the name
 		String setPackName = JOptionPane.showInputDialog("Please enter the set pack name");
 		if (setPackName == null) {
@@ -105,11 +101,15 @@ public class SetPackCreator extends APVFrame {
 		Path parentDirectoryPath = parentDirectory.toPath();
 		parentDirectoryPath = parentDirectoryPath.resolve(setPackName);
 		Files.createDirectories(parentDirectoryPath);
+		final Path parentFolderPath = parentDirectoryPath;
+		
+		panels.forEach(pnl -> {
+			pnl.updateForDemo(true, parentFolderPath);
+		});
 		
 		String referenceText = parent.getConfigurator().generateCurrentConfig();
 		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
 		Files.write(referencePath, referenceText.getBytes());
-		final Path parentFolderPath = parentDirectoryPath;
 		
 		panels.forEach(pnl -> {
 			try {

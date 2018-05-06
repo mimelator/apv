@@ -27,7 +27,7 @@ public class EmojisPanel extends SetPackPanel {
 		add(textArea);
 	}
 	
-	public void updateForDemo(boolean isDemoActive) {
+	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		if (isDemoActive) {
 			parent.getRandomMessagePainter().setMsgList(getMsgList());
 		} else {

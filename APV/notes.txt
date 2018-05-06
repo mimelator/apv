@@ -7,11 +7,10 @@ I'd like to import either a folder
 need loadSetPack
 
 colors are stored,
-messages are stored,
-song list?
+messages are stored but out of date,
+song isn't being set correctly
 
 the replacements for images are missing
-
 
 
 Need to pick:

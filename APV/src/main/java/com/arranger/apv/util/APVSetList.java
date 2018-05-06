@@ -6,8 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,9 +33,10 @@ public class APVSetList extends APVPlugin {
 	private static final Logger logger = Logger.getLogger(APVSetList.class.getName());
 	
 	private static final String KEY = "apv.setListFolder";
-	private static final String CONFIG = "apv.setListFolder = songs" + System.lineSeparator();
+	private static final String CONFIG = "apv.setListFolder = %s";
 	private List<Path> setList = new ArrayList<Path>();
 	private AudioPlayer currentPlayer;
+	private String configDirectory = "songs";
 	
 	public APVSetList(Main parent){
 		super(parent);
@@ -43,14 +44,18 @@ public class APVSetList extends APVPlugin {
 	
 	@Override
 	public String getConfig() {
-		return CONFIG;
+		return String.format(CONFIG, configDirectory) + System.lineSeparator();
 	}
-
+	
+	public void setConfigDirectory(String configDirectory) {
+		this.configDirectory = configDirectory;
+	}
+	
 	public void play() {
 		String configString = parent.getConfigString(KEY);
-		FileHelper fh = new FileHelper(parent);
-		String fullPath = fh.getFullPath(configString);
-		play(new File(fullPath));
+		Path currentDir = Paths.get(".");
+		Path songFolder = currentDir.resolve(configString);
+		play(songFolder.toFile());
 	}
 	
 	public void stop() {
@@ -91,11 +96,11 @@ public class APVSetList extends APVPlugin {
 		Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {
 			try {
-				List<Path> playList = setList.subList(index, setList.size() - 1);
-				playList.forEach(song -> {
-					playSong(minim.loadFile(song.toString()));
-				});
-			} catch (ConcurrentModificationException e) {
+				ListIterator<Path> it = setList.listIterator(index);
+				while (it.hasNext()) {
+					playSong(minim.loadFile(it.next().toString()));
+				}
+			} catch (Exception e) {
 				//When the setList has been reset
 			}
 		}).start();

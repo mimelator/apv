@@ -1120,11 +1120,11 @@ public class Main extends PApplet {
 		
 		//setList
 		APVSetList sl = getSetList();
-		if (sl != null && sl.getSetList().isEmpty()) {
-			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
+		if (sl != null && !sl.getSetList().isEmpty()) {
+			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(true));
 			buffer.append(sl.getConfig());
 		} else {
-			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(true));
+			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		}
 		
 		//Messages
