@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ public class SongsPanel extends SetPackPanel {
 	
 	private static final String SONGS_DIR = "songs";
 	private FileHelper fileHelper;
+	private JCheckBox preserveOrderCheckBox;
 	private JList<SongModel> songList;
 	private DefaultListModel<SongModel> modelList = new DefaultListModel<SongModel>();
 	
@@ -59,6 +61,9 @@ public class SongsPanel extends SetPackPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(jScrollPane);
 		
+		preserveOrderCheckBox = new JCheckBox("Preserve Order", true);
+		add(preserveOrderCheckBox);
+		
 		JPanel btnPanel = new JPanel();
 		btnPanel.add(addButton);
 		btnPanel.add(removeButton);
@@ -67,13 +72,23 @@ public class SongsPanel extends SetPackPanel {
 	
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
+		boolean numberFiles = preserveOrderCheckBox.isSelected();
+		int index = 1;
+		
 		//copy all of the items in the song list to the parentDirectory
 		Path songFolder = getSongsDirectoryPath(parentDirectory);
 		Files.createDirectories(songFolder);
 		for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
 			SongModel songModel = elements.nextElement();
 			Path srcPath = songModel.songFile.toPath();
-			Path destPath = songFolder.resolve(songModel.songFile.getName());
+			String name = songModel.songFile.getName();
+			
+			if (numberFiles) {
+				name = String.format("%03d_%s", index, name);
+				index++;
+			}
+			
+			Path destPath = songFolder.resolve(name);
 			Files.copy(srcPath, destPath);
 		}
 	}
