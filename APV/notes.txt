@@ -1,8 +1,6 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-ColorsPanel.randomize();
-
 
 
 *****************************************************************************
