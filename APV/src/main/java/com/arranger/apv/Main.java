@@ -479,7 +479,7 @@ public class Main extends PApplet {
 	}
 	
 	public void setNextScene(Scene scene, String cause) {
-		scenes.setNextPlugin(scene, cause);
+		scenes.setNextPlugin(scene, cause, false);
 	}
 	
 	public Scene getCurrentScene() {
@@ -691,12 +691,10 @@ public class Main extends PApplet {
 			}
 		});
 
-		ensureSetListReadyToPlay();
-		if (isSetList()) {
-			setList.play();
-		}
+		setDefaultScene("setup");
+		checkStartupSetList();
 	}
-	
+
 	public void playSetList(File directory) {
 		ensureSetListReadyToPlay();
 		setList.play(directory);
@@ -707,14 +705,6 @@ public class Main extends PApplet {
 		setList.play(files, indexToStart);
 	}
 
-	protected void ensureSetListReadyToPlay() {
-		if (setList != null) {
-			setList.stop();
-		} else {
-			setList = new APVSetList(this);
-		}
-	}
-	
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
 		fileName = new FileHelper(this).getFullPath(fileName);
@@ -801,6 +791,9 @@ public class Main extends PApplet {
 		
 		registerSystemCommands();
 		fireSetupEvent();
+		
+		setDefaultScene("reload");
+		checkStartupSetList();
 	}
 
 	protected void fireSetupEvent() {
@@ -938,6 +931,21 @@ public class Main extends PApplet {
 		
 		//reset the flag
 		scrambleMode = false;
+	}
+	
+	protected void checkStartupSetList() {
+		ensureSetListReadyToPlay();
+		if (isSetList()) {
+			setList.play();
+		}
+	}
+	
+	protected void ensureSetListReadyToPlay() {
+		if (setList != null) {
+			setList.stop();
+		} else {
+			setList = new APVSetList(this);
+		}
 	}
 
 	protected void initControlMode() {

@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.gui.APVTextFrame.TextSupplier;
@@ -88,6 +89,7 @@ public class APVWindow extends APVFrame {
 		JButton loadConfigButton = new JButton("Load Config");
 		loadConfigButton.addActionListener(e -> {
 			JFileChooser fc = fileHelper.getJFileChooser();
+			fc.setFileFilter(new FileNameExtensionFilter("Configuration Files", "conf"));
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
 			}

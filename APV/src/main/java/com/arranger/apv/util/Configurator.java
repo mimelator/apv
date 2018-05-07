@@ -334,13 +334,15 @@ public class Configurator extends APVPlugin {
 		return results.toString();
 	}
 	
+	private JSONQuoter quoter = new JSONQuoter(parent);
+	
 	public String generateConfig(String name, List<String> entries, boolean sort, boolean shouldQuote) {
 		StringBuffer buffer = new StringBuffer();
 		List<String> resultList = new ArrayList<String>();
 		buffer.append(name + " : [").append(System.lineSeparator());
 		entries.forEach(entry -> {
 			if (shouldQuote) {
-				resultList.add("     " + "\"" + entry + "\"");
+				resultList.add("     " + quoter.quote(entry));
 			} else {
 				resultList.add("     " + entry);
 			}

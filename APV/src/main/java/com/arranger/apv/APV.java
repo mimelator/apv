@@ -71,13 +71,17 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		return switchCommand;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setNextPlugin(APVPlugin plugin, String cause) {
+		setNextPlugin(plugin, cause, true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void setNextPlugin(APVPlugin plugin, String cause, boolean checkQuietWindow) {
 		if (currentPlugin.equals(plugin)) {
 			return;
 		}
 		
-		if (quietWindow.isInQuietWindow()) {
+		if (checkQuietWindow && quietWindow.isInQuietWindow()) {
 			logger.fine(String.format("Rejected changing %s for %s due to quiet window", getSystemName(), cause));
 			return;
 		}
@@ -86,7 +90,7 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		fireEvent(plugin, cause);
 		quietWindow.reset(quietWindowSize);
 	}
-
+	
 	public boolean isFrozen() {
 		if (sw == null) {
 			return false;
