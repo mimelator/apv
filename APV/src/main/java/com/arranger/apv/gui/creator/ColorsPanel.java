@@ -100,25 +100,22 @@ public class ColorsPanel extends SetPackPanel {
 	}
 	
 	protected JLabel getColorLabel(ColorEntry ce) {
-		GradientLabel label = new GradientLabel(ce.paint);
+		GradientLabel label = new GradientLabel(ce.paint, null);
+		
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				LinearGradientPaint selected = new GradientPicker(parent).showDialog();
+				if (selected != null) {
+					ce.paint = selected;
+					label.paint = selected;
+				}
+			}
+		});
+		
 		label.setPreferredSize(LABEL_SIZE);
 		label.setOpaque(true);
 
-//		label.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				JColorChooser.createDialog(null, "ColorPicker", true, colorChooser, evt -> {
-//					Color newColor = colorChooser.getColor();
-//					label.setBackground(newColor);
-//					if (firstColor) {
-//						ce.c1 = newColor;
-//					} else {
-//						ce.c2 = newColor;
-//					}
-//				}, null).setVisible(true);
-//			}
-//		});
-		
 		return label;
 	}
 	
@@ -148,12 +145,23 @@ public class ColorsPanel extends SetPackPanel {
 		return label;
 	}
 	
+	@FunctionalInterface
+	static interface Listener {
+		void onSelect(LinearGradientPaint paint);
+	}
+	
 	class GradientLabel extends JLabel {
-
 		private LinearGradientPaint paint;
 		
-		public GradientLabel(LinearGradientPaint paint) {
+		public GradientLabel(LinearGradientPaint paint, Listener listener) {
 			this.paint = paint;
+			addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (listener != null) {
+						listener.onSelect(paint);
+					}
+				}
+			});
 		}
 
 		@Override
