@@ -22,9 +22,6 @@ public class ColorsPanel extends SetPackPanel {
 	
 	private static final Dimension LABEL_SIZE = new Dimension(40, 40);
 	
-//	private static final String COLOR_PAIR_PATTERN = "color.pair.";
-//	private static final String COLOR_FILTER_PATTERN = "color.filter.";
-	
 	private List<ColorEntry> colorEntries = new ArrayList<ColorEntry>();
 	private JColorChooser colorChooser = new JColorChooser();
 	

@@ -1,8 +1,10 @@
 package com.arranger.apv.systems.lite;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
 
@@ -10,7 +12,13 @@ import processing.core.PApplet;
  * @see https://www.openprocessing.org/sketch/504313
  */
 public class Hactivity extends LiteShapeSystem {
+	
+	private static final String[] GARBAGE = { "bilinear momentum", "brute force", "fruit morse", "computing inverse", "quanta", "hex dump",
+			"cpu", "triangulation", "recursive backtrace", "parallell complexification" };
 
+	private static final Color DEFAULT_COLOR = new Color(100, 255, 50);
+	
+	Color fgColor;
 	int bg;
 	int fg;
 	int textS = 6;
@@ -19,21 +27,28 @@ public class Hactivity extends LiteShapeSystem {
 	float t = 0;
 	Item i = new HorizSplit(1);
 	
-	public Hactivity(Main parent) {
+	public Hactivity(Main parent, Color color) {
 		super(parent);
+		
+		fgColor = color;
+		bg = parent.color(0);
+		fg = color.getRGB();
+		
+		parent.getColorHelper().register(getName(), fgColor, col -> {fgColor = col; fg = col.getRGB();});
+	}
+	
+	public Hactivity(Configurator.Context ctx) {
+		this(ctx.getParent(), ctx.getColor(0, DEFAULT_COLOR));
 	}
 	
 	@Override
-	public void setup() {
-		bg = parent.color(0);
-		fg = parent.color(100, 255, 50);
+	public String getConfig() {
+		//{Hactivity : [GREEN]}
+		return String.format("{%s : [%s]}", getName(), parent.format(fgColor, true));
 	}
 
 	@Override
 	public void draw() {
-		//parent.fill(bg, 100);
-		//parent.rect(0, 0, parent.width, parent.height);
-		//parent.background(bg);
 		t += 0.01;
 		i.make(parent.width, parent.height);
 
@@ -46,11 +61,8 @@ public class Hactivity extends LiteShapeSystem {
 		parent.line(mouseX - cursor, mouseY, mouseX + cursor, mouseY);
 	}
 
-	String[] garbage = { "bilinear momentum", "brute force", "fruit morse", "computing inverse", "quanta", "hex dump",
-			"cpu", "triangulation", "recursive backtrace", "parallell complexification" };
-
 	String filler(int i) {
-		return garbage[i % garbage.length];
+		return GARBAGE[i % GARBAGE.length];
 	}
 
 	void label(String t) {

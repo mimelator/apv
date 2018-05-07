@@ -2,32 +2,22 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-
-Oscillating colors weren't being changed
-	Their colors go by HSB
+More painters need to be affected by the color choice
+	Oscillating colors weren't being changed as their colors use HSB
 		float hue = parent.oscillate(0, 1, oscScalar);
 		float saturation = 1;
 		float brightness = 1;
 		
 		Random can leverage what is going on with Oscillating colors
 		
-	Hactivity:
-				bg = parent.color(0);
+	Hactivity (gets a pass?)
+		bg = parent.color(0);
 		fg = parent.color(100, 255, 50);
 		
 	Spray Spark
 		sparks[i] = new Particle(random(256), random(256), random(256));
 		
-	CarnivalShapeSystem
-		parent.stroke(c);
 
-
-  runtime colors didn't seem to take in the tool
-More painters need to be affected by the color choice
-  
- Eventually, there could be trees for each APVSystem that would allow you to disable/enable plugins for your set
-
-Time to create set lists
 
 
 *****************************************************************************
@@ -35,6 +25,8 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Create set lists
+* Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
 * Document Commands (for creating Macros and Hot Keys and Agents)
 * Add documentation in reference.conf to each plugin to describe it's arguments
 *****************************************************************************
