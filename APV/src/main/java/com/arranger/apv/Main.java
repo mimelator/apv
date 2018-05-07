@@ -781,6 +781,8 @@ public class Main extends PApplet {
 	}
 	
 	public void reloadConfiguration(String file) {
+		colorHelper.reset();
+		
 		configurator.reload(file);
 		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
 		

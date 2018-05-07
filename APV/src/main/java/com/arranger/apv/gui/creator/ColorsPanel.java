@@ -7,10 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,6 +52,12 @@ public class ColorsPanel extends SetPackPanel {
 			GradientHolder value = entry.getValue();
 			add(createGradientPanel(key, value.getLinearGradientPaint()));
 		});
+		
+		JButton button = new JButton("Randomize");
+		button.addActionListener(evt -> {
+			colorEntries.forEach(ce -> ce.randomize());
+		});
+		add(button);
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
@@ -111,6 +119,7 @@ public class ColorsPanel extends SetPackPanel {
 		
 		label.setPreferredSize(LABEL_SIZE);
 		label.setOpaque(true);
+		ce.gradientLabel = label;
 
 		return label;
 	}
@@ -138,6 +147,11 @@ public class ColorsPanel extends SetPackPanel {
 			}
 		});
 		
+		if (firstColor) {
+			ce.label = label;
+		} else {
+			ce.label2 = label;
+		}
 		return label;
 	}
 	
@@ -179,6 +193,8 @@ public class ColorsPanel extends SetPackPanel {
 		private Color orig1, orig2;
 		private Color c1, c2;
 		private LinearGradientPaint paint, origPaint;
+		private JLabel label, label2;
+		private GradientLabel gradientLabel;
 		
 		ColorEntry(String key, LinearGradientPaint paint) {
 			this.key = key;
@@ -201,6 +217,35 @@ public class ColorsPanel extends SetPackPanel {
 			this.c1 = c1;
 			this.c2 = c2;
 			type = TYPE.TWO;
+		}
+		
+		void randomize() {
+			switch (type) {
+			case TWO:
+				c2 = getRandomColor();
+				label2.setBackground(c2);
+			case ONE:
+				c1 = getRandomColor();
+				label.setBackground(c1);
+				break;
+			case GRADIENT:
+				paint = getRandomGradient();
+				gradientLabel.paint = paint;
+				gradientLabel.repaint();
+				break;
+			}
+		}
+		
+		Color getRandomColor() {
+			return new Color((int)parent.random(256), (int)parent.random(256), (int)parent.random(256));
+		}
+		
+		LinearGradientPaint getRandomGradient() {
+			return new LinearGradientPaint(
+					new Point2D.Double(0, 0), 
+					new Point2D.Double(GradientPicker.DISTANCE, 1), 
+					new float[] {0, .35f, 1}, 
+					new Color[] {getRandomColor(), getRandomColor(), getRandomColor()});
 		}
 		
 		void update(ColorHelper helper, boolean useOrig) {

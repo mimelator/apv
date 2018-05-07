@@ -18,6 +18,7 @@ import com.arranger.apv.Main;
 
 public class GradientPicker extends APVPlugin {
 	
+	public static final int DISTANCE = 100;
 	private LinearGradientPaint selectedLGP;
 
 	public GradientPicker(Main parent) {
@@ -26,14 +27,14 @@ public class GradientPicker extends APVPlugin {
 
 	public LinearGradientPaint showDialog() {
 		JPanel gui = new JPanel(new GridLayout(2, 4, 1, 1));
-		addGradient(gui, 100, Color.YELLOW, Color.RED, Color.GREEN);
-		addGradient(gui, 100, Color.GREEN, Color.YELLOW, Color.RED);
-		addGradient(gui, 100, Color.RED, Color.GREEN, Color.YELLOW);
-		addGradient(gui, 100, Color.BLUE, Color.MAGENTA, Color.PINK);
-		addGradient(gui, 100, Color.WHITE, Color.RED, Color.BLACK);
-		addGradient(gui, 100, Color.RED, Color.GREEN, Color.BLACK);
-		addGradient(gui, 100, Color.BLUE, Color.PINK, Color.BLACK);
-		addGradient(gui, 100, Color.BLUE, Color.CYAN, Color.BLACK);
+		addGradient(gui, DISTANCE, Color.YELLOW, Color.RED, Color.GREEN);
+		addGradient(gui, DISTANCE, Color.GREEN, Color.YELLOW, Color.RED);
+		addGradient(gui, DISTANCE, Color.RED, Color.GREEN, Color.YELLOW);
+		addGradient(gui, DISTANCE, Color.BLUE, Color.MAGENTA, Color.PINK);
+		addGradient(gui, DISTANCE, Color.WHITE, Color.RED, Color.BLACK);
+		addGradient(gui, DISTANCE, Color.RED, Color.GREEN, Color.BLACK);
+		addGradient(gui, DISTANCE, Color.BLUE, Color.PINK, Color.BLACK);
+		addGradient(gui, DISTANCE, Color.BLUE, Color.CYAN, Color.BLACK);
 		JOptionPane.showMessageDialog(null, gui);
 		return selectedLGP;
 	}

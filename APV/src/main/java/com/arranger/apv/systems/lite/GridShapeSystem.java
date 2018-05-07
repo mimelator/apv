@@ -48,13 +48,13 @@ public class GridShapeSystem extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		distances = new float[parent.width][parent.height];
+		col = new OscillatingColor(parent, COLOR_OSC_SCALAR).getCurrentColor();
 	}
 
 	@Override
 	public void draw() {
 		int time = parent.millis();
 		parent.stroke(255);
-		col = new OscillatingColor(parent, COLOR_OSC_SCALAR).getCurrentColor();
 		Point2D pt = parent.getCurrentPoint();
 		float ptX = (float)pt.getX(); 
 		float ptY = (float)pt.getY(); 

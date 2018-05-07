@@ -38,6 +38,12 @@ public class ColorHelper extends APVPlugin {
 	public ColorHelper(Main parent) {
 		super(parent);
 	}
+	
+	public void reset() {
+		handlerMap.clear();
+		handlerMap2.clear();
+		handlerMapGradient.clear();
+	}
 
 	public Color decode(String colorName) {
 		Color result = null;
