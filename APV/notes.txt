@@ -1,8 +1,6 @@
 BRANCH: setListMaker
 https://github.com/mimelator/apv
 
-need loadSetPack command
-
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
