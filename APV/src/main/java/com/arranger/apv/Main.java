@@ -792,7 +792,7 @@ public class Main extends PApplet {
 	
 	public void reloadConfiguration(String file) {
 		configurator.reload(file);
-		Arrays.asList(SYSTEM_NAMES.values()).forEach(s -> reloadConfigurationForSystem(s));
+		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
 		
 		macroHelper.reloadConfiguration();
 		hotKeyHelper.reloadConfiguration();

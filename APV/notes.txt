@@ -1,32 +1,8 @@
 BRANCH: setListMaker
 https://github.com/mimelator/apv
 
-Ready to start Exporting the Pack.
-I'd like to export a folder 
-I'd like to import either a folder
-need loadSetPack
+need loadSetPack command
 
-colors are stored,
-messages are stored but out of date,
-song isn't being set correctly
-
-the replacements for images are missing
-
-
-Need to pick:
-* icons
-* colors
-* emojis/messages
-* songs
-and animate them with Demo scenes to show them in action
-
-
-This might be a tabbed interface:
- At the bottom of each tab would be reset, demo, save
- When Demoing you can use either a default demo scene or choose your own custom scene
- The scene will run indefinitely until you stop it
- 
-Then it will save a version of reference.conf including comments for the startup script
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)

@@ -102,7 +102,7 @@ public class APVWindow extends APVFrame {
 			});
 		});
 		
-		JButton loadSetListButton = new JButton("Load Set List");
+		JButton loadSetListButton = new JButton("Play Music");
 		loadSetListButton.addActionListener(e -> {
 			JFileChooser fc = fileHelper.getJFileChooser();
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

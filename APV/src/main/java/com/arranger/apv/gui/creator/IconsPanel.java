@@ -92,8 +92,8 @@ public class IconsPanel extends SetPackPanel {
 			
 			PImage image = isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage();
 			String pathName = icon.getFullTitle();
-			if (isDemoActive && imgHolder.file != null) {
-				pathName = imgHolder.file.getName();
+			if (isDemoActive && imgHolder.file != null && parentDirectory != null) {
+				pathName = parentDirectory.resolve(imgHolder.file.getName()).toAbsolutePath().toString();
 			}
 			
 			ih.updateImage(icon, image, pathName);

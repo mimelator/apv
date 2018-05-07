@@ -109,7 +109,10 @@ public class SetPackCreator extends APVFrame {
 		
 		String referenceText = parent.getConfigurator().generateCurrentConfig();
 		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
-		Files.write(referencePath, referenceText.getBytes());
+		
+		String instructions = String.format("#java -Dconfig.file=%s/application.conf -jar apv.jar", setPackName);
+		String result = String.format("%s %s %s", instructions, System.lineSeparator(), referenceText);
+		Files.write(referencePath, result.getBytes());
 		
 		panels.forEach(pnl -> {
 			try {

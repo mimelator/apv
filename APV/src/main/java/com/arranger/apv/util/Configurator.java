@@ -220,12 +220,10 @@ public class Configurator extends APVPlugin {
 	
 	public void reload(String file) {
 		ConfigFactory.invalidateCaches();
-		if (file == null) {
-			conf = ConfigFactory.load();
-		} else {
-			conf = ConfigFactory.load(file);
+		if (file != null) {
+			System.setProperty("config.file", file);
 		}
-		
+		conf = ConfigFactory.load();
 		initScramble();
 	}
 	
