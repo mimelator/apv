@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.ColorHelper.ColorHolder;
 import com.arranger.apv.util.ColorHelper.ColorHolder2;
+import com.arranger.apv.util.ColorHelper.GradientHolder;
 
 @SuppressWarnings("serial")
 public class ColorsPanel extends SetPackPanel {
@@ -45,15 +45,11 @@ public class ColorsPanel extends SetPackPanel {
 			add(createColorPanel(key, value.getColor()));
 		});
 		
-		add(createGradientPanel(generateSampleLG()));
-	}
-	
-	protected LinearGradientPaint generateSampleLG() {
-		Point2D start = new Point2D.Float(0, 0);
-		Point2D end = new Point2D.Float(50, 50);
-		float[] dist = { 0.0f, 0.2f, 1.0f };
-		Color[] colors = { Color.RED, Color.WHITE, Color.BLUE };
-		return new LinearGradientPaint(start, end, dist, colors);
+		colorHelper.getHandlerMapGradient().entrySet().forEach(entry -> {
+			String key = entry.getKey();
+			GradientHolder value = entry.getValue();
+			add(createGradientPanel(key, value.getLinearGradientPaint()));
+		});
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
@@ -89,9 +85,9 @@ public class ColorsPanel extends SetPackPanel {
 		return row;
 	}
 	
-	protected JPanel createGradientPanel(LinearGradientPaint paint) {
+	protected JPanel createGradientPanel(String key, LinearGradientPaint paint) {
 		JPanel row = new JPanel();
-		ColorEntry ce = new ColorEntry(paint);
+		ColorEntry ce = new ColorEntry(key, paint);
 		colorEntries.add(ce);
 		
 		row.add(new JLabel("Gradient"));
@@ -184,7 +180,8 @@ public class ColorsPanel extends SetPackPanel {
 		private Color c1, c2;
 		private LinearGradientPaint paint, origPaint;
 		
-		ColorEntry(LinearGradientPaint paint) {
+		ColorEntry(String key, LinearGradientPaint paint) {
+			this.key = key;
 			this.paint = paint;
 			this.origPaint = paint;
 			type = TYPE.GRADIENT;
@@ -216,7 +213,7 @@ public class ColorsPanel extends SetPackPanel {
 					helper.updateColor(key, orig1, orig2);
 					break;
 				case GRADIENT:
-					helper.updateGradient(origPaint);
+					helper.updateGradient(key, origPaint);
 					break;
 				}
 			} else {
@@ -228,7 +225,7 @@ public class ColorsPanel extends SetPackPanel {
 					helper.updateColor(key, c1, c2);
 					break;
 				case GRADIENT:
-					helper.updateGradient(paint);
+					helper.updateGradient(key, paint);
 					break;
 				}
 			}

@@ -1,6 +1,8 @@
 package com.arranger.apv.color;
 
 import java.awt.Color;
+import java.awt.LinearGradientPaint;
+import java.awt.geom.Point2D;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.gradient.GradientHelper;
@@ -25,7 +27,8 @@ public class OscillatingColor extends BeatColorSystem {
 		this.oscScalar = oscScalar;
 		this.gradientHelper = gradientHelper;
 		
-		parent.getColorHelper().registerGradientListener(gp -> {
+		LinearGradientPaint lgp = (gradientHelper == null) ? generateSampleLG() : gradientHelper.getLinearGradientPaint();
+		parent.getColorHelper().registerGradientListener(getDisplayName(), lgp, gp -> {
 			this.gradientHelper = new GradientHelper(parent, gp);
 		});
 	}
@@ -55,5 +58,13 @@ public class OscillatingColor extends BeatColorSystem {
 	@Override
 	protected boolean listenForColorChanges() {
 		return false;
+	}
+	
+	protected LinearGradientPaint generateSampleLG() {
+		Point2D start = new Point2D.Float(0, 0);
+		Point2D end = new Point2D.Float(50, 50);
+		float[] dist = { 0.0f, 0.2f, 1.0f };
+		Color[] colors = { Color.RED, Color.WHITE, Color.BLUE };
+		return new LinearGradientPaint(start, end, dist, colors);
 	}
 }
