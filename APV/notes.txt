@@ -1,6 +1,31 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+OscillatingColor is used by:
+	GridShapeSystem
+	LightWormSystem
+	SquareCircle
+	
+	https://stackoverflow.com/questions/21423670/4-color-gradient-using-java-awt
+	RandomColor
+
+
+{GradientHelper : [
+	{points : [0, 0, 255, 1]}
+	{colors : [BLACK, "(128, 0, 128)", RED]}
+	{fractions : [0, .1, 1]}
+]}
+
+I could have a gradient color be optionally used by the Osciallting colors (and Spray Spark)
+
+In the ColorsPanel
+there could be one additional setting of two pairs for the osciallating colors
+
+OR
+
+I could allow the user to pick a selection of colors and then automatically distribute that selection
+to all of the available swatches randomly
+
 
 More painters need to be affected by the color choice
 	Oscillating colors weren't being changed as their colors use HSB
@@ -9,10 +34,6 @@ More painters need to be affected by the color choice
 		float brightness = 1;
 		
 		Random can leverage what is going on with Oscillating colors
-		
-	Hactivity (gets a pass?)
-		bg = parent.color(0);
-		fg = parent.color(100, 255, 50);
 		
 	Spray Spark
 		sparks[i] = new Particle(random(256), random(256), random(256));

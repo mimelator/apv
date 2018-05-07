@@ -1,8 +1,11 @@
 package com.arranger.apv.util;
 
 import java.awt.Color;
+import java.awt.LinearGradientPaint;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +15,11 @@ import com.arranger.apv.Main;
 
 public class ColorHelper extends APVPlugin {
 
+	@FunctionalInterface
+	public static interface GradientChangeHandler {
+		public void onGradientChange(LinearGradientPaint gp);
+	}
+	
 	@FunctionalInterface
 	public static interface ColorChangeHandler {
 		public void onColorChange(Color color);
@@ -27,6 +35,7 @@ public class ColorHelper extends APVPlugin {
 
 	private Map<String, ColorHolder> handlerMap = new HashMap<String, ColorHolder>();
 	private Map<String, ColorHolder2> handlerMap2 = new HashMap<String, ColorHolder2>();
+	private List<GradientChangeHandler> gradientListeners = new ArrayList<GradientChangeHandler>();
 
 	public ColorHelper(Main parent) {
 		super(parent);
@@ -50,13 +59,17 @@ public class ColorHelper extends APVPlugin {
 
 		return result;
 	}
-
+	
 	public void register(String key, Color color, ColorChangeHandler handler) {
 		handlerMap.put(key, new ColorHolder(handler, color));
 	}
 
 	public void register(String key, Color c1, Color c2, ColorChangeHandler2 handler) {
 		handlerMap2.put(key, new ColorHolder2(handler, c1, c2));
+	}
+	
+	public void registerGradientListener(GradientChangeHandler handler) {
+		gradientListeners.add(handler);
 	}
 
 	public Map<String, ColorHolder> getHandlerMap() {
@@ -65,6 +78,10 @@ public class ColorHelper extends APVPlugin {
 
 	public Map<String, ColorHolder2> getHandlerMap2() {
 		return handlerMap2;
+	}
+	
+	public void updateGradient(LinearGradientPaint paint) {
+		gradientListeners.forEach(l -> l.onGradientChange(paint));
 	}
 
 	public void updateColor(String key, Color c1) {

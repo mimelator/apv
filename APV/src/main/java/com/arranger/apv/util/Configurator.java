@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.io.FileUtils;
 
@@ -44,6 +46,7 @@ public class Configurator extends APVPlugin {
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
 	
+	private JSONQuoter quoter;
 	private Config conf;
 	private RegisteredClasses registeredClasses;
 	private boolean shouldScrambleInitialSystems;
@@ -114,6 +117,36 @@ public class Configurator extends APVPlugin {
 			}
 		}
 		
+		public Color [] getColorArray(int index) {
+			List<Color> colorList = new ArrayList<Color>();
+			while (index < argList.size()) {
+				colorList.add(getColor(index, null));
+				index++;
+			}
+			
+			Color [] results = new Color[colorList.size()];
+			IntStream.range(0, results.length).forEach(i -> {
+				results[i] = colorList.get(i);
+			});
+			
+			
+			return results;
+		}
+
+		public float [] getFloatArray(int index) {
+			List<Float> floatList = new ArrayList<Float>();
+			while (index < argList.size()) {
+				floatList.add(getFloat(index, 0));
+				index++;
+			}
+			
+			float [] results = new float[floatList.size()];
+			IntStream.range(0, results.length).forEach(i -> {
+				results[i] = floatList.get(i);
+			});
+			return results;
+		}
+		
 		public List<Command> getCommandList(int index) {
 			List<Command> results = new ArrayList<Command>();
 			String [] cmdStrings = getStringArray(index, null);
@@ -153,11 +186,8 @@ public class Configurator extends APVPlugin {
 		public Color getColor(int index, Color defaultVal) {
 			if (argList.size() > index) {
 				String colorString = argList.get(index).unwrapped().toString();
-				if (colorHelper == null) {
-					colorHelper = new ColorHelper(parent);
-				}
-				
-				Color c = colorHelper.decode(colorString);
+				ColorHelper ch = getColorHelper();
+				Color c = ch.decode(colorString);
 				if (c != null) {
 					return c;
 				}
@@ -198,17 +228,25 @@ public class Configurator extends APVPlugin {
 		public Configurator getConfigurator() {
 			return Configurator.this;
 		}
+		
+		protected ColorHelper getColorHelper() {
+			if (colorHelper == null) {
+				colorHelper = new ColorHelper(parent);
+			}
+			return colorHelper;
+		}
 	}
 	
 	public Configurator(Main parent) {
 		super(parent);
+		quoter = new JSONQuoter(parent);
 		registeredClasses = new RegisteredClasses(parent);
 		reload();
 	}
 	
 	public Configurator(Main parent, InputStream inputStream) {
 		super(parent);
-		
+		quoter = new JSONQuoter(parent);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		conf = ConfigFactory.parseReader(reader);
 		initScramble();
@@ -229,6 +267,14 @@ public class Configurator extends APVPlugin {
 	
 	public Config getRootConfig() {
 		return conf;
+	}
+	
+	public APVPlugin loadObjectFromConfig(String config) {
+		Config tempConf = ConfigFactory.parseReader(new StringReader(config));  
+		Entry<String, ConfigValue> entry = tempConf.entrySet().iterator().next();
+		String key = entry.getKey();
+		ConfigList argList = (ConfigList)entry.getValue();
+		return loadPlugin(key, argList);
 	}
 	
 	public List<? extends APVPlugin> loadAVPPlugins(Main.SYSTEM_NAMES name) {
@@ -333,8 +379,6 @@ public class Configurator extends APVPlugin {
 		});
 		return results.toString();
 	}
-	
-	private JSONQuoter quoter = new JSONQuoter(parent);
 	
 	public String generateConfig(String name, List<String> entries, boolean sort, boolean shouldQuote) {
 		StringBuffer buffer = new StringBuffer();

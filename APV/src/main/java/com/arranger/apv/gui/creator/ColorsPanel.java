@@ -2,8 +2,12 @@ package com.arranger.apv.gui.creator;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,16 @@ public class ColorsPanel extends SetPackPanel {
 			ColorHolder value = entry.getValue();
 			add(createColorPanel(key, value.getColor()));
 		});
+		
+		add(createGradientPanel(generateSampleLG()));
+	}
+	
+	protected LinearGradientPaint generateSampleLG() {
+		Point2D start = new Point2D.Float(0, 0);
+		Point2D end = new Point2D.Float(50, 50);
+		float[] dist = { 0.0f, 0.2f, 1.0f };
+		Color[] colors = { Color.RED, Color.WHITE, Color.BLUE };
+		return new LinearGradientPaint(start, end, dist, colors);
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
@@ -75,6 +89,40 @@ public class ColorsPanel extends SetPackPanel {
 		return row;
 	}
 	
+	protected JPanel createGradientPanel(LinearGradientPaint paint) {
+		JPanel row = new JPanel();
+		ColorEntry ce = new ColorEntry(paint);
+		colorEntries.add(ce);
+		
+		row.add(new JLabel("Gradient"));
+		row.add(getColorLabel(ce));
+		return row;
+	}
+	
+	protected JLabel getColorLabel(ColorEntry ce) {
+		GradientLabel label = new GradientLabel(ce.paint);
+		label.setPreferredSize(LABEL_SIZE);
+		label.setOpaque(true);
+
+//		label.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				JColorChooser.createDialog(null, "ColorPicker", true, colorChooser, evt -> {
+//					Color newColor = colorChooser.getColor();
+//					label.setBackground(newColor);
+//					if (firstColor) {
+//						ce.c1 = newColor;
+//					} else {
+//						ce.c2 = newColor;
+//					}
+//				}, null).setVisible(true);
+//			}
+//		});
+		
+		return label;
+	}
+	
+	
 	protected JLabel getColorLabel(ColorEntry ce, boolean firstColor) {
 		JLabel label = new JLabel();
 		label.setPreferredSize(LABEL_SIZE);
@@ -100,16 +148,45 @@ public class ColorsPanel extends SetPackPanel {
 		return label;
 	}
 	
+	class GradientLabel extends JLabel {
+
+		private LinearGradientPaint paint;
+		
+		public GradientLabel(LinearGradientPaint paint) {
+			this.paint = paint;
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D)g;
+			
+			g2.setPaint(paint);
+			g2.fillRect(0, 0, getWidth(), getHeight());
+		}
+	}
+	
+	enum TYPE {TWO, ONE, GRADIENT};
+	
 	private class ColorEntry {
-		private boolean has2Colors = false;
+		
+		private TYPE type;
 		private String key;
 		private Color orig1, orig2;
 		private Color c1, c2;
+		private LinearGradientPaint paint, origPaint;
+		
+		ColorEntry(LinearGradientPaint paint) {
+			this.paint = paint;
+			this.origPaint = paint;
+			type = TYPE.GRADIENT;
+		}
 		
 		ColorEntry(String key, Color c1) {
 			this.key = key;
 			this.orig1 = c1;
 			this.c1 = c1;
+			type = TYPE.ONE;
 		}
 		
 		ColorEntry(String key, Color c1, Color c2) {
@@ -118,21 +195,33 @@ public class ColorsPanel extends SetPackPanel {
 			this.orig2 = c2;
 			this.c1 = c1;
 			this.c2 = c2;
-			has2Colors = true;
+			type = TYPE.TWO;
 		}
 		
 		void update(ColorHelper helper, boolean useOrig) {
 			if (useOrig) {
-				if (has2Colors) {
-					helper.updateColor(key, orig1, orig2);
-				} else {
+				switch (type) {
+				case ONE:
 					helper.updateColor(key, orig1);
+					break;
+				case TWO:
+					helper.updateColor(key, orig1, orig2);
+					break;
+				case GRADIENT:
+					helper.updateGradient(origPaint);
+					break;
 				}
 			} else {
-				if (has2Colors) {
-					helper.updateColor(key, c1, c2);
-				} else {
+				switch (type) {
+				case ONE:
 					helper.updateColor(key, c1);
+					break;
+				case TWO:
+					helper.updateColor(key, c1, c2);
+					break;
+				case GRADIENT:
+					helper.updateGradient(paint);
+					break;
 				}
 			}
 		}
