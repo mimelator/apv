@@ -1,10 +1,13 @@
 package com.arranger.apv.systems.lite;
 
 import java.awt.Color;
+import java.util.List;
+import java.util.stream.IntStream;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
-import com.arranger.apv.color.BeatColorSystem;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.frame.Reverser;
@@ -26,8 +29,6 @@ public class LightWormSystem extends LiteShapeSystem {
 	private static final boolean USE_ORIG_COLORS_DEFAULT = true;
 	private static final float DEFAULT_COLOR_SPEED = 5.0f;//50.0f;Modulate (4, 100)
 	private static final float COLOR_SCALAR = 5.5f; //10  //higher number rainbow
-	private static final int LOW_COLOR_OSC_SCALAR = 2;
-	private static final int HIGH_COLOR_OSC_SCALAR = 20;
 	private static final int COLOR_ALPHA = 30;
 	
 	private static final float FADE_DIV = 5.0f;
@@ -43,7 +44,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	private boolean useOrigColors = USE_ORIG_COLORS_DEFAULT;
 	private int numDragons = DEFAULT_NUM_DRAGONS;
 	private float colorSpeed = DEFAULT_COLOR_SPEED;
-	private BeatColorSystem [] colorSystems;
+	private ColorSystem [] colorSystems;
 	
 	private Reverser reverser;
 	
@@ -58,10 +59,15 @@ public class LightWormSystem extends LiteShapeSystem {
 		this.colorSpeed = colorSpeed; 
 		
 		if (!useOrigColors) {
-			colorSystems = new BeatColorSystem[numDragons];
-			for (int index = 0; index < numDragons; index++) {
-				colorSystems[index] = new OscillatingColor(parent, random(LOW_COLOR_OSC_SCALAR, HIGH_COLOR_OSC_SCALAR));
-			}
+			parent.getSetupEvent().register(() -> {
+				APV<ColorSystem> colors = parent.getColors();
+				ColorSystem cs = colors.getFirstInstanceOf(OscillatingColor.class);
+				List<ColorSystem> siblings = colors.getSiblings(cs);
+				colorSystems = new ColorSystem[numDragons];
+				IntStream.range(0, colorSystems.length).forEach(i -> {
+					colorSystems[i] = siblings.get((int)parent.random(siblings.size()));
+				});
+			});
 		}
 	}
 	

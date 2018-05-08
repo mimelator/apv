@@ -3,7 +3,9 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.Main;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 
 import processing.core.PApplet;
@@ -15,15 +17,18 @@ public class SquareCircle extends LiteShapeSystem {
 
 	private static final int BOX_ALPHA = 127;
 	private static final int ROTATION_SPEED = 5;
-	private static final int COLOR_OSC_SCALAR = 20;
 	private static final int SPACE_BETWEEN_SQUARES = 50;
 	private static final int SQUARE_SIDE = 30;
 	
-	private OscillatingColor oscColor;
+	private ColorSystem oscColor;
 	
 	public SquareCircle(Main parent) {
 		super(parent);
-		oscColor = new OscillatingColor(parent, COLOR_OSC_SCALAR);
+
+		parent.getSetupEvent().register(() -> {
+			APV<ColorSystem> colSystem = parent.getColors();
+			oscColor = colSystem.getFirstInstanceOf(OscillatingColor.class);
+		});
 	}
 
 	@Override

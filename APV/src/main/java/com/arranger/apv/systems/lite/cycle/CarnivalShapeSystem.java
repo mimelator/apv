@@ -3,6 +3,7 @@ package com.arranger.apv.systems.lite.cycle;
 
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.Main;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
@@ -64,7 +65,8 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	public void setup() {
 		shouldCreateNewObjectsEveryDraw = true;
 		if (useCustomColor) {
-			colorSystem = new OscillatingColor(parent);
+			APV<ColorSystem> colSystem = parent.getColors();
+			colorSystem = colSystem.getFirstInstanceOf(OscillatingColor.class);
 		}
 		super.setup();
 	}

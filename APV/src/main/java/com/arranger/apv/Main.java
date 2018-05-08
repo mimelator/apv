@@ -485,6 +485,10 @@ public class Main extends PApplet {
 	public Scene getCurrentScene() {
 		return currentScene;
 	}
+	
+	public APV<ColorSystem> getColors() {
+		return colors;
+	}
 
 	public ColorSystem getColor() {
 		return colors.getPlugin();
@@ -686,7 +690,7 @@ public class Main extends PApplet {
 		
 		//Forward messages to the currentLikedScene if applicable
 		getAPVChangeEvent().register((apv, plugin, cause) -> {
-			if (currentScene instanceof LikedScene) {
+			if (currentScene != null && currentScene.isLikedScene()) {
 				((LikedScene)currentScene).onPluginChange(apv, plugin, cause);
 			}
 		});
@@ -781,11 +785,14 @@ public class Main extends PApplet {
 	}
 	
 	public synchronized void reloadConfiguration(String file) {
+		//Color helper is used by the configurator during reload
 		colorHelper.reset();
 		
 		configurator.reload(file);
 		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
 		
+		//special case a couple of helpers
+		randomMessagePainter.reset();
 		macroHelper.reloadConfiguration();
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();

@@ -149,6 +149,11 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 	}
 	
+	public T getFirstInstanceOf(Class<? extends T> clazz) {
+		T result = list.stream().filter(p -> p.getClass().equals(clazz)).findFirst().get();
+		return result;
+	}
+	
 	public List<T> getSiblings(APVPlugin plugin) {
 		List<T> results = new ArrayList<T>();
 		

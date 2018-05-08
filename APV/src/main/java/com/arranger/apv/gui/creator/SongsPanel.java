@@ -53,6 +53,14 @@ public class SongsPanel extends SetPackPanel {
 			}
 		});
 		
+		//see if there is a current song list and add it to the modelList
+		APVSetList setList = parent.getSetList();
+		if (setList != null) {
+			setList.getSetList().forEach(songPath -> {
+				modelList.addElement(new SongModel(songPath.toFile()));
+			});
+		}
+		
 		removeButton.addActionListener(evt -> {
 			songList.remove(songList.getSelectedIndex());
 		});

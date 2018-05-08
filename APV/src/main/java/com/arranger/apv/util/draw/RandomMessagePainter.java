@@ -17,20 +17,15 @@ public class RandomMessagePainter extends APVPlugin {
 
 	public RandomMessagePainter(Main parent) {
 		super(parent);
-		msgList = parent.getConfigurator().getRootConfig().getStringList(MESSAGE_KEY);
-		
-		//prepare fonts
-		parent.getSetupEvent().register(() -> {
-			FontHelper fh = parent.getFontHelper();
-			PFont font = fh.createFontForText(msgList.stream().collect(Collectors.joining()));
-			if (font != null) {
-				fh.setCurrentFont(font);
-			}
-		});
+		initialize(parent);
 		
 		parent.getRandomMessageEvent().register(() -> {
 			parent.sendMessage(new String[]{getMessage()});
 		});
+	}
+	
+	public void reset() {
+		initialize(parent);
 	}
 	
 	@Override
@@ -48,5 +43,18 @@ public class RandomMessagePainter extends APVPlugin {
 	
 	private String getMessage() {
 		return msgList.get((int)parent.random(msgList.size()));
+	}
+	
+	private void initialize(Main parent) {
+		msgList = parent.getConfigurator().getRootConfig().getStringList(MESSAGE_KEY);
+		
+		//prepare fonts
+		parent.getSetupEvent().register(() -> {
+			FontHelper fh = parent.getFontHelper();
+			PFont font = fh.createFontForText(msgList.stream().collect(Collectors.joining()));
+			if (font != null) {
+				fh.setCurrentFont(font);
+			}
+		});
 	}
 }

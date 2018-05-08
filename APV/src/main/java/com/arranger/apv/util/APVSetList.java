@@ -77,6 +77,7 @@ public class APVSetList extends APVPlugin {
 		if (directory.isDirectory()) {
 			try {
 				Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
+				setList.sort(null); //Natural Sort Order
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				return;

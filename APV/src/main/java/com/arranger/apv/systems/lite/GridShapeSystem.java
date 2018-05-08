@@ -3,7 +3,9 @@ package com.arranger.apv.systems.lite;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.Main;
+import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.util.Configurator;
 
@@ -14,7 +16,6 @@ import processing.core.PApplet;
  */
 public class GridShapeSystem extends LiteShapeSystem {
 
-	private static final int COLOR_OSC_SCALAR = 20;
 	private static final int LARGE_STROKE_WEIGHT = 300;//30;
 	private static final int SPACER = 100;
 	
@@ -23,7 +24,6 @@ public class GridShapeSystem extends LiteShapeSystem {
 	int space;
 	int shapeSize;
 	Color col;
-	
 	
 	public GridShapeSystem(Main parent) {
 		this(parent, SPACER, LARGE_STROKE_WEIGHT);
@@ -48,7 +48,10 @@ public class GridShapeSystem extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		distances = new float[parent.width][parent.height];
-		col = new OscillatingColor(parent, COLOR_OSC_SCALAR).getCurrentColor();
+		
+		APV<ColorSystem> colSystem = parent.getColors();
+		ColorSystem oscColor = colSystem.getFirstInstanceOf(OscillatingColor.class);
+		col = oscColor.getCurrentColor();
 	}
 
 	@Override
