@@ -1,30 +1,6 @@
 BRANCH: building-sets-bugs-first
 https://github.com/mimelator/apv
 
-	
-saving on top of sets doesn't preserve the changes
-	TODO Icons:
-	
-		{AttractorSystem : [{SpriteFactory : [SPRITE]}
-		SPRITE -> sprite.png
-		sprite.png = ${apv.setPack.home}/teset62SP1/Gaming-Hearts-icon.png
-	
-	
-		All that has to happen is that the ImageHelper must update the imageList constants 
-	
-		paths aren't preserved
-		something is broken when creating a "layered" setpack
-		
-		sprite.png = sprite.png
-		purple.png = purple.png
-		triangle.png = triangle.png
-	 	{AttractorSystem : [{SpriteFactory : [${/Users/markimel/Desktop/APVSetPacks/SP1/Pickle_rick_transparent.png}, 0.3]}]}
-	 	{AttractorSystem : [{SpriteFactory : [${/Users/markimel/Desktop/APVSetPacks/SP1/danger.png}, 0.0]}]}
-	 	{AttractorSystem : [{SpriteFactory : [${/Users/markimel/Desktop/APVSetPacks/SP1/yinYang.png}, 0.0]}]}
-		
-	DONE: Check Songs  OK
-	DONE: Check colors: OK
-	DONE: Check messages: OK
 
 
 
