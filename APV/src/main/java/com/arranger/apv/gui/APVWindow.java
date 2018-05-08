@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +87,26 @@ public class APVWindow extends APVFrame {
 		JPanel commandFramePanel = apvCommandFrame.getPanel();
 		JPanel marqueeLauncherPanel = apvMarqueeLauncher.getPanel();
 		JPanel sPanel = createStats();
+		
+		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		marqueeLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		sPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		centerPanel.add(commandFramePanel);
+		centerPanel.add(marqueeLauncherPanel);
+		centerPanel.add(sPanel);
+		
+		createCmdButtons(centerPanel);
+		
+		return centerPanel;
+	}
+	
+	protected void createCmdButtons(JPanel parentPanel) {
+		
+		JPanel centerPanel = new JPanel(new GridLayout(2, 2)); 
+		
 		JButton loadConfigButton = new JButton("Load Config");
 		loadConfigButton.addActionListener(e -> {
 			JFileChooser fc = fileHelper.getJFileChooser();
@@ -118,24 +139,30 @@ public class APVWindow extends APVFrame {
 			new SetPackCreator(parent);
 		});
 		
-		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		marqueeLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		sPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		JButton selectFont = new JButton("Select Font");
+		selectFont.addActionListener(e -> {
+			//TOOD
+			JFontChooser fc = new JFontChooser();
+			if (fc.showDialog(centerPanel) == JFontChooser.OK_OPTION) {
+				//System.out.println(fc.getSelectedFont().toString());
+				parent.getFontHelper().updateCurrentFont(fc.getSelectedFont());
+			}
+		});
+		
 		loadConfigButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		agentInfoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		loadSetListButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 		createSetPack.setAlignmentX(Component.LEFT_ALIGNMENT);
+		selectFont.setAlignmentX(Component.LEFT_ALIGNMENT);
 		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		centerPanel.add(commandFramePanel);
-		centerPanel.add(marqueeLauncherPanel);
-		centerPanel.add(sPanel);
 		centerPanel.add(loadConfigButton);
 		centerPanel.add(agentInfoButton);
 		centerPanel.add(loadSetListButton);
 		centerPanel.add(createSetPack);
+		centerPanel.add(selectFont);
 		
-		return centerPanel;
+		parentPanel.add(centerPanel);
 	}
 	
 	protected JPanel createStats() {

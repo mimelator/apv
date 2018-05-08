@@ -2,6 +2,7 @@ package com.arranger.apv.util;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -14,37 +15,49 @@ import processing.core.PFont;
 /**
  * This class will help out with loading different fonts
  * as well as calculating widths for maximum display on screens
- * 
- * Right now this is parked in archive because it isn't in use
- * @see https://forum.processing.org/two/discussion/comment/83538/#Comment_83538
  */
 public class FontHelper extends APVPlugin {
 	
 	private static final Logger logger = Logger.getLogger(FontHelper.class.getName());
 	
-	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
-	private static final int DEFAULT_FONT_SIZE = 32;
-	private static final String DEFAULT_FONT_NAME = "ArialUnicodeMS";
+	private static final String FONT_KEY = "apv.font.name";
+	private static final String FONT_SIZE_KEY = "apv.font.size";
+	private static final String FONT_STYLE_KEY = "apv.font.style";
 	private static final String BACKUP_FONT_NAME = "Arial";
 	private static final int DEFAULT_CHARS = 2000; //Grab the first 2k chars covers about 10 code blocks
 	
-	
 	private Map<String, Font> fontMap;
 
-	private PFont defaultFont;
+	private PFont currentFont;
 	private String defaultCharSet;
+	private String previousSampleText;
 	
 	public FontHelper(Main parent) {
 		super(parent);
 	}
 	
-	public PFont getDefaultFont() {
-		return defaultFont;
+	@Override
+	public String getConfig() {
+		if (currentFont == null) {
+			currentFont = createFontForText("");
+		}
+		
+		StringBuffer buffer = new StringBuffer();
+		Font font = (Font)currentFont.getNative();
+		buffer.append(FONT_KEY).append(" = ").append(font.getName()).append(System.lineSeparator());
+		buffer.append(FONT_SIZE_KEY).append(" = ").append(font.getSize()).append(System.lineSeparator());
+		buffer.append(FONT_STYLE_KEY).append(" = ").append(getStyleName(font.getStyle())).append(System.lineSeparator()); 
+		
+		return buffer.toString();
 	}
 
-	public void setDefaultFont(PFont defaultFont) {
-		this.defaultFont = defaultFont;
-		parent.textFont(defaultFont);
+	public PFont getCurrentFont() {
+		return currentFont;
+	}
+
+	public void setCurrentFont(PFont pfont) {
+		this.currentFont = pfont;
+		parent.textFont(pfont);
 	}
 
 	public int getTotalWidth(String text, PFont font) {
@@ -52,7 +65,8 @@ public class FontHelper extends APVPlugin {
 	}
 	
 	public PFont createFontForText(String text) {
-		return createFontForText(text, DEFAULT_FONT_NAME);
+		String fontName = parent.getConfigString(FONT_KEY);
+		return createFontForText(text, fontName);
 	}
 	
 	public PFont createFontForText(String text, String fontName) {
@@ -69,9 +83,22 @@ public class FontHelper extends APVPlugin {
 			}
 		}
 		
-		String resultText = defaultCharSet + text; 
-		Font font = instance.deriveFont(DEFAULT_FONT_STYLE, DEFAULT_FONT_SIZE);
-		return new PFont(font, true, resultText.toCharArray());
+		previousSampleText = defaultCharSet + text; 
+		int fontSize = parent.getConfigInt(FONT_SIZE_KEY);
+		String fontStyleString = parent.getConfigString(FONT_STYLE_KEY);
+		int fontStyle = getFontStyleFromName(fontStyleString);
+		
+		Font font = instance.deriveFont(fontStyle, fontSize);
+		return new PFont(font, true, previousSampleText.toCharArray());
+	}
+	
+	public void updateCurrentFont(Font font) {
+		if (fontMap == null) {
+			initalizeFontMap();
+		}
+		
+		PFont pf = new PFont(font, true, previousSampleText.toCharArray());
+		setCurrentFont(pf);
 	}
 	
 	private void initalizeFontMap() {
@@ -87,5 +114,27 @@ public class FontHelper extends APVPlugin {
 		}
 		
 		defaultCharSet = new String(charset);
+	}
+	
+	private String getStyleName(int fontStyle) {
+		switch (fontStyle) {
+		case Font.PLAIN:
+			return "PLAIN";
+		case Font.ITALIC:
+			return "ITALIC";
+		case Font.BOLD:
+			return "BOLD";
+		default:
+			return "PLAIN";
+		}
+	}
+	
+	private int getFontStyleFromName(String fontStyle) {
+		try {
+			Field field = Font.class.getField(fontStyle);
+			return (int) field.get(null);
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 }

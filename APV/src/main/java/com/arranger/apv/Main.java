@@ -761,7 +761,7 @@ public class Main extends PApplet {
 	}
 	
 	@Override
-	public void draw() {
+	public synchronized void draw() {
 		safePainter.paint();
 	}
 	
@@ -776,11 +776,11 @@ public class Main extends PApplet {
 		}).paint(null, safe);
 	}
 	
-	public void reloadConfiguration() {
+	public synchronized void reloadConfiguration() {
 		reloadConfiguration(null);
 	}
 	
-	public void reloadConfiguration(String file) {
+	public synchronized void reloadConfiguration(String file) {
 		colorHelper.reset();
 		
 		configurator.reload(file);
@@ -1128,6 +1128,12 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		
+		//font
+		String config = getFontHelper().getConfig();
+		if (config != null) {
+			buffer.append(config);
+		}
+		
 		//setList
 		APVSetList sl = getSetList();
 		if (sl != null && !sl.getSetList().isEmpty()) {
@@ -1138,11 +1144,12 @@ public class Main extends PApplet {
 		}
 		
 		//Messages
-		String config = getRandomMessagePainter().getConfig();
+		config = getRandomMessagePainter().getConfig();
 		if (config != null) {
 			buffer.append(config);
 		}
 	
+		//images
 		config = getImageHelper().getConfig();
 		if (config != null) {
 			buffer.append(config);

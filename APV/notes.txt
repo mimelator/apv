@@ -1,7 +1,40 @@
-BRANCH: master
+BRANCH: building-sets-bugs-first
 https://github.com/mimelator/apv
 
 
+apv.setPack.home=/Users/markimel/Desktop/APVSetPacks
+apv.setListFolder = ${apv.setPack.home}/SP1/songs
+sprite.png = ${apv.setPack.home}/SP1/danger.png
+
+
+need a version number for the config file
+
+Font Chooser:
+	APVWindow button (make a grid)
+	save the font name as a simple apv.Value
+	Font Helper either looks at a config key OR gets a FontName passed in
+	
+	
+	FontHelper needs to do work:
+		onStartup
+		onReload
+		onSave
+	
+	
+Another animation: These are for transitions where the song name isn't known
+	a hindu goddess with many limbs
+	This will be a nice task where i can use a different set of sketches that don't perform quite as well
+	
+saving on top of sets doesn't preserve the changes
+
+A Command to cycle through all of the Configuration Files (setPacks)
+
+An ability to record how many likes for any given scene while streaming.
+	Feed this data to a machine learning model
+
+Help the SetPack Creator choose appropriate pngs AND fix the current ones
+	This could be explored with a simple GUI test (archive package)
+		Just try to load one onto a black Panel
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)

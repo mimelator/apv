@@ -37,6 +37,7 @@ import com.arranger.apv.helpers.MarqueeList;
 import com.arranger.apv.util.APVSetList;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
@@ -127,6 +128,7 @@ public abstract class APVPluginTest {
         when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
         when(parent.getAPVChangeEvent()).thenReturn(new APVChangeEvent(parent));
         when(parent.getSetList()).thenReturn(new APVSetList(parent));
+        when(parent.getFontHelper()).thenReturn(Mockito.mock(FontHelper.class));
         when(parent.getImageHelper()).thenReturn(Mockito.mock(ImageHelper.class));
         when(parent.getRandomMessagePainter()).thenReturn(Mockito.mock(RandomMessagePainter.class));
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));

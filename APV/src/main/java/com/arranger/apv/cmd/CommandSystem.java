@@ -130,7 +130,7 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	public Map<String, List<RegisteredCommandHandler>> getCommands() {
-		return registeredCommands;
+		return new HashMap<String, List<RegisteredCommandHandler>>(registeredCommands);
 	}
 
 	public Command getLastCommand() {
