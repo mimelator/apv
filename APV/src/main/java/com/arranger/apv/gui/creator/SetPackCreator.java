@@ -23,6 +23,8 @@ import com.arranger.apv.util.FileHelper;
 
 public class SetPackCreator extends APVFrame {
 
+	public static final String SET_PACK_HOME_KEY = "apv.setPack.home";
+	
 	private static final Logger logger = Logger.getLogger(SetPackCreator.class.getName());
 	
 	private static final int FRAME_HEIGHT = 650;
@@ -110,8 +112,10 @@ public class SetPackCreator extends APVFrame {
 		String referenceText = parent.getConfigurator().generateCurrentConfig();
 		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
 		
-		String instructions = String.format("#java -Dconfig.file=%s/application.conf -jar apv.jar", setPackName);
-		String result = String.format("%s %s %s", instructions, System.lineSeparator(), referenceText);
+		String instructions = String.format("#java -Dconfig.file=%s/application.conf -jar apv.jar", setPackName) + System.lineSeparator();
+		String setPackHome = String.format("%s = %s", SET_PACK_HOME_KEY, parentDirectory.getAbsolutePath()) + System.lineSeparator();
+
+		String result = String.format("%s %s %s", instructions, setPackHome, referenceText);
 		Files.write(referencePath, result.getBytes());
 		
 		panels.forEach(pnl -> {

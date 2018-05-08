@@ -4,22 +4,11 @@ https://github.com/mimelator/apv
 
 apv.setPack.home=/Users/markimel/Desktop/APVSetPacks
 apv.setListFolder = ${apv.setPack.home}/SP1/songs
+
+
 sprite.png = ${apv.setPack.home}/SP1/danger.png
 
 
-need a version number for the config file
-
-Font Chooser:
-	APVWindow button (make a grid)
-	save the font name as a simple apv.Value
-	Font Helper either looks at a config key OR gets a FontName passed in
-	
-	
-	FontHelper needs to do work:
-		onStartup
-		onReload
-		onSave
-	
 	
 Another animation: These are for transitions where the song name isn't known
 	a hindu goddess with many limbs

@@ -110,8 +110,9 @@ public class SongsPanel extends SetPackPanel {
 				filesToPlay.add(elements.nextElement().songFile);
 			}
 			if (parentDirectory != null) {
-				Path songFolder = getSongsDirectoryPath(parentDirectory);
-				parent.getSetList().setConfigDirectory(songFolder.toString());
+				//Path songFolder = getSongsDirectoryPath(parentDirectory);
+				Path relativeSongsDir = parentDirectory.getFileName().resolve(SONGS_DIR);
+				parent.getSetList().setRelativeConfigDirectory(relativeSongsDir.toString());
 			}
 			parent.play(filesToPlay, index);
 		} else {

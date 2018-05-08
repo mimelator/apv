@@ -33,10 +33,10 @@ public class APVSetList extends APVPlugin {
 	private static final Logger logger = Logger.getLogger(APVSetList.class.getName());
 	
 	private static final String KEY = "apv.setListFolder";
-	private static final String CONFIG = "apv.setListFolder = %s";
+	private static final String CONFIG = "apv.setListFolder = ${apv.setPack.home}" + File.separator + "%s";
 	private List<Path> setList = new ArrayList<Path>();
 	private AudioPlayer currentPlayer;
-	private String configDirectory = "songs";
+	private String relConfigDir = "songs";
 	
 	public APVSetList(Main parent){
 		super(parent);
@@ -44,11 +44,11 @@ public class APVSetList extends APVPlugin {
 	
 	@Override
 	public String getConfig() {
-		return String.format(CONFIG, configDirectory) + System.lineSeparator();
+		return String.format(CONFIG, relConfigDir) + System.lineSeparator();
 	}
 	
-	public void setConfigDirectory(String configDirectory) {
-		this.configDirectory = configDirectory;
+	public void setRelativeConfigDirectory(String relConfigDir) {
+		this.relConfigDir = relConfigDir;
 	}
 	
 	public void play() {

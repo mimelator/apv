@@ -1113,8 +1113,9 @@ public class Main extends PApplet {
 	}
 	
 	public String getConfig() {
+		//Version number 
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
-		Config rootConfig = getConfigurator().getRootConfig();
+		buffer.append("apv.conf.version = ").append(getVersionInfo().getVersion()).append(System.lineSeparator());
 		
 		//Constants
 		addConstant(buffer, FLAGS.CONTROL_MODE, getCurrentControlMode().name());
@@ -1123,12 +1124,12 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.SCREEN_WIDTH, String.valueOf(width));
 		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
 		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
-		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(rootConfig.getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
+		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		
-		//font
+		//Font info
 		String config = getFontHelper().getConfig();
 		if (config != null) {
 			buffer.append(config);

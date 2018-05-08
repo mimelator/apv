@@ -44,7 +44,7 @@ public class FontHelper extends APVPlugin {
 		
 		StringBuffer buffer = new StringBuffer();
 		Font font = (Font)currentFont.getNative();
-		buffer.append(FONT_KEY).append(" = ").append(font.getName()).append(System.lineSeparator());
+		buffer.append(FONT_KEY).append(" = ").append("\"").append(font.getName()).append("\"").append(System.lineSeparator());
 		buffer.append(FONT_SIZE_KEY).append(" = ").append(font.getSize()).append(System.lineSeparator());
 		buffer.append(FONT_STYLE_KEY).append(" = ").append(getStyleName(font.getStyle())).append(System.lineSeparator()); 
 		

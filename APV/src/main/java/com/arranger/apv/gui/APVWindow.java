@@ -141,10 +141,8 @@ public class APVWindow extends APVFrame {
 		
 		JButton selectFont = new JButton("Select Font");
 		selectFont.addActionListener(e -> {
-			//TOOD
 			JFontChooser fc = new JFontChooser();
 			if (fc.showDialog(centerPanel) == JFontChooser.OK_OPTION) {
-				//System.out.println(fc.getSelectedFont().toString());
 				parent.getFontHelper().updateCurrentFont(fc.getSelectedFont());
 			}
 		});
