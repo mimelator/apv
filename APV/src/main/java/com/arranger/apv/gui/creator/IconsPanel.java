@@ -3,6 +3,7 @@ package com.arranger.apv.gui.creator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -82,6 +84,10 @@ public class IconsPanel extends SetPackPanel {
 		btnPanel.setAlignmentX(CENTER_ALIGNMENT);
 		add(btnPanel);
 		
+		JLabel message = new JLabel("<html>If you see a red border, that means that the selected image isn't transparent and won't look great.</html>");
+		message.setAlignmentX(CENTER_ALIGNMENT);
+		add(message);
+		
 		updateLabel(index);
 	}
 	
@@ -93,7 +99,6 @@ public class IconsPanel extends SetPackPanel {
 			PImage image = isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage();
 			String pathName = icon.getFullTitle();
 			if (isDemoActive && imgHolder.file != null && parentDirectory != null) {
-				//pathName = parentDirectory.resolve(imgHolder.file.getName()).toAbsolutePath().toString();
 				//sprite.png = ${apv.setPack.home}/SP1/danger.png
 				pathName = "${apv.setPack.home}" + File.separator + parentDirectory.getFileName() + File.separator + imgHolder.file.getName();
 			}
@@ -119,8 +124,17 @@ public class IconsPanel extends SetPackPanel {
 	}
 	
 	private void updateCurrentIcon(File newIconFile) {
+		boolean hasAlpha = false;
+		try {
+			BufferedImage bi = ImageIO.read(newIconFile);
+			hasAlpha = bi.getColorModel().hasAlpha();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		ImageHolder icon = getCurrentIcon();
 		icon.setFile(newIconFile);
+		icon.setHasAlpha(hasAlpha);
 		updateLabel(index);
 	}
 
@@ -134,6 +148,11 @@ public class IconsPanel extends SetPackPanel {
 		
 		ImageHolder icon = getCurrentIcon();
 		label.setIcon(icon.getImageIcon());
+		if (icon.hasAlpha) {
+			label.setBorder(BorderFactory.createEmptyBorder());
+		} else {
+			label.setBorder(BorderFactory.createLineBorder(Color.RED));
+		}
 	}
 	
 	private ImageHolder getCurrentIcon() {
@@ -144,6 +163,7 @@ public class IconsPanel extends SetPackPanel {
 	private class ImageHolder {
 		File file;
 		Image image, origImage;
+		boolean hasAlpha = true;
 		
 		private ImageHolder(String configPath, Image image) {
 			this.image = image;
@@ -158,7 +178,11 @@ public class IconsPanel extends SetPackPanel {
 			this.file = file;
 			image = null;
 		}
-
+		
+		private void setHasAlpha(boolean hasAlpha) {
+			this.hasAlpha = hasAlpha;
+		}
+		
 		private Image getImage() {
 			if (image == null) {
 				image = parent.loadImage(file.getAbsolutePath()).getImage();

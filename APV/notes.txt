@@ -1,36 +1,29 @@
 BRANCH: building-sets-bugs-first
 https://github.com/mimelator/apv
 
-
-apv.setPack.home=/Users/markimel/Desktop/APVSetPacks
-apv.setListFolder = ${apv.setPack.home}/SP1/songs
-
-
-sprite.png = ${apv.setPack.home}/SP1/danger.png
-
-
 	
-Another animation: These are for transitions where the song name isn't known
-	a hindu goddess with many limbs
-	This will be a nice task where i can use a different set of sketches that don't perform quite as well
+Help the SetPack Creator choose appropriate pngs AND fix the current ones
+	This could be explored with a simple GUI test (archive package)
+		Just try to load one onto a black Panel
 	
 saving on top of sets doesn't preserve the changes
 
 A Command to cycle through all of the Configuration Files (setPacks)
 
-An ability to record how many likes for any given scene while streaming.
-	Feed this data to a machine learning model
 
-Help the SetPack Creator choose appropriate pngs AND fix the current ones
-	This could be explored with a simple GUI test (archive package)
-		Just try to load one onto a black Panel
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Create set lists
+* Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
+** The training data going into the model would be encoded information describing all of the current scene components 
+* Another animation: 
+	These are for transitions where the song name isn't known
+	Such as a hindu goddess with many limbs
+	This will be a nice task where i can use a different set of sketches that don't perform quite as well
+* Create set packs
 * Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
 * Document Commands (for creating Macros and Hot Keys and Agents)
 * Add documentation in reference.conf to each plugin to describe it's arguments
