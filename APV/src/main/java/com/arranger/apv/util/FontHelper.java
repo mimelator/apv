@@ -22,7 +22,7 @@ public class FontHelper extends APVPlugin {
 	private static final String FONT_KEY = "apv.font.name";
 	private static final String FONT_SIZE_KEY = "apv.font.size";
 	private static final String FONT_STYLE_KEY = "apv.font.style";
-	private static final String BACKUP_FONT_NAME = "Arial";
+	private static final String BACKUP_FONT_NAME = "Monospaced";
 	private static final int DEFAULT_CHARS = 2000; //Grab the first 2k chars covers about 10 code blocks
 	
 	private Map<String, Font> fontMap;
@@ -69,6 +69,10 @@ public class FontHelper extends APVPlugin {
 	}
 	
 	public PFont createFontForText(String text, String fontName) {
+		if (fontName == null) {
+			fontName = BACKUP_FONT_NAME;
+		}
+		
 		if (fontMap == null) {
 			initalizeFontMap();
 		}
@@ -84,6 +88,7 @@ public class FontHelper extends APVPlugin {
 		
 		previousSampleText = defaultCharSet + text; 
 		int fontSize = parent.getConfigInt(FONT_SIZE_KEY);
+		fontSize = Math.max(24, fontSize);
 		String fontStyleString = parent.getConfigString(FONT_STYLE_KEY);
 		int fontStyle = getFontStyleFromName(fontStyleString);
 		
@@ -129,6 +134,9 @@ public class FontHelper extends APVPlugin {
 	}
 	
 	private int getFontStyleFromName(String fontStyle) {
+		if (fontStyle == null) {
+			fontStyle = "PLAIN";
+		}
 		return new ReflectionHelper<Font, Integer>(Font.class, parent).getField(fontStyle);
 	}
 }
