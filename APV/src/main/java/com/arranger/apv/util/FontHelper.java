@@ -2,7 +2,6 @@ package com.arranger.apv.util;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -130,11 +129,6 @@ public class FontHelper extends APVPlugin {
 	}
 	
 	private int getFontStyleFromName(String fontStyle) {
-		try {
-			Field field = Font.class.getField(fontStyle);
-			return (int) field.get(null);
-		} catch (Exception e) {
-			return 0;
-		}
+		return new ReflectionHelper<Font, Integer>(Font.class, parent).getField(fontStyle);
 	}
 }

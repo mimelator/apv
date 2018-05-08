@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -34,6 +33,8 @@ import processing.core.PImage;
 @SuppressWarnings("serial")
 public class IconsPanel extends SetPackPanel {
 
+	private static final String EXPLANATION_MSG = "<html>If you see a red border, that means that the selected image isn't transparent and won't look great.</html>";
+	
 	private static final Logger logger = Logger.getLogger(IconsPanel.class.getName());
 	private static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
 
@@ -49,7 +50,17 @@ public class IconsPanel extends SetPackPanel {
 		ICON_NAMES.VALUES.forEach(icon -> {
 			String iconFile = parent.getConfigString(icon.getFullTitle());
 			Image img = parent.loadImage(iconFile).getImage();
-			iconMap.put(icon, new ImageHolder(iconFile, img));
+			ImageHolder imageHolder = new ImageHolder(iconFile, img);
+			checkAlpha(imageHolder);
+			iconMap.put(icon, imageHolder);
+		});
+		
+		//overlay the defaults with the alternates
+		Map<ICON_NAMES, String> map = parent.getImageHelper().getAlternateMap();
+		map.entrySet().forEach(entry -> {
+			ICON_NAMES name = entry.getKey();
+			String path = entry.getValue();
+			iconMap.get(name).setFile(new File(path));
 		});
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -84,7 +95,7 @@ public class IconsPanel extends SetPackPanel {
 		btnPanel.setAlignmentX(CENTER_ALIGNMENT);
 		add(btnPanel);
 		
-		JLabel message = new JLabel("<html>If you see a red border, that means that the selected image isn't transparent and won't look great.</html>");
+		JLabel message = new JLabel(EXPLANATION_MSG);
 		message.setAlignmentX(CENTER_ALIGNMENT);
 		add(message);
 		
@@ -124,18 +135,21 @@ public class IconsPanel extends SetPackPanel {
 	}
 	
 	private void updateCurrentIcon(File newIconFile) {
+		ImageHolder imageHolder = getCurrentImageHolder();
+		imageHolder.setFile(newIconFile);
+		checkAlpha(imageHolder);
+		updateLabel(index);
+	}
+
+	protected void checkAlpha(ImageHolder imageHolder) {
 		boolean hasAlpha = false;
-		try {
-			BufferedImage bi = ImageIO.read(newIconFile);
-			hasAlpha = bi.getColorModel().hasAlpha();
-		} catch (IOException e) {
-			e.printStackTrace();
+		Image image = imageHolder.getImage();
+		
+		if (image instanceof BufferedImage) {
+			hasAlpha = ((BufferedImage)image).getColorModel().hasAlpha();
 		}
 		
-		ImageHolder icon = getCurrentIcon();
-		icon.setFile(newIconFile);
-		icon.setHasAlpha(hasAlpha);
-		updateLabel(index);
+		imageHolder.setHasAlpha(hasAlpha);
 	}
 
 	private void updateLabel(int idx) {
@@ -146,16 +160,16 @@ public class IconsPanel extends SetPackPanel {
 		}
 		index = idx;
 		
-		ImageHolder icon = getCurrentIcon();
-		label.setIcon(icon.getImageIcon());
-		if (icon.hasAlpha) {
+		ImageHolder imageHolder = getCurrentImageHolder();
+		label.setIcon(imageHolder.getImageIcon());
+		if (imageHolder.hasAlpha) {
 			label.setBorder(BorderFactory.createEmptyBorder());
 		} else {
 			label.setBorder(BorderFactory.createLineBorder(Color.RED));
 		}
 	}
 	
-	private ImageHolder getCurrentIcon() {
+	private ImageHolder getCurrentImageHolder() {
 		ICON_NAMES i = ICON_NAMES.VALUES.get(index);
 		return iconMap.get(i);
 	}

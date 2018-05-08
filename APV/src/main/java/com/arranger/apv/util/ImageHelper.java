@@ -32,7 +32,7 @@ public class ImageHelper extends APVPlugin {
 		SCARED("Scared_face_emoji"),
 		ISLAND("emoji-island"),
 		BLITZ("Emoji_Blitz_Star"),
-		CIRCLE("simpleCircle"),
+		SIMPLE_CIRCLE("simpleCircle"),
 		THREE_D_STAR("3dstar");
 		
 		private String title;
@@ -47,25 +47,34 @@ public class ImageHelper extends APVPlugin {
 		public static final List<ICON_NAMES> VALUES = Arrays.asList(ICON_NAMES.values());
 	}
 	
-	private Map<String, List<ImageChangeHandler>> handlers = new HashMap<String, List<ImageChangeHandler>>();
+	private Map<ICON_NAMES, List<ImageChangeHandler>> handlers = new HashMap<ICON_NAMES, List<ImageChangeHandler>>();
 	private Map<ICON_NAMES, String> alternateIconMap = new HashMap<ICON_NAMES, String>();
 	
 	public ImageHelper(Main parent) {
 		super(parent);
 	}
+	
+	public Map<ICON_NAMES, String> getAlternateMap() {
+		return alternateIconMap;
+	}
 
-	public PImage loadImage(String path, ImageChangeHandler handler) {
-		List<ImageChangeHandler> list = handlers.get(path);
+	public PImage loadImage(ICON_NAMES icon, String path, ImageChangeHandler handler) {
+		List<ImageChangeHandler> list = handlers.get(icon);
 		if (list == null) {
 			list = new ArrayList<ImageChangeHandler>();
-			handlers.put(path, list);
+			handlers.put(icon, list);
 		}
 		list.add(handler);
+		
+		if (!icon.getFullTitle().equalsIgnoreCase(path)) {
+			alternateIconMap.put(icon, path);
+		}
+		
 		return parent.loadImage(path);
 	}
 
 	public void updateImage(ICON_NAMES icon, PImage image, String fileName) {
-		List<ImageChangeHandler> list = handlers.get(icon.getFullTitle());
+		List<ImageChangeHandler> list = handlers.get(icon);
 		if (list != null) {
 			list.forEach(h -> h.onImageChange(image));
 		}

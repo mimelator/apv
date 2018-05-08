@@ -6,7 +6,9 @@ import com.arranger.apv.Main;
 import com.arranger.apv.factory.APVShape.Data;
 import com.arranger.apv.systems.lifecycle.LifecycleSystem.LifecycleData;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.ImageHelper.ICON_NAMES;
 import com.arranger.apv.util.ImageHelper.ImageChangeHandler;
+import com.arranger.apv.util.ReflectionHelper;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -15,28 +17,29 @@ import processing.core.PShape;
 public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 	
 	protected PImage sprite;  
-	protected float alpha;
-	protected String file;
+	protected String imageKey;
 	
-	public SpriteFactory(Main parent, String file) {
-		super(parent);
-		this.file = file;
-		sprite = parent.getImageHelper().loadImage(file, this);
-	}
-	
-	public SpriteFactory(Main parent, String file, float scale) {
-		this(parent, file);
-		this.scale = scale;
+	public SpriteFactory(Main parent, String imageKey, float scale) {
+		super(parent, scale);
+		this.imageKey = imageKey;
+		
+		String resolvedImage = imageKey;
+		
+		ICON_NAMES icon = new ReflectionHelper<ICON_NAMES, ICON_NAMES>(ICON_NAMES.class, parent).getField(imageKey);
+		if (icon != null) {
+			//look it up
+			String title = icon.getFullTitle();
+			resolvedImage = parent.getConfigString(title);
+		}
+		
+		sprite = parent.getImageHelper().loadImage(icon, resolvedImage, this);
 	}
 	
 	public SpriteFactory(Configurator.Context ctx) {
-		super(ctx.getParent());
-		
-		//look for file, scale 
-		this.file = ctx.getString(0, null);
-		sprite = parent.getImageHelper().loadImage(file, this);
-		this.alpha = ctx.getFloat(1, 0);
-	}
+		this(ctx.getParent(), 
+						ctx.getString(0, ICON_NAMES.SPRITE.name()),
+								ctx.getFloat(1, 1));
+}
 	
 	@Override
 	public void onImageChange(PImage image) {
@@ -48,18 +51,19 @@ public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 
 	@Override
 	public String getConfig() {
-		//{SpriteFactory : [${triangle.png}, 2.5]}
-		return String.format("{%s : [${%s}, %s]}", getName(), file, alpha);
+		//{SpriteFactory : [SPRITE, 2.5]}
+		return String.format("{%s : [%s, %s]}", getName(), imageKey, scale);
 	}
 	
 	@Override
 	public void addSettingsMessages() {
-		parent.addSettingsMessage("   ---file: " + file);
+		parent.addSettingsMessage("   ---imageKey: " + imageKey);
+		parent.addSettingsMessage("   ---scale: " + scale);
 	}
 
 	@Override
 	public String getDisplayName() {
-		return super.getDisplayName() + ":" + file;
+		return super.getDisplayName() + ":" + imageKey;
 	}
 
 	public int getImageWidth() {

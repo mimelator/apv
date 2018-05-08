@@ -2,7 +2,6 @@ package com.arranger.apv.util;
 
 import java.awt.Color;
 import java.awt.LinearGradientPaint;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -101,12 +100,7 @@ public class ColorHelper extends APVPlugin {
 	}
 
 	protected Color getColorForName(String colorName) {
-		try {
-			Field field = Color.class.getField(colorName);
-			return (Color) field.get(null);
-		} catch (Exception e) {
-			return null;
-		}
+		return new ReflectionHelper<Color, Color>(Color.class, parent).getField(colorName);
 	}
 
 	public class GradientHolder {

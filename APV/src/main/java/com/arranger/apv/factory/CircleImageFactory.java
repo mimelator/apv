@@ -1,6 +1,7 @@
 package com.arranger.apv.factory;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.ImageHelper;
 
 /**
  * Now using sprites!
@@ -9,15 +10,13 @@ import com.arranger.apv.Main;
  */
 public class CircleImageFactory extends SpriteFactory {
 	
-	public static final String CIRCLE_PNG = "circle.png";
-	
 	
 	public CircleImageFactory(Main parent) {
-		super(parent, CIRCLE_PNG);
+		this(parent, 1);
 	}
 
 	public CircleImageFactory(Main parent, float scale) {
-		super(parent, CIRCLE_PNG, scale);
+		super(parent, ImageHelper.ICON_NAMES.SIMPLE_CIRCLE.name(), scale);
 	}
 
 	@Override

@@ -3,8 +3,8 @@ package com.arranger.apv.systems.lite.cycle;
 import java.awt.Color;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.factory.CircleImageFactory;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.ImageHelper;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -22,7 +22,7 @@ public class BubbleShapeSystem extends LiteCycleShapeSystem {
 	public BubbleShapeSystem(Main parent, int numNewObjects) {
 		super(parent, numNewObjects);
 		shouldCreateNewObjectsEveryDraw = false;
-		circle = parent.loadImage(CircleImageFactory.CIRCLE_PNG);
+		circle = parent.loadImage(ImageHelper.ICON_NAMES.SIMPLE_CIRCLE.getFullTitle());
 	}
 	
 	public BubbleShapeSystem(Configurator.Context ctx) {

@@ -4,8 +4,15 @@ https://github.com/mimelator/apv
 	
 saving on top of sets doesn't preserve the changes
 	TODO Icons:
+	
+		{AttractorSystem : [{SpriteFactory : [SPRITE]}
+		SPRITE -> sprite.png
+		sprite.png = ${apv.setPack.home}/teset62SP1/Gaming-Hearts-icon.png
+	
+	
+		All that has to happen is that the ImageHelper must update the imageList constants 
+	
 		paths aren't preserved
-		alpha check isn't enabled for load
 		something is broken when creating a "layered" setpack
 		
 		sprite.png = sprite.png
@@ -15,10 +22,9 @@ saving on top of sets doesn't preserve the changes
 	 	{AttractorSystem : [{SpriteFactory : [${/Users/markimel/Desktop/APVSetPacks/SP1/danger.png}, 0.0]}]}
 	 	{AttractorSystem : [{SpriteFactory : [${/Users/markimel/Desktop/APVSetPacks/SP1/yinYang.png}, 0.0]}]}
 		
-	DONE: Check Songs  OK: 
-	TODO: Check colors: Only three gradients are loaded, the other ones are 'embedded' by other systems like: 
-			Grid, LightWorm, SquareCircle, Carnival
-	DONE: Check messages: OK: Messages are not loaded
+	DONE: Check Songs  OK
+	DONE: Check colors: OK
+	DONE: Check messages: OK
 
 
 
