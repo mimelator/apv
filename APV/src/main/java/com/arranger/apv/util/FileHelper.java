@@ -49,15 +49,17 @@ public class FileHelper extends APVPlugin {
 	
 	public boolean saveFile(String fileName, String text, boolean append) {
 		try {
-			String fullPath = getFullPath(fileName);
+			String fullPathString = fileName;
+			if (!new File(fileName).isAbsolute()) {
+				fullPathString = getFullPath(fileName);
+			}
+			
+			Path fullPath = Paths.get(fullPathString);
+			byte[] bytes = text.getBytes();
 			if (append) {
-				Files.write(Paths.get(fullPath), 
-						text.getBytes(), 
-						StandardOpenOption.APPEND, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+				Files.write(fullPath, bytes, StandardOpenOption.APPEND, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 			} else {
-				Files.write(Paths.get(fullPath), 
-						text.getBytes(), 
-						StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+				Files.write(fullPath, bytes); //StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 			}
 		} catch (Exception e) {
 			debug(e);

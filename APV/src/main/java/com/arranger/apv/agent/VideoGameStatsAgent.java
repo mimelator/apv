@@ -1,5 +1,9 @@
 package com.arranger.apv.agent;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,14 +34,26 @@ public class VideoGameStatsAgent extends PulseAgent {
 		String timeStamp = vg.getTimeStamp();
 		FileHelper fh = new FileHelper(parent);
 		
-		//Create file with version info and header
-		if (fileName == null) {
-			fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
-			StringBuffer buffer = new StringBuffer("APV Version: " + parent.getVersionInfo().getVersion());
-			buffer.append(System.lineSeparator());
-			buffer.append("NumCommands, Cmds/Sec, TotalTime");
-			buffer.append(System.lineSeparator());
-			fh.saveFile(fileName, buffer.toString(), false);
+		String statsDirString = fh.getFullPath("stats");
+		File statsDir = new File(statsDirString);
+		Path statsPath = statsDir.toPath();
+		fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
+		fileName = statsPath.resolve(fileName).toString();
+		
+		if (!new File(fileName).exists()) {
+			//Create file with version info and header
+			try {
+				Files.createDirectories(statsPath);
+				StringBuffer buffer = new StringBuffer("APV Version: " + parent.getVersionInfo().getVersion());
+				buffer.append(System.lineSeparator());
+				buffer.append("NumCommands, Cmds/Sec, TotalTime");
+				buffer.append(System.lineSeparator());
+				
+				fh.saveFile(fileName, buffer.toString(), false);
+			} catch (IOException e) {
+				System.out.println(e);
+				e.printStackTrace();
+			}
 		}
 		
 		String result = String.format("%d, %f, %s", totalCmds, cmdsPerSec, timeStamp) + System.lineSeparator();
