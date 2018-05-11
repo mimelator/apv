@@ -47,7 +47,7 @@ public class HelpDisplay extends APVPlugin implements TextSupplier {
 					if (cmd.getModifiers() != 0) {
 						key = "Ctrl+" + cmd.getCharKey();
 					} else {
-						key = e.getKey();
+						key = e.getKey().getKey();
 						if (key.charAt(0) == '\n') {
 							key = "";
 						}

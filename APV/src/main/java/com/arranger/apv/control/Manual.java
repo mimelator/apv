@@ -1,8 +1,7 @@
 package com.arranger.apv.control;
 
 import com.arranger.apv.Main;
-
-import processing.event.KeyEvent;
+import com.arranger.apv.cmd.Command;
 
 public class Manual extends ControlSystem {
 
@@ -16,7 +15,7 @@ public class Manual extends ControlSystem {
 	}
 
 	@Override
-	public KeyEvent getNextCommand() {
+	public Command getNextCommand() {
 		return null;
 	}
 }

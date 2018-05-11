@@ -10,11 +10,8 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
-import com.arranger.apv.util.KeyEventHelper;
 import com.arranger.apv.util.RandomHelper;
 import com.arranger.apv.util.frame.QuietWindow;
-
-import processing.event.KeyEvent;
 
 public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandler {
 	
@@ -30,7 +27,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	protected Command command, switchCommand;
 	protected CommandHandler handler, switchHandler;
 	protected T currentPlugin;
-	protected KeyEventHelper keyEventHelper;
 	protected QuietWindow quietWindow;
 	protected int quietWindowSize = DEFAULT_QUIET_WINDOW;
 	
@@ -49,7 +45,6 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		list = (List<T>)parent.getConfigurator().loadAVPPlugins(name, allowScramble);
 		systemName = name;
 		sw = parent.getSwitchForSystem(name);
-		keyEventHelper = new KeyEventHelper(parent);
 		quietWindow = new QuietWindow(parent, quietWindowSize);
 		quietWindowSize = parent.getConfigInt(KEY);
 		setIndex(0, "initialize");
@@ -168,18 +163,17 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	}
 
 	@Override
-	public void onKeyPressed(KeyEvent event) {
+	public void onCommand(Command command, String cause, int modifiers) {
 		if (isFrozen()) {
 			return;
 		}
 		
-		String cause = keyEventHelper.getSource(event);
-		if (event.isAltDown()) {
+		if (Command.isAltDown(modifiers)) {
 			List<T> sibs = getSiblings(getPlugin(false));
 			T random = new RandomHelper(parent).random(sibs);
 			setNextPlugin(random, cause);
 		} else {
-			if (event.isShiftDown()) {
+			if (Command.isShiftDown(modifiers)) {
 				decrement(cause); 		
 			} else {
 				increment(cause);
@@ -217,8 +211,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		this.switchCommand = command;
 		switchHandler = new CommandHandler() {
 			@Override
-			public void onKeyPressed(KeyEvent e) {
-				if (e.isMetaDown()) {
+			public void onCommand(Command e, String source, int modifiers) {
+				if (Command.isMetaDown(modifiers)) {
 					sw.toggleFrozen();
 				} else {
 					sw.toggleEnabled();

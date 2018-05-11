@@ -89,7 +89,7 @@ public class LightWormSystem extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		reverser = new Reverser(parent, DEFAULT_REVERSE_PULSES); 
-		parent.getCommandSystem().registerHandler(Command.REVERSE, event -> reverser.reverse());
+		parent.getCommandSystem().registerHandler(Command.REVERSE, (command, source, modifiers) -> reverser.reverse());
 		
 		// initialize arrays
 		fadeTable = new float[NUM_TRAILS];

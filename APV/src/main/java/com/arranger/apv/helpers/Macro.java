@@ -12,8 +12,6 @@ import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.JSONQuoter;
 
-import processing.event.KeyEvent;
-
 public class Macro extends APVPlugin implements CommandHandler {
 	
 	private static final Logger logger = Logger.getLogger(Macro.class.getName());
@@ -48,10 +46,10 @@ public class Macro extends APVPlugin implements CommandHandler {
 	}
 
 	@Override
-	public void onKeyPressed(KeyEvent event) {
+	public void onCommand(Command command, String source, int modifiers) {
 		CommandSystem cs = parent.getCommandSystem();
 		commands.forEach(c -> {
-			cs.invokeCommand(c, displayName);
+			cs.invokeCommand(c, displayName, 0);
 		});
 		parent.sendMessage(new String[] {displayName});
 	}

@@ -12,11 +12,7 @@ import java.util.logging.Logger;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
-import com.arranger.apv.cmd.CommandSystem.RegisteredCommandHandler;
 import com.arranger.apv.loc.PerlinNoiseWalkerLocationSystem;
-
-import processing.core.PApplet;
-import processing.event.KeyEvent;
 
 public class Perlin extends PulseListeningControlSystem {
 	
@@ -26,7 +22,7 @@ public class Perlin extends PulseListeningControlSystem {
 	private static final int COMMAND_MAP_DIMENSION = 10;
 	
 	private PerlinNoiseWalkerLocationSystem walker;
-	private KeyEvent [][] commandGrid = null;
+	private CommandHolder [][] commandGrid = null;
 	
 	public Perlin(Main parent) {
 		super(parent);
@@ -34,8 +30,8 @@ public class Perlin extends PulseListeningControlSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerHandler(Command.WALKER_INC, event -> incWalker());
-			cs.registerHandler(Command.WALKER_DEC, event -> decWalker());
+			cs.registerHandler(Command.WALKER_INC, (command, source, modifiers) -> incWalker());
+			cs.registerHandler(Command.WALKER_DEC, (command, source, modifiers) -> decWalker());
 		});
 	}
 
@@ -56,29 +52,27 @@ public class Perlin extends PulseListeningControlSystem {
 	}
 
 	@Override
-	protected KeyEvent _getNextCommand() {
+	protected Command _getNextCommand() {
 		if (commandGrid == null) {
 			initializeCommandGrid();
 		}
 
 		//Don't issue a command that is frozen
 		int offset = 0;
-		KeyEvent keyEvent = null;
-		while (keyEvent == null) {
-			keyEvent = getKeyEvent(offset);
-			FrozenChecker enabledChecker = (FrozenChecker)keyEvent.getNative();
+		CommandHolder cc = null;
+		while (cc == null) {
+			cc = getCommandChecker(offset);
+			FrozenChecker enabledChecker = cc.checker;
 			if (enabledChecker != null && enabledChecker.isFrozen()) {
-				keyEvent = null;
+				cc = null;
 				offset++;
 			}
 		}
 		
-		//clone this on the way out but change the source
-		debugKeyEvent(keyEvent);
-		return keyEventHelper.createKeyEvent(keyEvent, getName());
+		return cc.command;
 	}
 	
-	private KeyEvent getKeyEvent(int offset) {
+	private CommandHolder getCommandChecker(int offset) {
 		//Get the point at scale it to our grid
 		Point2D currentPoint = walker.getCurrentPoint();
 		int x = (int)(currentPoint.getX() + offset) % COMMAND_MAP_DIMENSION;
@@ -117,73 +111,53 @@ public class Perlin extends PulseListeningControlSystem {
 		boolean isFrozen();
 	}
 	
-	private class CommandChecker {
+	private class CommandHolder {
 		
 		private Command command;
 		private FrozenChecker checker;
 		
-		public CommandChecker(Command command, FrozenChecker checker) {
+		public CommandHolder(Command command, FrozenChecker checker) {
 			super();
 			this.command = command;
 			this.checker = checker;
 		}
 	}
 	
-	private List<CommandChecker> initializeCommands() {
-		List<CommandChecker> commandCheckers = new ArrayList<CommandChecker>();
-		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandChecker(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
-		commandCheckers.add(new CommandChecker(Command.REVERSE, null));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_LOCATIONS, null));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_COLORS, null));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_FOREGROUNDS, ()-> parent.getForegrounds().isFrozen()));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_BACKGROUNDS, ()-> parent.getBackgrounds().isFrozen()));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_BACKDROPS, ()-> parent.getBackDrops().isFrozen()));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_FILTERS, ()-> parent.getFilters().isFrozen()));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_TRANSITIONS, ()-> parent.getTransitions().isFrozen()));
-		commandCheckers.add(new CommandChecker(Command.CYCLE_SHADERS, ()-> parent.getShaders().isFrozen()));
+	private List<CommandHolder> initializeCommands() {
+		List<CommandHolder> commandCheckers = new ArrayList<CommandHolder>();
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.REVERSE, null));
+		commandCheckers.add(new CommandHolder(Command.REVERSE, null));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_LOCATIONS, null));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_COLORS, null));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_FOREGROUNDS, ()-> parent.getForegrounds().isFrozen()));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_BACKGROUNDS, ()-> parent.getBackgrounds().isFrozen()));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_BACKDROPS, ()-> parent.getBackDrops().isFrozen()));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_FILTERS, ()-> parent.getFilters().isFrozen()));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_TRANSITIONS, ()-> parent.getTransitions().isFrozen()));
+		commandCheckers.add(new CommandHolder(Command.CYCLE_SHADERS, ()-> parent.getShaders().isFrozen()));
 		return commandCheckers;
 	};
 
 	protected void initializeCommandGrid() {
-		commandGrid = new KeyEvent[COMMAND_MAP_DIMENSION][COMMAND_MAP_DIMENSION];
+		commandGrid = new CommandHolder[COMMAND_MAP_DIMENSION][COMMAND_MAP_DIMENSION];
 		
-		List<CommandChecker> cmdList = initializeCommands();
+		List<CommandHolder> cmdList = initializeCommands();
 		Collections.shuffle(cmdList);
 		
-		Iterator<CommandChecker> it = cmdList.iterator();
+		Iterator<CommandHolder> it = cmdList.iterator();
 		
 		//create a grid of commands for the walker to walk over
-		for (KeyEvent [] row : commandGrid) {
+		for (CommandHolder [] row : commandGrid) {
 			for (int index = 0; index < row.length; index++) {
 				if (!it.hasNext()) {
 					it = cmdList.iterator();
 				}
-				CommandChecker cc = it.next();
-				KeyEvent event = keyEventHelper.createKeyEvent(
-						cc.command,
-						cc.checker,
-						parent.randomBoolean() ? 0 : PApplet.SHIFT);
-				row[index] = event;
+				CommandHolder cc = it.next();
+				row[index] = cc;
 			}
-		}
-		
-		if (logger.isLoggable(Level.FINE)) {
-			for (KeyEvent [] row : commandGrid) {
-				for (KeyEvent cmd : row) {
-					debugKeyEvent(cmd);
-				}
-			}
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected void debugKeyEvent(KeyEvent keyEvent) {
-		if (logger.isLoggable(Level.FINE)) {
-			List<RegisteredCommandHandler> commandList = (List<RegisteredCommandHandler>)keyEvent.getNative();
-			logger.fine("Command: " + commandList.get(0).getName() + " [shift=" + keyEvent.isShiftDown() + "]");
 		}
 	}
 }

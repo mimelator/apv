@@ -1,8 +1,7 @@
 package com.arranger.apv.control;
 
 import com.arranger.apv.Main;
-
-import processing.event.KeyEvent;
+import com.arranger.apv.cmd.Command;
 
 public class Auto extends PulseListeningControlSystem {
 	
@@ -23,7 +22,7 @@ public class Auto extends PulseListeningControlSystem {
 	}
 
 	@Override
-	protected KeyEvent _getNextCommand() {
-		return keyEventHelper.createScramble(getName());
+	protected Command _getNextCommand() {
+		return Command.SCRAMBLE;
 	}
 }

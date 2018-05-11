@@ -35,15 +35,19 @@ public class SetPackCreator extends APVFrame {
 	private JButton demoButton;
 	private boolean demoMode = false;
 	
+	private IconsPanel iconsPanel;
+	private ColorsPanel colorsPanel;
+	private EmojisPanel emojisPanel;
+	private SongsPanel songsPanel;
 	
 	public SetPackCreator(Main parent) {
 		super(parent);
 		fileHelper = new FileHelper(parent);
 		
-		panels.add(new IconsPanel(parent));
-		panels.add(new ColorsPanel(parent));
-		panels.add(new EmojisPanel(parent));
-		panels.add(new SongsPanel(parent));
+		panels.add(iconsPanel = new IconsPanel(parent));
+		panels.add(colorsPanel = new ColorsPanel(parent));
+		panels.add(emojisPanel = new EmojisPanel(parent));
+		panels.add(songsPanel = new SongsPanel(parent));
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		panels.forEach(pnl -> {
@@ -66,9 +70,31 @@ public class SetPackCreator extends APVFrame {
 		btnPanel.add(createButton);
 		panel.add(btnPanel);
 		
-		createFrame(getName(), FRAME_WIDTH, FRAME_HEIGHT, panel, () -> {});
+		createFrame(getName(), FRAME_WIDTH, FRAME_HEIGHT, panel, () -> {
+			SetPackCreator creator = parent.getSetPackCreator();
+			if (creator != null && creator.equals(this)) {
+				parent.setSetPackCreator(null);
+			}
+		});
+		parent.setSetPackCreator(this);
 	}
 	
+	public ColorsPanel getColorsPanel() {
+		return colorsPanel;
+	}
+
+	public IconsPanel getIconsPanel() {
+		return iconsPanel;
+	}
+
+	public EmojisPanel getEmojisPanel() {
+		return emojisPanel;
+	}
+
+	public SongsPanel getSongsPanel() {
+		return songsPanel;
+	}
+
 	private void toggleDemoMode() {
 		demoMode = !demoMode;
 		demoButton.setOpaque(true);

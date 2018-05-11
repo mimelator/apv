@@ -61,7 +61,13 @@ public class APVWindow extends APVFrame {
 		
 		createFrame("APV", (int)(parent.width * .825f), (int)(parent.height * .75f), master, () -> {
 			children.forEach(c -> c.onClose());
+			APVWindow window = parent.getApvWindow();
+			if (window != null && window.equals(this)) {
+				parent.setApvWindow(null);
+			}
 		});
+		
+		parent.setApvWindow(this);
 	}
 	
 	protected JPanel createFlagsPanel() {

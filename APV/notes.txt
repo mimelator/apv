@@ -6,7 +6,7 @@ I need a next for the play list
 
 updateForDemo
  randomizeColors
- randomizeSongs (fix Audio startup)
+ randomizeSongs
  randomizePics (option to only use pictures w/alpha)
 Going to have to use hot keys or macros.  In fact, some commands might need to be registerd with wierd key strokes? 
 
@@ -19,7 +19,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* remove CommandInterceptors
+* remove CommandInterceptors and replace with something not so delicate
 * A help command to display all of the command line switches
 * A Command to cycle through all of the Configuration Files (setPacks)
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model

@@ -15,7 +15,7 @@ public class FrameStrober extends APVPlugin {
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerHandler(Command.FRAME_STROBER_STROBE_FRAMES, 
-					event -> {if (event.isShiftDown()) skipNFrames-- ; else skipNFrames++;});
+					(command, source, modifiers) -> {if (Command.isShiftDown(modifiers)) skipNFrames-- ; else skipNFrames++;});
 		});
 	}
 

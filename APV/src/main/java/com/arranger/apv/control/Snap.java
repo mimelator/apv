@@ -5,8 +5,6 @@ import com.arranger.apv.audio.SnapListener;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
 
-import processing.event.KeyEvent;
-
 public class Snap extends ControlSystem {
 	
 	private static final int DEFAULT_FRAMES_TO_SKIP_FOR_SNAP = 100; 
@@ -20,9 +18,9 @@ public class Snap extends ControlSystem {
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerHandler(Command.QUIET_WINDOW_LENGTH_INC,
-					event -> snapListener.incrementFramesToSkip());
+					(command, source, modifiers) -> snapListener.incrementFramesToSkip());
 			cs.registerHandler(Command.QUIET_WINDOW_LENGTH_DEC,
-					event -> snapListener.deccrementFramesToSkip());
+					(command, source, modifiers) -> snapListener.deccrementFramesToSkip());
 		});
 	}
 
@@ -37,12 +35,11 @@ public class Snap extends ControlSystem {
 	}
 
 	@Override
-	public KeyEvent getNextCommand() {
+	public Command getNextCommand() {
 		if (snapListener.isSnap()) {
-			return keyEventHelper.createScramble(getName());
+			return Command.SCRAMBLE;
 		} else {
 			return null;
 		}
 	}
-
 }

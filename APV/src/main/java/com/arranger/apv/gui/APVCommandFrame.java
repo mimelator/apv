@@ -47,7 +47,7 @@ public class APVCommandFrame extends APVFrame {
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 					CMDModel model = list.getSelectedValue();
-					cs.invokeCommand(model.command, getName());
+					cs.invokeCommand(model.command, getName(), 0);
 				}
 			}
 		});

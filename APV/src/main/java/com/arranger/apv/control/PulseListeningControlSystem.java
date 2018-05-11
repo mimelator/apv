@@ -5,8 +5,6 @@ import com.arranger.apv.audio.PulseListener;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
 
-import processing.event.KeyEvent;
-
 public abstract class PulseListeningControlSystem extends ControlSystem {
 	
 	protected PulseListener autoSkipPulseListener;
@@ -19,14 +17,14 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
 			cs.registerHandler(Command.PULSE_SKIP_INC,
-					event -> autoSkipPulseListener.incrementPulsesToSkip());
+					(command, source, modifiers) -> autoSkipPulseListener.incrementPulsesToSkip());
 			cs.registerHandler(Command.PULSE_SKIP_DEC,
-					event -> autoSkipPulseListener.deccrementPulsesToSkip());
+					(command, source, modifiers) -> autoSkipPulseListener.deccrementPulsesToSkip());
 		});
 	}
 
 	protected abstract int getDefaultPulsesToSkip();
-	protected abstract KeyEvent _getNextCommand();
+	protected abstract Command _getNextCommand();
 
 	@Override
 	public boolean allowsMouseLocation() {
@@ -40,7 +38,7 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 	}
 	
 	@Override
-	public KeyEvent getNextCommand() {
+	public Command getNextCommand() {
 		if (autoSkipPulseListener.isNewPulse()) {
 			return _getNextCommand();
 		} else {

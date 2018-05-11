@@ -83,7 +83,7 @@ public class AttractorSystem extends LiteShapeSystem {
 			ay[i] = 0;
 		}
 		
-		parent.getCommandSystem().registerHandler(Command.REVERSE, event -> this.reverse = !reverse);
+		parent.getCommandSystem().registerHandler(Command.REVERSE, (command, source, modifiers) -> this.reverse = !reverse);
 		
 		if (factory != null) {
 			shape = factory.createShape(null);

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.KeyEventHelper;
 
 import processing.event.KeyEvent;
 
@@ -18,9 +17,9 @@ public class CommandSystem extends APVPlugin {
 	
 	private static final Logger logger = Logger.getLogger(CommandSystem.class.getName());
 	
-	protected Map<String, List<RegisteredCommandHandler>> registeredCommands = new HashMap<String, List<RegisteredCommandHandler>>();
+	protected Map<Command, List<RegisteredCommandHandler>> registeredCommands = new HashMap<Command, List<RegisteredCommandHandler>>();
+	protected Map<String, Command> keyBindingMap = new HashMap<String, Command>();
 	
-	private KeyEventHelper keyEventHelper;
 	private MessageModeInterceptor messageModeInterceptor;
 	private SceneSelectInterceptor sceneSelectInterceptor;
 	private RegisteredCommandHandler lastCommand;
@@ -29,7 +28,6 @@ public class CommandSystem extends APVPlugin {
 		super(parent);
 		messageModeInterceptor = new MessageModeInterceptor(parent);
 		sceneSelectInterceptor = new SceneSelectInterceptor(parent);
-		keyEventHelper = new KeyEventHelper(parent);
 		parent.registerMethod("keyEvent", this);
 	}
 
@@ -51,15 +49,11 @@ public class CommandSystem extends APVPlugin {
 	}
 	
 	public void invokeScramble(String source) {
-		invokeCommand(Command.SCRAMBLE, source);
-	}
-	
-	public void invokeCommand(Command command, String source) {
-		keyEvent(keyEventHelper.createKeyEvent(command, source, 0));
+		invokeCommand(Command.SCRAMBLE, source, 0);
 	}
 	
 	public boolean unregisterHandler(Command command, CommandHandler handler) {
-		List<RegisteredCommandHandler> list = registeredCommands.get(command.getKey());
+		List<RegisteredCommandHandler> list = registeredCommands.get(command);
 		if (list != null) {
 			Optional<RegisteredCommandHandler> rch = list.stream().filter(e -> {return e.handler.equals(handler);}).findFirst();
 			if (rch.isPresent()) {
@@ -73,38 +67,52 @@ public class CommandSystem extends APVPlugin {
 	
 	public void registerHandler(Command command, CommandHandler handler) {
 		RegisteredCommandHandler rch = new RegisteredCommandHandler(command, handler);
-		List<RegisteredCommandHandler> list = registeredCommands.get(rch.command.getKey());
+		List<RegisteredCommandHandler> list = registeredCommands.get(rch.command);
 		if (list == null) {
 			list = new ArrayList<RegisteredCommandHandler>();
-			registeredCommands.put(rch.command.getKey(), list);
+			registeredCommands.put(rch.command, list);
 		}
+		keyBindingMap.put(command.getKey(), command);
 		list.add(rch);
 	}
 	
 	public void keyEvent(KeyEvent keyEvent) {
+		if (keyEvent.getAction() != KeyEvent.RELEASE) {
+			return;
+		}
+		
+		char charKey = keyEvent.getKey();
+		if (messageModeInterceptor.intercept(charKey)) {
+			return;
+		}
+		
+		if (sceneSelectInterceptor.intercept(charKey)) {
+			return;
+		}
+		
+		String key = Command.getKeyForKeyEvent(keyEvent);
+		Command cmd = keyBindingMap.get(key);
+		if (cmd != null) {
+			String source = Command.getSource(keyEvent);
+			invokeCommand(cmd, source, keyEvent.getModifiers());
+		} else {
+			if (!Command.isMetaDown(keyEvent.getModifiers())) {
+				System.out.println("Unable to find commands for key: " + key);
+			}
+		}
+	}
+
+	public void invokeCommand(Command command, String source, int modifiers) {
 		try {
-			if (keyEvent.getAction() != KeyEvent.RELEASE) {
-				return;
-			}
-			
-			char charKey = keyEvent.getKey();
-			if (messageModeInterceptor.intercept(charKey)) {
-				return;
-			}
-			
-			if (sceneSelectInterceptor.intercept(charKey)) {
-				return;
-			}
-			
-			String source = keyEventHelper.getSource(keyEvent);
-			String key = Command.getKeyForKeyEvent(keyEvent);
-			List<RegisteredCommandHandler> list = registeredCommands.get(key);
+			List<RegisteredCommandHandler> list = registeredCommands.get(command);
 			if (list != null  && !list.isEmpty()) {
 				list.forEach(c -> {
-					c.handler.onKeyPressed(keyEvent);
+					c.handler.onCommand(command, source, modifiers);
 				});
 				lastCommand = list.get(list.size() - 1);
 				parent.getCommandInvokedEvent().fire(lastCommand.command, source);
+			} else {
+				System.out.println("No handlers for command: " + command.name());
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);
@@ -113,7 +121,7 @@ public class CommandSystem extends APVPlugin {
 	
 	@FunctionalInterface
 	public static interface CommandHandler {
-		public void onKeyPressed(KeyEvent event);
+		public void onCommand(Command command, String source, int modifiers);
 	}
 	
 	@FunctionalInterface
@@ -129,8 +137,8 @@ public class CommandSystem extends APVPlugin {
 		return results;
 	}
 	
-	public Map<String, List<RegisteredCommandHandler>> getCommands() {
-		return new HashMap<String, List<RegisteredCommandHandler>>(registeredCommands);
+	public Map<Command, List<RegisteredCommandHandler>> getCommands() {
+		return new HashMap<Command, List<RegisteredCommandHandler>>(registeredCommands);
 	}
 
 	public Command getLastCommand() {

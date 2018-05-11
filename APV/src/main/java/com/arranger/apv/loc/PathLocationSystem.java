@@ -42,8 +42,8 @@ public abstract class PathLocationSystem extends LocationSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerHandler(Command.REVERSE, event -> reverser.reverse());
-			cs.registerHandler(Command.SCRAMBLE, event -> reverser.reverse());
+			cs.registerHandler(Command.REVERSE, (command, source, modifiers) -> reverser.reverse());
+			cs.registerHandler(Command.SCRAMBLE, (command, source, modifiers) -> reverser.reverse());
 		});
 	}
 	

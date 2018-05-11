@@ -119,6 +119,24 @@ public class SongsPanel extends SetPackPanel {
 		}
 	}
 
+	public void ffwd() {
+		int index = songList.getSelectedIndex() + 1;
+		if (index > songList.getModel().getSize() - 1) {
+			index = 0;
+		}
+		songList.setSelectedIndex(index);
+		updateForDemo(true, null);
+	}
+	
+	public void prev() {
+		int index = songList.getSelectedIndex() - 1;
+		if (index < 0) {
+			index = songList.getModel().getSize() - 1;
+		}
+		songList.setSelectedIndex(index);
+		updateForDemo(true, null);
+	}
+	
 	protected Path getSongsDirectoryPath(Path parentDirectory) {
 		Path songFolder = parentDirectory.resolve(SONGS_DIR);
 		return songFolder;
@@ -129,7 +147,7 @@ public class SongsPanel extends SetPackPanel {
 			int index = songList.getSelectedIndex();
 			if (index < 0) {
 				index = 0;
-			}
+			} 
 			
 			List<File> filesToPlay = new ArrayList<File>();
 			for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {

@@ -8,8 +8,6 @@ import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.util.Configurator;
 
-import processing.event.KeyEvent;
-
 public class HotKey extends APVPlugin implements CommandHandler {
 	
 	private static final Logger logger = Logger.getLogger(HotKey.class.getName());
@@ -37,7 +35,7 @@ public class HotKey extends APVPlugin implements CommandHandler {
 	}
 	
 	@Override
-	public void onKeyPressed(KeyEvent event) {
+	public void onCommand(Command command, String source, int modifiers) {
 		parent.activateNextPlugin(system, pluginName, "hotKey");
 	}
 	

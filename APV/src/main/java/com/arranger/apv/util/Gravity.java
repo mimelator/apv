@@ -16,8 +16,8 @@ public class Gravity extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerHandler(Command.GRAVITY, (event) -> {
-				if (event.isShiftDown()) {
+			cs.registerHandler(Command.GRAVITY, (command, source, modifiers) -> {
+				if (Command.isShiftDown(modifiers)) {
 					gravityIndex--;
 				} else {
 					gravityIndex++;
@@ -28,7 +28,7 @@ public class Gravity extends APVPlugin {
 				}
 			});
 			cs.registerHandler(Command.SCRAMBLE,
-					event -> gravityIndex = (int) parent.random(GRAVITY.length - 1));
+					(command, source, modifiers) -> gravityIndex = (int) parent.random(GRAVITY.length - 1));
 		});
 	}
 	

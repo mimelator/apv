@@ -2,13 +2,9 @@ package com.arranger.apv.control;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.util.KeyEventHelper;
-
-import processing.event.KeyEvent;
+import com.arranger.apv.cmd.Command;
 
 public abstract class ControlSystem extends APVPlugin {
-	
-	protected KeyEventHelper keyEventHelper;
 	
 	public static enum CONTROL_MODES {
 		AUTO, SNAP, MANUAL, PERLIN;
@@ -30,7 +26,6 @@ public abstract class ControlSystem extends APVPlugin {
 
 	public ControlSystem(Main parent) {
 		super(parent);
-		keyEventHelper = new KeyEventHelper(parent);
 	}
 	
 	public boolean allowsMouseLocation() {
@@ -46,5 +41,5 @@ public abstract class ControlSystem extends APVPlugin {
 	/**
 	 * Returns null if no command needed
 	 */
-	public abstract KeyEvent getNextCommand();
+	public abstract Command getNextCommand();
 }

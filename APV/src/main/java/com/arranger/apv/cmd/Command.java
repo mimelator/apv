@@ -79,9 +79,13 @@ public enum Command {
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
 	//Set List Commands
-	FFWD(java.awt.event.KeyEvent.VK_F9, "FwdSong", "Play the next song"),
-	PLAY_PAUSE(java.awt.event.KeyEvent.VK_F8, "Play/Pause Song", "Plays or Pauses the song"),
-	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
+	//for mac... TODO investigate
+	FFWD(java.awt.event.KeyEvent.VK_NUMPAD9, "FwdSong", "Play the next song"),
+	PLAY_PAUSE(java.awt.event.KeyEvent.VK_NUMPAD8, "Play/Pause Song", "Plays or Pauses the song"),
+	PREV(java.awt.event.KeyEvent.VK_NUMPAD7, "PrevSong", "Play the previous song"),
+//	FFWD(java.awt.event.KeyEvent.VK_F9, "FwdSong", "Play the next song"),
+//	PLAY_PAUSE(java.awt.event.KeyEvent.VK_F8, "Play/Pause Song", "Plays or Pauses the song"),
+//	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
 	
 	//Hot Keys
 	HOT_KEY_1('!', "", ""),
@@ -168,7 +172,7 @@ public enum Command {
 				return String.format("%s+%d", charKey, modifiers);
 			}
 		} else {
-			return String.valueOf(commandKey);
+			return java.awt.event.KeyEvent.getKeyText(commandKey);
 		}
 	}
 	
@@ -204,13 +208,41 @@ public enum Command {
 	
 	public static String getKeyForKeyEvent(KeyEvent event) {
 		char charKey = event.getKey();
-		String key = (charKey != 0 && charKey != 65535) ? String.valueOf(Character.toLowerCase(charKey)) : String.valueOf(event.getKeyCode());
+		String key = (Character.isLetter(charKey)  || Character.isWhitespace(charKey)) ? 
+				String.valueOf(Character.toLowerCase(charKey)) : 
+					java.awt.event.KeyEvent.getKeyText(event.getKeyCode());
+
+				
 		int mods = event.getModifiers();
 		if (mods == Event.CTRL) {
 			key += "+" + String.valueOf(mods);
 		}
 		
 		return key;
+	}
+	
+	public static String getSource(KeyEvent keyEvent) {
+		String source = keyEvent.getNative().toString();
+		if (source.contains("EVENT")) { // this is extra data
+			source = "KeyEvent";
+		}
+		return source;
+	}
+	
+	public static boolean isShiftDown(int modifiers) {
+		return (modifiers & KeyEvent.SHIFT) != 0;
+	}
+
+	public static boolean isControlDown(int modifiers) {
+		return (modifiers & KeyEvent.CTRL) != 0;
+	}
+
+	public static boolean isMetaDown(int modifiers) {
+		return (modifiers & KeyEvent.META) != 0;
+	}
+
+	public static boolean isAltDown(int modifiers) {
+		return (modifiers & KeyEvent.ALT) != 0;
 	}
 	
 	static {
@@ -223,6 +255,7 @@ public enum Command {
 			} else {
 				checkMap.add(key);
 			}
+			System.out.printf("Command: %s -> %s\n", c, key);
 		});
 		//All done with the check
 	}

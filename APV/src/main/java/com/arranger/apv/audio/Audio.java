@@ -59,8 +59,8 @@ public class Audio extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 				CommandSystem cs = parent.getCommandSystem();
-				cs.registerHandler(Command.AUDIO_INC, event -> db++);
-				cs.registerHandler(Command.AUDIO_DEC, event -> db--);
+				cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> db++);
+				cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> db--);
 		});
 	}
 	

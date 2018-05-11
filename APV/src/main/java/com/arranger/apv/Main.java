@@ -31,6 +31,8 @@ import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
 import com.arranger.apv.gui.creator.ColorsPanel;
+import com.arranger.apv.gui.creator.SetPackCreator;
+import com.arranger.apv.gui.creator.SongsPanel;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
@@ -70,7 +72,7 @@ import com.typesafe.config.Config;
 import ch.bildspur.postfx.builder.PostFX;
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.event.KeyEvent;
+import processing.event.Event;
 import processing.opengl.PShader;
 
 public class Main extends PApplet {
@@ -124,6 +126,8 @@ public class Main extends PApplet {
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	protected PostFX postFX;
+	protected APVWindow apvWindow;
+	protected SetPackCreator setPackCreator;
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -259,6 +263,22 @@ public class Main extends PApplet {
 		initEvents();
 	}
 	
+	public SetPackCreator getSetPackCreator() {
+		return setPackCreator;
+	}
+
+	public void setSetPackCreator(SetPackCreator setPackCreator) {
+		this.setPackCreator = setPackCreator;
+	}
+
+	public APVWindow getApvWindow() {
+		return apvWindow;
+	}
+
+	public void setApvWindow(APVWindow apvWindow) {
+		this.apvWindow = apvWindow;
+	}
+
 	public String getConfigValueForFlag(FLAGS flag) {
 		return getConfigurator().getRootConfig().getString(flag.apvName());
 	}
@@ -739,12 +759,43 @@ public class Main extends PApplet {
 	}
 	
 	public void randomizeColors() {
-		//Create a new demo set pack from the current configuration
-		// don't save it, but put it into demo mode
-		//
-		ColorsPanel cp = new ColorsPanel(this);
+		ColorsPanel cp = getColorsPanel();
 		cp.randomize();
 		cp.updateForDemo(true, null);
+	}
+	
+	public ColorsPanel getColorsPanel() {
+		ColorsPanel cp = null;
+		if (setPackCreator != null) {
+			cp = setPackCreator.getColorsPanel();
+		} else {
+			cp = new ColorsPanel(this);
+		}
+		return cp;
+	}
+	
+	public SongsPanel getSongsPanel() {
+		SongsPanel sp = null;
+		if (setPackCreator != null) {
+			sp = setPackCreator.getSongsPanel();
+		} else {
+			sp = new SongsPanel(this);
+		}
+		return sp;
+	}
+	
+	public void ffwd() {
+		SongsPanel sp = getSongsPanel();
+		sp.ffwd();
+	}
+	
+	public void playPause() {
+		
+	}
+
+	public void prev() {
+		SongsPanel sp = getSongsPanel();
+		sp.prev();
 	}
 	
 	/**
@@ -907,9 +958,10 @@ public class Main extends PApplet {
 	
 	protected void runControlMode() {
 		ControlSystem cs = getControl();
-		KeyEvent nextCommand = cs.getNextCommand();
+		Command nextCommand = cs.getNextCommand();
 		if (nextCommand != null) {
-			getCommandSystem().keyEvent(nextCommand);
+			int modifiers = randomBoolean() ? Event.SHIFT : 0;
+			getCommandSystem().invokeCommand(nextCommand, cs.getDisplayName(), modifiers);
 		}
 	}
 	
@@ -976,8 +1028,8 @@ public class Main extends PApplet {
 		registerMainSwitches();
 		registerSystemCommands();
 		
-		likedScenes.registerHandler(Command.RIGHT_ARROW, e -> likedScenes.increment("->"));
-		likedScenes.registerHandler(Command.LEFT_ARROW, e -> likedScenes.decrement("<-"));
+		likedScenes.registerHandler(Command.RIGHT_ARROW, (c,s,m) -> likedScenes.increment("->"));
+		likedScenes.registerHandler(Command.LEFT_ARROW, (c,s,m) -> likedScenes.decrement("<-"));
 		
 		hotKeyHelper.register();
 		macroHelper.register();
@@ -998,22 +1050,25 @@ public class Main extends PApplet {
 
 	protected void registerMainCommands() {
 		CommandSystem cs = commandSystem;
-		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
-		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
-		cs.registerHandler(Command.RANDOMIZE_COLORS, e -> randomizeColors());
-		cs.registerHandler(Command.WINDOWS, e -> new APVWindow(this));
-		cs.registerHandler(Command.RESET, e -> reset());
-		cs.registerHandler(Command.MANUAL, e -> manual());	
-		cs.registerHandler(Command.PERF_MONITOR, e -> perfMonitor.dumpMonitorInfo(e.isShiftDown()));
-		cs.registerHandler(Command.SCREEN_SHOT, e -> screenshotMode = true); //screenshot's can only be taking during draw
-		cs.registerHandler(Command.SAVE_CONFIGURATION, event -> configurator.saveCurrentConfig());
-		cs.registerHandler(Command.RELOAD_CONFIGURATION, event -> reloadConfiguration());
-		cs.registerHandler(Command.UP_ARROW, e -> likeCurrentScene());
-		cs.registerHandler(Command.DOWN_ARROW, e -> disLikeCurrentScene());
-		cs.registerHandler(Command.TRANSITION_FRAMES_INC, e -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
-		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, e -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(Command.isShiftDown(mod)));  
+		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
+		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeColors());
+		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
+		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
+		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
+		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
+		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
+		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());	
+		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(Command.isShiftDown(mod)));
+		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
+		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
+		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
+		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
+		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
+		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 	}
-
+	
 	protected void registerSystemCommands() {
 		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
 		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
@@ -1035,7 +1090,7 @@ public class Main extends PApplet {
 	}
 
 	protected void registerSwitch(Switch s, Command command) {
-		commandSystem.registerHandler(command, event -> s.toggleEnabled());
+		commandSystem.registerHandler(command, (cmd,src,mod) -> s.toggleEnabled());
 	}
 	
 	protected void cycleMode(boolean advance) {
