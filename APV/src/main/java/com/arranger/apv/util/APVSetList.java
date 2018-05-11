@@ -111,6 +111,7 @@ public class APVSetList extends APVPlugin {
 
 	protected void playSong(AudioPlayer player) {
 		currentPlayer = player;
+		parent.getAudio().getBeatInfo().updateSource(player);
 		AudioMetaData metaData = player.getMetaData();
 		String title = metaData.title();
 		if (title == null) {
