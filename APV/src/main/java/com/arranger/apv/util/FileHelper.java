@@ -17,10 +17,14 @@ import com.arranger.apv.Main;
 
 public class FileHelper extends APVPlugin {
 	
+	private static final String MUSIC_DIR = "Music";
+
 	private static final Logger logger = Logger.getLogger(FileHelper.class.getName());
 	
-	private static final String HOME_DIR = System.getProperty("user.home");
+	public static final String HOME_DIR = System.getProperty("user.home");
 	public static final String APV_DIR = HOME_DIR + File.separator + "apv";
+	public static final String APV_MUSIC_DIR = "apv.musicDir";
+	
 	private File rootFolder;
 
 	public FileHelper(Main parent)  {
@@ -125,6 +129,26 @@ public class FileHelper extends APVPlugin {
 		}
 		
 		return fileChooser;
+	}
+	
+	public Path getFirstMp3FromMusicDir() {
+		
+		Path musicPath = null;
+		String musicDir = parent.getConfigurator().getRootConfig().getString(APV_MUSIC_DIR);
+		if (musicDir == null || musicDir.isEmpty()) {
+			musicPath = new File(HOME_DIR).toPath().resolve(MUSIC_DIR);
+		} else {
+			musicPath = new File(musicDir).toPath();
+		}
+		
+		Path result = null;
+		
+		try {
+			result = Files.find(musicPath, 4, (p, bfa) -> p.toString().endsWith(".mp3")).findFirst().get();
+		} catch (IOException e) {
+			debug(e);
+		}
+		return result;
 	}
 	
 	private void debug(Exception e) {

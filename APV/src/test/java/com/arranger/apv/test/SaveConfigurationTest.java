@@ -1,7 +1,5 @@
 package com.arranger.apv.test;
 
-import static org.mockito.Mockito.when;
-
 import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,49 +9,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 
-public class SaveConfigurationTest extends APVPluginTest {
+public class SaveConfigurationTest extends ConfigBasedTest {
 
 	private static final String TEST_STORING_A_FEW_COLORS_CONF = "testStoringAFewColors.conf";
 	private static final String TEST_GETTING_GLOBAL_CONFIG_CONF = "testGettingGlobalConfig.conf";
 	
-	Configurator cfg;
 	
 	public SaveConfigurationTest() {
-	}
-
-	
-	@BeforeEach
-	public void setupConfigurator() {
-		cfg = new Configurator(parent);
-		when(parent.getConfigurator()).thenReturn(cfg);
-		
-		Answer<APV<? extends APVPlugin>> answer = new Answer<APV<? extends APVPlugin>>() {
-	        @SuppressWarnings({ "unchecked", "rawtypes" })
-			public APV<? extends APVPlugin> answer(InvocationOnMock invocation) throws Throwable {
-	        	SYSTEM_NAMES name = invocation.getArgument(0);
-	        	return new APV(parent, name);
-	        }
-	    };
-		
-		when(parent.getSystem(Mockito.any())).thenAnswer(answer);
-	}
-	
-	@Override
-	protected void setFrameIndexes() {
-
 	}
 
 	@Test

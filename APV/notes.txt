@@ -2,17 +2,29 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-Test streaming from mac with different OBS values
-	-> Pretty good at 24FPS.  Did have network issues at times
-Test launching a new instance with the Snapshot
-	-> Done
-Test optimizing the stream values on the ami
-	-> In Prog
-Fix shader loading on Windows
-
 
 updateForDemo
  randomizeColors
+ randomizeSongs (fix Audio startup)
+ randomizePics (option to only use pictures w/alpha)
+ 
+Going to have to use hot keys or macros.  In fact, some commands might need to be registerd with wierd key strokes? 
+ 
+ Audio should look recurively in what ever folder is set.
+ If not set, it should recursively look in the user's Music Folder user.homeDir/Music
+ 
+ 
+ https://stackoverflow.com/questions/2056221/recursively-list-files-in-java
+ Files.walk(Paths.get(path))
+        .filter(Files::isRegularFile)
+        .forEach(System.out::println);
+        
+Files.find(Paths.get(path),
+           Integer.MAX_VALUE,
+           (filePath, fileAttr) -> fileAttr.isRegularFile())
+        .forEach(System.out::println);
+ 
+ 
 
 
 *****************************************************************************

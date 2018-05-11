@@ -1,12 +1,14 @@
 package com.arranger.apv.audio;
 
 
+import java.nio.file.Path;
 import java.util.stream.IntStream;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
+import com.arranger.apv.util.FileHelper;
 
 import ddf.minim.AudioInput;
 import ddf.minim.AudioListener;
@@ -21,16 +23,28 @@ import ddf.minim.analysis.FFT;
  */
 public class Audio extends APVPlugin {
 	
+	private static final String APV_LINE_IN = "apv.lineIn";
+	
 	protected BeatInfo beatInfo;
 	protected AudioSource source;
 	protected Minim minim;
 	protected int db = 0;
+	protected boolean lineIn = false;
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
 		minim = new Minim(parent);
-		//source = minim.getLineIn(Minim.MONO, bufferSize);
-		source = minim.loadFile("C:\\Users\\Administrator\\Music\\stellar.mp3");
+		
+		boolean lineIn = parent.getConfigBoolean(APV_LINE_IN);
+		if (lineIn) {
+			System.out.println("Listening to line in");
+			lineIn = true;
+			source = minim.getLineIn(Minim.MONO, bufferSize);
+		} else {
+			System.out.println("Not using Line In, finding first mp3 to play");
+			Path mp3 = new FileHelper(parent).getFirstMp3FromMusicDir();
+			source = minim.loadFile(mp3.toAbsolutePath().toString());
+		}
 		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
@@ -82,15 +96,13 @@ public class Audio extends APVPlugin {
 		}
 		
 		public void updateSource(AudioSource newSource) {
-			if (source != null) {
+			if (!lineIn && source != null && source instanceof AudioPlayer) {
 				source.removeListener(listener);
-				if (source instanceof AudioPlayer) {
-					((AudioPlayer)source).close();
-				}
+				((AudioPlayer)source).close();
+				newSource.addListener(listener);
 			}
 			
 			source = newSource;
-			newSource.addListener(listener);
 		}
 		
 		protected void createFFT() {
