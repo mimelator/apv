@@ -7,8 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 
@@ -131,24 +133,42 @@ public class FileHelper extends APVPlugin {
 		return fileChooser;
 	}
 	
+	public List<Path> getAllMp3sFromDir(Path directory) {
+		List<Path> result = null;
+		try {
+			result = Files.find(directory, Integer.MAX_VALUE, (p, bfa) -> { 
+				return p.toString().endsWith(".mp3");
+			}).collect(Collectors.toList());
+		} catch (IOException e) {
+			debug(e);
+		}
+		return result;
+	}
+	
+	public List<Path> getAllMp3sFromMusicDir() {
+		return getAllMp3sFromDir(getMusicPath());
+	}
+	
 	public Path getFirstMp3FromMusicDir() {
-		
-		Path musicPath = null;
+		Path result = null;
+		try {
+			Path musicPath = getMusicPath();
+			result = Files.find(musicPath, 4, (p, bfa) -> p.toString().endsWith(".mp3")).findFirst().get();
+		} catch (IOException e) {
+			debug(e);
+		}
+		return result;
+	}
+
+	protected Path getMusicPath() {
+		Path musicPath;
 		String musicDir = parent.getConfigurator().getRootConfig().getString(APV_MUSIC_DIR);
 		if (musicDir == null || musicDir.isEmpty()) {
 			musicPath = new File(HOME_DIR).toPath().resolve(MUSIC_DIR);
 		} else {
 			musicPath = new File(musicDir).toPath();
 		}
-		
-		Path result = null;
-		
-		try {
-			result = Files.find(musicPath, 4, (p, bfa) -> p.toString().endsWith(".mp3")).findFirst().get();
-		} catch (IOException e) {
-			debug(e);
-		}
-		return result;
+		return musicPath;
 	}
 	
 	private void debug(Exception e) {

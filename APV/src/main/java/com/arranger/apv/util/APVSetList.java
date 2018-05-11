@@ -1,15 +1,11 @@
 package com.arranger.apv.util;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -30,10 +26,10 @@ import ddf.minim.Minim;
  */
 public class APVSetList extends APVPlugin {
 
-	private static final Logger logger = Logger.getLogger(APVSetList.class.getName());
-	
 	private static final String KEY = "apv.setListFolder";
 	private static final String CONFIG = "apv.setListFolder = ${apv.setPack.home}" + File.separator + "%s";
+
+	
 	private List<Path> setList = new ArrayList<Path>();
 	private AudioPlayer currentPlayer;
 	private String relConfigDir = "songs";
@@ -75,13 +71,10 @@ public class APVSetList extends APVPlugin {
 		setList.clear();
 		
 		if (directory.isDirectory()) {
-			try {
-				Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
-				setList.sort(null); //Natural Sort Order
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				return;
-			}
+			setList = new FileHelper(parent).getAllMp3sFromDir(directory.toPath());
+			
+			//Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
+			//setList.sort(null); //Natural Sort Order
 		} else {
 			setList.add(directory.toPath());
 		}

@@ -62,7 +62,7 @@ public class SongsPanel extends SetPackPanel {
 		}
 		
 		removeButton.addActionListener(evt -> {
-			songList.remove(songList.getSelectedIndex());
+		    songList.getSelectedValuesList().forEach(sm -> modelList.removeElement(sm));
 		});
 		
 		JScrollPane jScrollPane = new JScrollPane(songList);
