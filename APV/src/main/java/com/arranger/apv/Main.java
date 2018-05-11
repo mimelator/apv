@@ -702,11 +702,10 @@ public class Main extends PApplet {
 		initializeCommands();
 		
 		//processing hints
-		//noCursor();
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
-		//frameRate(60);
+		surface.setResizable(true);
 		
 		fireSetupEvent();
 		
