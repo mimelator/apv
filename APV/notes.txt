@@ -1,9 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
-DONE: Remove in setlist isn't working
-DONE: When i click play music twice it doesn't pick up the correct subdirectory
+I need a next for the play list
 
 
 updateForDemo
@@ -21,6 +19,8 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* remove CommandInterceptors
+* A help command to display all of the command line switches
 * A Command to cycle through all of the Configuration Files (setPacks)
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components 

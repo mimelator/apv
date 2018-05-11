@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -22,6 +23,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.APVSetList;
 import com.arranger.apv.util.FileHelper;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 @SuppressWarnings("serial")
 public class SongsPanel extends SetPackPanel {
@@ -40,6 +43,7 @@ public class SongsPanel extends SetPackPanel {
 
 		JButton addButton = new JButton("Add");
 		JButton removeButton = new JButton("Remove");
+		JButton randomizeButton = new JButton("Randomize");
 		
 		addButton.addActionListener(evt -> {
 			JFileChooser fc = fileHelper.getJFileChooser();
@@ -51,6 +55,19 @@ public class SongsPanel extends SetPackPanel {
 					modelList.addElement(new SongModel(f));
 				});
 			}
+		});
+		
+		randomizeButton.addActionListener(evt -> {
+			List<SongModel> list = new ArrayList<SongModel>();
+			IntStream.range(0,  modelList.getSize()).forEach(i -> {
+				list.add(modelList.get(i));
+			});
+			
+			Collections.shuffle(list);
+			DefaultListModel<SongModel> ml = new DefaultListModel<SongModel>();
+			list.forEach(sm -> ml.addElement(sm));
+			songList.setModel(ml);
+			modelList = ml;
 		});
 		
 		//see if there is a current song list and add it to the modelList
@@ -75,6 +92,7 @@ public class SongsPanel extends SetPackPanel {
 		JPanel btnPanel = new JPanel();
 		btnPanel.add(addButton);
 		btnPanel.add(removeButton);
+		btnPanel.add(randomizeButton);
 		add(btnPanel);
 	}
 	

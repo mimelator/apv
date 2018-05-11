@@ -107,8 +107,8 @@ public class APVSetList extends APVPlugin {
 		parent.getAudio().getBeatInfo().updateSource(player);
 		AudioMetaData metaData = player.getMetaData();
 		String title = metaData.title();
-		if (title == null) {
-			title = metaData.fileName();
+		if (title == null || title.isEmpty()) {
+			title = new File(metaData.fileName()).getName();
 		}
 		parent.sendMarqueeMessage(title);
 		player.play();
