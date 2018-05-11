@@ -76,7 +76,7 @@ public class Main extends PApplet {
 	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
-	public static final int NUMBER_PARTICLES = 100;
+	public static final int NUMBER_PARTICLES = 50;//100;
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
@@ -681,10 +681,11 @@ public class Main extends PApplet {
 		initializeCommands();
 		
 		//processing hints
-		noCursor();
+		//noCursor();
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
+		//frameRate(60);
 		
 		fireSetupEvent();
 		

@@ -29,7 +29,8 @@ public class Audio extends APVPlugin {
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
 		minim = new Minim(parent);
-		source = minim.getLineIn(Minim.MONO, bufferSize);
+		//source = minim.getLineIn(Minim.MONO, bufferSize);
+		source = minim.loadFile("C:\\Users\\Administrator\\Music\\stellar.mp3");
 		
 		beatInfo = new BeatInfo(source);
 		if (source instanceof AudioPlayer) {
@@ -67,6 +68,7 @@ public class Audio extends APVPlugin {
 		protected BeatDetect pulseDetector;
 		protected BeatDetect freqDetector;
 		protected FFT fft;
+		protected AudioListener listener;
 		
 		public BeatInfo(AudioSource source) {
 			this.source = source;
@@ -74,8 +76,21 @@ public class Audio extends APVPlugin {
 			pulseDetector.setSensitivity(60);
 			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
 			freqDetector.setSensitivity(5);
-			addListeners(source);
+			createListener();
+			source.addListener(listener);
 			createFFT();
+		}
+		
+		public void updateSource(AudioSource newSource) {
+			if (source != null) {
+				source.removeListener(listener);
+				if (source instanceof AudioPlayer) {
+					((AudioPlayer)source).close();
+				}
+			}
+			
+			source = newSource;
+			newSource.addListener(listener);
 		}
 		
 		protected void createFFT() {
@@ -100,8 +115,8 @@ public class Audio extends APVPlugin {
 			return freqDetector;
 		}
 		
-		protected void addListeners(AudioSource source) {
-			source.addListener(new AudioListener() {
+		private void createListener() {
+			this.listener =  new AudioListener() {
 				public void samples(float[] samps) {
 					scale(samps, db);
 					pulseDetector.detect(samps);
@@ -114,7 +129,7 @@ public class Audio extends APVPlugin {
 					pulseDetector.detect(sampsL); 
 					fft.forward(sampsL);
 				}
-			});
+			};
 		}
 	}
 	

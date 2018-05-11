@@ -22,7 +22,7 @@ public class FontHelper extends APVPlugin {
 	private static final String FONT_KEY = "apv.font.name";
 	private static final String FONT_SIZE_KEY = "apv.font.size";
 	private static final String FONT_STYLE_KEY = "apv.font.style";
-	private static final String BACKUP_FONT_NAME = "Monospaced";
+	private static final String BACKUP_FONT_NAME = "Courier New";
 	private static final int DEFAULT_CHARS = 2000; //Grab the first 2k chars covers about 10 code blocks
 	
 	private Map<String, Font> fontMap;
