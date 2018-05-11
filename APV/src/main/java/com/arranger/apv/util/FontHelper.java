@@ -79,7 +79,7 @@ public class FontHelper extends APVPlugin {
 		
 		Font instance = fontMap.get(fontName);
 		if (instance == null) {
-			instance = fontMap.get(BACKUP_FONT_NAME);
+			instance = fontMap.values().iterator().next();
 			if (instance == null) {
 				logger.warning("Unable to find font: " + fontName + " or " + BACKUP_FONT_NAME);
 				return null;
