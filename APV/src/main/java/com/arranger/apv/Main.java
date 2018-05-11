@@ -30,6 +30,7 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
+import com.arranger.apv.gui.creator.ColorsPanel;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
@@ -736,6 +737,15 @@ public class Main extends PApplet {
 		transitions.scramble(true);
 	}
 	
+	public void randomizeColors() {
+		//Create a new demo set pack from the current configuration
+		// don't save it, but put it into demo mode
+		//
+		ColorsPanel cp = new ColorsPanel(this);
+		cp.randomize();
+		cp.updateForDemo(true, null);
+	}
+	
 	/**
 	 * Reset all switches and control mode
 	 */
@@ -989,6 +999,7 @@ public class Main extends PApplet {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, e -> cycleMode(!e.isShiftDown())); 
 		cs.registerHandler(Command.SCRAMBLE, e -> scramble());
+		cs.registerHandler(Command.RANDOMIZE_COLORS, e -> randomizeColors());
 		cs.registerHandler(Command.WINDOWS, e -> new APVWindow(this));
 		cs.registerHandler(Command.RESET, e -> reset());
 		cs.registerHandler(Command.MANUAL, e -> manual());	

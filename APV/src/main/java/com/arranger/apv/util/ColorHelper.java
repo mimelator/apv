@@ -76,15 +76,15 @@ public class ColorHelper extends APVPlugin {
 	}
 
 	public Map<String, ColorHolder> getHandlerMap() {
-		return handlerMap;
+		return new HashMap<String, ColorHolder>(handlerMap);
 	}
 
 	public Map<String, ColorHolder2> getHandlerMap2() {
-		return handlerMap2;
+		return new HashMap<String, ColorHolder2>(handlerMap2);
 	}
 	
 	public Map<String, GradientHolder> getHandlerMapGradient() {
-		return handlerMapGradient;
+		return new HashMap<String, GradientHolder>(handlerMapGradient);
 	}
 
 	public void updateGradient(String key, LinearGradientPaint paint) {

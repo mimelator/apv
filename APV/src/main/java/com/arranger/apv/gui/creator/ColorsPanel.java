@@ -55,9 +55,13 @@ public class ColorsPanel extends SetPackPanel {
 		
 		JButton button = new JButton("Randomize");
 		button.addActionListener(evt -> {
-			colorEntries.forEach(ce -> ce.randomize());
+			randomize();
 		});
 		add(button);
+	}
+
+	public void randomize() {
+		colorEntries.forEach(ce -> ce.randomize());
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {

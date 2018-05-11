@@ -51,6 +51,7 @@ public enum Command {
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
 	RESET('?', "Reset", "Resets switches to their defaults"),
 	SCRAMBLE(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things"),
+	RANDOMIZE_COLORS('`', "RandomizeColors", "Randomly changes the current Set Pack color scheme"),
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),
 	RELOAD_CONFIGURATION('u', "Reloads Configuration", "Reloads all of the current configuration"),

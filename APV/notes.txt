@@ -1,7 +1,18 @@
-BRANCH: building-sets-bugs-first
+BRANCH: master
 https://github.com/mimelator/apv
 
 
+Test streaming from mac with different OBS values
+	-> Pretty good at 24FPS.  Did have network issues at times
+Test launching a new instance with the Snapshot
+	-> Done
+Test optimizing the stream values on the ami
+	-> In Prog
+Fix shader loading on Windows
+
+
+updateForDemo
+ randomizeColors
 
 
 *****************************************************************************
