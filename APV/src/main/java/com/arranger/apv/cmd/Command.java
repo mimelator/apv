@@ -14,7 +14,7 @@ import processing.event.KeyEvent;
 
 public enum Command {
 	
-	FREEZE('|', "Freeze", "Used for debugging purposes"),
+	//FREEZE('|', "Freeze", "Used for debugging purposes"),
 	
 	//Switches
 	SWITCH_AGENT('x', "AgentSwitch", "Enables/Disables the registered agents"),
@@ -255,7 +255,7 @@ public enum Command {
 			} else {
 				checkMap.add(key);
 			}
-			System.out.printf("Command: %s -> %s\n", c, key);
+			//System.out.printf("Command: %s -> %s\n", c, key);
 		});
 		//All done with the check
 	}

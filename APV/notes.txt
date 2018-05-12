@@ -1,7 +1,8 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-double click on the song in the song list to play
+Convert Marquee List to SetPack List
+Unable to find commands for key: ⇧
 
 updateForDemo
  randomizeColors
@@ -9,7 +10,6 @@ updateForDemo
  randomizePics (option to only use pictures w/alpha)
 Going to have to use hot keys or macros.  In fact, some commands might need to be registerd with wierd key strokes? 
 
- 
 
 
 *****************************************************************************
@@ -18,6 +18,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* double click on the song in the song list to play
 * A laminated command sheet
 * remove CommandInterceptors and replace with something not so delicate
 * A help command to display all of the command line switches
