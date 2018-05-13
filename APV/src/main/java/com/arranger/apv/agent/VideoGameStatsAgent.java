@@ -22,6 +22,8 @@ import com.arranger.apv.util.FileHelper;
 public class VideoGameStatsAgent extends PulseAgent {
 	
 	private static final String STATS_NAME = "apvStats";
+	private String fileName;
+	
 
 	public VideoGameStatsAgent(Context ctx) {
 		super(ctx);
@@ -43,8 +45,10 @@ public class VideoGameStatsAgent extends PulseAgent {
 		String statsDirString = fh.getFullPath("stats");
 		File statsDir = new File(statsDirString);
 		Path statsPath = statsDir.toPath();
-		String fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
-		fileName = statsPath.resolve(fileName).toString();
+		if (fileName == null) {
+			fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
+			fileName = statsPath.resolve(fileName).toString();
+		}
 		
 		try {
 			//version info and header
