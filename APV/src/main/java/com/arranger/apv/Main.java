@@ -154,25 +154,42 @@ public class Main extends PApplet {
 	
 	public enum FLAGS {
 		
-		CONTROL_MODE("controlMode"),
-		FULL_SCREEN("fullScreen"),
-		SCRAMBLE_SYSTEMS("scrambleSystems"),
-		SCREEN_WIDTH("screen.width"),
-		SCREEN_HEIGHT("screen.height"),
-		MONITORING_ENABLED("monitoring.enabled"),
-		QUIET_WINDOW_SIZE("quietWindowSize"),
-		AUTO_ADD_SOBLE("autoAddSoble"),
-		DEBUG_SYS_MESSAGES("debugSystemMessages"),
-		SET_LIST("setList"),
-		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha");
+		CONTROL_MODE("controlMode", "PERLIN|AUTO|MANUAL|SNAP"),
+		FULL_SCREEN("fullScreen", "true|false"),
+		SCRAMBLE_SYSTEMS("scrambleSystems", "true|false"),
+		SCREEN_WIDTH("screen.width", "integer"),
+		SCREEN_HEIGHT("screen.height", "integer"),
+		MONITORING_ENABLED("monitoring.enabled", "true|false"),
+		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
+		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
+		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
+		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
+		FONT_NAME("font.name", "string"),
+		FONT_SIZE("font.size", "integer"),
+		FONT_STYLE("font.style", "PLAIN|ITALIC|BOLD"),
+		SET_LIST("setList", "true|false"),
+		SET_LIST_FOLDER("setListFolder", "directory"),
+		LINE_IN("lineIn", "true|false"),
+		MUSIC_DIR("musicDir", "directory");
 		
-		public String name;
-		private FLAGS(String name) {
+		private String name;
+		private String description;
+		
+		private FLAGS(String name, String description) {
 			this.name = name;
+			this.description = description;
+		}
+		
+		public String plainName() {
+			return name;
 		}
 		
 		public String apvName() {
 			return "apv." + name;
+		}
+		
+		public String description() {
+			return description;
 		}
 		
 		public static final List<FLAGS> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
@@ -246,6 +263,8 @@ public class Main extends PApplet {
 	}
 
 	public void settings() {
+		dumpStartupFlags();
+		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
 		
@@ -1189,6 +1208,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 	}
 	
+	
 	public String getConfig() {
 		//Version number 
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
@@ -1205,6 +1225,9 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
+		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
+		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
+		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		
 		//Font info
 		String config = getFontHelper().getConfig();
@@ -1238,5 +1261,21 @@ public class Main extends PApplet {
 	private void addConstant(StringBuffer buffer, FLAGS flag, String value) {
 		buffer.append("apv." + flag.name + " = " + value);
 		buffer.append(System.lineSeparator());
+	}
+	
+	private void dumpStartupFlags() {
+		StringBuffer buffer = new StringBuffer("Startup options for APV Version: ");
+		buffer.append(new VersionInfo(this).getVersion());
+		buffer.append(System.lineSeparator());
+		
+		Main.FLAGS.VALUES.forEach(flag -> {
+			buffer.append("-D");
+			buffer.append(flag.apvName());
+			buffer.append("=");
+			buffer.append(flag.description());
+			buffer.append(System.lineSeparator());
+		});
+		
+		System.out.println(buffer.toString());
 	}
 }

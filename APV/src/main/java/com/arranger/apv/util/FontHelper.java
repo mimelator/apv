@@ -19,9 +19,6 @@ public class FontHelper extends APVPlugin {
 	
 	private static final Logger logger = Logger.getLogger(FontHelper.class.getName());
 	
-	private static final String FONT_KEY = "apv.font.name";
-	private static final String FONT_SIZE_KEY = "apv.font.size";
-	private static final String FONT_STYLE_KEY = "apv.font.style";
 	private static final String BACKUP_FONT_NAME = "Courier New";
 	private static final int DEFAULT_CHARS = 2000; //Grab the first 2k chars covers about 10 code blocks
 	
@@ -43,9 +40,9 @@ public class FontHelper extends APVPlugin {
 		
 		StringBuffer buffer = new StringBuffer();
 		Font font = (Font)currentFont.getNative();
-		buffer.append(FONT_KEY).append(" = ").append("\"").append(font.getName()).append("\"").append(System.lineSeparator());
-		buffer.append(FONT_SIZE_KEY).append(" = ").append(font.getSize()).append(System.lineSeparator());
-		buffer.append(FONT_STYLE_KEY).append(" = ").append(getStyleName(font.getStyle())).append(System.lineSeparator()); 
+		buffer.append(Main.FLAGS.FONT_NAME.apvName()).append(" = ").append("\"").append(font.getName()).append("\"").append(System.lineSeparator());
+		buffer.append(Main.FLAGS.FONT_SIZE.apvName()).append(" = ").append(font.getSize()).append(System.lineSeparator());
+		buffer.append(Main.FLAGS.FONT_STYLE.apvName()).append(" = ").append(getStyleName(font.getStyle())).append(System.lineSeparator()); 
 		
 		return buffer.toString();
 	}
@@ -64,7 +61,7 @@ public class FontHelper extends APVPlugin {
 	}
 	
 	public PFont createFontForText(String text) {
-		String fontName = parent.getConfigString(FONT_KEY);
+		String fontName = parent.getConfigString(Main.FLAGS.FONT_NAME.apvName());
 		return createFontForText(text, fontName);
 	}
 	
@@ -87,9 +84,9 @@ public class FontHelper extends APVPlugin {
 		}
 		
 		previousSampleText = defaultCharSet + text; 
-		int fontSize = parent.getConfigInt(FONT_SIZE_KEY);
+		int fontSize = parent.getConfigInt(Main.FLAGS.FONT_SIZE.apvName());
 		fontSize = Math.max(24, fontSize);
-		String fontStyleString = parent.getConfigString(FONT_STYLE_KEY);
+		String fontStyleString = parent.getConfigString(Main.FLAGS.FONT_STYLE.apvName());
 		int fontStyle = getFontStyleFromName(fontStyleString);
 		
 		Font font = instance.deriveFont(fontStyle, fontSize);

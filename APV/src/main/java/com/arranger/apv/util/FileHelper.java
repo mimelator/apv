@@ -25,7 +25,7 @@ public class FileHelper extends APVPlugin {
 	
 	public static final String HOME_DIR = System.getProperty("user.home");
 	public static final String APV_DIR = HOME_DIR + File.separator + "apv";
-	public static final String APV_MUSIC_DIR = "apv.musicDir";
+	public static final String APV_MUSIC_DIR = Main.FLAGS.MUSIC_DIR.apvName();
 	
 	private File rootFolder;
 

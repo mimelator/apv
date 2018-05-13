@@ -73,7 +73,7 @@ public class APVWindow extends APVFrame {
 	protected JPanel createFlagsPanel() {
 		JPanel panel = new JPanel();
 		String result = Main.FLAGS.VALUES.stream().map(f -> {
-			return f.name + '=' + parent.getConfigValueForFlag(f);
+			return f.plainName() + '=' + parent.getConfigValueForFlag(f);
 		}).collect(Collectors.joining("  |  "));
 		
 		panel.add(new JLabel(result));

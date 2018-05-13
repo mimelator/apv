@@ -2,8 +2,7 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
- A help command to display all of the command line switches
-
+update the videogameagent to replace the file each time
 
 
 *****************************************************************************

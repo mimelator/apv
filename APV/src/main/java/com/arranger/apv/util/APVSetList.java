@@ -26,8 +26,8 @@ import ddf.minim.Minim;
  */
 public class APVSetList extends APVPlugin {
 
-	private static final String KEY = "apv.setListFolder";
-	private static final String CONFIG = "apv.setListFolder = ${apv.setPack.home}" + File.separator + "%s";
+	private static final String KEY = Main.FLAGS.SET_LIST_FOLDER.apvName();
+	private static final String CONFIG = KEY + " = ${apv.setPack.home}" + File.separator + "%s";
 
 	
 	private List<Path> setList = new ArrayList<Path>();

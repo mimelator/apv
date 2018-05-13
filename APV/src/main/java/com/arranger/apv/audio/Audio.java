@@ -23,7 +23,7 @@ import ddf.minim.analysis.FFT;
  */
 public class Audio extends APVPlugin {
 	
-	private static final String APV_LINE_IN = "apv.lineIn";
+	private static final String APV_LINE_IN = Main.FLAGS.LINE_IN.apvName();
 	
 	protected BeatInfo beatInfo;
 	protected AudioSource source;
