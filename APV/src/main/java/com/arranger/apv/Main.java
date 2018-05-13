@@ -263,8 +263,6 @@ public class Main extends PApplet {
 	}
 
 	public void settings() {
-		dumpStartupFlags();
-		
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
 		
@@ -280,6 +278,8 @@ public class Main extends PApplet {
 		}
 		
 		initEvents();
+		
+		dumpStartupFlags();
 	}
 	
 	public SetPackCreator getSetPackCreator() {
@@ -1273,6 +1273,8 @@ public class Main extends PApplet {
 			buffer.append(flag.apvName());
 			buffer.append("=");
 			buffer.append(flag.description());
+			buffer.append("   value: ");
+			buffer.append(getConfigValueForFlag(flag));
 			buffer.append(System.lineSeparator());
 		});
 		

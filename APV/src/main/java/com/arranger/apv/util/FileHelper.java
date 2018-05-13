@@ -19,6 +19,10 @@ import com.arranger.apv.Main;
 
 public class FileHelper extends APVPlugin {
 	
+	private static final String STATS = "stats";
+
+	private static final String SET_PACKS = "setPacks";
+
 	private static final String MUSIC_DIR = "Music";
 
 	private static final Logger logger = Logger.getLogger(FileHelper.class.getName());
@@ -38,6 +42,16 @@ public class FileHelper extends APVPlugin {
 		} catch (Exception e) {
 			debug(e);
 		}
+	}
+	
+	public File getSetPacksFolder() {
+		String setPacksString = getFullPath(SET_PACKS);
+		return new File(setPacksString);
+	}
+	
+	public File getStatsFolder() {
+		String setPacksString = getFullPath(STATS);
+		return new File(setPacksString);
 	}
 
 	public String getFullPath(String fileName) {

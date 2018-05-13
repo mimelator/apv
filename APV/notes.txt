@@ -1,7 +1,8 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Just save the set packs to the apv home folder under setPacks like stats does
+
+
 
 
 

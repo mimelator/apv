@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -112,16 +111,10 @@ public class SetPackCreator extends APVFrame {
 			return;
 		}
 		
-		//get the file chooser
-		JFileChooser fc = fileHelper.getJFileChooser();
-		fc.setDialogTitle("Choose folder for " + setPackName);
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			try {
-				createSetPack(fc.getSelectedFile(), setPackName);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
+		try {
+			createSetPack(fileHelper.getSetPacksFolder(), setPackName);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 	

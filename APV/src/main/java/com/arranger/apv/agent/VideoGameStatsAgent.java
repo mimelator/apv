@@ -1,6 +1,5 @@
 package com.arranger.apv.agent;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,9 +41,7 @@ public class VideoGameStatsAgent extends PulseAgent {
 		String timeStamp = vg.getTimeStamp();
 		FileHelper fh = new FileHelper(parent);
 		
-		String statsDirString = fh.getFullPath("stats");
-		File statsDir = new File(statsDirString);
-		Path statsPath = statsDir.toPath();
+		Path statsPath = fh.getStatsFolder().toPath();
 		if (fileName == null) {
 			fileName = String.format("%s-%s.txt", STATS_NAME, timestamp());
 			fileName = statsPath.resolve(fileName).toString();
