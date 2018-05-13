@@ -1,7 +1,9 @@
-BRANCH: marqueeList-to-set-pack-list
+BRANCH: displacemnt-map
 https://github.com/mimelator/apv
 
+displacemnt-map
 
+https://www.openprocessing.org/sketch/495155
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
@@ -10,6 +12,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Use ShaderDemo2 to start rendering images with glsl
 * Need to unify the GUI based commands
 * Displacemnt Map shaders for Guest DJ messages and WaveLength
 	* https://www.opengl.org/discussion_boards/showthread.php/181740-Bump-mapping-in-fragment-shader

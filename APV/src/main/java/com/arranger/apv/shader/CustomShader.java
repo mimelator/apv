@@ -14,20 +14,22 @@ public class CustomShader extends Shader {
 	private static final float ALPHA = .5f;
 	
 	private CustomShaderPass pass;
+	private float alpha;
 
-	public CustomShader(Main parent, String shaderName) {
+	public CustomShader(Main parent, String shaderName, float alpha) {
 		super(parent, shaderName, null);
 		pass = new CustomShaderPass(parent);
+		this.alpha = alpha;
 	}
 	
 	public CustomShader(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getString(0, null));
+		this(ctx.getParent(), ctx.getString(0, null), ctx.getFloat(1, ALPHA));
 	}
 	
 	@Override
 	public String getConfig() {
 		//{CustomShader : [monjori]}
-		return String.format("{%s : [%s]}", getName(), getDisplayName());
+		return String.format("{%s : [%s, %s]}", getName(), getDisplayName(), alpha);
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class CustomShader extends Shader {
 	        PShader shader = getShader();
 	        shader.set("resolution", (float)parent.width, (float)parent.height);
 			shader.set("time", parent.millis() / 1000.0f);
-			shader.set("alpha", ALPHA);
+			shader.set("alpha", alpha);
 	    }
 	}
 }
