@@ -1,12 +1,7 @@
 BRANCH: marqueeList-to-set-pack-list
 https://github.com/mimelator/apv
 
-* Convert Marquee List to SetPack List
-	* A Command to cycle through all of the Configuration Files (setPacks)
 
-Need to unify the GUI based commands
-
-APVMarqueeLauncher -> SetPackLauncher
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
@@ -15,6 +10,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Need to unify the GUI based commands
 * Displacemnt Map shaders for Guest DJ messages and WaveLength
 	* https://www.opengl.org/discussion_boards/showthread.php/181740-Bump-mapping-in-fragment-shader
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
