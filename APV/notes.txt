@@ -7,7 +7,6 @@ Finish off the stats
 Convert Marquee List to SetPack List
 Unable to find commands for key: ⇧
 Unable to find commands for key: ⌥
-Unable to find commands for key: =
 
 
 

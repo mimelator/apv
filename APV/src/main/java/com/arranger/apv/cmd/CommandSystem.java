@@ -92,11 +92,12 @@ public class CommandSystem extends APVPlugin {
 		
 		String key = Command.getKeyForKeyEvent(keyEvent);
 		Command cmd = keyBindingMap.get(key);
+		int modifiers = keyEvent.getModifiers();
 		if (cmd != null) {
 			String source = Command.getSource(keyEvent);
-			invokeCommand(cmd, source, keyEvent.getModifiers());
+			invokeCommand(cmd, source, modifiers);
 		} else {
-			if (!Command.isMetaDown(keyEvent.getModifiers())) {
+			if (!Command.isMetaDown(modifiers) && !Command.isControlDown(modifiers) && !Command.isAltDown(modifiers)) {
 				System.out.println("Unable to find commands for key: " + key);
 			}
 		}
