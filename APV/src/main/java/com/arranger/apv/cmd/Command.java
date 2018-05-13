@@ -45,7 +45,8 @@ public enum Command {
 	CYCLE_BACKGROUNDS('b', "Background", "Cycles through the backgrounds (SHIFT and ALT options)"),
 	CYCLE_FOREGROUNDS('f', "Foreground", "Cycles through the foregrounds (SHIFT and ALT options)"),
 	CYCLE_SHADERS('s', "Shader", "Cycles through the shaders (SHIFT and ALT options)"),
-	CYCLE_CONTROL_MODE('z', "Cycle Mode", "Cycles between all the available Modes (SHIFT)"),
+	CYCLE_CONTROL_MODE('z', "Cycle Control Mode", "Cycles between all the available Control Modes (SHIFT)"),
+	CYCLE_SET_PACK('k', "Cycle Set Pack", "Cycles between all the available Set Packs (SHIFT)"),
 	
 	//Typical commands
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),

@@ -1072,7 +1072,8 @@ public class Main extends PApplet {
 
 	protected void registerMainCommands() {
 		CommandSystem cs = commandSystem;
-		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(Command.isShiftDown(mod)));  
+		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(!Command.isShiftDown(mod)));  
+		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
 		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPack());
 		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
@@ -1081,7 +1082,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
 		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
 		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());	
-		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(Command.isShiftDown(mod)));
+		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
 		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
 		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
@@ -1122,6 +1123,16 @@ public class Main extends PApplet {
 		} else {
 			currentControlMode = controlMode.getPrevious();
 		}
+	}
+	
+	protected void cycleSetPack(boolean advance) {
+		APVWindow gui = getApvWindow();
+		if (gui == null) {
+			//TODO fix when the GUI isn't required
+			return;
+		}
+		
+		gui.getSetPackLauncher().update(advance);
 	}
 	
 	protected void setupSystems() {

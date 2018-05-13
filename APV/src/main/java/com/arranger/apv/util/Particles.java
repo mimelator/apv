@@ -14,10 +14,11 @@ public class Particles extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			parent.getCommandSystem().registerHandler(Command.PARTICLE_SCALAR, (command, source, modifiers) -> {
-				if (Command.isShiftDown(modifiers))
+				if (Command.isShiftDown(modifiers)) {
 					decrement();
-				else
+				} else {
 					increment();
+				}
 			});
 		});
 	}

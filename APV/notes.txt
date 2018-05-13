@@ -1,6 +1,10 @@
 BRANCH: marqueeList-to-set-pack-list
 https://github.com/mimelator/apv
 
+* Convert Marquee List to SetPack List
+	* A Command to cycle through all of the Configuration Files (setPacks)
+
+Need to unify the GUI based commands
 
 APVMarqueeLauncher -> SetPackLauncher
 
@@ -12,12 +16,11 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 TODO:
 * Displacemnt Map shaders for Guest DJ messages and WaveLength
-* Convert Marquee List to SetPack List
-	* A Command to cycle through all of the Configuration Files (setPacks)
+	* https://www.opengl.org/discussion_boards/showthread.php/181740-Bump-mapping-in-fragment-shader
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
+	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
-
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components 
 * Another animation: 

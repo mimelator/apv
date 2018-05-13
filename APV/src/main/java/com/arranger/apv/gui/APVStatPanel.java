@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,6 +33,7 @@ public class APVStatPanel extends APVFrame {
 		model = new CounterMapTableModel(map);
 		
 		panel = new JPanel();
+		panel.setBorder(BorderFactory.createTitledBorder("Stats"));
 		
 		JTable table = new JTable(model);
 		DefaultTableCellRenderer leftTCR = new DefaultTableCellRenderer();

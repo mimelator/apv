@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -67,6 +68,7 @@ public class APVCommandFrame extends APVFrame {
 		
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createTitledBorder("APV Commands"));
 		JScrollPane jScrollPane = new JScrollPane(list);
 		jScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.add(jScrollPane);

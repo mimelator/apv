@@ -1,16 +1,16 @@
 package com.arranger.apv.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Path;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,9 +41,7 @@ public class SetPackLauncher extends APVFrame {
 				if (evt.getClickCount() == 2) {
 					String setPackName = list.getSelectedValue();
 					if (setPackName != null && !setPackName.isEmpty()) {
-						Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
-						Path confgFile = setPackPath.resolve("application.conf");
-						parent.reloadConfiguration(confgFile.toAbsolutePath().toString());
+						reloadSetPack(setPackName);
 					}
 				}
 			}
@@ -69,9 +67,9 @@ public class SetPackLauncher extends APVFrame {
 		});
 
 		panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.add(new JLabel("Set Packs"));
-		panel.add(new JScrollPane(list), BorderLayout.PAGE_START);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createTitledBorder("Set Packs"));
+		panel.add(new JScrollPane(list));
 		
 		JPanel btnPanel = new JPanel();
 		btnPanel.setMinimumSize(PREFERRED_SIZE);
@@ -91,5 +89,32 @@ public class SetPackLauncher extends APVFrame {
 	@Override
 	public JPanel getPanel() {
 		return panel;
+	}
+	
+	public void update(boolean advance) {
+		if (modelList.isEmpty()) {
+			return;
+		}
+		int index = 0;
+		
+		if (advance) {
+			index = list.getSelectedIndex() + 1;
+			if (index >= modelList.size()) {
+				index = 0;
+			}
+		} else {
+			index = list.getSelectedIndex() - 1;
+			if (index < 0) {
+				index = modelList.size() - 1;
+			}
+		}
+		list.setSelectedIndex(index);
+		reloadSetPack(modelList.get(index));
+	}
+	
+	protected void reloadSetPack(String setPackName) {
+		Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
+		Path confgFile = setPackPath.resolve("application.conf");
+		parent.reloadConfiguration(confgFile.toAbsolutePath().toString());
 	}
 }
