@@ -33,7 +33,7 @@ import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
-import com.arranger.apv.helpers.MarqueeList;
+import com.arranger.apv.helpers.SetPackList;
 import com.arranger.apv.util.APVSetList;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.FileHelper;
@@ -94,7 +94,7 @@ public abstract class APVPluginTest {
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
         FFT fft = Mockito.mock(FFT.class);
         CommandSystem commandSystem = Mockito.mock(CommandSystem.class);
-        MarqueeList sceneList = Mockito.mock(MarqueeList.class);
+        SetPackList sceneList = Mockito.mock(SetPackList.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
@@ -117,7 +117,7 @@ public abstract class APVPluginTest {
         when(parent.getConfig()).thenCallRealMethod();
         when(parent.createShape()).thenReturn(new PShape());
         when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
-        when(parent.getMarqueeList()).thenReturn(sceneList);
+        when(parent.getSetPackList()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
         when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
         when(parent.getConfigValueForFlag(Mockito.any())).thenCallRealMethod();

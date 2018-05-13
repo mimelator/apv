@@ -82,26 +82,26 @@ public class APVWindow extends APVFrame {
 	
 	protected JPanel createCenterPanel() {
 		APVCommandFrame apvCommandFrame = new APVCommandFrame(parent, false);
-		APVMarqueeLauncher apvMarqueeLauncher = new APVMarqueeLauncher(parent, false);
+		SetPackLauncher setPackLauncher = new SetPackLauncher(parent, false);
 		children.add(apvCommandFrame);
-		children.add(apvMarqueeLauncher);
+		children.add(setPackLauncher);
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1)); 
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
 		JPanel commandFramePanel = apvCommandFrame.getPanel();
-		JPanel marqueeLauncherPanel = apvMarqueeLauncher.getPanel();
+		JPanel setPackLauncherPanel = setPackLauncher.getPanel();
 		JPanel sPanel = createStats();
 		
 		commandFramePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		marqueeLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		setPackLauncherPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		sPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		centerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		centerPanel.add(commandFramePanel);
-		centerPanel.add(marqueeLauncherPanel);
+		centerPanel.add(setPackLauncherPanel);
 		centerPanel.add(sPanel);
 		
 		createCmdButtons(centerPanel);

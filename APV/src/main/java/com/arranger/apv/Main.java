@@ -37,7 +37,7 @@ import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
-import com.arranger.apv.helpers.MarqueeList;
+import com.arranger.apv.helpers.SetPackList;
 import com.arranger.apv.helpers.PerformanceMonitor;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
@@ -120,7 +120,7 @@ public class Main extends PApplet {
 	protected VideoGameHelper videoGameHelper;
 	protected MacroHelper macroHelper;
 	protected HotKeyHelper hotKeyHelper;
-	protected MarqueeList marqueeList;
+	protected SetPackList setPackList;
 	protected FontHelper fontHelper;
 	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
@@ -322,8 +322,8 @@ public class Main extends PApplet {
 		return fontHelper;
 	}
 
-	public MarqueeList getMarqueeList() {
-		return marqueeList;
+	public SetPackList getSetPackList() {
+		return setPackList;
 	}
 	
 	public MacroHelper getMacroHelper() {
@@ -692,7 +692,7 @@ public class Main extends PApplet {
 		pulseListener = new APVPulseListener(this);
 		macroHelper = new MacroHelper(this);
 		hotKeyHelper = new HotKeyHelper(this);
-		marqueeList = new MarqueeList(this);
+		setPackList = new SetPackList(this);
 		randomMessagePainter = new RandomMessagePainter(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);

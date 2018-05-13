@@ -39,7 +39,7 @@ public class SaveConfigurationTest extends ConfigBasedTest {
 		results.append(System.lineSeparator()).append(System.lineSeparator());
 		
 		results.append(parent.getConfig()).append(System.lineSeparator());
-		results.append(parent.getMarqueeList().getConfig()).append(System.lineSeparator()).append(System.lineSeparator()); 
+		results.append(parent.getSetPackList().getConfig()).append(System.lineSeparator()).append(System.lineSeparator()); 
 		
 		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
 			results.append(getConfigForSystem(s));

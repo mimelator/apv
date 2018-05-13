@@ -1,8 +1,8 @@
-BRANCH: master
+BRANCH: marqueeList-to-set-pack-list
 https://github.com/mimelator/apv
 
 
-
+APVMarqueeLauncher -> SetPackLauncher
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
@@ -16,10 +16,7 @@ TODO:
 	* A Command to cycle through all of the Configuration Files (setPacks)
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
-* double click on the song in the song list to play
 * A laminated command sheet
-* remove CommandInterceptors and replace with something not so delicate
-
 
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components 
@@ -30,13 +27,15 @@ TODO:
 * Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
 * Document Commands (for creating Macros and Hot Keys and Agents)
 	* Add documentation in reference.conf to each plugin to describe it's arguments
+* remove CommandInterceptors and replace with something not so delicate
+	
 *****************************************************************************
 *****************************************************************************
-
 Set Pack Names could be:
 	PurpleHaze
 	Homecoming
-
+*****************************************************************************
+*****************************************************************************
 
 Remote Debugging:
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
