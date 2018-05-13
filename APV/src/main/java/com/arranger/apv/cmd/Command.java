@@ -208,7 +208,8 @@ public enum Command {
 	
 	public static String getKeyForKeyEvent(KeyEvent event) {
 		char charKey = event.getKey();
-		String key = (Character.isLetter(charKey)  || Character.isWhitespace(charKey)) ? 
+		boolean simpleAscii =  ((int)charKey) <  0x0100  && ((int)charKey) > 0x20; 
+		String key = (Character.isLetterOrDigit(charKey)  || Character.isWhitespace(charKey) || simpleAscii) ? 
 				String.valueOf(Character.toLowerCase(charKey)) : 
 					java.awt.event.KeyEvent.getKeyText(event.getKeyCode());
 

@@ -57,18 +57,7 @@ public class SongsPanel extends SetPackPanel {
 			}
 		});
 		
-		randomizeButton.addActionListener(evt -> {
-			List<SongModel> list = new ArrayList<SongModel>();
-			IntStream.range(0,  modelList.getSize()).forEach(i -> {
-				list.add(modelList.get(i));
-			});
-			
-			Collections.shuffle(list);
-			DefaultListModel<SongModel> ml = new DefaultListModel<SongModel>();
-			list.forEach(sm -> ml.addElement(sm));
-			songList.setModel(ml);
-			modelList = ml;
-		});
+		randomizeButton.addActionListener(evt -> randomize());
 		
 		//see if there is a current song list and add it to the modelList
 		APVSetList setList = parent.getSetList();
@@ -135,6 +124,19 @@ public class SongsPanel extends SetPackPanel {
 		}
 		songList.setSelectedIndex(index);
 		updateForDemo(true, null);
+	}
+	
+	public void randomize() {
+		List<SongModel> list = new ArrayList<SongModel>();
+		IntStream.range(0,  modelList.getSize()).forEach(i -> {
+			list.add(modelList.get(i));
+		});
+		
+		Collections.shuffle(list);
+		DefaultListModel<SongModel> ml = new DefaultListModel<SongModel>();
+		list.forEach(sm -> ml.addElement(sm));
+		songList.setModel(ml);
+		modelList = ml;
 	}
 	
 	protected Path getSongsDirectoryPath(Path parentDirectory) {

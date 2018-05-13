@@ -757,10 +757,14 @@ public class Main extends PApplet {
 		transitions.scramble(true);
 	}
 	
-	public void randomizeColors() {
+	public void randomizeCurrentSetPack() {
 		ColorsPanel cp = getColorsPanel();
 		cp.randomize();
 		cp.updateForDemo(true, null);
+		
+		SongsPanel sp = getSongsPanel();
+		sp.randomize();
+		sp.updateForDemo(true, null);
 	}
 	
 	public ColorsPanel getColorsPanel() {
@@ -1051,7 +1055,7 @@ public class Main extends PApplet {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(Command.isShiftDown(mod)));  
 		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
-		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeColors());
+		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPack());
 		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
 		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
 		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());

@@ -1,24 +1,9 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Finish off the stats
 
+ A help command to display all of the command line switches
 
-Convert Marquee List to SetPack List
-Unable to find commands for key: ⇧
-Unable to find commands for key: ⌥
-
-
-
-updateForDemo
- randomizeColors
- randomizeSongs
- randomizePics (option to only use pictures w/alpha)
-Going to have to use hot keys or macros.  In fact, some commands might need to be registerd with wierd key strokes? 
-
-Set Pack Names could be:
-	PurpleHaze
-	Homecoming
 
 
 *****************************************************************************
@@ -28,12 +13,13 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Convert Marquee List to SetPack List
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * double click on the song in the song list to play
 * A laminated command sheet
 * remove CommandInterceptors and replace with something not so delicate
-* A help command to display all of the command line switches
+
 * A Command to cycle through all of the Configuration Files (setPacks)
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components 
@@ -47,6 +33,11 @@ TODO:
 * Add documentation in reference.conf to each plugin to describe it's arguments
 *****************************************************************************
 *****************************************************************************
+
+Set Pack Names could be:
+	PurpleHaze
+	Homecoming
+
 
 Remote Debugging:
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
