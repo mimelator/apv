@@ -1,8 +1,15 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Finish off the stats
+
+
 Convert Marquee List to SetPack List
 Unable to find commands for key: ⇧
+Unable to find commands for key: ⌥
+Unable to find commands for key: =
+
+
 
 updateForDemo
  randomizeColors
@@ -10,14 +17,20 @@ updateForDemo
  randomizePics (option to only use pictures w/alpha)
 Going to have to use hot keys or macros.  In fact, some commands might need to be registerd with wierd key strokes? 
 
+Set Pack Names could be:
+	PurpleHaze
+	Homecoming
 
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 			2nd:    1627, 0.149431 c/s, 03:01:28  (May  8, 2018)
+			3rd		1517, 0.412565 c/s, 01:01:17  (May 11, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Create an App that takes a list of YouTube Videos and downloads them to a directory
+* Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * double click on the song in the song list to play
 * A laminated command sheet
 * remove CommandInterceptors and replace with something not so delicate
