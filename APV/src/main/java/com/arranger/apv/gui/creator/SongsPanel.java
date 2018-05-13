@@ -1,11 +1,12 @@
 package com.arranger.apv.gui.creator;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -18,7 +19,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.util.APVSetList;
@@ -40,6 +40,14 @@ public class SongsPanel extends SetPackPanel {
 		fileHelper = new FileHelper(parent);
 		
 		songList = new JList<SongModel>(modelList);
+		songList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int index = songList.locationToIndex(e.getPoint());
+					play(index);
+				}
+			}
+		});
 
 		JButton addButton = new JButton("Add");
 		JButton removeButton = new JButton("Remove");
@@ -47,12 +55,11 @@ public class SongsPanel extends SetPackPanel {
 		
 		addButton.addActionListener(evt -> {
 			JFileChooser fc = fileHelper.getJFileChooser();
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.setMultiSelectionEnabled(true);
-			fc.setFileFilter(new FileNameExtensionFilter("MP3s", "mp3"));
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				Arrays.asList(fc.getSelectedFiles()).forEach(f -> {
-					modelList.addElement(new SongModel(f));
+				List<Path> allMp3sFromDir = new FileHelper(parent).getAllMp3sFromDir(fc.getSelectedFile().toPath());
+				allMp3sFromDir.forEach(path -> {
+					modelList.addElement(new SongModel(path.toFile()));
 				});
 			}
 		});
@@ -113,8 +120,7 @@ public class SongsPanel extends SetPackPanel {
 		if (index > songList.getModel().getSize() - 1) {
 			index = 0;
 		}
-		songList.setSelectedIndex(index);
-		updateForDemo(true, null);
+		play(index);
 	}
 	
 	public void prev() {
@@ -122,6 +128,10 @@ public class SongsPanel extends SetPackPanel {
 		if (index < 0) {
 			index = songList.getModel().getSize() - 1;
 		}
+		play(index);
+	}
+
+	protected void play(int index) {
 		songList.setSelectedIndex(index);
 		updateForDemo(true, null);
 	}
