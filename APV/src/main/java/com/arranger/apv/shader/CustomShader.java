@@ -32,7 +32,6 @@ public class CustomShader extends Shader {
 			this.imageFile = imageFile;
 		}
 	}
-	
 
 	protected BasePass createCustomPass(Main parent) {
 		return new CustomShaderPass(parent);
