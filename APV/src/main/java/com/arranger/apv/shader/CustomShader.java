@@ -22,7 +22,6 @@ public class CustomShader extends Shader {
 	protected PImage image;
 	protected String imageFile;
 	protected String textureName = DEFAULT_TEXTURE_NAME;
-	protected String textureResolutionName = DEFAULT_TEXTURE_NAME + "Resolution";
 
 	public CustomShader(Main parent, String shaderName, float alpha, String imageFile, List<SHADERS> shaders) {
 		super(parent, shaderName, shaders);
@@ -31,16 +30,9 @@ public class CustomShader extends Shader {
 		if (imageFile != null) {
 			image = parent.loadImage(imageFile);
 			this.imageFile = imageFile;
-			
-			parent.getSetupEvent().register(() -> {
-				checkImageSize(image);
-			});
 		}
 	}
 	
-	protected void checkImageSize(PImage image) {
-		//do nothing
-	}
 
 	protected BasePass createCustomPass(Main parent) {
 		return new CustomShaderPass(parent);
@@ -90,7 +82,6 @@ public class CustomShader extends Shader {
 			
 			if (image != null) {
 				shader.set(textureName, image);
-				shader.set(textureResolutionName, image.width, image.height);
 			}
 	    }
 	}
