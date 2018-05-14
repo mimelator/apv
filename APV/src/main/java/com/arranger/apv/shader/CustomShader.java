@@ -25,6 +25,7 @@ public class CustomShader extends Shader {
 
 	public CustomShader(Main parent, String shaderName, float alpha, String imageFile, List<SHADERS> shaders) {
 		super(parent, shaderName, shaders);
+		parent.textureWrap(REPEAT);
 		pass = createCustomPass(parent);
 		this.alpha = alpha;
 		if (imageFile != null) {
@@ -81,6 +82,7 @@ public class CustomShader extends Shader {
 			
 			if (image != null) {
 				shader.set(textureName, image);
+				shader.set("textureResolution", image.width, image.height);
 			}
 	    }
 	}

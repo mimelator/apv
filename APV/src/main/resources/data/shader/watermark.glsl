@@ -5,37 +5,33 @@ precision mediump int;
 
 uniform sampler2D myTexture;
 uniform sampler2D texture;
+
+uniform float time;
 uniform float alpha;
-uniform float angle;
-uniform bool rotate;
+uniform bool scroll;
 uniform vec2 resolution;
 
 varying vec4 vertColor;
 varying vec4 vertTexCoord;
 
-
-mat2 rotate2d(float _angle){
-    return mat2(cos(_angle),-sin(_angle),
-                sin(_angle),cos(_angle));
-}
+#define TILES_COUNT_X 4.0
+#define SPEED 4.0
 
 void main() {
+	vec4 backCol;
 
-	vec2 st = gl_FragCoord.xy / resolution.xy;
-
-	if (rotate) {
-		//shift, rotate, shift back
-		st -= vec2(0.5);
-		st = rotate2d(angle) * st;
-		st += vec2(0.5);
+	if (scroll) {
+		vec2 pos = gl_FragCoord.xy - vec2(SPEED * time);
+  		vec2 p = (resolution - TILES_COUNT_X * pos) / resolution.x;
+		vec3 col = texture2D (myTexture, p).xyz;
+		backCol = vec4 (col, 1.0);
+	} else {
+		//flip it
+		vec2 st = gl_FragCoord.xy / resolution.xy;
+		vec2 flippedTexCoord = vec2(st.s, 1.0 - st.t);
+    	backCol = texture2D(myTexture, flippedTexCoord.st);
 	}
 
-    //flip it
-    vec2 flippedTexCoord = vec2(st.s, 1.0 - st.t);
-  
-  	//get the pixel
-  	vec4 backCol = texture2D(myTexture, flippedTexCoord.st);
-  
   	//mix
   	gl_FragColor = vec4(backCol.rgb, alpha) * vertColor;
 }
