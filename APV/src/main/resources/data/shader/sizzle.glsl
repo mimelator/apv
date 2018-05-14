@@ -3,6 +3,7 @@ precision mediump float;
 precision mediump int;
 #endif
 
+//http://glslsandbox.com/e#46913.0
 
 uniform float time;
 uniform vec2 resolution;

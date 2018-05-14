@@ -33,7 +33,7 @@ public class Shader extends ShapeSystem {
 		TOON(b -> b.toon()),
 		VIGNETTE(b -> b.vignette(0.8f, 0.3f));
 		
-		public ShaderPass shaderPass;
+		private ShaderPass shaderPass;
 		
 		private SHADERS() {
 			this((b) -> b.bloom(0.5f, 20, 30));
@@ -42,15 +42,19 @@ public class Shader extends ShapeSystem {
 		private SHADERS(ShaderPass shaderPass) {
 			this.shaderPass = shaderPass;
 		}
+		
+		public ShaderPass getShaderPass() {
+			return shaderPass;
+		}
 	};
 	
 	@FunctionalInterface
-	private static interface ShaderPass {
+	protected static interface ShaderPass {
 		void addPass(PostFXBuilder builder);
 	}
 	
-	private List<SHADERS> shaders;
-	private String displayName;
+	protected List<SHADERS> shaders;
+	protected String displayName;
 
 	public Shader(Main parent, String displayName, List<SHADERS> shaders) {
 		super(parent, null);

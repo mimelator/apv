@@ -1,9 +1,14 @@
 BRANCH: displacemnt-map
 https://github.com/mimelator/apv
 
-displacemnt-map
+Watermark shaders
+ refactored class.
+ flip rendering
+ sort out images
+ generate logos on the fly
+ animate the logos?  (Zoom in/out)
+ figure out rendering schedule for watermarks
 
-https://www.openprocessing.org/sketch/495155
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
