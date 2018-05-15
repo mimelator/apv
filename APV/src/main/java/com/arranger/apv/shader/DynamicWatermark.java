@@ -18,8 +18,8 @@ public class DynamicWatermark extends Watermark {
 		g.beginDraw();
 		g.stroke(255); //Don't use color as this is a mask situation
 		g.textSize(textSize);
-		g.textAlign(CENTER, CENTER);
-		g.text(text, (float)coordinatesForLocation.getX() * .85f, (float)coordinatesForLocation.getY());
+		g.textAlign(location.getAlignX(), location.getAlignY());
+		g.text(text, (float)coordinatesForLocation.getX(), (float)coordinatesForLocation.getY());
 		g.endDraw();
 		
 		this.image = g.get();
