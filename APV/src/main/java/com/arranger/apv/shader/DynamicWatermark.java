@@ -1,22 +1,25 @@
 package com.arranger.apv.shader;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.draw.SafePainter;
 
 import processing.core.PGraphics;
 
 public class DynamicWatermark extends Watermark {
 	
-	public DynamicWatermark(Main parent, float alpha, float textSize, String text, List<SHADERS> shaders) {
+	public DynamicWatermark(Main parent, float alpha, float textSize, String text, SafePainter.LOCATION location, List<SHADERS> shaders) {
 		super(parent, text, alpha, false, null, shaders);
-			
+		
+		Point2D coordinatesForLocation = new SafePainter(parent, null).getCoordinatesForLocation(location);
 		PGraphics g = parent.createGraphics(parent.width, parent.height);
 		g.beginDraw();
-		g.stroke(255); //TODO use color?
+		g.stroke(255); //Don't use color as this is a mask situation
 		g.textSize(textSize);
 		g.textAlign(CENTER, CENTER);
-		g.text(text, parent.width / 2, parent.height / 2);
+		g.text(text, (float)coordinatesForLocation.getX() * .85f, (float)coordinatesForLocation.getY());
 		g.endDraw();
 		
 		this.image = g.get();

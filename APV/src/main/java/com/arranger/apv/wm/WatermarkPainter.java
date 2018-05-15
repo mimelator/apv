@@ -50,7 +50,7 @@ public class WatermarkPainter extends ShapeSystem {
 	@Override
 	public void draw() {
 		if (dw == null) {
-			dw = new DynamicWatermark(parent, .5f, TEXT_SIZE * scale, msg, null);
+			dw = new DynamicWatermark(parent, .5f, TEXT_SIZE * scale, msg, location, null);
 		}
 		APV<Shader> shaders = parent.getShaders();
 		shaders.setEnabled(true);

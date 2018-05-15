@@ -2,16 +2,19 @@ BRANCH: displacemnt-map
 https://github.com/mimelator/apv
 
 
-figure out rendering schedule for watermarks
+the agent can activateTheNext Watermark plugin
+or the existing APVWatermark can do that on event
 
+add apv.watermarkFrames to flags
+Better font
 
-apv.watermarkFrames = 500
-watermarks : [
-	{Watermark : [${apv.watermarkFrames}, "Wavelength"]}
-	{Watermark : [${apv.watermarkFrames}, "Wavelength Rocks", .1, LOWER_RIGHT]}
-]
+See if aquamarine can get rid of all of the red (find a Heavy Metal (cartoon))
 
+Dynamic Watermark should have an image passed
+The watermark painter should paint multiple text passes with different sizes and alpha
 
+what if watermarks had 20 /40 pictures, and just rotated between them
+they could cycle larger and smaller
 
 
 *****************************************************************************
