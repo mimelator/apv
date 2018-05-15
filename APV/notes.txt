@@ -1,19 +1,7 @@
-BRANCH: gui-unification
+BRANCH: master
 https://github.com/mimelator/apv
 
 
-SongsPanel
-ColorPanel
-IconsPanel
-EmojisPanel
-SetPackPanel
-
-When playing a new setPack, fire a watermark event (upper left?)
-
-remove setPackCreator from main
-remove apvwindow from main
-
-fix: Main: randomizeCurrentSetPack, getColorsPanel, getSongsPanel
 
 
 *****************************************************************************
@@ -25,7 +13,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 TODO:
 * Render vector graphics
 * See if aquamarine can get rid of all of the red
-* Need to unify the GUI based commands
+* When playing a new setPack, fire a watermark event (upper left?)
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
