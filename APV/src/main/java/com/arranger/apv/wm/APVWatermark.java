@@ -16,6 +16,7 @@ public class APVWatermark extends APV<WatermarkPainter> {
 			token = parent.getWatermarkEvent().register(() -> {
 				WatermarkPainter wp =  getPlugin();
 				new DrawHelper(parent, wp.getNumFrames(), wp, () -> {});
+				increment(parent.getWatermarkEvent().getDisplayName());
 			});
 		});
 	}

@@ -172,6 +172,7 @@ public class Main extends PApplet {
 		SET_LIST("setList", "true|false"),
 		SET_LIST_FOLDER("setListFolder", "directory"),
 		LINE_IN("lineIn", "true|false"),
+		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory");
 		
 		private String name;
@@ -492,6 +493,10 @@ public class Main extends PApplet {
 	
 	public int getDefaultShapeSystemAlpha() {
 		return getConfigInt(FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA.apvName());
+	}
+	
+	public int getWatermarkFrames() {
+		return getConfigInt(FLAGS.WATERMARK_FRAMES.apvName());
 	}
 	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
@@ -1256,6 +1261,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
+		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		
 		//Font info
 		String config = getFontHelper().getConfig();

@@ -38,6 +38,11 @@ public class APVEvent<T> extends APVPlugin {
 		return eventType;
 	}
 
+	@Override
+	public String getName() {
+		return eventType.name();
+	}
+
 	/**
 	 * Need a temp copy of the list
 	 * because it might be modified on the fly due to calls to {@link #unregister(EventHandler)}

@@ -24,6 +24,4 @@ public class DynamicWatermark extends Watermark {
 		
 		this.image = g.get();
 	}
-
-
 }
