@@ -43,6 +43,7 @@ import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.RandomMessagePainter;
+import com.arranger.apv.wm.APVWatermark;
 
 import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;
@@ -111,6 +112,7 @@ public abstract class APVPluginTest {
         assert(parent.getAudio().getBeatInfo().getFreqDetector() != null);
         
         when(parent.getPulseListener()).thenReturn(Mockito.mock(APVPulseListener.class));
+        when(parent.getWatermark()).thenReturn(Mockito.mock(APVWatermark.class));
         when(parent.getColorHelper()).thenReturn(new ColorHelper(parent));
         when(parent.getImageHelper()).thenReturn(new ImageHelper(parent));
         when(parent.getCommandSystem()).thenReturn(commandSystem);

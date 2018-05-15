@@ -2,13 +2,16 @@ BRANCH: displacemnt-map
 https://github.com/mimelator/apv
 
 
-Watermark shaders
- refactored class.
- flip rendering
- sort out images
- generate logos on the fly
- animate the logos?  (Zoom in/out)
- figure out rendering schedule for watermarks
+figure out rendering schedule for watermarks
+
+
+apv.watermarkFrames = 500
+watermarks : [
+	{Watermark : [${apv.watermarkFrames}, "Wavelength"]}
+	{Watermark : [${apv.watermarkFrames}, "Wavelength Rocks", .1, LOWER_RIGHT]}
+]
+
+
 
 
 *****************************************************************************

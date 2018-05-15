@@ -24,6 +24,7 @@ public enum Command {
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
 	SWITCH_PULSE_LISTENER(';', "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
+	SWITCH_WATERMARK(':', "WatermarkSwitch", "Enables/Disables watermarks"),
 	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
 	
@@ -47,6 +48,7 @@ public enum Command {
 	CYCLE_SHADERS('s', "Shader", "Cycles through the shaders (SHIFT and ALT options)"),
 	CYCLE_CONTROL_MODE('z', "Cycle Control Mode", "Cycles between all the available Control Modes (SHIFT)"),
 	CYCLE_SET_PACK('k', "Cycle Set Pack", "Cycles between all the available Set Packs (SHIFT)"),
+	CYCLE_WATERMARK(',', "Next Watermark", "Queues up the next Watermark"),
 	
 	//Typical commands
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
@@ -72,6 +74,7 @@ public enum Command {
 	WALKER_DEC('<', "Walker--", "Decrease the stride of the Command Walker in Perlin mode"),
 	QUIET_WINDOW_LENGTH_INC(')', "QuietWindow++", "Increases the duration of the Quiet Window in Snap mode"),
 	QUIET_WINDOW_LENGTH_DEC('(', "QuietWindow--", "Decreases the duration of the Quiet Window in Snap mode"),
+	SHOW_WATERMARK('.', "Show Watermark", "Displays the watermark"),
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),

@@ -412,6 +412,9 @@ public class Configurator extends APVPlugin {
 			case PULSELISTENERS:
 				pluginList = parent.getPulseListener().getList();
 				break;
+			case WATERMARKS:
+				pluginList = parent.getWatermark().getList();
+				break;
 			case HOTKEYS:
 				HotKeyHelper hotKeyHelper = parent.getHotKeyHelper();
 				pluginList = new ArrayList<HotKey>(hotKeyHelper.getHotKeys().values());

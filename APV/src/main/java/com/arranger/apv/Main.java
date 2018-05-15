@@ -37,8 +37,8 @@ import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
-import com.arranger.apv.helpers.SetPackList;
 import com.arranger.apv.helpers.PerformanceMonitor;
+import com.arranger.apv.helpers.SetPackList;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
@@ -67,6 +67,7 @@ import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
 import com.arranger.apv.util.frame.SplineHelper;
+import com.arranger.apv.wm.APVWatermark;
 import com.typesafe.config.Config;
 
 import ch.bildspur.postfx.builder.PostFX;
@@ -102,6 +103,7 @@ public class Main extends PApplet {
 	//Useful helper classes
 	protected APVAgent agent;
 	protected APVPulseListener pulseListener;
+	protected APVWatermark watermark;
 	protected APVSetList setList;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
@@ -231,7 +233,8 @@ public class Main extends PApplet {
 		SCENES("scenes"),
 		SHADERS("shaders"),
 		SWITCHES("switches", false),
-		TRANSITIONS("transitions");
+		TRANSITIONS("transitions"),
+		WATERMARKS("watermarks");
 		
 		
 		public String name;
@@ -455,6 +458,10 @@ public class Main extends PApplet {
 		return (DrawShapeEvent)eventMap.get(EventTypes.EARTHQUAKE);
 	}
 	
+	public DrawShapeEvent getWatermarkEvent() {
+		return (DrawShapeEvent)eventMap.get(EventTypes.WATERMARK);
+	}
+	
 	public CommandInvokedEvent getCommandInvokedEvent() {
 		return (CommandInvokedEvent)eventMap.get(EventTypes.COMMAND_INVOKED);
 	}
@@ -564,6 +571,10 @@ public class Main extends PApplet {
 	
 	public APV<TransitionSystem> getTransitions() {
 		return transitions;
+	}
+	
+	public APVWatermark getWatermark() {
+		return watermark;
 	}
 	
 	public TransitionSystem getTransition() {
@@ -712,6 +723,7 @@ public class Main extends PApplet {
 		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
 		systemMap.put(SYSTEM_NAMES.SHADERS, new APV<Shader>(this, SYSTEM_NAMES.SHADERS));
 		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
+		systemMap.put(SYSTEM_NAMES.WATERMARKS, new APVWatermark(this));
 		
 		assignSystems();
 		initControlMode();
@@ -724,7 +736,6 @@ public class Main extends PApplet {
 		orientation(LANDSCAPE);
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
-		surface.setResizable(true);
 		
 		fireSetupEvent();
 		
@@ -880,6 +891,7 @@ public class Main extends PApplet {
 		macroHelper.reloadConfiguration();
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
+		watermark.reloadConfiguration();
 		reset();
 		
 		registerSystemCommands();
@@ -1088,6 +1100,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
 		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
 		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
+		cs.registerHandler(Command.SHOW_WATERMARK, (cmd,src,mod) -> getWatermarkEvent().fire());
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 	}
@@ -1102,6 +1115,7 @@ public class Main extends PApplet {
 		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
 		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
 		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
+		register(SYSTEM_NAMES.WATERMARKS, Command.SWITCH_WATERMARK, Command.CYCLE_WATERMARK);
 	}
 	
 	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand) {
@@ -1178,7 +1192,9 @@ public class Main extends PApplet {
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
+		watermark = (APVWatermark) systemMap.get(SYSTEM_NAMES.WATERMARKS);
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	protected void configureSwitches() {
@@ -1215,6 +1231,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.TWIRL, new DrawShapeEvent(this, EventTypes.TWIRL));
 		eventMap.put(EventTypes.MARQUEE, new DrawShapeEvent(this, EventTypes.MARQUEE));
 		eventMap.put(EventTypes.EARTHQUAKE, new DrawShapeEvent(this, EventTypes.EARTHQUAKE));
+		eventMap.put(EventTypes.WATERMARK, new DrawShapeEvent(this, EventTypes.WATERMARK));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 	}
@@ -1266,6 +1283,7 @@ public class Main extends PApplet {
 		if (config != null) {
 			buffer.append(config);
 		}
+		
 		return buffer.toString();
 	}
 	
