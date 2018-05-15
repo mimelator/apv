@@ -32,7 +32,6 @@ import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
 import com.arranger.apv.gui.creator.ColorsPanel;
 import com.arranger.apv.gui.creator.SetPackCreator;
-import com.arranger.apv.gui.creator.SongsPanel;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
@@ -44,13 +43,14 @@ import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Scene;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
-import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
@@ -104,7 +104,7 @@ public class Main extends PApplet {
 	protected APVAgent agent;
 	protected APVPulseListener pulseListener;
 	protected APVWatermark watermark;
-	protected APVSetList setList;
+	protected APVSetListPlayer setListPlayer;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
 	protected Audio audio;
@@ -143,6 +143,11 @@ public class Main extends PApplet {
 	private boolean scrambleMode = false;
 	private boolean screenshotMode = false;
 	private int lastScrambleFrame = 0;
+	
+	private SongsModel songsModel;
+//	private APVModel colorsModel;
+//	private APVModel emojisModel;
+//	private APVModel iconsModel;
 	
 	
 	//Switches for runtime
@@ -382,8 +387,8 @@ public class Main extends PApplet {
 		return pulseListener;
 	}
 	
-	public APVSetList getSetList() {
-		return setList;
+	public APVSetListPlayer getSetListPlayer() {
+		return setListPlayer;
 	}
 	
 	public APVAgent getAgent() {
@@ -716,6 +721,11 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
+		songsModel = new SongsModel(this);
+//		colorsModel = new SongsModel(this);
+//		emojisModel = new SongsModel(this);
+//		iconsModel = new SongsModel(this);
+		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
 		systemMap.put(SYSTEM_NAMES.COLORS, new APV<ColorSystem>(this, SYSTEM_NAMES.COLORS));
@@ -742,8 +752,6 @@ public class Main extends PApplet {
 		hint(DISABLE_DEPTH_MASK);
 		background(Color.BLACK.getRGB());
 		
-		fireSetupEvent();
-		
 		//Forward messages to the currentLikedScene if applicable
 		getAPVChangeEvent().register((apv, plugin, cause) -> {
 			if (currentScene != null && currentScene.isLikedScene()) {
@@ -753,18 +761,16 @@ public class Main extends PApplet {
 
 		setDefaultScene("setup");
 		checkStartupSetList();
+		
+		fireSetupEvent();
 	}
 
 	public void playSetList(File directory) {
 		ensureSetListReadyToPlay();
-		setList.play(directory);
+		setListPlayer.play(directory);
+		songsModel.onSetListPlayerChange();
 	}
 	
-	public void play(List<File> files, int indexToStart) {
-		ensureSetListReadyToPlay();
-		setList.play(files, indexToStart);
-	}
-
 	public void doScreenCapture() {
 		String fileName = String.format("apv%08d.png", getFrameCount());
 		fileName = new FileHelper(this).getFullPath(fileName);
@@ -797,9 +803,12 @@ public class Main extends PApplet {
 		cp.randomize();
 		cp.updateForDemo(true, null);
 		
-		SongsPanel sp = getSongsPanel();
-		sp.randomize();
-		sp.updateForDemo(true, null);
+//		SongsPanel sp = getSongsPanel();
+//		sp.randomize();
+//		sp.updateForDemo(true, null);
+		
+		songsModel.randomize();
+		songsModel.playSong(0);
 	}
 	
 	public ColorsPanel getColorsPanel() {
@@ -812,28 +821,20 @@ public class Main extends PApplet {
 		return cp;
 	}
 	
-	public SongsPanel getSongsPanel() {
-		SongsPanel sp = null;
-		if (setPackCreator != null) {
-			sp = setPackCreator.getSongsPanel();
-		} else {
-			sp = new SongsPanel(this);
-		}
-		return sp;
+	public SongsModel getSongsModel() {
+		return songsModel;
 	}
 	
 	public void ffwd() {
-		SongsPanel sp = getSongsPanel();
-		sp.ffwd();
+		songsModel.ffwd();
 	}
 	
 	public void playPause() {
-		
+		throw new RuntimeException("playPause not implemented");
 	}
 
 	public void prev() {
-		SongsPanel sp = getSongsPanel();
-		sp.prev();
+		songsModel.prev();
 	}
 	
 	/**
@@ -897,13 +898,19 @@ public class Main extends PApplet {
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
 		watermark.reloadConfiguration();
+		
+		songsModel.reset();
+//		colorsModel.reset();
+//		emojisModel.reset();
+//		iconsModel.reset();
 		reset();
 		
 		registerSystemCommands();
-		fireSetupEvent();
 		
 		setDefaultScene("reload");
 		checkStartupSetList();
+		
+		fireSetupEvent();
 	}
 
 	protected void fireSetupEvent() {
@@ -1047,15 +1054,15 @@ public class Main extends PApplet {
 	protected void checkStartupSetList() {
 		ensureSetListReadyToPlay();
 		if (isSetList()) {
-			setList.play();
+			setListPlayer.playStartupSetList();
 		}
 	}
 	
 	protected void ensureSetListReadyToPlay() {
-		if (setList != null) {
-			setList.stop();
+		if (setListPlayer != null) {
+			setListPlayer.stop();
 		} else {
-			setList = new APVSetList(this);
+			setListPlayer = new APVSetListPlayer(this);
 		}
 	}
 
@@ -1270,7 +1277,7 @@ public class Main extends PApplet {
 		}
 		
 		//setList
-		APVSetList sl = getSetList();
+		APVSetListPlayer sl = getSetListPlayer();
 		if (sl != null && !sl.getSetList().isEmpty()) {
 			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(true));
 			buffer.append(sl.getConfig());

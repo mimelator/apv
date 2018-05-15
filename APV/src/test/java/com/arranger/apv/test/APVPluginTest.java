@@ -34,7 +34,7 @@ import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.SetPackList;
-import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
@@ -131,7 +131,7 @@ public abstract class APVPluginTest {
         when(parent.getCarnivalEvent()).thenReturn(new DrawShapeEvent(parent, EventTypes.CARNIVAL));
         when(parent.getStrobeEvent()).thenReturn(new CoreEvent(parent, EventTypes.STROBE));
         when(parent.getAPVChangeEvent()).thenReturn(new APVChangeEvent(parent));
-        when(parent.getSetList()).thenReturn(new APVSetList(parent));
+        when(parent.getSetListPlayer()).thenReturn(new APVSetListPlayer(parent));
         when(parent.getVersionInfo()).thenReturn(Mockito.mock(VersionInfo.class));
         when(parent.getFontHelper()).thenReturn(Mockito.mock(FontHelper.class));
         when(parent.getImageHelper()).thenReturn(Mockito.mock(ImageHelper.class));

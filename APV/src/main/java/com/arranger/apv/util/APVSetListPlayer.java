@@ -24,7 +24,7 @@ import ddf.minim.Minim;
  * *** Trigger a new marquee with the title of each song
  * 
  */
-public class APVSetList extends APVPlugin {
+public class APVSetListPlayer extends APVPlugin {
 
 	private static final String KEY = Main.FLAGS.SET_LIST_FOLDER.apvName();
 	private static final String CONFIG = KEY + " = ${apv.setPack.home}" + File.separator + "%s";
@@ -34,7 +34,7 @@ public class APVSetList extends APVPlugin {
 	private AudioPlayer currentPlayer;
 	private String relConfigDir = "songs";
 	
-	public APVSetList(Main parent){
+	public APVSetListPlayer(Main parent){
 		super(parent);
 	}
 	
@@ -47,7 +47,7 @@ public class APVSetList extends APVPlugin {
 		this.relConfigDir = relConfigDir;
 	}
 	
-	public void play() {
+	public void playStartupSetList() {
 		String configString = parent.getConfigString(KEY);
 		Path currentDir = Paths.get(".");
 		Path songFolder = currentDir.resolve(configString);
@@ -72,9 +72,6 @@ public class APVSetList extends APVPlugin {
 		
 		if (directory.isDirectory()) {
 			setList = new FileHelper(parent).getAllMp3sFromDir(directory.toPath());
-			
-			//Files.newDirectoryStream(Paths.get(directory.getAbsolutePath()), "*.mp3").forEach(s -> setList.add(s));
-			//setList.sort(null); //Natural Sort Order
 		} else {
 			setList.add(directory.toPath());
 		}

@@ -21,10 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.util.APVSetList;
+import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.util.FileHelper;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @SuppressWarnings("serial")
 public class SongsPanel extends SetPackPanel {
@@ -32,14 +30,18 @@ public class SongsPanel extends SetPackPanel {
 	private static final String SONGS_DIR = "songs";
 	private FileHelper fileHelper;
 	private JCheckBox preserveOrderCheckBox;
+	
+	private SongsModel songsModel;
+	
 	private JList<SongModel> songList;
-	private DefaultListModel<SongModel> modelList = new DefaultListModel<SongModel>();
+	private DefaultListModel<SongModel> modelList;
 	
 	public SongsPanel(Main parent) {
 		super(parent, PANELS.SONGS);
 		fileHelper = new FileHelper(parent);
+		songsModel = parent.getSongsModel();
 		
-		songList = new JList<SongModel>(modelList);
+		songList = new JList<SongModel>();
 		songList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
@@ -48,6 +50,7 @@ public class SongsPanel extends SetPackPanel {
 				}
 			}
 		});
+		syncModels(true);
 
 		JButton addButton = new JButton("Add");
 		JButton removeButton = new JButton("Remove");
@@ -61,21 +64,14 @@ public class SongsPanel extends SetPackPanel {
 				allMp3sFromDir.forEach(path -> {
 					modelList.addElement(new SongModel(path.toFile()));
 				});
+				syncModels(false);
 			}
 		});
 		
 		randomizeButton.addActionListener(evt -> randomize());
-		
-		//see if there is a current song list and add it to the modelList
-		APVSetList setList = parent.getSetList();
-		if (setList != null) {
-			setList.getSetList().forEach(songPath -> {
-				modelList.addElement(new SongModel(songPath.toFile()));
-			});
-		}
-		
 		removeButton.addActionListener(evt -> {
 		    songList.getSelectedValuesList().forEach(sm -> modelList.removeElement(sm));
+		    syncModels(false);
 		});
 		
 		JScrollPane jScrollPane = new JScrollPane(songList);
@@ -137,16 +133,27 @@ public class SongsPanel extends SetPackPanel {
 	}
 	
 	public void randomize() {
-		List<SongModel> list = new ArrayList<SongModel>();
-		IntStream.range(0,  modelList.getSize()).forEach(i -> {
-			list.add(modelList.get(i));
-		});
-		
-		Collections.shuffle(list);
-		DefaultListModel<SongModel> ml = new DefaultListModel<SongModel>();
-		list.forEach(sm -> ml.addElement(sm));
-		songList.setModel(ml);
-		modelList = ml;
+		songsModel.randomize();
+		syncModels(true);
+	}
+
+	/**
+	 * Updates our modelList with the Songs from the Song Model
+	 * if fetch is true, get the list, if not push our current list
+	 */
+	private void syncModels(boolean fetch) {
+		if (fetch) {
+			DefaultListModel<SongModel> ml = new DefaultListModel<SongModel>();
+			songsModel.getSongs().forEach(f -> ml.addElement(new SongModel(f)));
+			songList.setModel(ml);
+			modelList = ml;
+		} else {
+			List<File> songs = new ArrayList<File>();
+			IntStream.range(0,  modelList.getSize()).forEach(i -> {
+				songs.add(modelList.get(i).songFile);
+			});
+			songsModel.setSongs(songs);
+		}
 	}
 	
 	protected Path getSongsDirectoryPath(Path parentDirectory) {
@@ -168,14 +175,13 @@ public class SongsPanel extends SetPackPanel {
 			if (parentDirectory != null) {
 				//Path songFolder = getSongsDirectoryPath(parentDirectory);
 				Path relativeSongsDir = parentDirectory.getFileName().resolve(SONGS_DIR);
-				parent.getSetList().setRelativeConfigDirectory(relativeSongsDir.toString());
+				parent.getSetListPlayer().setRelativeConfigDirectory(relativeSongsDir.toString());
 			}
-			parent.play(filesToPlay, index);
+			
+			songsModel.setSongs(filesToPlay);
+			songsModel.playSong(index);
 		} else {
-			APVSetList setList = parent.getSetList();
-			if (setList != null) {
-				setList.stop();
-			}
+			songsModel.stop();
 		}
 	}
 

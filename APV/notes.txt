@@ -1,9 +1,19 @@
-BRANCH: watermark
+BRANCH: gui-unification
 https://github.com/mimelator/apv
 
 
-Better font
-The watermark painter should paint multiple text passes with different sizes and alpha
+SongsPanel
+ColorPanel
+IconsPanel
+EmojisPanel
+SetPackPanel
+
+When playing a new setPack, fire a watermark event (upper left?)
+
+remove setPackCreator from main
+remove apvwindow from main
+
+fix: Main: randomizeCurrentSetPack, getColorsPanel, getSongsPanel
 
 
 *****************************************************************************
@@ -13,13 +23,14 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Render vector graphics
 * See if aquamarine can get rid of all of the red
-* Use ShaderDemo2 to start rendering images with glsl
 * Need to unify the GUI based commands
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
+* Take a list of Commands to run at startup (Such as SHOW_WATERMARK)
 * Another animation: 
 	These are for transitions where the song name isn't known
 	Such as a hindu goddess with many limbs
@@ -28,6 +39,7 @@ TODO:
 * Document Commands (for creating Macros and Hot Keys and Agents)
 	* Add documentation in reference.conf to each plugin to describe it's arguments
 * remove CommandInterceptors and replace with something not so delicate
+* Use ShaderDemo2 to start rendering images with glsl
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components
 	
@@ -44,6 +56,8 @@ Set Pack Names could be:
 Remote Debugging:
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
 
+Opt Eclipse params:
+-Xms1024M -Xmx1024M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=4 
 
 *****************************************************************************			
 *****************************************************************************

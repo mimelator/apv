@@ -71,6 +71,7 @@ public class WatermarkPainter extends ShapeSystem {
 		g.textAlign(location.getAlignX(), location.getAlignY());
 		g.text(msg, (float)coordinatesForLocation.getX(), (float)coordinatesForLocation.getY());
 		g.endDraw();
+		g.dispose();
 		
 		return g.get();
 	}
