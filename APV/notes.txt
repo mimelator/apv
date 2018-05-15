@@ -1,20 +1,9 @@
-BRANCH: displacemnt-map
+BRANCH: watermark
 https://github.com/mimelator/apv
 
 
-the agent can activateTheNext Watermark plugin
-or the existing APVWatermark can do that on event
-
-add apv.watermarkFrames to flags
 Better font
-
-See if aquamarine can get rid of all of the red (find a Heavy Metal (cartoon))
-
-Dynamic Watermark should have an image passed
 The watermark painter should paint multiple text passes with different sizes and alpha
-
-what if watermarks had 20 /40 pictures, and just rotated between them
-they could cycle larger and smaller
 
 
 *****************************************************************************
@@ -24,16 +13,13 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* See if aquamarine can get rid of all of the red
 * Use ShaderDemo2 to start rendering images with glsl
 * Need to unify the GUI based commands
-* Displacemnt Map shaders for Guest DJ messages and WaveLength
-	* https://www.opengl.org/discussion_boards/showthread.php/181740-Bump-mapping-in-fragment-shader
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
-* Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
-** The training data going into the model would be encoded information describing all of the current scene components 
 * Another animation: 
 	These are for transitions where the song name isn't known
 	Such as a hindu goddess with many limbs
@@ -42,12 +28,16 @@ TODO:
 * Document Commands (for creating Macros and Hot Keys and Agents)
 	* Add documentation in reference.conf to each plugin to describe it's arguments
 * remove CommandInterceptors and replace with something not so delicate
+* Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
+** The training data going into the model would be encoded information describing all of the current scene components
 	
 *****************************************************************************
 *****************************************************************************
 Set Pack Names could be:
 	PurpleHaze
 	Homecoming
+	Aquamarine
+	HeavyMetal
 *****************************************************************************
 *****************************************************************************
 
