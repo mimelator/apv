@@ -66,4 +66,8 @@ mvn package
 mvn release:clean release:prepare release:perform
 *****************************************************************************
 
+*****************************************************************************
+Issues:
+APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
 
+*****************************************************************************

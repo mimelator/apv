@@ -43,6 +43,7 @@ import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
@@ -147,7 +148,7 @@ public class Main extends PApplet {
 	private SongsModel songsModel;
 //	private APVModel colorsModel;
 //	private APVModel emojisModel;
-//	private APVModel iconsModel;
+	private IconsModel iconsModel;
 	
 	
 	//Switches for runtime
@@ -240,7 +241,7 @@ public class Main extends PApplet {
 		SHADERS("shaders"),
 		SWITCHES("switches", false),
 		TRANSITIONS("transitions"),
-		WATERMARKS("watermarks");
+		WATERMARKS("watermarks", false);
 		
 		
 		public String name;
@@ -724,7 +725,7 @@ public class Main extends PApplet {
 		songsModel = new SongsModel(this);
 //		colorsModel = new SongsModel(this);
 //		emojisModel = new SongsModel(this);
-//		iconsModel = new SongsModel(this);
+		iconsModel = new IconsModel(this);
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -821,6 +822,10 @@ public class Main extends PApplet {
 		return cp;
 	}
 	
+	public IconsModel getIconsModel() {
+		return iconsModel;
+	}
+	
 	public SongsModel getSongsModel() {
 		return songsModel;
 	}
@@ -902,7 +907,7 @@ public class Main extends PApplet {
 		songsModel.reset();
 //		colorsModel.reset();
 //		emojisModel.reset();
-//		iconsModel.reset();
+		iconsModel.reset();
 		reset();
 		
 		registerSystemCommands();

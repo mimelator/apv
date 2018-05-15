@@ -1,22 +1,17 @@
 package com.arranger.apv.gui.creator;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -24,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.model.IconsModel;
+import com.arranger.apv.model.IconsModel.ImageHolder;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.ImageHelper.ICON_NAMES;
@@ -36,37 +33,22 @@ public class IconsPanel extends SetPackPanel {
 	private static final String EXPLANATION_MSG = "<html>If you see a red border, that means that the selected image isn't transparent and won't look great.</html>";
 	
 	private static final Logger logger = Logger.getLogger(IconsPanel.class.getName());
-	private static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
 
 	private FileHelper fileHelper;
-	private Map<ICON_NAMES, ImageHolder> iconMap = new HashMap<ICON_NAMES, ImageHolder>();
+	
 	private JLabel label;
 	private int index = 0;
+	private IconsModel iconsModel;
 	
 	public IconsPanel(Main parent) {
 		super(parent, PANELS.ICONS);
 		fileHelper = new FileHelper(parent);
-		
-		ICON_NAMES.VALUES.forEach(icon -> {
-			String iconFile = parent.getConfigString(icon.getFullTitle());
-			Image img = parent.loadImage(iconFile).getImage();
-			ImageHolder imageHolder = new ImageHolder(iconFile, img);
-			checkAlpha(imageHolder);
-			iconMap.put(icon, imageHolder);
-		});
-		
-		//overlay the defaults with the alternates
-		Map<ICON_NAMES, String> map = parent.getImageHelper().getAlternateMap();
-		map.entrySet().forEach(entry -> {
-			ICON_NAMES name = entry.getKey();
-			String path = entry.getValue();
-			iconMap.get(name).setFile(new File(path));
-		});
+		iconsModel = parent.getIconsModel();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		label = new JLabel();
-		label.setPreferredSize(PREFERRED_ICON_SIZE);
+		label.setPreferredSize(IconsModel.PREFERRED_ICON_SIZE);
 		label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		add(label);
@@ -104,14 +86,14 @@ public class IconsPanel extends SetPackPanel {
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		ImageHelper ih = parent.getImageHelper();
+		Map<ICON_NAMES, ImageHolder> iconMap = iconsModel.getIconMap();
 		ICON_NAMES.VALUES.forEach(icon -> {
 			ImageHolder imgHolder = iconMap.get(icon);
 			
 			PImage image = isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage();
 			String pathName = icon.getFullTitle();
-			if (isDemoActive && imgHolder.file != null && parentDirectory != null) {
-				//sprite.png = ${apv.setPack.home}/SP1/danger.png
-				pathName = "${apv.setPack.home}" + File.separator + parentDirectory.getFileName() + File.separator + imgHolder.file.getName();
+			if (isDemoActive && imgHolder.getFile() != null && parentDirectory != null) {
+				pathName = "${apv.setPack.home}" + File.separator + parentDirectory.getFileName() + File.separator + imgHolder.getFile().getName();
 			}
 			
 			ih.updateImage(icon, image, pathName);
@@ -120,11 +102,12 @@ public class IconsPanel extends SetPackPanel {
 	
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
+		Map<ICON_NAMES, ImageHolder> iconMap = iconsModel.getIconMap();
 		ICON_NAMES.VALUES.forEach(icon -> {
 			ImageHolder imgHolder = iconMap.get(icon);
-			if (imgHolder.file != null) {
-				Path srcPath = imgHolder.file.toPath();
-				Path destPath = parentDirectory.resolve(imgHolder.file.getName());
+			if (imgHolder.getFile() != null) {
+				Path srcPath = imgHolder.getFile().toPath();
+				Path destPath = parentDirectory.resolve(imgHolder.getFile().getName());
 				try {
 					Files.copy(srcPath, destPath, StandardCopyOption.REPLACE_EXISTING);
 				} catch (IOException e) {
@@ -137,19 +120,8 @@ public class IconsPanel extends SetPackPanel {
 	private void updateCurrentIcon(File newIconFile) {
 		ImageHolder imageHolder = getCurrentImageHolder();
 		imageHolder.setFile(newIconFile);
-		checkAlpha(imageHolder);
+		iconsModel.checkAlpha(imageHolder);
 		updateLabel(index);
-	}
-
-	protected void checkAlpha(ImageHolder imageHolder) {
-		boolean hasAlpha = false;
-		Image image = imageHolder.getImage();
-		
-		if (image instanceof BufferedImage) {
-			hasAlpha = ((BufferedImage)image).getColorModel().hasAlpha();
-		}
-		
-		imageHolder.setHasAlpha(hasAlpha);
 	}
 
 	private void updateLabel(int idx) {
@@ -162,7 +134,7 @@ public class IconsPanel extends SetPackPanel {
 		
 		ImageHolder imageHolder = getCurrentImageHolder();
 		label.setIcon(imageHolder.getImageIcon());
-		if (imageHolder.hasAlpha) {
+		if (imageHolder.isHasAlpha()) {
 			label.setBorder(BorderFactory.createEmptyBorder());
 		} else {
 			label.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -171,53 +143,6 @@ public class IconsPanel extends SetPackPanel {
 	
 	private ImageHolder getCurrentImageHolder() {
 		ICON_NAMES i = ICON_NAMES.VALUES.get(index);
-		return iconMap.get(i);
-	}
-	
-	private class ImageHolder {
-		File file;
-		Image image, origImage;
-		boolean hasAlpha = true;
-		
-		private ImageHolder(String configPath, Image image) {
-			this.image = image;
-			this.origImage = image;
-		}
-		
-		private ImageHolder(File file) {
-			this.file = file;
-		}
-		
-		private void setFile(File file) {
-			this.file = file;
-			image = null;
-		}
-		
-		private void setHasAlpha(boolean hasAlpha) {
-			this.hasAlpha = hasAlpha;
-		}
-		
-		private Image getImage() {
-			if (image == null) {
-				image = parent.loadImage(file.getAbsolutePath()).getImage();
-			}
-			return image;
-		}
-		
-		private PImage getOriginalImage() {
-			return new PImage(origImage);
-		}
-		
-		private PImage getPImage() {
-			return new PImage(getImage());
-		}
-		
-		private ImageIcon getImageIcon() {
-			Image img = getImage();
-			
-			//scale it
-			Image scaled = img.getScaledInstance(PREFERRED_ICON_SIZE.width, PREFERRED_ICON_SIZE.height, Image.SCALE_SMOOTH);
-			return new ImageIcon(scaled);
-		}
+		return iconsModel.getIconMap().get(i);
 	}
 }

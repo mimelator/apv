@@ -44,11 +44,11 @@ public class WatermarkPainter extends ShapeSystem {
 	
 	@Override
 	public String getConfig() {
-		// {WatermarkPainter : [${apv.watermarkFrames}, "Wavelength Rocks", LOWER_RIGHT]}
-		return String.format("{%s : [%s, \"%s\", %s, %s]}", getName(),
+		// {WatermarkPainter : [${apv.watermarkFrames}, "Wavelength Rocks", .5, LOWER_RIGHT]}
+		return String.format("{%s : [%s, %s, \"%s\", %s]}", getName(),
 							numFrames,
-							scale,
 							msg,
+							scale,
 							location.name());
 	}
 

@@ -23,11 +23,9 @@ public class SongsModel extends APVModel {
 	public SongsModel(Main parent) {
 		super(parent);
 		
-		parent.getSetupEvent().register(() -> {
-			onSetListPlayerChange();
-		});
+		reset();
 	}
-	
+
 	public void onSetListPlayerChange() {
 		reset();
 		APVSetListPlayer setList = parent.getSetListPlayer();
@@ -42,6 +40,9 @@ public class SongsModel extends APVModel {
 	public void reset() {
 		songs.clear();
 		index = 0;
+		parent.getSetupEvent().register(() -> {
+			onSetListPlayerChange();
+		});
 	}
 	
 	public void randomize() {
