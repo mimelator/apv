@@ -56,6 +56,13 @@ public class ColorsModel extends APVModel {
 		});
 	}
 	
+	public void setCurrentColors(boolean useOriginal) {
+		ColorHelper colorHelper = parent.getColorHelper();
+		colorEntries.forEach(ce -> {
+			ce.update(colorHelper, useOriginal);
+		});
+	}
+	
 	@Override
 	public void randomize() {
 		colorEntries.forEach(ce -> ce.randomize());

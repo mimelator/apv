@@ -19,7 +19,7 @@ public class EmojisPanel extends SetPackPanel {
 		textArea = new JTextArea(15, 30);
 		
 		//get the current messages
-		origMsgList = parent.getRandomMessagePainter().getMsgList();
+		origMsgList = parent.getEmojisModel().getMsgList();
 		origMsgList.forEach(msg -> {
 			textArea.append(msg);
 			textArea.append(System.lineSeparator());
@@ -29,9 +29,9 @@ public class EmojisPanel extends SetPackPanel {
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		if (isDemoActive) {
-			parent.getRandomMessagePainter().setMsgList(getMsgList());
+			parent.getEmojisModel().setMsgList(getMsgList());
 		} else {
-			parent.getRandomMessagePainter().setMsgList(origMsgList);
+			parent.getEmojisModel().setMsgList(origMsgList);
 		}
 	}
 	

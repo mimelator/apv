@@ -30,7 +30,6 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
-import com.arranger.apv.gui.creator.ColorsPanel;
 import com.arranger.apv.gui.creator.SetPackCreator;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
@@ -44,6 +43,7 @@ import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.model.ColorsModel;
+import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
@@ -148,7 +148,7 @@ public class Main extends PApplet {
 	
 	private SongsModel songsModel;
 	private ColorsModel colorsModel;
-//	private APVModel emojisModel;
+	private EmojisModel emojisModel;
 	private IconsModel iconsModel;
 	
 	
@@ -699,6 +699,11 @@ public class Main extends PApplet {
 	}
 	
 	public void setup() {
+		songsModel = new SongsModel(this);
+		colorsModel = new ColorsModel(this);
+		emojisModel = new EmojisModel(this);
+		iconsModel = new IconsModel(this);
+		
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
 		commandSystem = new CommandSystem(this);
@@ -723,10 +728,6 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		
-		songsModel = new SongsModel(this);
-		colorsModel = new ColorsModel(this);
-//		emojisModel = new SongsModel(this);
-		iconsModel = new IconsModel(this);
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -801,28 +802,11 @@ public class Main extends PApplet {
 	}
 	
 	public void randomizeCurrentSetPack() {
-//		ColorsPanel cp = getColorsPanel();
-//		cp.randomize();
-//		cp.updateForDemo(true, null);
-		
-//		SongsPanel sp = getSongsPanel();
-//		sp.randomize();
-//		sp.updateForDemo(true, null);
-		
 		colorsModel.randomize();
+		colorsModel.setCurrentColors(false);
 		
 		songsModel.randomize();
 		songsModel.playSong(0);
-	}
-	
-	public ColorsPanel getColorsPanel() {
-		ColorsPanel cp = null;
-		if (setPackCreator != null) {
-			cp = setPackCreator.getColorsPanel();
-		} else {
-			cp = new ColorsPanel(this);
-		}
-		return cp;
 	}
 	
 	public IconsModel getIconsModel() {
@@ -835,6 +819,10 @@ public class Main extends PApplet {
 	
 	public ColorsModel getColorsModel() {
 		return colorsModel;
+	}
+	
+	public EmojisModel getEmojisModel() {
+		return emojisModel;
 	}
 	
 	public void ffwd() {
@@ -913,7 +901,7 @@ public class Main extends PApplet {
 		
 		songsModel.reset();
 		colorsModel.reset();
-//		emojisModel.reset();
+		emojisModel.reset();
 		iconsModel.reset();
 		reset();
 		

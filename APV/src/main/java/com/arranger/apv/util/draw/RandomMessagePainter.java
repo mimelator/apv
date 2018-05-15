@@ -5,19 +5,19 @@ import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.util.FontHelper;
 
 import processing.core.PFont;
 
 public class RandomMessagePainter extends APVPlugin {
 	
-	private static final String MESSAGE_KEY = "apvMessages";
+	private EmojisModel model;
 	
-	private List<String> msgList = null;
-
 	public RandomMessagePainter(Main parent) {
 		super(parent);
-		initialize(parent);
+		model = parent.getEmojisModel();
+		initializeFonts(parent);
 		
 		parent.getRandomMessageEvent().register(() -> {
 			parent.sendMessage(new String[]{getMessage()});
@@ -25,33 +25,23 @@ public class RandomMessagePainter extends APVPlugin {
 	}
 	
 	public void reset() {
-		initialize(parent);
+		initializeFonts(parent);
 	}
 	
 	@Override
 	public String getConfig() {
-		return parent.getConfigurator().generateConfig(MESSAGE_KEY, msgList, false, true);
-	}
-
-	public List<String> getMsgList() {
-		return msgList;
-	}
-	
-	public void setMsgList(List<String> msgList) {
-		this.msgList = msgList;
+		return parent.getConfigurator().generateConfig(EmojisModel.MESSAGE_KEY, model.getMsgList(), false, true);
 	}
 	
 	private String getMessage() {
-		return msgList.get((int)parent.random(msgList.size()));
+		List<String> list = model.getMsgList();
+		return list.get((int)parent.random(list.size()));
 	}
 	
-	private void initialize(Main parent) {
-		msgList = parent.getConfigurator().getRootConfig().getStringList(MESSAGE_KEY);
-		
-		//prepare fonts
+	private void initializeFonts(Main parent) {
 		parent.getSetupEvent().register(() -> {
 			FontHelper fh = parent.getFontHelper();
-			PFont font = fh.createFontForText(msgList.stream().collect(Collectors.joining()));
+			PFont font = fh.createFontForText(model.getMsgList().stream().collect(Collectors.joining()));
 			if (font != null) {
 				fh.setCurrentFont(font);
 			}

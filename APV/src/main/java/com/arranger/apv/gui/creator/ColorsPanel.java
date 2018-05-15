@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import com.arranger.apv.Main;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.ColorsModel.ColorEntry;
-import com.arranger.apv.util.ColorHelper;
 
 @SuppressWarnings("serial")
 public class ColorsPanel extends SetPackPanel {
@@ -67,10 +66,7 @@ public class ColorsPanel extends SetPackPanel {
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
-		ColorHelper colorHelper = parent.getColorHelper();
-		colorsModel.getColorEntries().forEach(ce -> {
-			ce.update(colorHelper, !isDemoActive);
-		});
+		colorsModel.setCurrentColors(!isDemoActive);
 	}
 	
 	@Override
