@@ -3,8 +3,10 @@ package com.arranger.apv.gui;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.model.SetPackModel;
 import com.arranger.apv.util.FileHelper;
 
 public class SetPackLauncher extends APVFrame {
@@ -24,11 +27,13 @@ public class SetPackLauncher extends APVFrame {
 	private JList<String> list;
 	private JPanel panel;
 	private FileHelper fh;
+	private SetPackModel setPackModel;
 	private DefaultListModel<String> modelList = new DefaultListModel<String>();
 	
 	public SetPackLauncher(Main parent, boolean launchFrame) {
 		super(parent);
 		fh = new FileHelper(parent);
+		setPackModel = parent.getSetPackModel();
 		
 		parent.getSetPackList().getList().forEach(s -> {
 			modelList.addElement(s);
@@ -39,9 +44,9 @@ public class SetPackLauncher extends APVFrame {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
-					String setPackName = list.getSelectedValue();
-					if (setPackName != null && !setPackName.isEmpty()) {
-						reloadSetPack(setPackName);
+					int index = list.getSelectedIndex();
+					if (index != -1) {
+						setPackModel.launchSetPack(index);
 					}
 				}
 			}
@@ -59,11 +64,13 @@ public class SetPackLauncher extends APVFrame {
 				Arrays.asList(fc.getSelectedFiles()).forEach(file -> {
 					modelList.addElement(file.toString());
 				});
+				sync(false);
 			}
 		});
 		
 		removeButton.addActionListener(evt -> {
 			list.getSelectedValuesList().forEach(sm -> modelList.removeElement(sm));
+			sync(false);
 		});
 
 		panel = new JPanel();
@@ -85,36 +92,21 @@ public class SetPackLauncher extends APVFrame {
 	public SetPackLauncher(Main parent) {
 		this(parent, true);
 	}
+	
+	private void sync(boolean fetch) {
+		if (fetch) {
+			
+		} else {
+			List<String> setPackList = new ArrayList<String>();
+			IntStream.range(0, modelList.getSize()).forEach(i -> {
+				setPackList.add(modelList.get(i));
+			});
+			setPackModel.setSetPackList(setPackList);
+		}
+	}
 
 	@Override
 	public JPanel getPanel() {
 		return panel;
-	}
-	
-	public void update(boolean advance) {
-		if (modelList.isEmpty()) {
-			return;
-		}
-		int index = 0;
-		
-		if (advance) {
-			index = list.getSelectedIndex() + 1;
-			if (index >= modelList.size()) {
-				index = 0;
-			}
-		} else {
-			index = list.getSelectedIndex() - 1;
-			if (index < 0) {
-				index = modelList.size() - 1;
-			}
-		}
-		list.setSelectedIndex(index);
-		reloadSetPack(modelList.get(index));
-	}
-	
-	protected void reloadSetPack(String setPackName) {
-		Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
-		Path confgFile = setPackPath.resolve("application.conf");
-		parent.reloadConfiguration(confgFile.toAbsolutePath().toString());
 	}
 }

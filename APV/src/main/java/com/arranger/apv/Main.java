@@ -30,7 +30,6 @@ import com.arranger.apv.event.DrawShapeEvent;
 import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
-import com.arranger.apv.gui.creator.SetPackCreator;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
@@ -45,6 +44,7 @@ import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.model.IconsModel;
+import com.arranger.apv.model.SetPackModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
@@ -130,8 +130,6 @@ public class Main extends PApplet {
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	protected PostFX postFX;
-	protected APVWindow apvWindow;
-	protected SetPackCreator setPackCreator;
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -150,6 +148,7 @@ public class Main extends PApplet {
 	private ColorsModel colorsModel;
 	private EmojisModel emojisModel;
 	private IconsModel iconsModel;
+	private SetPackModel setPackModel;
 	
 	
 	//Switches for runtime
@@ -293,21 +292,21 @@ public class Main extends PApplet {
 		dumpStartupFlags();
 	}
 	
-	public SetPackCreator getSetPackCreator() {
-		return setPackCreator;
-	}
-
-	public void setSetPackCreator(SetPackCreator setPackCreator) {
-		this.setPackCreator = setPackCreator;
-	}
-
-	public APVWindow getApvWindow() {
-		return apvWindow;
-	}
-
-	public void setApvWindow(APVWindow apvWindow) {
-		this.apvWindow = apvWindow;
-	}
+//	public SetPackCreator getSetPackCreator() {
+//		return setPackCreator;
+//	}
+//
+//	public void setSetPackCreator(SetPackCreator setPackCreator) {
+//		this.setPackCreator = setPackCreator;
+//	}
+//
+//	public APVWindow getApvWindow() {
+//		return apvWindow;
+//	}
+//
+//	public void setApvWindow(APVWindow apvWindow) {
+//		this.apvWindow = apvWindow;
+//	}
 
 	public String getConfigValueForFlag(FLAGS flag) {
 		return getConfigurator().getRootConfig().getString(flag.apvName());
@@ -703,6 +702,7 @@ public class Main extends PApplet {
 		colorsModel = new ColorsModel(this);
 		emojisModel = new EmojisModel(this);
 		iconsModel = new IconsModel(this);
+		setPackModel = new SetPackModel(this);
 		
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
@@ -825,6 +825,10 @@ public class Main extends PApplet {
 		return emojisModel;
 	}
 	
+	public SetPackModel getSetPackModel() {
+		return setPackModel;
+	}
+	
 	public void ffwd() {
 		songsModel.ffwd();
 	}
@@ -903,6 +907,7 @@ public class Main extends PApplet {
 		colorsModel.reset();
 		emojisModel.reset();
 		iconsModel.reset();
+		setPackModel.reset();
 		reset();
 		
 		registerSystemCommands();
@@ -1152,13 +1157,11 @@ public class Main extends PApplet {
 	}
 	
 	protected void cycleSetPack(boolean advance) {
-		APVWindow gui = getApvWindow();
-		if (gui == null) {
-			//TODO fix when the GUI isn't required
-			return;
+		if (advance) {
+			getSetPackModel().launchNextSetPack();
+		} else {
+			getSetPackModel().launchPrevSetPack();
 		}
-		
-		gui.getSetPackLauncher().update(advance);
 	}
 	
 	protected void setupSystems() {

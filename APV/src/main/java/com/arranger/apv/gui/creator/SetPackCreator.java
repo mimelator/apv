@@ -69,13 +69,7 @@ public class SetPackCreator extends APVFrame {
 		btnPanel.add(createButton);
 		panel.add(btnPanel);
 		
-		createFrame(getName(), FRAME_WIDTH, FRAME_HEIGHT, panel, () -> {
-			SetPackCreator creator = parent.getSetPackCreator();
-			if (creator != null && creator.equals(this)) {
-				parent.setSetPackCreator(null);
-			}
-		});
-		parent.setSetPackCreator(this);
+		createFrame(getName(), FRAME_WIDTH, FRAME_HEIGHT, panel, () -> {});
 	}
 	
 	public ColorsPanel getColorsPanel() {

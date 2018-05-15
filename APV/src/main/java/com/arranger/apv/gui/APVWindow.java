@@ -37,7 +37,6 @@ public class APVWindow extends APVFrame {
 	private FileHelper fileHelper;
 	private JPanel statsPanel;
 	private List<APVFrame> children = new ArrayList<APVFrame>();
-	private SetPackLauncher setPackLauncher;
 	
 	public APVWindow(Main parent) {
 		super(parent);
@@ -62,17 +61,7 @@ public class APVWindow extends APVFrame {
 		
 		createFrame("APV", (int)(parent.width * .825f), (int)(parent.height * .75f), master, () -> {
 			children.forEach(c -> c.onClose());
-			APVWindow window = parent.getApvWindow();
-			if (window != null && window.equals(this)) {
-				parent.setApvWindow(null);
-			}
 		});
-		
-		parent.setApvWindow(this);
-	}
-	
-	public SetPackLauncher getSetPackLauncher() {
-		return setPackLauncher;
 	}
 	
 	protected JPanel createFlagsPanel() {
@@ -87,7 +76,7 @@ public class APVWindow extends APVFrame {
 	
 	protected JPanel createCenterPanel() {
 		APVCommandFrame apvCommandFrame = new APVCommandFrame(parent, false);
-		setPackLauncher = new SetPackLauncher(parent, false);
+		SetPackLauncher setPackLauncher = new SetPackLauncher(parent, false);
 		children.add(apvCommandFrame);
 		children.add(setPackLauncher);
 		
