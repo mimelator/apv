@@ -43,6 +43,7 @@ import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
@@ -146,7 +147,7 @@ public class Main extends PApplet {
 	private int lastScrambleFrame = 0;
 	
 	private SongsModel songsModel;
-//	private APVModel colorsModel;
+	private ColorsModel colorsModel;
 //	private APVModel emojisModel;
 	private IconsModel iconsModel;
 	
@@ -723,7 +724,7 @@ public class Main extends PApplet {
 		videoGameHelper = new VideoGameHelper(this);
 		
 		songsModel = new SongsModel(this);
-//		colorsModel = new SongsModel(this);
+		colorsModel = new ColorsModel(this);
 //		emojisModel = new SongsModel(this);
 		iconsModel = new IconsModel(this);
 		
@@ -800,13 +801,15 @@ public class Main extends PApplet {
 	}
 	
 	public void randomizeCurrentSetPack() {
-		ColorsPanel cp = getColorsPanel();
-		cp.randomize();
-		cp.updateForDemo(true, null);
+//		ColorsPanel cp = getColorsPanel();
+//		cp.randomize();
+//		cp.updateForDemo(true, null);
 		
 //		SongsPanel sp = getSongsPanel();
 //		sp.randomize();
 //		sp.updateForDemo(true, null);
+		
+		colorsModel.randomize();
 		
 		songsModel.randomize();
 		songsModel.playSong(0);
@@ -828,6 +831,10 @@ public class Main extends PApplet {
 	
 	public SongsModel getSongsModel() {
 		return songsModel;
+	}
+	
+	public ColorsModel getColorsModel() {
+		return colorsModel;
 	}
 	
 	public void ffwd() {
@@ -905,7 +912,7 @@ public class Main extends PApplet {
 		watermark.reloadConfiguration();
 		
 		songsModel.reset();
-//		colorsModel.reset();
+		colorsModel.reset();
 //		emojisModel.reset();
 		iconsModel.reset();
 		reset();

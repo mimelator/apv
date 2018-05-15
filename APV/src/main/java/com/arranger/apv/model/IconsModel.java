@@ -55,6 +55,11 @@ public class IconsModel extends APVModel {
 		});
 	}
 	
+	@Override
+	public void randomize() {
+		//Do nothing
+	}
+
 	public void checkAlpha(ImageHolder imageHolder) {
 		boolean hasAlpha = false;
 		Image image = imageHolder.getImage();

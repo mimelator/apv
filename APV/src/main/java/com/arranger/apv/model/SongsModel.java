@@ -45,6 +45,7 @@ public class SongsModel extends APVModel {
 		});
 	}
 	
+	@Override
 	public void randomize() {
 		Collections.shuffle(songs);
 		index = 0;

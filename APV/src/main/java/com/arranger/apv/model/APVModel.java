@@ -10,4 +10,5 @@ public abstract class APVModel extends APVPlugin {
 	}
 
 	public abstract void reset();
+	public abstract void randomize();
 }
