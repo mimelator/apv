@@ -1,7 +1,24 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-LifecycleSystem's should reset all particles on color changes
+create a setpack from a csv
+
+Might be nice to do this from inside APV
+--> Command line tool / Headless 
+
+template application.conf
+
+Folder:
+	application.conf
+	Songs:
+
+	Colors:
+
+	Icons:
+
+	Messages:
+
+
 
 
 *****************************************************************************
@@ -11,7 +28,6 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* See if aquamarine can get rid of all of the red
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
 * Render vector graphics
