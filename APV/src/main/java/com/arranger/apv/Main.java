@@ -481,6 +481,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.LOCATION);
 	}
 	
+	public CoreEvent getColorChangeEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.COLOR_CHANGE);
+	}
+	
 	public boolean isMonitoringEnabled() {
 		return getConfigBoolean(FLAGS.MONITORING_ENABLED.apvName());	
 	}
@@ -1249,6 +1253,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.WATERMARK, new DrawShapeEvent(this, EventTypes.WATERMARK));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
+		eventMap.put(EventTypes.COLOR_CHANGE, new CoreEvent(this, EventTypes.COLOR_CHANGE));
 	}
 	
 	

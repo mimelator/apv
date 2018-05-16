@@ -64,11 +64,15 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	@Override
 	public void setup() {
 		shouldCreateNewObjectsEveryDraw = true;
+		updateCustomColor();
+		super.setup();
+	}
+
+	protected void updateCustomColor() {
 		if (useCustomColor) {
 			APV<ColorSystem> colSystem = parent.getColors();
 			colorSystem = colSystem.getFirstInstanceOf(OscillatingColor.class);
 		}
-		super.setup();
 	}
 
 	public void draw() {
@@ -80,7 +84,7 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	
 	@Override
 	protected void reset() {
-		
+		updateCustomColor();
 	}
 
 	@Override

@@ -61,6 +61,7 @@ public class ColorsModel extends APVModel {
 		colorEntries.forEach(ce -> {
 			ce.update(colorHelper, useOriginal);
 		});
+		parent.getColorChangeEvent().fire();
 	}
 	
 	@Override

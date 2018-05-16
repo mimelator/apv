@@ -1,7 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
+LifecycleSystem's should reset all particles on color changes
 
 
 *****************************************************************************
@@ -11,14 +11,14 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Render vector graphics
 * See if aquamarine can get rid of all of the red
-* When playing a new setPack, fire a watermark event (upper left?)
 * Create an App that takes a list of YouTube Videos and downloads them to a directory
 	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
+* Render vector graphics
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
 * Take a list of Commands to run at startup (Such as SHOW_WATERMARK)
+* When playing a new setPack, fire a watermark event (upper left?)
 * Another animation: 
 	These are for transitions where the song name isn't known
 	Such as a hindu goddess with many limbs

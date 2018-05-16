@@ -34,6 +34,10 @@ public abstract class LifecycleSystem extends ShapeSystem {
 		this.numParticles = numParticles;
 		
 		alpha = parent.getDefaultShapeSystemAlpha();
+		
+		parent.getSetupEvent().register(() -> {
+			parent.getColorChangeEvent().register(() -> onFactoryUpdate());
+		});
 	}
 	
 	@Override

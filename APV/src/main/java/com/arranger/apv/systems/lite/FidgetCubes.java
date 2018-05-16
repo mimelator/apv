@@ -16,6 +16,7 @@ import processing.core.PVector;
  */
 public class FidgetCubes extends LiteShapeSystem {
 
+	private static final double SPIN_DECAY_RATE = 0.97;
 	private static final double BOX_SPACER = 1.5;
 	private static final int DISTURBANCE_RANGE_LOW = 2;
 	private static final int DISTURBANCE_RANGE_HIGH = 7;
@@ -66,7 +67,7 @@ public class FidgetCubes extends LiteShapeSystem {
 		float [] hsbvals = new float[3];
 		Color cc = parent.getColor().getCurrentColor();
 		Color.RGBtoHSB(cc.getRed(), cc.getGreen(), cc.getBlue(), hsbvals);
-		
+		float targetHue = hsbvals[0] * 255;
 		
 		float disturbanceRange = BOX_SIZE * parent.oscillate(DISTURBANCE_RANGE_LOW, 
 												DISTURBANCE_RANGE_HIGH, 
@@ -85,17 +86,15 @@ public class FidgetCubes extends LiteShapeSystem {
 			}
 
 			c.rot.x += c.spinX;
-			c.spinX *= 0.97;
+			c.spinX *= SPIN_DECAY_RATE;
 
 			c.rot.y += c.spinY;
-			c.spinY *= 0.97;
+			c.spinY *= SPIN_DECAY_RATE;
 
-			c.hueValue = hsbvals[0];	//get the hue from the current color
+			c.hueValue = targetHue;	
 			
 			c.hueValue += (PApplet.abs(c.spinX) + PApplet.abs(c.spinY)) * 0.05;
-			if (c.hueValue > 255) {
-				c.hueValue = 0;
-			}
+			c.hueValue %= 255;
 
 			parent.pushMatrix();
 			parent.translate(c.pos.x, c.pos.y, 0);

@@ -23,7 +23,6 @@ public class GridShapeSystem extends LiteShapeSystem {
 	float maxDistance;
 	int space;
 	int shapeSize;
-	Color col;
 	
 	public GridShapeSystem(Main parent) {
 		this(parent, SPACER, LARGE_STROKE_WEIGHT);
@@ -48,14 +47,14 @@ public class GridShapeSystem extends LiteShapeSystem {
 	@Override
 	public void setup() {
 		distances = new float[parent.width][parent.height];
-		
-		APV<ColorSystem> colSystem = parent.getColors();
-		ColorSystem oscColor = colSystem.getFirstInstanceOf(OscillatingColor.class);
-		col = oscColor.getCurrentColor();
 	}
 
 	@Override
 	public void draw() {
+		APV<ColorSystem> colSystem = parent.getColors();
+		ColorSystem oscColor = colSystem.getFirstInstanceOf(OscillatingColor.class);
+		Color col = oscColor.getCurrentColor();
+		
 		int time = parent.millis();
 		parent.stroke(255);
 		Point2D pt = parent.getCurrentPoint();

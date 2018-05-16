@@ -18,13 +18,16 @@ protected List<LiteCycleObj> lcObjects  = new ArrayList<LiteCycleObj>();
 	protected int numNewObjects;
 	
 	public LiteCycleShapeSystem(Main parent) {
-		super(parent);
-		numNewObjects = Main.NUMBER_PARTICLES;
+		this(parent, Main.NUMBER_PARTICLES);
 	}
 
 	public LiteCycleShapeSystem(Main parent, int numNewObjects) {
 		super(parent);
 		this.numNewObjects = numNewObjects;
+		
+		parent.getSetupEvent().register(() -> {
+			parent.getColorChangeEvent().register(() -> onFactoryUpdate());
+		});
 	}
 	
 	@Override
