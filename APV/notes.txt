@@ -1,25 +1,72 @@
-BRANCH: master
+BRANCH: cl-tools
 https://github.com/mimelator/apv
 
-create a setpack from a csv
+WL TODO:
 
-Might be nice to do this from inside APV
---> Command line tool / Headless 
-
-template application.conf
-
-Folder:
-	application.conf
-	Songs:
-
-	Colors:
-
-	Icons:
-
-	Messages:
+	Create new image
+		Multipart upload
+		install Homebrew and then brew install ImageMagick
+			convert Unknown-3.png -fuzz 20% -transparent white result.png
 
 
+	Create new setpack
+	Create new dj
+	
+https://mongodb.github.io/morphia/	
+GenerateSetPack.js	
+	connect to db
+	look up setpack
+	generate an application.conf
+		by creating models for:
+			IconsModel
+			ColorsModel
+			EmojisModel
+			SongsModel
+		SetPackCreator#createSetPack  --> Needs to be converted to a Command.SETPACK_CREATOR
+		for each song, need to run ytld
+		
+		
+	What's the bridge from the database script and the java code	
+	Two way mapping into java and do from apv:
+		http://mongodb.github.io/morphia/1.3/getting-started/quick-tour/
+		Need to create java domain models for all the models in the database
+		This is also important for 24/7 mode (round-the-clock) where APV needs to query the db
+			for each next song
+			
+		Files can be stored in a variety of directory structures. 
+		Probably not best to be stored in a flat structure
+		Could be stored by:
+			dj / setpack / songs	
+		
+		
+		need flags for:
+			mongodb URL
+			filenames in the db... Are they relative? if so need to change the web app
+			APV_HOME = /Users/markimel/apv 
+			mongodb://localhost:27017/test
+	
+*****************************************************************************	
+Project Timeline:
+New Job = June 18th? (or 25)
+ NJ - 7 days: Go Live June 11
+ NJ - 14 days: 12 hour stream June 4
+ NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
+*****************************************************************************
+ 
+***************************************************************************** 
+Current Reference for web apps
+http://www.react.express
+https://reactjs.org/community/examples.html
+https://docs.mongodb.com/manual/reference/mongo-shell
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data/flow_control_using_async
+https://codelabs.developers.google.com/codelabs/amp-beautiful-interactive-canonical/index.html
+***************************************************************************** 
 
+*****************************************************************************
+Setup a softlink inside of public to the apv directory:
+cd git/wl/public
+ln -s ~/apv apv
+*****************************************************************************
 
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
@@ -28,8 +75,11 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Create an App that takes a list of YouTube Videos and downloads them to a directory
-	 * https://askubuntu.com/questions/178481/how-to-download-an-mp3-track-from-a-youtube-video
+* Window blinds background
+* Automatic image processing
+	* background removal: https://rorodata.com/showcase/background-removal/
+    * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur
+* All backgrounds should be able to rotate around the center of the screen (slowly is fine)
 * Render vector graphics
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
@@ -54,6 +104,12 @@ Set Pack Names could be:
 	Homecoming
 	Aquamarine
 	HeavyMetal
+	
+Messages:
+	Can you keep up with me?
+	Still there?
+	You're doing great.
+	That's the way to race...	
 *****************************************************************************
 *****************************************************************************
 
