@@ -3,38 +3,17 @@ https://github.com/mimelator/apv
 
 
 Timeline:
-
-	Tuesday 22nd: Write a script to read enough data to implement one application.conf
-	colors not setting properly
-	
-	apv.setList = true
-	apv.setListFolder = ${apv.setPack.home}/Omega3/songs
-		
-	
 	Wednesday 22nd: Play a series of setpacks based on data entered in DB
 	Thursday 23rd: Build Docker Image
 	Friday 24th: Buy computer and install Docker
-	
-	sp = db.setpacks;
-	sp.updateMany({}, { $set:{ folder:""  } });
-	
-	
-Every DJ Setpack should contain:
-	5+ songs
-		ANything less than 10 songs will be augmented with one of my songs
-	3+ colors
-	3+ images
-	3+ messages
-	
-	This will create 1 setpack
-		setpackname
-		1 dj
-			created on demand
-		10+ song
-		3+ colors
-		3+ images
-		3+ messages	
 
+
+*****************************************************************************
+mongo shell
+sp = db.setpacks;
+sp.updateMany({}, { $set:{ folder:""  } });
+	
+*****************************************************************************	
 	
 *****************************************************************************	
 Dockerize node, mongo, youtube-dl, imagemagick
