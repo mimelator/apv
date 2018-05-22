@@ -20,23 +20,11 @@ public class CommandSystem extends APVPlugin {
 	protected Map<Command, List<RegisteredCommandHandler>> registeredCommands = new HashMap<Command, List<RegisteredCommandHandler>>();
 	protected Map<String, Command> keyBindingMap = new HashMap<String, Command>();
 	
-	private MessageModeInterceptor messageModeInterceptor;
-	private SceneSelectInterceptor sceneSelectInterceptor;
 	private RegisteredCommandHandler lastCommand;
 	
 	public CommandSystem(Main parent) {
 		super(parent);
-		messageModeInterceptor = new MessageModeInterceptor(parent);
-		sceneSelectInterceptor = new SceneSelectInterceptor(parent);
 		parent.registerMethod("keyEvent", this);
-	}
-
-	public MessageModeInterceptor getMessageModeInterceptor() {
-		return messageModeInterceptor;
-	}
-	
-	public SceneSelectInterceptor getSceneSelectInterceptor() {
-		return sceneSelectInterceptor;
 	}
 	
 	/**
@@ -44,8 +32,7 @@ public class CommandSystem extends APVPlugin {
 	 * Reset the interceptors
 	 */
 	public void reset() {
-		messageModeInterceptor.reset();
-		sceneSelectInterceptor.reset();
+		
 	}
 	
 	public void invokeScramble(String source) {
@@ -78,15 +65,6 @@ public class CommandSystem extends APVPlugin {
 	
 	public void keyEvent(KeyEvent keyEvent) {
 		if (keyEvent.getAction() != KeyEvent.RELEASE) {
-			return;
-		}
-		
-		char charKey = keyEvent.getKey();
-		if (messageModeInterceptor.intercept(charKey)) {
-			return;
-		}
-		
-		if (sceneSelectInterceptor.intercept(charKey)) {
 			return;
 		}
 		
@@ -129,15 +107,7 @@ public class CommandSystem extends APVPlugin {
 	public static interface MessageHandler {
 		public void onMessage(String msg);
 	}
-	
-	public String [] getInterceptorHelpMessages() {
-		String [] results = new String[] {
-			messageModeInterceptor.getHelpText(),
-			sceneSelectInterceptor.getHelpText(),	
-		};
-		return results;
-	}
-	
+
 	public Map<Command, List<RegisteredCommandHandler>> getCommands() {
 		return new HashMap<Command, List<RegisteredCommandHandler>>(registeredCommands);
 	}

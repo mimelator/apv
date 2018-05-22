@@ -112,10 +112,6 @@ public class Scene extends ShapeSystem {
 		this.cc.locSys = ls;
 	}
 	
-	public char getHotKey() {
-		return '0';
-	}
-	
 	@Override
 	public String getConfig() {
 		if (isLikedScene()) {

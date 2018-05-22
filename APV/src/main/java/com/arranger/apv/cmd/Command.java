@@ -23,10 +23,10 @@ public enum Command {
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
-	SWITCH_PULSE_LISTENER(';', "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
-	SWITCH_WATERMARK(':', "WatermarkSwitch", "Enables/Disables watermarks"),
-	SWITCH_FRAME_STROBER('8', "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
-	SWITCH_CONTINUOUS_CAPTURE('9', "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
+	SWITCH_PULSE_LISTENER(DeadCommandCode.next(), "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
+	SWITCH_WATERMARK(DeadCommandCode.next(), "WatermarkSwitch", "Enables/Disables watermarks"),
+	SWITCH_FRAME_STROBER(DeadCommandCode.next(), "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
+	SWITCH_CONTINUOUS_CAPTURE(DeadCommandCode.next(), "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
 	
 	SWITCH_FOREGROUNDS('1', "ForegroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the foregrounds", false),
 	SWITCH_BACKGROUNDS('2', "BackgroundsSwitch", "Enables/Disables/Freezes(use <CMD>) the backgrounds", false),
@@ -48,7 +48,7 @@ public enum Command {
 	CYCLE_SHADERS('s', "Shader", "Cycles through the shaders (SHIFT and ALT options)"),
 	CYCLE_CONTROL_MODE('z', "Cycle Control Mode", "Cycles between all the available Control Modes (SHIFT)"),
 	CYCLE_SET_PACK('k', "Cycle Set Pack", "Cycles between all the available Set Packs (SHIFT)"),
-	CYCLE_WATERMARK(',', "Next Watermark", "Queues up the next Watermark"),
+	CYCLE_WATERMARK(DeadCommandCode.next(), "Next Watermark", "Queues up the next Watermark"),
 	
 	//Typical commands
 	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
@@ -64,17 +64,17 @@ public enum Command {
 	AUDIO_INC('+', "Audio++", "Increases the audio sensitivity"),
 	AUDIO_DEC('-', "Audio--", "Decreases the audio sensitivity"),
 	PARTICLE_SCALAR('p', "Particle Scalar", "Increases/Decreases Number Particles by a %"),
-	FRAME_STROBER_STROBE_FRAMES('a', "FrameStrober Strobe Frame", "Increases/Decreases the frames to strobe (hold shift to decrease)"),
+	FRAME_STROBER_STROBE_FRAMES(DeadCommandCode.next(), "FrameStrober Strobe Frame", "Increases/Decreases the frames to strobe (hold shift to decrease)"),
 	GRAVITY('g', "Gravity", "Increases/Decreases Gravity"),
-	PULSE_SKIP_INC(']', "Pulse++", "Increases the number of pulses to skip in auto/perlin mode"),
-	PULSE_SKIP_DEC('[', "Pulse--", "Decrease the number of pulses to skip in auto/perlin mode"),
-	TRANSITION_FRAMES_INC('}', "Transition Frames", "Increments the number of frames for each transition"),
-	TRANSITION_FRAMES_DEC('{', "Transition Frames", "Decrements the number of frames for each transition "),
-	WALKER_INC('>', "Walker++", "Increases the stride of the Command Walker in Perlin mode"),
-	WALKER_DEC('<', "Walker--", "Decrease the stride of the Command Walker in Perlin mode"),
-	QUIET_WINDOW_LENGTH_INC(')', "QuietWindow++", "Increases the duration of the Quiet Window in Snap mode"),
-	QUIET_WINDOW_LENGTH_DEC('(', "QuietWindow--", "Decreases the duration of the Quiet Window in Snap mode"),
-	SHOW_WATERMARK('.', "Show Watermark", "Displays the watermark"),
+	PULSE_SKIP_INC(DeadCommandCode.next(), "Pulse++", "Increases the number of pulses to skip in auto/perlin mode"),
+	PULSE_SKIP_DEC(DeadCommandCode.next(), "Pulse--", "Decrease the number of pulses to skip in auto/perlin mode"),
+	TRANSITION_FRAMES_INC(DeadCommandCode.next(), "Transition Frames", "Increments the number of frames for each transition"),
+	TRANSITION_FRAMES_DEC(DeadCommandCode.next(), "Transition Frames", "Decrements the number of frames for each transition "),
+	WALKER_INC(DeadCommandCode.next(), "Walker++", "Increases the stride of the Command Walker in Perlin mode"),
+	WALKER_DEC(DeadCommandCode.next(), "Walker--", "Decrease the stride of the Command Walker in Perlin mode"),
+	QUIET_WINDOW_LENGTH_INC(DeadCommandCode.next(), "QuietWindow++", "Increases the duration of the Quiet Window in Snap mode"),
+	QUIET_WINDOW_LENGTH_DEC(DeadCommandCode.next(), "QuietWindow--", "Decreases the duration of the Quiet Window in Snap mode"),
+	SHOW_WATERMARK(DeadCommandCode.next(), "Show Watermark", "Displays the watermark"),
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
@@ -112,7 +112,7 @@ public enum Command {
 	MACRO_8('8', "", "", Event.CTRL),
 	
 	//DB Commands
-	DB_CREATE_SET_PACK_FOLDERS('=', "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them");
+	DB_CREATE_SET_PACK_FOLDERS(DeadCommandCode.next(), "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them");
 	
 	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	

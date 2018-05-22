@@ -3,6 +3,16 @@ https://github.com/mimelator/apv
 
 
 Timeline:
+Todo:
+	icon upload size must be restricted, or scaled down automatically.  either is fine
+		Not sure how it crashed the server
+	
+	need a command that on startup loads all of the setpacks in the setpack directory
+		and plays the first one
+		
+	DONE: need to remove some older antiquated commands
+			
+
 	Wednesday 22nd: Play a series of setpacks based on data entered in DB
 	Thursday 23rd: Build Docker Image
 	Friday 24th: Buy computer and install Docker
@@ -59,6 +69,7 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Tree scene?
 * Window blinds background
 * Automatic image processing
 	* background removal: https://rorodata.com/showcase/background-removal/
@@ -76,7 +87,6 @@ TODO:
 * Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
 * Document Commands (for creating Macros and Hot Keys and Agents)
 	* Add documentation in reference.conf to each plugin to describe it's arguments
-* remove CommandInterceptors and replace with something not so delicate
 * Use ShaderDemo2 to start rendering images with glsl
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components

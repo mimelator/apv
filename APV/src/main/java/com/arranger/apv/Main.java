@@ -49,6 +49,7 @@ import com.arranger.apv.model.SetPackModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
+import com.arranger.apv.scene.Marquee;
 import com.arranger.apv.scene.Scene;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
@@ -67,6 +68,7 @@ import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.StarPainter;
+import com.arranger.apv.util.draw.TextDrawHelper;
 import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
@@ -868,7 +870,12 @@ public class Main extends PApplet {
 	}
 	
 	public void sendMarqueeMessage(String message) {
-		getCommandSystem().getSceneSelectInterceptor().showMessageSceneWithText(message);
+		Marquee marquee = (Marquee)scenes.getFirstInstanceOf(Marquee.class);
+		marquee.setText(message);
+		setNextScene(marquee, "marquee");
+		
+		//Send the message to the lower right for awhile
+		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
 	@Override
@@ -1213,7 +1220,6 @@ public class Main extends PApplet {
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
 		watermark = (APVWatermark) systemMap.get(SYSTEM_NAMES.WATERMARKS);
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	protected void configureSwitches() {

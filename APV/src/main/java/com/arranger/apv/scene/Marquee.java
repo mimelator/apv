@@ -31,24 +31,12 @@ public class Marquee extends Animation {
 
 	public Marquee(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, "Hello World"));
-		
-		parent.getSetupEvent().register(() -> {
-			parent.getCommandSystem().getMessageModeInterceptor().registerMessageListeners(msg -> {
-				text = msg.trim();
-				reset();
-			});
-		});
 	}
 	
 	public void setText(String text) {
 		this.text = text;
 	}
 	
-	@Override
-	public char getHotKey() {
-		return 'm';
-	}
-
 	@Override
 	public String getConfig() {
 		//{Marquee: ["He's trying!!!"]}

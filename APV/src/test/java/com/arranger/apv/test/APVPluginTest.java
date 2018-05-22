@@ -23,8 +23,6 @@ import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
 import com.arranger.apv.cmd.CommandSystem;
-import com.arranger.apv.cmd.MessageModeInterceptor;
-import com.arranger.apv.cmd.SceneSelectInterceptor;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.CoreEvent;
@@ -139,9 +137,6 @@ public abstract class APVPluginTest {
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
         when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));
-        
-        when(commandSystem.getMessageModeInterceptor()).thenReturn(Mockito.mock(MessageModeInterceptor.class));
-        when(commandSystem.getSceneSelectInterceptor()).thenReturn(Mockito.mock(SceneSelectInterceptor.class));
         when(sceneList.getConfig()).thenCallRealMethod();
     }
     

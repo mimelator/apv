@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.cmd.SceneSelectInterceptor;
 import com.arranger.apv.util.JSONQuoter;
 import com.typesafe.config.ConfigList;
 
@@ -25,14 +24,14 @@ public class SetPackList extends APVPlugin {
 			ConfigList configList = parent.getConfigurator().getRootConfig().getList(SET_PACK_LIST);
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
-			// for each string register a custom action
-			SceneSelectInterceptor ssi = parent.getCommandSystem().getSceneSelectInterceptor();
-
-			stringList.stream().forEach(s -> {
-				ssi.registerScene(c -> {
-					ssi.showMessageSceneWithText(s);
-				});
-			});
+//			// for each string register a custom action
+//			SceneSelectInterceptor ssi = parent.getCommandSystem().getSceneSelectInterceptor();
+//
+//			stringList.stream().forEach(s -> {
+//				ssi.registerScene(c -> {
+//					ssi.showMessageSceneWithText(s);
+//				});
+//			});
 		});
 	}
 	

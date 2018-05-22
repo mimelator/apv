@@ -64,9 +64,9 @@ public class HelpDisplay extends APVPlugin implements TextSupplier {
 			});
 		});
 		
-		for (String m : p.getCommandSystem().getInterceptorHelpMessages()) {
-			messages.add(m);
-		}
+//		for (String m : p.getCommandSystem().getInterceptorHelpMessages()) {
+//			messages.add(m);
+//		}
 		
 		List<String> sortedMessages = new ArrayList<String>(messages);
 		sortedMessages.sort(Comparator.naturalOrder());

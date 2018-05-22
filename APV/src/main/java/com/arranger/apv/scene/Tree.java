@@ -27,11 +27,6 @@ public class Tree extends Animation {
 	}
 	
 	@Override
-	public char getHotKey() {
-		return 't';
-	}
-	
-	@Override
 	protected void reset() {
 		tracker = null;
 		paths.clear();
