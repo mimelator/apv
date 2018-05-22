@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.SongEntity;
 import com.arranger.apv.util.APVSetListPlayer;
+import com.arranger.apv.util.FileHelper;
 
 /**
  * SongsModel contains the currently chosen songs
@@ -22,7 +24,6 @@ public class SongsModel extends APVModel {
 
 	public SongsModel(Main parent) {
 		super(parent);
-		
 		reset();
 	}
 
@@ -51,6 +52,21 @@ public class SongsModel extends APVModel {
 		index = 0;
 	}
 
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void loadFromEntities(List entities) {
+		songs.clear();
+		index = 0;
+		FileHelper fh = new FileHelper(parent);
+		List<SongEntity> seList = (List<SongEntity>)entities;
+		seList.forEach(se -> {
+			String fullPath = fh.getFullPath(se.getFilename());
+			songs.add(new File(fullPath));
+		});
+		
+		playSong(0);
+	}
+	
 	public void playSong(int index) {
 		if (index >= songs.size()) {
 			index = 0;

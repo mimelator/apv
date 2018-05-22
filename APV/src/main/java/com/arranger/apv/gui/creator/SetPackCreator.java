@@ -3,8 +3,6 @@ package com.arranger.apv.gui.creator;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,12 +15,10 @@ import javax.swing.JTabbedPane;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.gui.APVFrame;
-import com.arranger.apv.util.Configurator;
+import com.arranger.apv.model.Creator;
 import com.arranger.apv.util.FileHelper;
 
 public class SetPackCreator extends APVFrame {
-
-	public static final String SET_PACK_HOME_KEY = "apv.setPack.home";
 	
 	private static final Logger logger = Logger.getLogger(SetPackCreator.class.getName());
 	
@@ -113,30 +109,21 @@ public class SetPackCreator extends APVFrame {
 	}
 	
 	private void createSetPack(File parentDirectory, String setPackName) throws IOException {
-		Path parentDirectoryPath = parentDirectory.toPath();
-		parentDirectoryPath = parentDirectoryPath.resolve(setPackName);
-		Files.createDirectories(parentDirectoryPath);
-		final Path parentFolderPath = parentDirectoryPath;
-		
-		panels.forEach(pnl -> {
-			pnl.updateForDemo(true, parentFolderPath);
-		});
-		
-		String referenceText = parent.getConfigurator().generateCurrentConfig();
-		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
-		
-		String instructions = String.format("#java -Dconfig.file=%s/application.conf -jar apv.jar", setPackName) + System.lineSeparator();
-		String setPackHome = String.format("%s = %s", SET_PACK_HOME_KEY, parentDirectory.getAbsolutePath()) + System.lineSeparator();
-
-		String result = String.format("%s %s %s", instructions, setPackHome, referenceText);
-		Files.write(referencePath, result.getBytes());
-		
-		panels.forEach(pnl -> {
-			try {
-				pnl.createFilesForSetPack(parentFolderPath);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		});
+		new Creator(parent).createSetPack(parentDirectory, setPackName, 
+				(isDemoActive, pd) -> {
+					panels.forEach(pnl -> {
+						pnl.updateForDemo(true, pd);
+					});
+				},
+				
+				(pd) -> {
+					panels.forEach(pnl -> {
+						try {
+							pnl.createFilesForSetPack(pd);
+						} catch (IOException e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+						}
+					});
+				});
 	}
 }

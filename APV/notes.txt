@@ -1,49 +1,54 @@
 BRANCH: cl-tools
 https://github.com/mimelator/apv
 
-WL TODO:
 
-	Create new image
-		Multipart upload
-		install Homebrew and then brew install ImageMagick
-			convert Unknown-3.png -fuzz 20% -transparent white result.png
+Timeline:
 
-
-	Create new setpack
-	Create new dj
+	Tuesday 22nd: Write a script to read enough data to implement one application.conf
+	colors not setting properly
 	
-https://mongodb.github.io/morphia/	
-GenerateSetPack.js	
-	connect to db
-	look up setpack
-	generate an application.conf
-		by creating models for:
-			IconsModel
-			ColorsModel
-			EmojisModel
-			SongsModel
-		SetPackCreator#createSetPack  --> Needs to be converted to a Command.SETPACK_CREATOR
-		for each song, need to run ytld
+	apv.setList = true
+	apv.setListFolder = ${apv.setPack.home}/Omega3/songs
 		
-		
-	What's the bridge from the database script and the java code	
-	Two way mapping into java and do from apv:
-		http://mongodb.github.io/morphia/1.3/getting-started/quick-tour/
-		Need to create java domain models for all the models in the database
-		This is also important for 24/7 mode (round-the-clock) where APV needs to query the db
-			for each next song
-			
-		Files can be stored in a variety of directory structures. 
-		Probably not best to be stored in a flat structure
-		Could be stored by:
-			dj / setpack / songs	
-		
-		
-		need flags for:
-			mongodb URL
-			filenames in the db... Are they relative? if so need to change the web app
-			APV_HOME = /Users/markimel/apv 
-			mongodb://localhost:27017/test
+	
+	Wednesday 22nd: Play a series of setpacks based on data entered in DB
+	Thursday 23rd: Build Docker Image
+	Friday 24th: Buy computer and install Docker
+	
+	sp = db.setpacks;
+	sp.updateMany({}, { $set:{ folder:""  } });
+	
+	
+Every DJ Setpack should contain:
+	5+ songs
+		ANything less than 10 songs will be augmented with one of my songs
+	3+ colors
+	3+ images
+	3+ messages
+	
+	This will create 1 setpack
+		setpackname
+		1 dj
+			created on demand
+		10+ song
+		3+ colors
+		3+ images
+		3+ messages	
+
+	
+*****************************************************************************	
+Dockerize node, mongo, youtube-dl, imagemagick
+
+https://semaphoreci.com/community/tutorials/dockerizing-a-node-js-web-application
+https://medium.com/statuscode/dockerising-a-node-js-and-mongodb-app-d22047e2806f
+https://docs.docker.com/v1.6/examples/nodejs_web_app/
+https://docs.docker.com/v1.11/engine/examples/mongodb/
+https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+https://buddy.works/guides/how-dockerize-node-application
+using apt-get in docker: https://forums.docker.com/t/not-able-to-install-anything-with-apt-get-on-a-docker-container/1595
+https://medium.com/@sunnykay/docker-development-workflow-node-express-mongo-4bb3b1f7eb1e
+*****************************************************************************		
+	
 	
 *****************************************************************************	
 Project Timeline:
@@ -129,5 +134,5 @@ mvn release:clean release:prepare release:perform
 *****************************************************************************
 Issues:
 APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
-
+WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
 *****************************************************************************

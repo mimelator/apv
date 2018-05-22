@@ -1,4 +1,4 @@
-package com.arranger.apv.db;
+package com.arranger.apv.db.entity;
 
 import java.util.List;
 

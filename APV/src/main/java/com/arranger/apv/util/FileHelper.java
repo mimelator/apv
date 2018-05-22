@@ -56,7 +56,11 @@ public class FileHelper extends APVPlugin {
 
 	public String getFullPath(String fileName) {
 		try {
-			return rootFolder.getCanonicalPath() + File.separator + fileName;
+			if (fileName.startsWith(File.separator)) {
+				return rootFolder.getCanonicalPath() + fileName;
+			} else {
+				return rootFolder.getCanonicalPath() + File.separator + fileName;
+			}
 		} catch (Exception e) {
 			debug(e);
 			return fileName;

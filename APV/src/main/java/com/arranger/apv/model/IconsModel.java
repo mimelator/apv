@@ -5,11 +5,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.ImageEntity;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.ImageHelper.ICON_NAMES;
 
 import processing.core.PImage;
@@ -22,7 +25,6 @@ public class IconsModel extends APVModel {
 	
 	public IconsModel(Main parent) {
 		super(parent);
-		
 		reset();
 	}
 	
@@ -58,6 +60,17 @@ public class IconsModel extends APVModel {
 	@Override
 	public void randomize() {
 		//Do nothing
+	}
+	
+	@Override
+	@SuppressWarnings("rawtypes")
+	public void loadFromEntities(List entities) {
+		FileHelper fh = new FileHelper(parent);
+		getIconMap().values().forEach(ih -> {
+			ImageEntity ie = (ImageEntity)getRandomEntity(entities);
+			String fullPath = fh.getFullPath(ie.getFilename());
+			ih.setFile(new File(fullPath));
+		});
 	}
 
 	public void checkAlpha(ImageHolder imageHolder) {

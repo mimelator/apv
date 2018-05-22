@@ -1,4 +1,4 @@
-package com.arranger.apv.db;
+package com.arranger.apv.db.entity;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;

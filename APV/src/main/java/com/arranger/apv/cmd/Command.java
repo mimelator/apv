@@ -109,7 +109,10 @@ public enum Command {
 	MACRO_5('5', "", "", Event.CTRL),
 	MACRO_6('6', "", "", Event.CTRL),
 	MACRO_7('7', "", "", Event.CTRL),
-	MACRO_8('8', "", "", Event.CTRL);
+	MACRO_8('8', "", "", Event.CTRL),
+	
+	//DB Commands
+	DB_CREATE_SET_PACK_FOLDERS('=', "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them");
 	
 	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	

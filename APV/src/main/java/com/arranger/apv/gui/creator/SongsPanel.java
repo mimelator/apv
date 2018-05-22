@@ -4,7 +4,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -21,13 +20,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.model.Creator;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.util.FileHelper;
 
 @SuppressWarnings("serial")
 public class SongsPanel extends SetPackPanel {
 	
-	private static final String SONGS_DIR = "songs";
 	private FileHelper fileHelper;
 	private JCheckBox preserveOrderCheckBox;
 	
@@ -90,25 +89,12 @@ public class SongsPanel extends SetPackPanel {
 	
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
-		boolean numberFiles = preserveOrderCheckBox.isSelected();
-		int index = 1;
-		
-		//copy all of the items in the song list to the parentDirectory
-		Path songFolder = getSongsDirectoryPath(parentDirectory);
-		Files.createDirectories(songFolder);
+		List<File> songList = new ArrayList<File>();
 		for (Enumeration<SongModel> elements = modelList.elements(); elements.hasMoreElements();) {
-			SongModel songModel = elements.nextElement();
-			Path srcPath = songModel.songFile.toPath();
-			String name = songModel.songFile.getName();
-			
-			if (numberFiles) {
-				name = String.format("%03d_%s", index, name);
-				index++;
-			}
-			
-			Path destPath = songFolder.resolve(name);
-			Files.copy(srcPath, destPath);
+			songList.add(elements.nextElement().songFile);
 		}
+		
+		new Creator(parent).createSongFilesForSetPack(parentDirectory, preserveOrderCheckBox.isSelected(), songList);
 	}
 
 	public void ffwd() {
@@ -156,11 +142,6 @@ public class SongsPanel extends SetPackPanel {
 		}
 	}
 	
-	protected Path getSongsDirectoryPath(Path parentDirectory) {
-		Path songFolder = parentDirectory.resolve(SONGS_DIR);
-		return songFolder;
-	}
-	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
 		if (isDemoActive) {
 			int index = songList.getSelectedIndex();
@@ -173,9 +154,7 @@ public class SongsPanel extends SetPackPanel {
 				filesToPlay.add(elements.nextElement().songFile);
 			}
 			if (parentDirectory != null) {
-				//Path songFolder = getSongsDirectoryPath(parentDirectory);
-				Path relativeSongsDir = parentDirectory.getFileName().resolve(SONGS_DIR);
-				parent.getSetListPlayer().setRelativeConfigDirectory(relativeSongsDir.toString());
+				new Creator(parent).setSongsRelativeDir(parentDirectory);
 			}
 			
 			songsModel.setSongs(filesToPlay);

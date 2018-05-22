@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.MessageEntity;
 
 
 public class EmojisModel extends APVModel {
@@ -15,7 +16,6 @@ public class EmojisModel extends APVModel {
 	
 	public EmojisModel(Main parent) {
 		super(parent);
-		
 		msgList = parent.getConfigurator().getRootConfig().getStringList(MESSAGE_KEY);
 	}
 
@@ -27,6 +27,17 @@ public class EmojisModel extends APVModel {
 	@Override
 	public void randomize() {
 		Collections.shuffle(msgList);
+	}
+	
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void loadFromEntities(List entities) {
+		List<MessageEntity> meList = (List<MessageEntity>)entities;
+		msgList.clear();
+		
+		meList.forEach(me -> {
+			msgList.add(me.getMessage());
+		});
 	}
 
 	public List<String> getMsgList() {

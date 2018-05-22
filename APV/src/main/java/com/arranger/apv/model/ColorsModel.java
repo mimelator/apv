@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.ColorEntity;
 import com.arranger.apv.gui.creator.GradientPicker;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.ColorHelper.ColorHolder;
@@ -24,6 +25,40 @@ public class ColorsModel extends APVModel {
 	
 	public List<ColorEntry> getColorEntries() {
 		return colorEntries;
+	}
+	
+	@Override
+	@SuppressWarnings({ "rawtypes" })
+	public void loadFromEntities(List entities) {
+		ColorHelper ch = parent.getColorHelper();
+		
+		colorEntries.forEach(ce -> {
+			ColorEntity colorEntity1 = (ColorEntity)getRandomEntity(entities);
+			ColorEntity colorEntity2 = (ColorEntity)getRandomEntity(entities);
+			Color color2 = ch.decode(colorEntity2.getColorData());
+			Color color1 = ch.decode(colorEntity1.getColorData());
+			
+			switch (ce.getType()) {
+			case TWO:
+				ce.setC2(color2);
+			case ONE:
+				ce.setC1(color1);
+				break;
+			case GRADIENT:
+				LinearGradientPaint lgp = generateLGP(color1, color2);
+				ce.setLGP(lgp);
+			}
+		});
+		
+		setCurrentColors(false);
+	}
+	
+	protected LinearGradientPaint generateLGP(Color col1, Color col2) {
+		Point2D start = new Point2D.Float(0, 0);
+		Point2D end = new Point2D.Float(50, 50);
+		float[] dist = { 0.0f, 1.0f };
+		Color[] colors = { col1, col2 };
+		return new LinearGradientPaint(start, end, dist, colors);
 	}
 
 	protected void init() {

@@ -29,6 +29,12 @@ public class SetPackModel extends APVModel {
 	public void randomize() {
 		Collections.shuffle(setPackList);
 	}
+	
+	@Override
+	@SuppressWarnings("rawtypes")
+	public void loadFromEntities(List entities) {
+		
+	}
 
 	public List<String> getSetPackList() {
 		return new ArrayList<String>(setPackList);

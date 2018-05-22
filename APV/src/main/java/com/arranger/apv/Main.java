@@ -21,6 +21,7 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.control.ControlSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
+import com.arranger.apv.db.DBSupport;
 import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.APVEvent;
 import com.arranger.apv.event.APVEvent.EventHandler;
@@ -61,6 +62,7 @@ import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
+import com.arranger.apv.util.StartupCommandRunner;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
@@ -107,9 +109,10 @@ public class Main extends PApplet {
 	protected APVPulseListener pulseListener;
 	protected APVWatermark watermark;
 	protected APVSetListPlayer setListPlayer;
+	protected Audio audio;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
-	protected Audio audio;
+	protected DBSupport dbSupport;
 	protected Gravity gravity;
 	protected ColorHelper colorHelper;
 	protected ImageHelper imageHelper;
@@ -129,6 +132,7 @@ public class Main extends PApplet {
 	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
+	protected StartupCommandRunner startupCommandRunner;
 	protected PostFX postFX;
 	
 	//Collections
@@ -179,7 +183,9 @@ public class Main extends PApplet {
 		SET_LIST_FOLDER("setListFolder", "directory"),
 		LINE_IN("lineIn", "true|false"),
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
-		MUSIC_DIR("musicDir", "directory");
+		MUSIC_DIR("musicDir", "directory"),
+		MONGO_HOST_PORT("mongoHostPort", "string"),
+		MONGO_DB_NAME("mongoDbName", "string");
 		
 		private String name;
 		private String description;
@@ -292,22 +298,6 @@ public class Main extends PApplet {
 		dumpStartupFlags();
 	}
 	
-//	public SetPackCreator getSetPackCreator() {
-//		return setPackCreator;
-//	}
-//
-//	public void setSetPackCreator(SetPackCreator setPackCreator) {
-//		this.setPackCreator = setPackCreator;
-//	}
-//
-//	public APVWindow getApvWindow() {
-//		return apvWindow;
-//	}
-//
-//	public void setApvWindow(APVWindow apvWindow) {
-//		this.apvWindow = apvWindow;
-//	}
-
 	public String getConfigValueForFlag(FLAGS flag) {
 		return getConfigurator().getRootConfig().getString(flag.apvName());
 	}
@@ -358,6 +348,10 @@ public class Main extends PApplet {
 	
 	public Gravity getGravity() {
 		return gravity;
+	}
+	
+	public DBSupport getDBSupport() {
+		return dbSupport;
 	}
 	
 	public FrameStrober getFrameStrober() {
@@ -710,6 +704,7 @@ public class Main extends PApplet {
 		
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
+		dbSupport = new DBSupport(this);
 		commandSystem = new CommandSystem(this);
 		frameStrober = new FrameStrober(this);
 		imageHelper = new ImageHelper(this);
@@ -731,6 +726,7 @@ public class Main extends PApplet {
 		starPainter = new StarPainter(this);
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
+		startupCommandRunner = new StartupCommandRunner(this);
 		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
@@ -770,6 +766,8 @@ public class Main extends PApplet {
 		checkStartupSetList();
 		
 		fireSetupEvent();
+		
+		startupCommandRunner.runStartupCommands();
 	}
 
 	public void playSetList(File directory) {
@@ -1124,6 +1122,8 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SHOW_WATERMARK, (cmd,src,mod) -> getWatermarkEvent().fire());
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+		
+		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 	}
 	
 	protected void registerSystemCommands() {
@@ -1273,10 +1273,12 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
-		addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
+		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
+		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
+		
 		
 		//Font info
 		String config = getFontHelper().getConfig();

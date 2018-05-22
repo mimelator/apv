@@ -3,12 +3,7 @@ package com.arranger.apv.gui.creator;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,21 +14,17 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.model.Creator;
 import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.IconsModel.ImageHolder;
 import com.arranger.apv.util.FileHelper;
-import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.ImageHelper.ICON_NAMES;
-
-import processing.core.PImage;
 
 @SuppressWarnings("serial")
 public class IconsPanel extends SetPackPanel {
 
 	private static final String EXPLANATION_MSG = "<html>If you see a red border, that means that the selected image isn't transparent and won't look great.</html>";
 	
-	private static final Logger logger = Logger.getLogger(IconsPanel.class.getName());
-
 	private FileHelper fileHelper;
 	
 	private JLabel label;
@@ -85,36 +76,12 @@ public class IconsPanel extends SetPackPanel {
 	}
 	
 	public void updateForDemo(boolean isDemoActive, Path parentDirectory) {
-		ImageHelper ih = parent.getImageHelper();
-		Map<ICON_NAMES, ImageHolder> iconMap = iconsModel.getIconMap();
-		ICON_NAMES.VALUES.forEach(icon -> {
-			ImageHolder imgHolder = iconMap.get(icon);
-			
-			PImage image = isDemoActive ? imgHolder.getPImage() : imgHolder.getOriginalImage();
-			String pathName = icon.getFullTitle();
-			if (isDemoActive && imgHolder.getFile() != null && parentDirectory != null) {
-				pathName = "${apv.setPack.home}" + File.separator + parentDirectory.getFileName() + File.separator + imgHolder.getFile().getName();
-			}
-			
-			ih.updateImage(icon, image, pathName);
-		});
+		new Creator(parent).updateIconsForDemo(isDemoActive, parentDirectory);
 	}
 	
 	@Override
 	public void createFilesForSetPack(Path parentDirectory) throws IOException {
-		Map<ICON_NAMES, ImageHolder> iconMap = iconsModel.getIconMap();
-		ICON_NAMES.VALUES.forEach(icon -> {
-			ImageHolder imgHolder = iconMap.get(icon);
-			if (imgHolder.getFile() != null) {
-				Path srcPath = imgHolder.getFile().toPath();
-				Path destPath = parentDirectory.resolve(imgHolder.getFile().getName());
-				try {
-					Files.copy(srcPath, destPath, StandardCopyOption.REPLACE_EXISTING);
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			}
-		});
+		new Creator(parent).createIconFilesForSetPack(parentDirectory);
 	}
 	
 	private void updateCurrentIcon(File newIconFile) {

@@ -5,7 +5,7 @@ import java.util.List;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import com.arranger.apv.db.SetpackEntity;
+import com.arranger.apv.db.entity.SetpackEntity;
 import com.mongodb.MongoClient;
 
 
@@ -16,7 +16,7 @@ public class MongoDBConnectTest {
 
 		// tell Morphia where to find your classes
 		// can be called multiple times with different packages or classes
-		morphia.mapPackage("com.arranger.apv.db");
+		morphia.mapPackage("com.arranger.apv.db.entity");
 
 		// create the Datastore connecting to the default port on the local host
 		Datastore datastore = morphia.createDatastore(new MongoClient(), "test");

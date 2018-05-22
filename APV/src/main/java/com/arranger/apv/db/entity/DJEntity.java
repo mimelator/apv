@@ -1,23 +1,22 @@
-package com.arranger.apv.db;
+package com.arranger.apv.db.entity;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Reference;
 
-@Entity("songs")
-public class SongEntity {
-	
+@Entity("djs")
+public class DJEntity {
+
 	@Id
 	private ObjectId id;
 	@Property 
     private String name;
-	@Property 
-    private String filename;
-	@Property 
-    private String uniqueId;
+	@Reference 
+	private SetpackEntity setpack;
 	
-	public SongEntity() {
+	public DJEntity() {
 	}
 
 	public ObjectId getId() {
@@ -36,19 +35,13 @@ public class SongEntity {
 		this.name = name;
 	}
 
-	public String getFilename() {
-		return filename;
+	public SetpackEntity getSetpack() {
+		return setpack;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setSetpack(SetpackEntity setpack) {
+		this.setpack = setpack;
 	}
 
-	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
+	
 }
