@@ -7,10 +7,11 @@ Todo:
 	icon upload size must be restricted, or scaled down automatically.  either is fine
 		Not sure how it crashed the server
 	
-	need a command that on startup loads all of the setpacks in the setpack directory
-		and plays the first one
-		
+	DONE: need a command that on startup loads all of the setpacks in the setpack directory
 	DONE: need to remove some older antiquated commands
+	
+	
+	Need commands to plays the first one
 			
 
 	Wednesday 22nd: Play a series of setpacks based on data entered in DB

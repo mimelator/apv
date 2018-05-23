@@ -34,10 +34,7 @@ public class SetPackLauncher extends APVFrame {
 		super(parent);
 		fh = new FileHelper(parent);
 		setPackModel = parent.getSetPackModel();
-		
-		parent.getSetPackList().getList().forEach(s -> {
-			modelList.addElement(s);
-		});
+		sync(true);
 		
 		list = new JList<String>(modelList);
 		list.addMouseListener(new MouseAdapter() {
@@ -95,7 +92,10 @@ public class SetPackLauncher extends APVFrame {
 	
 	private void sync(boolean fetch) {
 		if (fetch) {
-			
+			modelList.clear();
+			setPackModel.getSetPackList().forEach(s -> {
+				modelList.addElement(s);
+			});
 		} else {
 			List<String> setPackList = new ArrayList<String>();
 			IntStream.range(0, modelList.getSize()).forEach(i -> {

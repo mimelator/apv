@@ -58,9 +58,9 @@ public class Audio extends APVPlugin {
 		}
 		
 		parent.getSetupEvent().register(() -> {
-				CommandSystem cs = parent.getCommandSystem();
-				cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> db++);
-				cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> db--);
+			CommandSystem cs = parent.getCommandSystem();
+			cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> db++);
+			cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> db--);
 		});
 	}
 	
@@ -85,24 +85,30 @@ public class Audio extends APVPlugin {
 		protected AudioListener listener;
 		
 		public BeatInfo(AudioSource source) {
+			setup(source);
+		}
+
+		protected void setup(AudioSource source) {
 			this.source = source;
 			pulseDetector = new BeatDetect(); 
 			pulseDetector.setSensitivity(60);
 			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
 			freqDetector.setSensitivity(5);
+			createFFT();
 			createListener();
 			source.addListener(listener);
-			createFFT();
 		}
 		
 		public void updateSource(AudioSource newSource) {
-			if (!lineIn && source != null && source instanceof AudioPlayer) {
+			if (!lineIn && source != null) {
 				source.removeListener(listener);
-				((AudioPlayer)source).close();
-				newSource.addListener(listener);
 			}
 			
-			source = newSource;
+			if (source instanceof AudioPlayer) {
+				((AudioPlayer)source).close();
+			}
+				
+			setup(newSource);
 		}
 		
 		protected void createFFT() {

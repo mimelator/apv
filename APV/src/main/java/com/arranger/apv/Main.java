@@ -849,6 +849,7 @@ public class Main extends PApplet {
 	 * Reset all switches and control mode
 	 */
 	public void reset() {
+		getSceneCompleteEvent().fire();
 		resetSwitches();
 		initControlMode();
 		commandSystem.reset();
@@ -911,6 +912,7 @@ public class Main extends PApplet {
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
 		watermark.reloadConfiguration();
+		setPackList.reset();
 		
 		songsModel.reset();
 		colorsModel.reset();

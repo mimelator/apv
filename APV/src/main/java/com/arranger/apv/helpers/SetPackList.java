@@ -1,14 +1,16 @@
 package com.arranger.apv.helpers;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.JSONQuoter;
 import com.typesafe.config.ConfigList;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class SetPackList extends APVPlugin {
 
@@ -18,24 +20,31 @@ public class SetPackList extends APVPlugin {
 	
 	public SetPackList(Main parent) {
 		super(parent);
-		
+		setupRegistration();
+	}
+
+	protected void setupRegistration() {
 		parent.getSetupEvent().register(() -> {
 			// get the strings
 			ConfigList configList = parent.getConfigurator().getRootConfig().getList(SET_PACK_LIST);
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
-//			// for each string register a custom action
-//			SceneSelectInterceptor ssi = parent.getCommandSystem().getSceneSelectInterceptor();
-//
-//			stringList.stream().forEach(s -> {
-//				ssi.registerScene(c -> {
-//					ssi.showMessageSceneWithText(s);
-//				});
-//			});
+			if (stringList.isEmpty()) {
+				System.out.println("load up default list");
+				File spFolder = new FileHelper(parent).getSetPacksFolder();
+				File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
+				stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
+			}
+			
+			parent.getSetPackModel().setSetPackList(stringList);
 		});
 	}
 	
-	@SuppressWarnings("unchecked")
+	public void reset() {
+		stringList.clear();
+		setupRegistration();
+	}
+	
 	@Override
 	public String getConfig() {
 		if (stringList == null) {

@@ -1,5 +1,7 @@
 package com.arranger.apv.model;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,9 +65,24 @@ public class SetPackModel extends APVModel {
 			index = setPackList.size() - 1;
 		}
 		
+		int currentIndex = index;
+		
 		String setPackName = setPackList.get(index);
 		Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
 		Path confgFile = setPackPath.resolve("application.conf");
-		parent.reloadConfiguration(confgFile.toAbsolutePath().toString());
+		String configFilePath = confgFile.toAbsolutePath().toString();
+		
+		try {
+			String result = new String(Files.readAllBytes(confgFile));
+			System.out.println("Launching setpack: " + setPackName);
+			System.out.println(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//This will cause #reset to be triggered and we'll lose the index
+		parent.reloadConfiguration(configFilePath);
+		
+		this.index = currentIndex + 1;
 	}
 }
