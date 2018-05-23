@@ -12,13 +12,8 @@ public class PulseShakeFilter extends EarthquakeFilter {
 	private static final float SIZE_SCALAR_LARGE = 3.0f;
 	private static final float OSC_SCALAR = 5f;
 
-	protected BeatDetect pulseDetector;
-	
 	public PulseShakeFilter(Main parent) {
 		super(parent);
-		parent.getSetupEvent().register(() -> {
-			pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
-		});
 	}
 	
 	@Override
@@ -28,6 +23,7 @@ public class PulseShakeFilter extends EarthquakeFilter {
 		float scalar = parent.oscillate(SIZE_SCALAR_SMALL, SIZE_SCALAR_LARGE, OSC_SCALAR * 2);
 		shakeSize *= scalar;
 		
+		BeatDetect pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 		if (pulseDetector.isOnset()) {
 			shake(shakeSize);
 		}

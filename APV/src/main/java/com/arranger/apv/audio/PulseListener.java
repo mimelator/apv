@@ -18,7 +18,6 @@ public class PulseListener extends APVPlugin {
 	public static final int DEFAULT_FADE_OUT_FRAMES = 100;
 	public static final int DEFAULT_PULSES_TO_SKIP = 4;
 	
-	private BeatDetect pulseDetector;
 	private int pulsesToSkip = DEFAULT_PULSES_TO_SKIP;
 	private int currentPulseSkipped;
 	private MultiFrameSkipper frameSkipper;
@@ -38,7 +37,6 @@ public class PulseListener extends APVPlugin {
 		currentPulseSkipped = 0;
 		
 		//need to trigger the frameFader when ever the pulseDetector returns true
-		pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 		if (startPulse) {
 			newPulse();
 		}
@@ -60,6 +58,7 @@ public class PulseListener extends APVPlugin {
 		
 		logger.fine("frameCount: " + parent.getFrameCount());
 		
+		BeatDetect pulseDetector = parent.getAudio().getBeatInfo().getPulseDetector();
 		boolean onset = pulseDetector.isOnset();
 		logger.fine("isOnset: " + onset);
 		if (onset) {

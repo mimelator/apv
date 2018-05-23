@@ -134,7 +134,7 @@ public class APVWindow extends APVFrame {
 			}
 		});
 		
-		JButton createSetPack = new JButton("Create Set Pack");
+		JButton createSetPack = new JButton("Set Pack");
 		createSetPack.addActionListener(e -> {
 			new SetPackCreator(parent);
 		});

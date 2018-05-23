@@ -4,15 +4,37 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
+	DONE: CreateSetPack window should be called :EditSetPack
+
+	DONE: preserve other settings after SetPackModel.launchSetPack
+			Not Done: This would be registering for an event???.... Not sure actually
+	
+	Use different databases and node instances to keep SetPacks and DJs different
+		I can have different categories of DJs and the inventory will be different for each database	
+		
+	DONE: Check to see if Perlin walker is still working correctly after deading all of those commands.
+		Perlin Pulses to Skip isn't working
+		
+		The PulseListener (used everywhere) isn't keeping up when the Audio#components change
+			Need to figure out the correct way to fix this:
+			I thought the PulseListeners were created on demand so they'd be 'current'
+			Maybe they need to register for changes?  And make sure those change events are fired
+			
+			The Snap listener is probably the only one that didn't cache it's Audio#comopnent
+		
+		
+		
+		
+		
+	
+	The Marquee Message can have:
+		The Song
+			The SetPack by DJ
+	
+
 	icon upload size must be restricted, or scaled down automatically.  either is fine
 		Not sure how it crashed the server
 	
-	DONE: need a command that on startup loads all of the setpacks in the setpack directory
-	DONE: need to remove some older antiquated commands
-	
-	
-	Need commands to plays the first one
-			
 
 	Wednesday 22nd: Play a series of setpacks based on data entered in DB
 	Thursday 23rd: Build Docker Image

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.util.FileHelper;
 
 public class SetPackModel extends APVModel {
@@ -65,6 +66,8 @@ public class SetPackModel extends APVModel {
 			index = setPackList.size() - 1;
 		}
 		
+		//preserve some state before reload
+		CONTROL_MODES currentControlMode = parent.getCurrentControlMode();
 		int currentIndex = index;
 		
 		String setPackName = setPackList.get(index);
@@ -83,6 +86,8 @@ public class SetPackModel extends APVModel {
 		//This will cause #reset to be triggered and we'll lose the index
 		parent.reloadConfiguration(configFilePath);
 		
+		//restore some state
 		this.index = currentIndex + 1;
+		parent.setCurrentControlMode(currentControlMode);
 	}
 }

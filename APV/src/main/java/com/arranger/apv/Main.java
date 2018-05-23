@@ -412,6 +412,10 @@ public class Main extends PApplet {
 		return currentControlMode;
 	}
 	
+	public void setCurrentControlMode(CONTROL_MODES mode) {
+		currentControlMode = mode;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public APVEvent<EventHandler> getEventForType(EventTypes type) {
 		 return (APVEvent<EventHandler>)eventMap.get(type);
