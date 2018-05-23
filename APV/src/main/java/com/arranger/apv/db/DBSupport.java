@@ -61,6 +61,30 @@ public class DBSupport extends APVPlugin {
 		return results.isEmpty() ? null : results.get(0);	
 	}
 	
+	public void dbRefreshSetPackConfiguration() {
+		FileHelper fileHelper = new FileHelper(parent);
+		
+		Datastore datastore = getDatastore();
+		List<SetpackEntity> results = datastore.createQuery(SetpackEntity.class).asList();
+		results.forEach(setPack -> {
+			System.out.println("Refreshing setPack: " + setPack.getName());
+			
+			loadSetPackIntoModels(setPack);
+			try {
+				final Creator creator = new Creator(parent);
+				creator.createSetPackApplication(fileHelper.getSetPacksFolder(), setPack.getName(), 
+						(isDemoActive, pd) -> {
+							creator.updateIconsForDemo(isDemoActive, pd);
+							creator.setSongsRelativeDir(pd);
+						});
+				
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		});
+		
+	}
+	
 	public void dbCreateSetPackFolders() {
 		FileHelper fileHelper = new FileHelper(parent);
 		
@@ -77,20 +101,7 @@ public class DBSupport extends APVPlugin {
 		results.forEach(setPack -> {
 			System.out.println("Creating setPack for: " + setPack.getName());
 			
-			List<ColorEntity> colors = setPack.getColor();
-			List<ImageEntity> images = setPack.getImage();
-			List<MessageEntity> messages = setPack.getMessage();
-			List<SongEntity> songs = setPack.getSong();
-			
-			ColorsModel colorsModel = parent.getColorsModel();
-			IconsModel iconsModel = parent.getIconsModel();
-			EmojisModel emojisModel = parent.getEmojisModel();
-			SongsModel songsModel = parent.getSongsModel();
-			
-			colorsModel.loadFromEntities(colors);
-			iconsModel.loadFromEntities(images);
-			emojisModel.loadFromEntities(messages);
-			songsModel.loadFromEntities(songs);
+			SongsModel songsModel = loadSetPackIntoModels(setPack);
 			
 			try {
 				final Creator creator = new Creator(parent);
@@ -116,6 +127,24 @@ public class DBSupport extends APVPlugin {
 			setPack.setFolder(setPack.getName());
 			datastore.save(setPack);
 		});
+	}
+
+	protected SongsModel loadSetPackIntoModels(SetpackEntity setPack) {
+		List<ColorEntity> colors = setPack.getColor();
+		List<ImageEntity> images = setPack.getImage();
+		List<MessageEntity> messages = setPack.getMessage();
+		List<SongEntity> songs = setPack.getSong();
+		
+		ColorsModel colorsModel = parent.getColorsModel();
+		IconsModel iconsModel = parent.getIconsModel();
+		EmojisModel emojisModel = parent.getEmojisModel();
+		SongsModel songsModel = parent.getSongsModel();
+		
+		colorsModel.loadFromEntities(colors);
+		iconsModel.loadFromEntities(images);
+		emojisModel.loadFromEntities(messages);
+		songsModel.loadFromEntities(songs);
+		return songsModel;
 	}
 
 	protected Datastore getDatastore() {

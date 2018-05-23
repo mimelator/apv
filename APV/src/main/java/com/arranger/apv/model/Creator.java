@@ -42,12 +42,16 @@ public class Creator extends APVPlugin {
 	}
 	
 	public void createSetPack(File parentDirectory, String setPackName, UpdateCallback uc, CreateFilesCallback cc) throws IOException {
+		Path parentDirectoryPath = createSetPackApplication(parentDirectory, setPackName, uc);
+		cc.onCreateFilesForSetPack(parentDirectoryPath);
+	}
+	
+	public Path createSetPackApplication(File parentDirectory, String setPackName, UpdateCallback uc) throws IOException {
 		Path parentDirectoryPath = parentDirectory.toPath();
 		parentDirectoryPath = parentDirectoryPath.resolve(setPackName);
 		Files.createDirectories(parentDirectoryPath);
-		final Path parentFolderPath = parentDirectoryPath;
 		
-		uc.onUpdateForDemo(true, parentFolderPath);
+		uc.onUpdateForDemo(true, parentDirectoryPath);
 		
 		String referenceText = parent.getConfigurator().generateCurrentConfig();
 		Path referencePath = parentDirectoryPath.resolve(Configurator.APPLICATION_CONF);
@@ -58,7 +62,7 @@ public class Creator extends APVPlugin {
 		String result = String.format("%s %s %s", instructions, setPackHome, referenceText);
 		Files.write(referencePath, result.getBytes());
 		
-		cc.onCreateFilesForSetPack(parentFolderPath);
+		return parentDirectoryPath;
 	}
 	
 	public void setSongsRelativeDir(Path parentDirectory) {

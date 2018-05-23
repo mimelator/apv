@@ -112,7 +112,8 @@ public enum Command {
 	MACRO_8('8', "", "", Event.CTRL),
 	
 	//DB Commands
-	DB_CREATE_SET_PACK_FOLDERS(DeadCommandCode.next(), "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them");
+	DB_CREATE_SET_PACK_FOLDERS(DeadCommandCode.next(), "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them"),
+	DB_REFRESH_SET_PACK_CONFIGURATION(DeadCommandCode.next(), "dbRefreshSetPack", "Updates all of the application.conf to the latest version");
 	
 	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	

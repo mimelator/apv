@@ -97,7 +97,7 @@ public class SetPackModel extends APVModel {
 			e.printStackTrace();
 		}
 		
-		//This will cause #reset to be triggered and we'll lose the index
+		//This will cause #reset to be triggered 
 		parent.reloadConfiguration(configFilePath);
 		
 		//restore some state
@@ -105,6 +105,6 @@ public class SetPackModel extends APVModel {
 		parent.setCurrentControlMode(currentControlMode);
 		this.setpackEntity = setpackEntity;
 		
-		//Fire event?  If so, the subscribers would need to be newly - reloaded?
+		//Fire event?  Only agents will remain?
 	}
 }

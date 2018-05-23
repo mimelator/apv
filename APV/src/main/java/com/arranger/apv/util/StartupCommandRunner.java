@@ -9,16 +9,23 @@ import com.arranger.apv.cmd.Command;
 public class StartupCommandRunner extends APVPlugin {
 	
 	public static final String CMD_KEY = "defaultCommands";
+	
+	private List<String> cmdList;
 
 	public StartupCommandRunner(Main parent) {
 		super(parent);
 	}
 	
 	public void runStartupCommands() {
-		List<String> cmdList = parent.getConfigurator().getRootConfig().getStringList(CMD_KEY);
+		cmdList = parent.getConfigurator().getRootConfig().getStringList(CMD_KEY);
 		cmdList.forEach(cmdString -> {
 			Command cmd = Command.valueOf(cmdString);
 			parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);
 		});
+	}
+
+	@Override
+	public String getConfig() {
+		return parent.getConfigurator().generateConfig(CMD_KEY, cmdList, false, true);
 	}
 }

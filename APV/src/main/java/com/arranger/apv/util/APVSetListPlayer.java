@@ -91,6 +91,10 @@ public class APVSetListPlayer extends APVPlugin {
 				while (it.hasNext()) {
 					playSong(minim.loadFile(it.next().toString()));
 				}
+				
+				//fire setlist ended event
+				parent.getSetListCompleteEvent().fire();
+				
 			} catch (Exception e) {
 				//When the setList has been reset
 			}

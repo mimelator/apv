@@ -433,6 +433,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.SCENE_COMPLETE);
 	}
 	
+	public CoreEvent getSetListCompleteEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.SETLIST_COMPLETE);
+	}
+	
 	public CoreEvent getStrobeEvent() {
 		return (CoreEvent)eventMap.get(EventTypes.STROBE);
 	}
@@ -621,6 +625,10 @@ public class Main extends PApplet {
 	
 	public RandomMessagePainter getRandomMessagePainter() {
 		return randomMessagePainter;
+	}
+	
+	public StartupCommandRunner getStartupCommandRunner() {
+		return startupCommandRunner;
 	}
 	
 	public void likeCurrentScene() {
@@ -842,7 +850,8 @@ public class Main extends PApplet {
 	}
 	
 	public void playPause() {
-		throw new RuntimeException("playPause not implemented");
+		getSetListCompleteEvent().fire();
+		//throw new RuntimeException("playPause not implemented");
 	}
 
 	public void prev() {
@@ -1137,6 +1146,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
+		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());
 	}
 	
 	protected void registerSystemCommands() {
@@ -1253,6 +1263,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.SETUP, new CoreEvent(this, EventTypes.SETUP));
 		eventMap.put(EventTypes.DRAW, new CoreEvent(this, EventTypes.DRAW));
 		eventMap.put(EventTypes.SCENE_COMPLETE, new CoreEvent(this, EventTypes.SCENE_COMPLETE));
+		eventMap.put(EventTypes.SETLIST_COMPLETE, new CoreEvent(this, EventTypes.SETLIST_COMPLETE));
 		eventMap.put(EventTypes.STROBE, new CoreEvent(this, EventTypes.STROBE));
 		eventMap.put(EventTypes.COMMAND_INVOKED, new CommandInvokedEvent(this));
 		eventMap.put(EventTypes.SPARK, new DrawShapeEvent(this, EventTypes.SPARK));
@@ -1309,6 +1320,12 @@ public class Main extends PApplet {
 		
 		//Messages
 		config = getRandomMessagePainter().getConfig();
+		if (config != null) {
+			buffer.append(config);
+		}
+		
+		//startup commands
+		config = getStartupCommandRunner().getConfig();
 		if (config != null) {
 			buffer.append(config);
 		}

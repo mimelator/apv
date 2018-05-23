@@ -39,6 +39,7 @@ import com.arranger.apv.util.FileHelper.StreamConsumer;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
+import com.arranger.apv.util.StartupCommandRunner;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.wm.APVWatermark;
@@ -134,6 +135,7 @@ public abstract class APVPluginTest {
         when(parent.getFontHelper()).thenReturn(Mockito.mock(FontHelper.class));
         when(parent.getImageHelper()).thenReturn(Mockito.mock(ImageHelper.class));
         when(parent.getRandomMessagePainter()).thenReturn(Mockito.mock(RandomMessagePainter.class));
+        when(parent.getStartupCommandRunner()).thenReturn(Mockito.mock(StartupCommandRunner.class));
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
         when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));

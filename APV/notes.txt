@@ -4,26 +4,16 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	Move mongo db to be inside the apv directory
-	
-	Each Apv can be in a different user's home folder
-
-	Why isn't the gravity agent working during a setpack?
-
-	No Node work until the product is stable
+	Verify:
+		SetListComplete Event is fired and the agent cycles the setpack
 		
-	Setpack mode. Supports line/out. Auto advance is only available in lineout mode.
-
-	icon upload size must be restricted, or scaled down automatically.  either is fine
-		Not sure how it crashed the server
+		when i add a new agent or any new thing to the reference.conf
+			I need to recompute all of the existing application.conf 
 		
-	When a setpack is complete, it should fire a setpack complete event
-		Then an agent could determine what to do next.
-			Default would be to ffwd to the next available setpack
-			Special would be to create a random mixed setpack on the fly and play that with a few songs
-	
-
-	Wednesday 22nd: Play a series of setpacks based on data entered in DB
+		
+	Wednesday 22nd: Docker research on mongo db
+		Move mongo db to be inside the apv directory
+		Each Apv can be in a different user's home folder
 	Thursday 23rd: Build Docker Image
 	Friday 24th: Buy computer and install Docker
 
@@ -49,7 +39,6 @@ db.djs.updateOne(
 	{ $set: { "setpack" : spIds } }
 );
 
-
 //delete
 find by id:
  db.songs.find(ObjectId("5b04945dfe01707121b83fb6"));
@@ -65,11 +54,7 @@ db.setpacks.updateOne(
 db.setpacks.update(
   {name: 'AlphaTwo'}, 
   {$pull: { song: ObjectId("5b04945dfe01707121b83fb6")}});
-  
- //5b049441fe01707121b83fb5
- //5b04e616e5f46c7aad888c25
- 
- //remove
+
 
 *****************************************************************************	
 	
@@ -89,7 +74,6 @@ using apt-get in docker: https://forums.docker.com/t/not-able-to-install-anythin
 https://medium.com/@sunnykay/docker-development-workflow-node-express-mongo-4bb3b1f7eb1e
 *****************************************************************************		
 	
-	
 *****************************************************************************	
 Project Timeline:
 New Job = June 18th? (or 25)
@@ -98,15 +82,6 @@ New Job = June 18th? (or 25)
  NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
 *****************************************************************************
  
-***************************************************************************** 
-Current Reference for web apps
-http://www.react.express
-https://reactjs.org/community/examples.html
-https://docs.mongodb.com/manual/reference/mongo-shell
-https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data/flow_control_using_async
-https://codelabs.developers.google.com/codelabs/amp-beautiful-interactive-canonical/index.html
-***************************************************************************** 
-
 *****************************************************************************
 Setup a softlink inside of public to the apv directory:
 cd git/wl/public
@@ -120,17 +95,15 @@ Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
-* Tree scene?
+* SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
+* Tree scene?  Puzzle animation of a background iamge
 * Window blinds background
-* Automatic image processing
-	* background removal: https://rorodata.com/showcase/background-removal/
-    * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur
+* add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
 * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
 * Render vector graphics
 * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 * A laminated command sheet
-* Take a list of Commands to run at startup (Such as SHOW_WATERMARK)
-* When playing a new setPack, fire a watermark event (upper left?)
+* Ability to fire any of the events
 * Another animation: 
 	These are for transitions where the song name isn't known
 	Such as a hindu goddess with many limbs
