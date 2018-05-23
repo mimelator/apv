@@ -4,32 +4,23 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	DONE: CreateSetPack window should be called :EditSetPack
-
-	DONE: preserve other settings after SetPackModel.launchSetPack
-			Not Done: This would be registering for an event???.... Not sure actually
-	
 	Use different databases and node instances to keep SetPacks and DJs different
 		I can have different categories of DJs and the inventory will be different for each database	
 		
-	DONE: Check to see if Perlin walker is still working correctly after deading all of those commands.
-		Perlin Pulses to Skip isn't working
-		
-		The PulseListener (used everywhere) isn't keeping up when the Audio#components change
-			Need to figure out the correct way to fix this:
-			I thought the PulseListeners were created on demand so they'd be 'current'
-			Maybe they need to register for changes?  And make sure those change events are fired
-			
-			The Snap listener is probably the only one that didn't cache it's Audio#comopnent
-		
-		
-		
-		
-		
-	
-	The Marquee Message can have:
+	Setpack mode. Supports line/out. Different marquee. Auto advance is only available in lineout mode.
+
+DONE:	The Marquee Message can have:
 		The Song
 			The SetPack by DJ
+			
+		The SetPackModel (parent.getSpackModel()) will have the current SetpackEntity which can be used as needed for display
+		
+		SetPack Entity agent & painter onSetPackChange event
+		
+		I have a problem getting the DJ from the SetPack because i wasn't recording the dj id
+		I'll see if i can fix that via the cmd line
+		
+		
 	
 
 	icon upload size must be restricted, or scaled down automatically.  either is fine
@@ -46,6 +37,21 @@ mongo shell
 sp = db.setpacks;
 sp.updateMany({}, { $set:{ folder:""  } });
 	
+//find first
+var res = djs.findOne();
+
+//give all the setpacks to the first dj
+var spIds = [];
+var myCursor = db.setpacks.find();
+while (myCursor.hasNext()) {
+  var obj = myCursor.next();
+  print(obj._id);
+  spIds.push(obj._id);
+}
+db.djs.updateOne(
+	{},
+	{ $set: { "setpack" : spIds } }
+);
 *****************************************************************************	
 	
 *****************************************************************************	

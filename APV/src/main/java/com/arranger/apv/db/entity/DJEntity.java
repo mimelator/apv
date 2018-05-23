@@ -1,5 +1,7 @@
 package com.arranger.apv.db.entity;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -13,8 +15,8 @@ public class DJEntity {
 	private ObjectId id;
 	@Property 
     private String name;
-	@Reference 
-	private SetpackEntity setpack;
+	@Reference(idOnly = true)
+	private List<SetpackEntity> setpack;
 	
 	public DJEntity() {
 	}
@@ -35,13 +37,11 @@ public class DJEntity {
 		this.name = name;
 	}
 
-	public SetpackEntity getSetpack() {
+	public List<SetpackEntity> getSetpack() {
 		return setpack;
 	}
 
-	public void setSetpack(SetpackEntity setpack) {
+	public void setSetpack(List<SetpackEntity> setpack) {
 		this.setpack = setpack;
 	}
-
-	
 }

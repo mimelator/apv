@@ -1,6 +1,7 @@
 package com.arranger.apv.db;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ import org.mongodb.morphia.query.Query;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.db.entity.ColorEntity;
+import com.arranger.apv.db.entity.DJEntity;
 import com.arranger.apv.db.entity.ImageEntity;
 import com.arranger.apv.db.entity.MessageEntity;
 import com.arranger.apv.db.entity.SetpackEntity;
@@ -37,8 +39,27 @@ public class DBSupport extends APVPlugin {
 		morphia.mapPackage(ENTITY_PACKAGE);
 	}
 
-	public void dbCreateSetPackFolders() {
+	public SetpackEntity findSetpackEntityByName(String name) {
+		Datastore datastore = getDatastore();
 		
+		Query<SetpackEntity> query = datastore.createQuery(SetpackEntity.class);
+		query.and(query.criteria("name").equal(name));
+		
+		List<SetpackEntity> results = query.asList();
+		return results.isEmpty() ? null : results.get(0);	
+	}
+	
+	public DJEntity getDJforSetpack(SetpackEntity setpackEntity) {
+		Datastore datastore = getDatastore();
+		
+		Query<DJEntity> query = datastore.createQuery(DJEntity.class);
+		query.and(query.criteria("setpack").in(Collections.singletonList(setpackEntity)));
+		
+		List<DJEntity> results = query.asList();
+		return results.isEmpty() ? null : results.get(0);	
+	}
+	
+	public void dbCreateSetPackFolders() {
 		FileHelper fileHelper = new FileHelper(parent);
 		
 		//find all of the SetPacks that don't have a folder

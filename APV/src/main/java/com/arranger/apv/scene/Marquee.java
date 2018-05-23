@@ -2,9 +2,14 @@ package com.arranger.apv.scene;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.DJEntity;
+import com.arranger.apv.db.entity.SetpackEntity;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.TextPainter;
 import com.arranger.apv.util.frame.Tracker;
 
 import processing.core.PApplet;
@@ -89,6 +94,22 @@ public class Marquee extends Animation {
 		for (OneChr oc : chrs) {
 			oc.updateMe();
 			drawCount++;
+		}
+		
+		//Automatically draw the SetPack Name
+		SetpackEntity setpackEntity = parent.getSetPackModel().getSetpackEntity();
+		if (setpackEntity != null) {
+			DJEntity dJforSetpack = parent.getDBSupport().getDJforSetpack(setpackEntity);
+			
+			//draw some stuff!
+			List<String> messages = new ArrayList<String>();
+			messages.add(String.format("SetPack: %s", setpackEntity.getName()));
+			
+			if (dJforSetpack != null) {
+				messages.add(String.format("DJ: %s", dJforSetpack.getName()));
+			}
+			
+			new TextPainter(parent).drawText(messages, SafePainter.LOCATION.UPPER_RIGHT);
 		}
 		
 		if (tracker != null && tracker.isActive(e -> true)) {

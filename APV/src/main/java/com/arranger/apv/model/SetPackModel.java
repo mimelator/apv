@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
+import com.arranger.apv.db.entity.SetpackEntity;
 import com.arranger.apv.util.FileHelper;
 
 public class SetPackModel extends APVModel {
@@ -17,9 +18,19 @@ public class SetPackModel extends APVModel {
 	private FileHelper fh;
 	private int index;
 	
+	private SetpackEntity setpackEntity;
+	
 	public SetPackModel(Main parent) {
 		super(parent);
 		fh = new FileHelper(parent);
+	}
+	
+	public SetpackEntity getSetpackEntity() {
+		return setpackEntity;
+	}
+
+	public void setSetpackEntity(SetpackEntity setpackEntity) {
+		this.setpackEntity = setpackEntity;
 	}
 
 	@Override
@@ -66,11 +77,14 @@ public class SetPackModel extends APVModel {
 			index = setPackList.size() - 1;
 		}
 		
+		String setPackName = setPackList.get(index);
+		
 		//preserve some state before reload
 		CONTROL_MODES currentControlMode = parent.getCurrentControlMode();
 		int currentIndex = index;
+		SetpackEntity setpackEntity = parent.getDBSupport().findSetpackEntityByName(setPackName);
 		
-		String setPackName = setPackList.get(index);
+		//start working on reload
 		Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
 		Path confgFile = setPackPath.resolve("application.conf");
 		String configFilePath = confgFile.toAbsolutePath().toString();
@@ -89,5 +103,8 @@ public class SetPackModel extends APVModel {
 		//restore some state
 		this.index = currentIndex + 1;
 		parent.setCurrentControlMode(currentControlMode);
+		this.setpackEntity = setpackEntity;
+		
+		//Fire event?  If so, the subscribers would need to be newly - reloaded?
 	}
 }
