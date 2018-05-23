@@ -32,6 +32,8 @@ public class DBSupport extends APVPlugin {
 	
 	private static final String ENTITY_PACKAGE = ColorEntity.class.getPackage().getName(); 
 	private Morphia morphia;
+
+	private Datastore datastore;
 	
 	public DBSupport(Main parent) {
 		super(parent);
@@ -117,10 +119,11 @@ public class DBSupport extends APVPlugin {
 	}
 
 	protected Datastore getDatastore() {
-		String dbName = parent.getConfigValueForFlag(Main.FLAGS.MONGO_DB_NAME);
-		String serverHostPort = parent.getConfigValueForFlag(Main.FLAGS.MONGO_HOST_PORT);
-		
-		Datastore datastore = morphia.createDatastore(new MongoClient(serverHostPort), dbName);
+		if (datastore == null) {
+			String dbName = parent.getConfigValueForFlag(Main.FLAGS.MONGO_DB_NAME);
+			String serverHostPort = parent.getConfigValueForFlag(Main.FLAGS.MONGO_HOST_PORT);
+			datastore = morphia.createDatastore(new MongoClient(serverHostPort), dbName);
+		}
 		return datastore;
 	}
 }

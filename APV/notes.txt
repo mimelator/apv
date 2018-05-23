@@ -4,27 +4,23 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	Use different databases and node instances to keep SetPacks and DJs different
-		I can have different categories of DJs and the inventory will be different for each database	
-		
-	Setpack mode. Supports line/out. Different marquee. Auto advance is only available in lineout mode.
-
-DONE:	The Marquee Message can have:
-		The Song
-			The SetPack by DJ
-			
-		The SetPackModel (parent.getSpackModel()) will have the current SetpackEntity which can be used as needed for display
-		
-		SetPack Entity agent & painter onSetPackChange event
-		
-		I have a problem getting the DJ from the SetPack because i wasn't recording the dj id
-		I'll see if i can fix that via the cmd line
-		
-		
+	Move mongo db to be inside the apv directory
 	
+	Each Apv can be in a different user's home folder
+
+	Why isn't the gravity agent working during a setpack?
+
+	No Node work until the product is stable
+		
+	Setpack mode. Supports line/out. Auto advance is only available in lineout mode.
 
 	icon upload size must be restricted, or scaled down automatically.  either is fine
 		Not sure how it crashed the server
+		
+	When a setpack is complete, it should fire a setpack complete event
+		Then an agent could determine what to do next.
+			Default would be to ffwd to the next available setpack
+			Special would be to create a random mixed setpack on the fly and play that with a few songs
 	
 
 	Wednesday 22nd: Play a series of setpacks based on data entered in DB
@@ -52,10 +48,36 @@ db.djs.updateOne(
 	{},
 	{ $set: { "setpack" : spIds } }
 );
+
+
+//delete
+find by id:
+ db.songs.find(ObjectId("5b04945dfe01707121b83fb6"));
+ db.songs.deleteOne({"_id":ObjectId("5b04945dfe01707121b83fb6")});
+ 
+//add a song to a setpack
+db.setpacks.updateOne(
+	{"_id": ObjectId("5b04948dfe01707121b83fb7")}, 
+ 	{ $addToSet: { "song": ObjectId("5b04e616e5f46c7aad888c25") } }
+);
+
+
+db.setpacks.update(
+  {name: 'AlphaTwo'}, 
+  {$pull: { song: ObjectId("5b04945dfe01707121b83fb6")}});
+  
+ //5b049441fe01707121b83fb5
+ //5b04e616e5f46c7aad888c25
+ 
+ //remove
+
 *****************************************************************************	
 	
 *****************************************************************************	
 Dockerize node, mongo, youtube-dl, imagemagick
+
+Use different databases and node instances to keep SetPacks and DJs different
+		I can have different categories of DJs and the inventory will be different for each database	
 
 https://semaphoreci.com/community/tutorials/dockerizing-a-node-js-web-application
 https://medium.com/statuscode/dockerising-a-node-js-and-mongodb-app-d22047e2806f
