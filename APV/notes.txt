@@ -5,22 +5,6 @@ https://github.com/mimelator/apv
 Timeline:
 Todo:
 	Thursday 23rd: Build Docker Image
-		Run APV pointing to the Correct Ocean database and location
-			reference.conf
-				apv.mongoDbName = test
-				apv.mongoHostPort = "localhost:27017"
-	
-			application.conf should have:
-				apv.setPack.home = /Users/markimel/apv/oceans/<oceaan-name>/setPacks
-				This is set by Creator
-					String setPackHome = String.format("%s = %s", SET_PACK_HOME_KEY, parentDirectory.getAbsolutePath()) + System.lineSeparator();
-					parentDirectory comes from FileHelper
-						fileHelper.getSetPacksFolder()
-							FileHelper#getFullPath
-							
-				BTW: SaveConfigurationTest outputs a reference.conf into the current ocean folder
-	
-	
 	Friday 24th: Buy computer and install Docker
 
 
