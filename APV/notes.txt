@@ -4,85 +4,23 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-
-	* Because i need to fix something locally, i need to change the mongdb url in config.json
-		"mongoDB": "mongodb://database:27017/test",
-		I'm not sure how i should pass in database vs localhost for both docker and local development convenience yet.
-
-	* Figure out how to tell node express which port to listen to
-
-	* Enhance the wavelength script to: 
-	
-		Require a param for the named ocean: eg: ./wavelength.sh -wl-port=3000 mongo-port=27017 arranger 
-			<OCEAN_NAME> = "arranger"
-			<WL-PORT> = 3000
-			<MONGO-PORT> = 27017
-			Create any necessary folders and
-			Launch the docker-compose with the correct params
-				Volume location
-					- ~/apv/<OCEAN_NAME>:/usr/src/app/public/apv
-					- ~/apv/<OCEAN_NAME>/data/db:/data/db
-				Ports  
-					- <MONGO-PORT>:<MONGO-PORT>
-					- <WL-PORT>:<WL-PORT> 
-				
-	
-		
-	*create a folder structure for apv oceans
-	*Parameterize the mongodb, ports and paths for the docker command line tool	
-	* reference.conf and all application.conf files need to reference:
-		apv.mongoDbName = <OCEAN-NAME>
-		apv.mongoHostPort = "localhost:<OCEAN-PORT>"
-		
-		It would be good to have this be Ocean Specific	
-	
-		~/apv/<OCEAN-NAME>/
-							data
-							icons
-							playlist
-							reference.conf
-							setPacks
-							stats
-	
-
-	
-	MONGO:
-	#start an instance of mongo pointing at your database	
-	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo	
-		
-	#start an instance that is exposed as port 37017	
-	sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
-	#connect to it	
-	mongodb://localhost:37017/test	
-		
-	#name an instance
-	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo 	
-		
-		
-	NODE:
-	https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
-	
-	#build the image (in the wl directory)
-	docker build -t mimel/wl .	
-	
-	#run an instance of it
-	docker run -p 49160:3000 -d mimel/wl
-	
-	//connect to an instance of docker
-	docker exec -it wavelength-arranger /bin/bash
-	
-	COMPOSE:
-	https://ciphertrick.com/2017/10/23/dockerize-nodejs-service-with-mongodb-docker-compose/
-		
-	COMPOSE: MONGO|NODE|WAVELENGTH|IMAGEMAGICK
-	#Dockerfile in ~/git/wl/Dockerfile (and a .dockerignore)
-	#docker-compose.yml at ~/docker/docker-compose.yml	
-	docker-compose up --build	
-		
-	Wednesday 22nd: Docker research on mongo db
-		DONE!!!! Move mongo db to be inside the apv directory
-		DONE!!!! Each Apv can be in a different user's home folder
 	Thursday 23rd: Build Docker Image
+		Run APV pointing to the Correct Ocean database and location
+			reference.conf
+				apv.mongoDbName = test
+				apv.mongoHostPort = "localhost:27017"
+	
+			application.conf should have:
+				apv.setPack.home = /Users/markimel/apv/oceans/<oceaan-name>/setPacks
+				This is set by Creator
+					String setPackHome = String.format("%s = %s", SET_PACK_HOME_KEY, parentDirectory.getAbsolutePath()) + System.lineSeparator();
+					parentDirectory comes from FileHelper
+						fileHelper.getSetPacksFolder()
+							FileHelper#getFullPath
+							
+				BTW: SaveConfigurationTest outputs a reference.conf into the current ocean folder
+	
+	
 	Friday 24th: Buy computer and install Docker
 
 
@@ -127,21 +65,6 @@ db.setpacks.update(
 *****************************************************************************	
 	
 npm run devstart
-*****************************************************************************	
-Dockerize node, mongo, youtube-dl, imagemagick
-
-Use different databases and node instances to keep SetPacks and DJs different
-		I can have different categories of DJs and the inventory will be different for each database	
-
-https://semaphoreci.com/community/tutorials/dockerizing-a-node-js-web-application
-https://medium.com/statuscode/dockerising-a-node-js-and-mongodb-app-d22047e2806f
-https://docs.docker.com/v1.6/examples/nodejs_web_app/
-https://docs.docker.com/v1.11/engine/examples/mongodb/
-https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
-https://buddy.works/guides/how-dockerize-node-application
-using apt-get in docker: https://forums.docker.com/t/not-able-to-install-anything-with-apt-get-on-a-docker-container/1595
-https://medium.com/@sunnykay/docker-development-workflow-node-express-mongo-4bb3b1f7eb1e
-*****************************************************************************		
 	
 *****************************************************************************	
 Project Timeline:
@@ -150,13 +73,6 @@ New Job = June 18th? (or 25)
  NJ - 14 days: 12 hour stream June 4
  NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
 *****************************************************************************
- 
-*****************************************************************************
-Setup a softlink inside of public to the apv directory:
-cd git/wl/public
-ln -s ~/apv apv
-*****************************************************************************
-
 *****************************************************************************
 Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
 			2nd:    1627, 0.149431 c/s, 03:01:28  (May  8, 2018)
@@ -183,7 +99,12 @@ TODO:
 * Use ShaderDemo2 to start rendering images with glsl
 * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 ** The training data going into the model would be encoded information describing all of the current scene components
-	
+*****************************************************************************
+*****************************************************************************
+Issues:
+APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
+WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
+When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
 *****************************************************************************
 *****************************************************************************
 Set Pack Names could be:
@@ -199,23 +120,108 @@ Messages:
 	That's the way to race...	
 *****************************************************************************
 *****************************************************************************
-
 Remote Debugging:
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
 
 Opt Eclipse params:
 -Xms1024M -Xmx1024M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=4 
-
 *****************************************************************************			
 *****************************************************************************
 Build & Release to local artifactory and github
 mvn package
 mvn release:clean release:prepare release:perform
 *****************************************************************************
-
 *****************************************************************************
-Issues:
-APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
-WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
-When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
+DOCKER COMMANDS NOTES
+
+	MONGO:
+	#start an instance of mongo pointing at your database	
+	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo	
+		
+	#start an instance that is exposed as port 37017	
+	sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
+	#connect to it	
+	mongodb://localhost:37017/test	
+		
+	#name an instance
+	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo 	
+		
+		
+	NODE:
+	https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+	
+	#build the image (in the wl directory)
+	docker build -t mimel/wl .	
+	
+	#run an instance of it
+	docker run -p 49160:3000 -d mimel/wl
+	
+	//connect to an instance of docker
+	docker exec -it wavelength-arranger /bin/bash
+	
+	COMPOSE:
+	https://ciphertrick.com/2017/10/23/dockerize-nodejs-service-with-mongodb-docker-compose/
+		
+	COMPOSE: MONGO|NODE|WAVELENGTH|IMAGEMAGICK
+	#Dockerfile in ~/git/wl/Dockerfile (and a .dockerignore)
+	#docker-compose.yml at ~/docker/docker-compose.yml	
+	docker-compose up --build	
+		
+	Wednesday 22nd: Docker research on mongo db
+		DONE!!!! Move mongo db to be inside the apv directory
+		DONE!!!! Each Apv can be in a different user's home folder
+*****************************************************************************
+*****************************************************************************
+DOCKER DEVELOPMENT NOTES
+* Because i need to fix something locally, i need to change the mongdb url in config.json
+		"mongoDB": "mongodb://database:27017/test",
+		I'm not sure how i should pass in database vs localhost for both docker and local development convenience yet.
+
+	I might need a variety of techniques to pass params:
+		1) For passing during the execution of docker-compose.yml
+		
+		At least 2 files need to be modified by looking up env params
+		2) app.js needs to be updated for the port?  huh?
+		3) config.json needs an updated url
+
+
+	* Figure out how to tell node express which port to listen to
+
+	* Enhance the wavelength script to: 
+	
+		Require a param for the named ocean: eg: ./wavelength.sh -wl-port=3000 mongo-port=27017 -o=arranger 
+			<OCEAN_NAME> = "arranger"
+			<WL-PORT> = 3000
+			<MONGO-PORT> = 27017
+			Create any necessary folders and
+			Launch the docker-compose with the correct params
+				Volume location
+					- ~/apv/<OCEAN_NAME>:/usr/src/app/public/apv
+					- ~/apv/<OCEAN_NAME>/data/db:/data/db
+				Ports  
+					- <MONGO-PORT>:<MONGO-PORT>
+					- <WL-PORT>:<WL-PORT> 
+				
+	
+		
+	*create a folder structure for apv oceans
+	*Parameterize the mongodb, ports and paths for the docker command line tool	
+	* reference.conf and all application.conf files need to reference:
+		apv.mongoDbName = <OCEAN-NAME>
+		apv.mongoHostPort = "localhost:<OCEAN-PORT>"
+		
+		It would be good to have this be Ocean Specific	
+	
+		~/apv/<OCEAN-NAME>/
+							data
+							icons
+							playlist
+							reference.conf
+							setPacks
+							stats
+*****************************************************************************	
+*****************************************************************************
+Setup a softlink inside of public to the apv directory:
+cd git/wl/public
+ln -s ~/apv apv
 *****************************************************************************

@@ -187,7 +187,8 @@ public class Main extends PApplet {
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory"),
 		MONGO_HOST_PORT("mongoHostPort", "string"),
-		MONGO_DB_NAME("mongoDbName", "string");
+		MONGO_DB_NAME("mongoDbName", "string"),
+		OCEAN_NAME("ocean", "string");
 		
 		private String name;
 		private String description;
@@ -1301,6 +1302,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
 		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
+		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		
 		
 		//Font info

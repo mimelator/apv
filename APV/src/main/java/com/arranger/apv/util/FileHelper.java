@@ -19,25 +19,26 @@ import com.arranger.apv.Main;
 
 public class FileHelper extends APVPlugin {
 	
+	public static final String HOME_DIR = System.getProperty("user.home");
+	
 	private static final String STATS = "stats";
-
 	private static final String SET_PACKS = "setPacks";
-
 	private static final String MUSIC_DIR = "Music";
-
+	
+	private static final String APV_MUSIC_DIR = Main.FLAGS.MUSIC_DIR.apvName();
 	private static final Logger logger = Logger.getLogger(FileHelper.class.getName());
 	
-	public static final String HOME_DIR = System.getProperty("user.home");
-	public static final String APV_DIR = HOME_DIR + File.separator + "apv";
-	public static final String APV_MUSIC_DIR = Main.FLAGS.MUSIC_DIR.apvName();
-	
+	private String apvDir;
 	private File rootFolder;
 
 	public FileHelper(Main parent)  {
 		super(parent);
 		
+		String oceanName = parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME);
+		apvDir = HOME_DIR + File.separator + "apv" + File.separator + "oceans" + File.separator + oceanName;
+		
 		try {
-			rootFolder = new File(APV_DIR);
+			rootFolder = new File(apvDir);
 			rootFolder.mkdirs();
 		} catch (Exception e) {
 			debug(e);
