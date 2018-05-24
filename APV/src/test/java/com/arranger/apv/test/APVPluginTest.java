@@ -17,8 +17,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.audio.Audio.BeatInfo;
@@ -34,6 +36,7 @@ import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.SetPackList;
 import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
+import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
 import com.arranger.apv.util.FontHelper;
@@ -60,6 +63,8 @@ public abstract class APVPluginTest {
 	protected int frameIndexEnd;
 	protected PeekIterator<Integer> frameIterator;
 	protected List<String> filesToRemove = new ArrayList<String>();
+	
+	protected Configurator cfg;
 	
 	protected void debug(String msg) {
 		System.out.println(msg);
@@ -140,7 +145,24 @@ public abstract class APVPluginTest {
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
         when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));
         when(sceneList.getConfig()).thenCallRealMethod();
+        
+        setupConfigurator();
     }
+    
+	public void setupConfigurator() {
+		cfg = new Configurator(parent);
+		when(parent.getConfigurator()).thenReturn(cfg);
+		
+		Answer<APV<? extends APVPlugin>> answer = new Answer<APV<? extends APVPlugin>>() {
+	        @SuppressWarnings({ "unchecked", "rawtypes" })
+			public APV<? extends APVPlugin> answer(InvocationOnMock invocation) throws Throwable {
+	        	SYSTEM_NAMES name = invocation.getArgument(0);
+	        	return new APV(parent, name);
+	        }
+	    };
+		
+		when(parent.getSystem(Mockito.any())).thenAnswer(answer);
+	}
     
     protected abstract void setFrameIndexes();
     
