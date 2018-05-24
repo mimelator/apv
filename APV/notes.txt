@@ -4,16 +4,84 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	Verify:
-		SetListComplete Event is fired and the agent cycles the setpack
+
+	* Because i need to fix something locally, i need to change the mongdb url in config.json
+		"mongoDB": "mongodb://database:27017/test",
+		I'm not sure how i should pass in database vs localhost for both docker and local development convenience yet.
+
+	* Figure out how to tell node express which port to listen to
+
+	* Enhance the wavelength script to: 
+	
+		Require a param for the named ocean: eg: ./wavelength.sh -wl-port=3000 mongo-port=27017 arranger 
+			<OCEAN_NAME> = "arranger"
+			<WL-PORT> = 3000
+			<MONGO-PORT> = 27017
+			Create any necessary folders and
+			Launch the docker-compose with the correct params
+				Volume location
+					- ~/apv/<OCEAN_NAME>:/usr/src/app/public/apv
+					- ~/apv/<OCEAN_NAME>/data/db:/data/db
+				Ports  
+					- <MONGO-PORT>:<MONGO-PORT>
+					- <WL-PORT>:<WL-PORT> 
+				
+	
 		
-		when i add a new agent or any new thing to the reference.conf
-			I need to recompute all of the existing application.conf 
+	*create a folder structure for apv oceans
+	*Parameterize the mongodb, ports and paths for the docker command line tool	
+	* reference.conf and all application.conf files need to reference:
+		apv.mongoDbName = <OCEAN-NAME>
+		apv.mongoHostPort = "localhost:<OCEAN-PORT>"
 		
+		It would be good to have this be Ocean Specific	
+	
+		~/apv/<OCEAN-NAME>/
+							data
+							icons
+							playlist
+							reference.conf
+							setPacks
+							stats
+	
+
+	
+	MONGO:
+	#start an instance of mongo pointing at your database	
+	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo	
+		
+	#start an instance that is exposed as port 37017	
+	sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
+	#connect to it	
+	mongodb://localhost:37017/test	
+		
+	#name an instance
+	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo 	
+		
+		
+	NODE:
+	https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+	
+	#build the image (in the wl directory)
+	docker build -t mimel/wl .	
+	
+	#run an instance of it
+	docker run -p 49160:3000 -d mimel/wl
+	
+	//connect to an instance of docker
+	docker exec -it wavelength-arranger /bin/bash
+	
+	COMPOSE:
+	https://ciphertrick.com/2017/10/23/dockerize-nodejs-service-with-mongodb-docker-compose/
+		
+	COMPOSE: MONGO|NODE|WAVELENGTH|IMAGEMAGICK
+	#Dockerfile in ~/git/wl/Dockerfile (and a .dockerignore)
+	#docker-compose.yml at ~/docker/docker-compose.yml	
+	docker-compose up --build	
 		
 	Wednesday 22nd: Docker research on mongo db
-		Move mongo db to be inside the apv directory
-		Each Apv can be in a different user's home folder
+		DONE!!!! Move mongo db to be inside the apv directory
+		DONE!!!! Each Apv can be in a different user's home folder
 	Thursday 23rd: Build Docker Image
 	Friday 24th: Buy computer and install Docker
 
@@ -58,6 +126,7 @@ db.setpacks.update(
 
 *****************************************************************************	
 	
+npm run devstart
 *****************************************************************************	
 Dockerize node, mongo, youtube-dl, imagemagick
 
@@ -148,4 +217,5 @@ mvn release:clean release:prepare release:perform
 Issues:
 APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
 WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
+When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
 *****************************************************************************
