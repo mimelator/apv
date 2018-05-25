@@ -4,52 +4,98 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	Thursday 23rd: Build Docker Image
-	Friday 24th: Buy computer and install Docker
+	Build out Arranger Set Pack
+		Build the tools to automatically import songs from the hard drive
+			Do it in node.js or java -> Let's try node
+			
+			require fs
+			for each .mp3 in $IMPORT_SONG_DIR
+				Add a song to the database 
+				However, the $IMPORT_SONG_DIR will be on a different volume than the $APV_HOME/songs
+			
+			for each .png in a $IMPORT_IMAGE_DIR 
+				Convert the image to transparent
+				Add the image to the database
+				However, the $IMPORT_IMAGE_DIR will be on a different volume than the $APV_HOME/icons
+				
+			for each line(message) in $MESSAGES_TEXT
+				Add the message to the database
+				
+			for each line(color) in $COLORS_TEXT
+				Add the colors to the database	
+				
+			Should this be a standalone node.js file that is executed from docker-compose.yml?
+					That could be pretty sweet
+					
+			
+			This will provide the json template for the wizard that i need to make.
+			
+			In fact, this can just be the internal REST API for the front-end wizard
+			The wizard can be a completely different node js installation the exposes 8000 on the web
+				It can be a react-based single page wizard that builds up the json doc for the import.js script
+				
+			Investigate:
+				* REST API Nodes
+				* Authentication based Single Page Applications that can post a JSON document
+					It can use angular/react/keyston whatever.... it's a different runtime than wevlength:3000 server
+					
+					In fact, it could be running on amazon's cloud and post the JSON document to my internal server
+						The internal REST API could be unique-user-key and the import JSON document.
+						This would make it easier to have the nightbot from twitch post
+						
+						https://medium.com/@sgobinda007/setting-up-react-redux-application-for-production-and-hosting-in-aws-ec2-8bbb8bf3c643	
+				
+				Static website in 10 minutes hosted free on AWS
+				https://hackernoon.com/how-to-deploy-a-live-reactjs-redux-website-in-under-10-minutes-cadf73cfc75a
+			
+				Great Reesponsive UI for static sites
+				* https://semantic-ui.com
+				* https://foundation.zurb.com/sites.html
+				* HTML Kick Start: http://www.99lime.com/elements/
 
+	Maybe:
+		create mapping between libraries and ports/ocean names
+	
+	Evaluate new features:
+		* Soundcloud play list
+		* Napster play list
+		* Branding has 3 layers: Wavelength - Ocean-Name - DJ
+	
+	Investigate:
+		* How to override the DefaultCommands.
+			- Document the procedure because it might be better to run a "restorative" command 
+				then patch a bunch of application.conf's by hand
+	
+	
+	Friday 24th: Buy computer and install Docker
+		Installation for streaming:
+		git
+		mvn
+		mvn repository (with custom package)
+			https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
+			export and import the missing item ch.bildspur.postfx.0.0.13
+		shell scripts (package.sh)
+		obs
+		
+		create a shell script that doesn't require db commands.  ie: override defaultcommands
+	
+
+LLC + BankAccount + Domainname
+	http://wavelength.rocks
+		admin/admin
+		admin@wavelength.rocks
+	$200 estimate to open the account with
+	iMac
 
 *****************************************************************************
-mongo shell
-sp = db.setpacks;
-sp.updateMany({}, { $set:{ folder:""  } });
-	
-//find first
-var res = djs.findOne();
-
-//give all the setpacks to the first dj
-var spIds = [];
-var myCursor = db.setpacks.find();
-while (myCursor.hasNext()) {
-  var obj = myCursor.next();
-  print(obj._id);
-  spIds.push(obj._id);
-}
-db.djs.updateOne(
-	{},
-	{ $set: { "setpack" : spIds } }
-);
-
-//delete
-find by id:
- db.songs.find(ObjectId("5b04945dfe01707121b83fb6"));
- db.songs.deleteOne({"_id":ObjectId("5b04945dfe01707121b83fb6")});
- 
-//add a song to a setpack
-db.setpacks.updateOne(
-	{"_id": ObjectId("5b04948dfe01707121b83fb7")}, 
- 	{ $addToSet: { "song": ObjectId("5b04e616e5f46c7aad888c25") } }
-);
-
-
-db.setpacks.update(
-  {name: 'AlphaTwo'}, 
-  {$pull: { song: ObjectId("5b04945dfe01707121b83fb6")}});
-
-
-*****************************************************************************	
-	
+LOCAL DEVELOPMENT
+Start node local
+cd git\wl	
+edit .env
 npm run devstart
 	
+Start mongo
+~/mongod.sh default
 *****************************************************************************	
 Project Timeline:
 New Job = June 18th? (or 25)
@@ -115,6 +161,43 @@ Build & Release to local artifactory and github
 mvn package
 mvn release:clean release:prepare release:perform
 *****************************************************************************
+*****************************************************************************
+MONGO SHELL
+sp = db.setpacks;
+sp.updateMany({}, { $set:{ folder:""  } });
+	
+//find first
+var res = djs.findOne();
+
+//give all the setpacks to the first dj
+var spIds = [];
+var myCursor = db.setpacks.find();
+while (myCursor.hasNext()) {
+  var obj = myCursor.next();
+  print(obj._id);
+  spIds.push(obj._id);
+}
+db.djs.updateOne(
+	{},
+	{ $set: { "setpack" : spIds } }
+);
+
+//delete
+find by id:
+ db.songs.find(ObjectId("5b04945dfe01707121b83fb6"));
+ db.songs.deleteOne({"_id":ObjectId("5b04945dfe01707121b83fb6")});
+ 
+//add a song to a setpack
+db.setpacks.updateOne(
+	{"_id": ObjectId("5b04948dfe01707121b83fb7")}, 
+ 	{ $addToSet: { "song": ObjectId("5b04e616e5f46c7aad888c25") } }
+);
+
+
+db.setpacks.update(
+  {name: 'AlphaTwo'}, 
+  {$pull: { song: ObjectId("5b04945dfe01707121b83fb6")}});
+*****************************************************************************	
 *****************************************************************************
 DOCKER COMMANDS NOTES
 

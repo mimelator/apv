@@ -15,7 +15,7 @@ import com.typesafe.config.ConfigList;
 public class SetPackList extends APVPlugin {
 
 	private static final String SET_PACK_LIST = "setPackList";
-	private static final String [] DEFAULT_SCENES = {"No scenes for you"};
+	private static final String [] DEFAULT_SETS = {""};
 	private List<String> stringList;
 	
 	public SetPackList(Main parent) {
@@ -30,8 +30,9 @@ public class SetPackList extends APVPlugin {
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
 			if (stringList.isEmpty()) {
-				System.out.println("load up default list");
 				File spFolder = new FileHelper(parent).getSetPacksFolder();
+				System.out.println("No setpack list defined.  Loading all available setpacks in setpack directory: " + spFolder.getAbsolutePath());
+				
 				File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
 				stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
 			}
@@ -48,7 +49,7 @@ public class SetPackList extends APVPlugin {
 	@Override
 	public String getConfig() {
 		if (stringList == null) {
-			stringList = Arrays.asList(DEFAULT_SCENES);
+			stringList = Arrays.asList(DEFAULT_SETS);
 		}
 		
 		//setPackList : [${songs}]
