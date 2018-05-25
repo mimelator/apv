@@ -34,6 +34,7 @@ public class DBSupport extends APVPlugin {
 	private Morphia morphia;
 
 	private Datastore datastore;
+	private Boolean DB_ENABLED;
 	
 	public DBSupport(Main parent) {
 		super(parent);
@@ -42,6 +43,10 @@ public class DBSupport extends APVPlugin {
 	}
 
 	public SetpackEntity findSetpackEntityByName(String name) {
+		if (!isEnabled()) {
+			return null;
+		}
+		
 		Datastore datastore = getDatastore();
 		
 		Query<SetpackEntity> query = datastore.createQuery(SetpackEntity.class);
@@ -52,6 +57,10 @@ public class DBSupport extends APVPlugin {
 	}
 	
 	public DJEntity getDJforSetpack(SetpackEntity setpackEntity) {
+		if (!isEnabled()) {
+			return null;
+		}
+		
 		Datastore datastore = getDatastore();
 		
 		Query<DJEntity> query = datastore.createQuery(DJEntity.class);
@@ -62,6 +71,10 @@ public class DBSupport extends APVPlugin {
 	}
 	
 	public void dbRefreshSetPackConfiguration() {
+		if (!isEnabled()) {
+			throw new IllegalStateException("Can't referesh db setpack folder without setting apv.mongoHostPort");
+		}
+		
 		FileHelper fileHelper = new FileHelper(parent);
 		
 		Datastore datastore = getDatastore();
@@ -86,6 +99,10 @@ public class DBSupport extends APVPlugin {
 	}
 	
 	public void dbCreateSetPackFolders() {
+		if (!isEnabled()) {
+			throw new IllegalStateException("Can't create db setpack folder without setting apv.mongoHostPort");
+		}
+		
 		FileHelper fileHelper = new FileHelper(parent);
 		
 		//find all of the SetPacks that don't have a folder
@@ -148,11 +165,23 @@ public class DBSupport extends APVPlugin {
 	}
 
 	protected Datastore getDatastore() {
+		if (!isEnabled()) {
+			return null;
+		}
 		if (datastore == null) {
 			String dbName = parent.getConfigValueForFlag(Main.FLAGS.MONGO_DB_NAME);
 			String serverHostPort = parent.getConfigValueForFlag(Main.FLAGS.MONGO_HOST_PORT);
 			datastore = morphia.createDatastore(new MongoClient(serverHostPort), dbName);
 		}
 		return datastore;
+	}
+	
+	protected boolean isEnabled() {
+		if (DB_ENABLED == null) {
+			String serverHostPort = parent.getConfigValueForFlag(Main.FLAGS.MONGO_HOST_PORT);
+			boolean disabled = (serverHostPort == null || serverHostPort.isEmpty());
+			DB_ENABLED = new Boolean(!disabled); 
+		}
+		return DB_ENABLED;
 	}
 }
