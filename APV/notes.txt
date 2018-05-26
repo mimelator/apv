@@ -3,6 +3,34 @@ https://github.com/mimelator/apv
 
 
 Timeline:
+	REPRO PRI 1 BUG:
+		Launch ./apv 27017 default
+			After the first marquee completes, FFWD to next song
+			Repros with ./apv-no-db as well
+
+			Triggering a getSceneCompleteEvent (via Play/Pause) 'solves it'
+				But i don't exactly know why yet, and therefore i don't know the best way to fix it.
+				
+					At first i thought that if it was setting the tracker to a new object, if not null fire an event
+					Then i thought i would create a new Marquee every time
+					
+					Still don't know how to fix it yet...
+						NOPE Try not allowing Marquee to be reset
+						
+				if (currentScene.isNew()) {
+					transition = prepareTransition(true);
+				}		
+				
+				and the CountdownAgent???
+				Nope Maybe, i can make the countdown agent stateless.  That seems to make everything better
+			
+				Why Isn't the normal SceneCompleteEvent being fired by Marquee?
+				Why is the text all foo-bar'd?	
+					
+		
+
+
+
 Todo:
 	Build out Arranger Set Pack
 		Build the tools to automatically import songs from the hard drive
@@ -53,31 +81,15 @@ Todo:
 				* https://foundation.zurb.com/sites.html
 				* HTML Kick Start: http://www.99lime.com/elements/
 
-	Maybe:
-		create mapping between libraries and ports/ocean names
-	
 	Evaluate new features:
 		* Soundcloud play list
 		* Napster play list
 		* Branding has 3 layers: Wavelength - Ocean-Name - DJ
 	
-	Investigate:
-		* How to override the DefaultCommands.
-			- Document the procedure because it might be better to run a "restorative" command 
-				then patch a bunch of application.conf's by hand
-	
-	
 	Friday 24th: Buy computer and install Docker
-		Installation for streaming:
-		git
-		mvn
-		mvn repository (with custom package)
-			https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
-			export and import the missing item ch.bildspur.postfx.0.0.13
-		shell scripts (package.sh)
-		obs
+		Wired connection.  I wonder if i should just stream off of my laptop?
+		I can experiment with a ethernet connection from a repeater or the attic	
 		
-		create a shell script that doesn't require db commands.  ie: override defaultcommands
 	
 
 LLC + BankAccount + Domainname
@@ -104,9 +116,12 @@ New Job = June 18th? (or 25)
  NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
 *****************************************************************************
 *****************************************************************************
-Current High Score: 8041, 1.633685 c/s, 01:22:02  (Apr 29, 2018)
-			2nd:    1627, 0.149431 c/s, 03:01:28  (May  8, 2018)
-			3rd		1517, 0.412565 c/s, 01:01:17  (May 11, 2018)
+Current High Score: 8041, 1.633685 01:22:02  (Apr 29, 2018)
+
+					5513, 1.730383, 00:53:06 (May 25, 2018) APV Version: 0.3.1-SNAPSHOT 1st iMac
+
+			2nd:    1627, 0.149431 03:01:28  (May  8, 2018)
+			3rd		1517, 0.412565 01:01:17  (May 11, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
@@ -292,3 +307,9 @@ Setup a softlink inside of public to the apv directory:
 cd git/wl/public
 ln -s ~/apv apv
 *****************************************************************************
+How to override the DefaultCommands.
+-DdefaultCommands.0
+-DdefaultCommands.0=DB_CREATE_SET_PACK_FOLDERS
+-DdefaultCommands.1=CYCLE_SET_PACK
+see apv-no-db.sh for example			
+*****************************************************************************			

@@ -22,28 +22,33 @@ import processing.core.PGraphics;
  */
 public class Marquee extends Animation {
 
-	private static final int NEW_CHARS_PER_DRAW = 120;//60;
+	private static final int DRAWN_CHAR_THRESHOLD = 800000;
 	private static final int MAX_TEXT_LENGTH = 30;
-	private static final int MAX_TEXT_LENGTH_OFFSET = 120;
 	private static final int TEXT_SIZE = 200;
+	private static final int MAX_TEXT_LENGTH_REDUCTION = (int)(TEXT_SIZE * .4f);
+	private static final int REQUIRED_HITS_PER_FRAME = 3;
+	private static final int ASCII_HIGH = 126;
+	private static final int ASCII_LOW = 33;
+	
 	private String text;
 	private int characterColor;
 	private PGraphics pg;
 	private ArrayList<OneChr> chrs;
+	private Tracker<Marquee> tracker;
+	private int drawCount = 0;
 
 	private Map<SetpackEntity, DJEntity> djMap = new HashMap<SetpackEntity, DJEntity>();
 	
 	public Marquee(Main parent, String text) {
 		super(parent);
 		this.text = text;
+		if (text.length() > MAX_TEXT_LENGTH) {
+			text = text.substring(0, MAX_TEXT_LENGTH);
+		}
 	}
 
 	public Marquee(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, "Hello World"));
-	}
-	
-	public void setText(String text) {
-		this.text = text;
 	}
 	
 	@Override
@@ -53,23 +58,23 @@ public class Marquee extends Animation {
 	}
 
 	@Override
-	protected void reset() {
-		pg = null;
-	}
-
-	private static final int DRAWN_CHAR_THRESHOLD = 800000;
-	private Tracker<Marquee> tracker;
-	int drawCount = 0;
-	
-	@Override
-	public void drawScene() {
+	public boolean isNew() {
+		boolean isNew = false;
 		if (pg == null) {
 			initOffScreenGraphics();
+			
 			drawCount = 0;
+			chrs = new ArrayList<OneChr>();
 			tracker = new Tracker<Marquee>(parent, parent.getSceneCompleteEvent());
 			parent.getMarqueeEvent().fire();
+			isNew = true;
 		}
 		
+		return isNew;
+	}
+
+	@Override
+	public void drawScene() {
 		//draw background frame always the same size
 		int insetY = parent.height / 3;
 		parent.fill(0, 50);
@@ -78,28 +83,30 @@ public class Marquee extends Animation {
 		parent.rectMode(CENTER);
 		parent.rect(parent.width / 2, (parent.height / 2) + TEXT_SIZE / 4, parent.width, insetY);
 		
-
 		//draw text
 		parent.fill(255);
 		parent.stroke(0);
 		parent.textAlign(CENTER, CENTER);
-
-		if (chrs.size() < 2000) {
-			for (int i = 0; i < NEW_CHARS_PER_DRAW; i++) {
-				float x = parent.random(parent.width);
-				float y = parent.random(parent.height);
-				int c = pg.get((int) x, (int) y);
-				if (c == characterColor) {
-					chrs.add(new OneChr(x, y, 1));
-				}
+		
+		int hits = 0;
+		
+		while (hits < REQUIRED_HITS_PER_FRAME) {
+			float x = parent.random(parent.width);
+			float y = parent.random(parent.height);
+			int c = pg.get((int) x, (int) y);
+			if (c == characterColor) {
+				chrs.add(new OneChr(x, y));
+				hits++;
 			}
 		}
 		
+		parent.image(pg.get(), 0, 0);
+		
 		for (OneChr oc : chrs) {
-			oc.updateMe();
+			oc.draw();
 			drawCount++;
 		}
-		
+
 		//Automatically draw the SetPack Name
 		SetpackEntity setpackEntity = parent.getSetPackModel().getSetpackEntity();
 		if (setpackEntity != null) {
@@ -119,20 +126,18 @@ public class Marquee extends Animation {
 			new TextPainter(parent).drawText(messages, SafePainter.LOCATION.UPPER_LEFT);
 		}
 		
-		if (tracker != null && tracker.isActive(e -> true)) {
-			if (drawCount > DRAWN_CHAR_THRESHOLD) {
-				tracker.fireEvent();
-				tracker = null;
-			}
+		if (tracker != null && tracker.isActive(e -> drawCount > DRAWN_CHAR_THRESHOLD)) {
+			tracker.fireEvent();
+			tracker = null;
 		}
 	}
 	
 	protected void initOffScreenGraphics() {
 		//adjust the textSize based on the length of the text
-		int textOffset = (int)PApplet.map(text.length(), 1, MAX_TEXT_LENGTH, 0, MAX_TEXT_LENGTH_OFFSET);
+		int textOffset = (int)PApplet.map(text.length(), 1, MAX_TEXT_LENGTH, 0, MAX_TEXT_LENGTH_REDUCTION);
 		int textSize = TEXT_SIZE - textOffset;
+		characterColor = parent.color(0);
 		
-		chrs = new ArrayList<OneChr>();
 		pg = parent.createGraphics(parent.width, parent.height, JAVA2D);
 		pg.beginDraw();
 		pg.textSize(textSize);
@@ -140,19 +145,17 @@ public class Marquee extends Animation {
 		pg.fill(characterColor);
 		pg.text(text.trim(), pg.width / 2, pg.height / 2);
 		pg.endDraw();
-		
-		characterColor = parent.color(0);
-		lastFrameDrawn = parent.getFrameCount();
 	}
 
 	class OneChr {
+		
 		float x, y;
 		float myRotate;
 		int mySize;
 		char myChr;
 		int color;
 		
-		OneChr(float _x, float _y, float gS) {
+		OneChr(float _x, float _y) {
 			x = _x;
 			y = _y;
 
@@ -160,12 +163,12 @@ public class Marquee extends Animation {
 			myRotate = (HALF_PI * radi);
 			float sizeFactor = parent.random(2);
 			mySize = (int) Math.max(10, Math.pow(sizeFactor, 5));
-			myChr = (char) parent.random(33, 126);
+			myChr = (char) parent.random(ASCII_LOW, ASCII_HIGH);
 			Color clr = parent.getColor().getCurrentColor();
 			color = parent.color(clr.getRed(), clr.getGreen(), clr.getBlue());
 		}
 
-		void updateMe() {
+		void draw() {
 			parent.noStroke();
 			parent.fill(color);
 			parent.pushMatrix();

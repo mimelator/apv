@@ -29,6 +29,7 @@ public class Tracker<T> extends APVPlugin {
 	public void fireEvent() {
 		if (event != null && active) {
 			event.fire();
+			active = false;
 			event = null;
 		}
 	}

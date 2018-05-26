@@ -27,9 +27,8 @@ public class Tree extends Animation {
 	}
 	
 	@Override
-	protected void reset() {
-		tracker = null;
-		paths.clear();
+	public boolean isNew() {
+		return tracker != null;
 	}
 
 	@Override

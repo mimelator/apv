@@ -851,7 +851,9 @@ public class Main extends PApplet {
 	}
 	
 	public void playPause() {
-		getSetListCompleteEvent().fire();
+		//Leave this active for emergencies
+		getSceneCompleteEvent().fire();
+		//getSetListCompleteEvent().fire();
 		//throw new RuntimeException("playPause not implemented");
 	}
 
@@ -885,8 +887,10 @@ public class Main extends PApplet {
 	}
 	
 	public void sendMarqueeMessage(String message) {
-		Marquee marquee = (Marquee)scenes.getFirstInstanceOf(Marquee.class);
-		marquee.setText(message);
+//		Marquee marquee = (Marquee)scenes.getFirstInstanceOf(Marquee.class);
+//		marquee.setText(message);
+		
+		Marquee marquee = new Marquee(this, message);
 		setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile

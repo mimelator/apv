@@ -97,6 +97,9 @@ public class SafePainter extends APVPlugin {
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, t.getMessage(), t);
+			if (t.getMessage().contains("Too many calls to pushMatrix()")) {
+				System.exit(1);
+			}
 		}
 	}
 	
