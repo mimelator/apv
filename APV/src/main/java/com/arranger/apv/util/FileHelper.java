@@ -93,11 +93,21 @@ public class FileHelper extends APVPlugin {
 		return true;
 	}
 	
-	public String readFile(String fileName) {
+	public String readFile(String relFileName) {
 		String result = null;
 		try {
-			String fullPath = getFullPath(fileName);
+			String fullPath = getFullPath(relFileName);
 			Path p = Paths.get(fullPath);
+			result = new String(Files.readAllBytes(p));
+		} catch (Exception e) {
+			debug(e);
+		}
+		return result;
+	}
+	
+	public String readFile(Path p) {
+		String result = null;
+		try {
 			result = new String(Files.readAllBytes(p));
 		} catch (Exception e) {
 			debug(e);

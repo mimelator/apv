@@ -1,4 +1,4 @@
-package com.arranger.apv.archive;
+package com.arranger.apv.util;
 
 import java.io.File;
 import java.nio.file.FileSystems;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Random;
 
 import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FileWatcher;
 
 public class FileWatcherTest /*extends APVPluginTest*/ {
 	

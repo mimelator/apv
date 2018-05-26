@@ -18,8 +18,12 @@ public class StartupCommandRunner extends APVPlugin {
 	
 	public void runStartupCommands() {
 		cmdList = parent.getConfigurator().getRootConfig().getStringList(CMD_KEY);
+		runCommands(cmdList);
+	}
+
+	protected void runCommands(List<String> cmdList) {
 		cmdList.forEach(cmdString -> {
-			if (!cmdString.isEmpty()) {
+			if (!cmdString.isEmpty() && !cmdString.startsWith("#")) {
 				Command cmd = Command.valueOf(cmdString);
 				parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);
 			}

@@ -57,6 +57,7 @@ import com.arranger.apv.transition.TransitionSystem;
 import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FileCommandRunner;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
@@ -135,6 +136,7 @@ public class Main extends PApplet {
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	protected StartupCommandRunner startupCommandRunner;
+	protected FileCommandRunner fileCommandRunner;
 	protected PostFX postFX;
 	
 	//Collections
@@ -632,6 +634,10 @@ public class Main extends PApplet {
 		return startupCommandRunner;
 	}
 	
+	public FileCommandRunner getFileCommandRunner() {
+		return fileCommandRunner;
+	}
+	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		sendMessage(new String[] {"Liked :)"});
@@ -742,6 +748,7 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		startupCommandRunner = new StartupCommandRunner(this);
+		fileCommandRunner = new FileCommandRunner(this);
 		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
@@ -1308,12 +1315,12 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		
-		
-		//Font info
-		String config = getFontHelper().getConfig();
-		if (config != null) {
-			buffer.append(config);
-		}
+		//helper configs
+		addHelperConfig(buffer, getFontHelper());
+		addHelperConfig(buffer, getRandomMessagePainter());
+		addHelperConfig(buffer, getStartupCommandRunner());
+		addHelperConfig(buffer, getFileCommandRunner());
+		addHelperConfig(buffer, getImageHelper());
 		
 		//setList
 		APVSetListPlayer sl = getSetListPlayer();
@@ -1324,25 +1331,16 @@ public class Main extends PApplet {
 			addConstant(buffer, FLAGS.SET_LIST, String.valueOf(isSetList()));
 		}
 		
-		//Messages
-		config = getRandomMessagePainter().getConfig();
-		if (config != null) {
-			buffer.append(config);
-		}
-		
-		//startup commands
-		config = getStartupCommandRunner().getConfig();
-		if (config != null) {
-			buffer.append(config);
-		}
-	
-		//images
-		config = getImageHelper().getConfig();
-		if (config != null) {
-			buffer.append(config);
-		}
-		
 		return buffer.toString();
+	}
+	
+	private void addHelperConfig(StringBuffer buffer, APVPlugin plugin) {
+		if (plugin != null) {
+			String config = plugin.getConfig();
+			if (config != null) {
+				buffer.append(config);
+			}
+		}
 	}
 	
 	private void addConstant(StringBuffer buffer, FLAGS flag, String value) {

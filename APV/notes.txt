@@ -1,37 +1,22 @@
 BRANCH: cl-tools
 https://github.com/mimelator/apv
 
-
 Timeline:
-	REPRO PRI 1 BUG:
-		Launch ./apv 27017 default
-			After the first marquee completes, FFWD to next song
-			Repros with ./apv-no-db as well
-
-			Triggering a getSceneCompleteEvent (via Play/Pause) 'solves it'
-				But i don't exactly know why yet, and therefore i don't know the best way to fix it.
-				
-					At first i thought that if it was setting the tracker to a new object, if not null fire an event
-					Then i thought i would create a new Marquee every time
-					
-					Still don't know how to fix it yet...
-						NOPE Try not allowing Marquee to be reset
-						
-				if (currentScene.isNew()) {
-					transition = prepareTransition(true);
-				}		
-				
-				and the CountdownAgent???
-				Nope Maybe, i can make the countdown agent stateless.  That seems to make everything better
-			
-				Why Isn't the normal SceneCompleteEvent being fired by Marquee?
-				Why is the text all foo-bar'd?	
-					
-		
-
-
-
 Todo:
+	Server Work
+		use docker and node
+		figure out how to migrate databases / libraries
+
+		ssh and create mongo and node
+
+		
+	how can i issue remote commands to the server?
+		SSH is the easiest
+			Maybe touch a file and have the server read it's contents?
+			The FileWatcher can watch a file that has commands.  Any time it changes, it gets executed
+
+
+
 	Build out Arranger Set Pack
 		Build the tools to automatically import songs from the hard drive
 			Do it in node.js or java -> Let's try node
@@ -86,18 +71,14 @@ Todo:
 		* Napster play list
 		* Branding has 3 layers: Wavelength - Ocean-Name - DJ
 	
-	Friday 24th: Buy computer and install Docker
-		Wired connection.  I wonder if i should just stream off of my laptop?
-		I can experiment with a ethernet connection from a repeater or the attic	
-		
-	
 
 LLC + BankAccount + Domainname
 	http://wavelength.rocks
 		admin/admin
 		admin@wavelength.rocks
 	$200 estimate to open the account with
-	iMac
+		-> Internet charge
+		-> iMac cose
 
 *****************************************************************************
 LOCAL DEVELOPMENT
@@ -116,12 +97,10 @@ New Job = June 18th? (or 25)
  NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
 *****************************************************************************
 *****************************************************************************
-Current High Score: 8041, 1.633685 01:22:02  (Apr 29, 2018)
-
-					5513, 1.730383, 00:53:06 (May 25, 2018) APV Version: 0.3.1-SNAPSHOT 1st iMac
-
-			2nd:    1627, 0.149431 03:01:28  (May  8, 2018)
-			3rd		1517, 0.412565 01:01:17  (May 11, 2018)
+Current High Score: 8041, 1.633685 	01:22:02  	(Apr 29, 2018)
+					7507, 1.147859, 01:49:00  	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT 1st iMac
+					5513, 1.730383, 00:53:06 	(May 25, 2018) APV Version: 0.3.1-SNAPSHOT 1st iMac
+					1627, 0.149431 	03:01:28  	(May  8, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:
