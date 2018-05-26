@@ -10,7 +10,7 @@ Todo:
 		ssh and create mongo and node
 
 		
-	how can i issue remote commands to the server?
+	IN PROGRESS: how can i issue remote commands to the server?
 		SSH is the easiest
 			Maybe touch a file and have the server read it's contents?
 			The FileWatcher can watch a file that has commands.  Any time it changes, it gets executed
