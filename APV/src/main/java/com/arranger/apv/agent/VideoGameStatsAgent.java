@@ -52,6 +52,9 @@ public class VideoGameStatsAgent extends PulseAgent {
 			Files.createDirectories(statsPath);
 			StringBuffer buffer = new StringBuffer("APV Version: " + parent.getVersionInfo().getVersion());
 			buffer.append(System.lineSeparator());
+			buffer.append("Ocean: ").append(parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
+			buffer.append(System.lineSeparator());
+			
 			buffer.append("NumCommands, Cmds/Sec, TotalTime");
 			buffer.append(System.lineSeparator());
 			buffer.append(String.format("%d, %f, %s", totalCmds, cmdsPerSec, timeStamp) + System.lineSeparator());
