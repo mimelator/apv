@@ -4,17 +4,19 @@ https://github.com/mimelator/apv
 Timeline:
 Todo:
 	Server Work
-		use docker and node
-		figure out how to migrate databases / libraries
-
-		ssh and create mongo and node
-
+		IN PROGRESS	
+			use docker and node
+			figure out how to migrate databases / libraries
+				./migrate-all-oceans.sh
+			
 		
 	IN PROGRESS: how can i issue remote commands to the server?
 		SSH is the easiest
 			Maybe touch a file and have the server read it's contents?
 			The FileWatcher can watch a file that has commands.  Any time it changes, it gets executed
 
+	
+	Can i restart apv in the middle of a stream remotely?
 
 
 	Build out Arranger Set Pack
@@ -100,6 +102,7 @@ New Job = June 18th? (or 25)
 Current High Score: 
 					8743, 0.742379, 03:16:17	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT
 					8041, 1.633685 	01:22:02  	(Apr 29, 2018)
+					8298, 0.878374, 02:37:27	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT STREAMING
 					7507, 1.147859, 01:49:00  	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT
 					5513, 1.730383, 00:53:06 	(May 25, 2018) APV Version: 0.3.1-SNAPSHOT
 					1627, 0.149431 	03:01:28  	(May  8, 2018)
