@@ -3,21 +3,11 @@ https://github.com/mimelator/apv
 
 Timeline:
 Todo:
-	Server Work
-		IN PROGRESS	
-			use docker and node
-			figure out how to migrate databases / libraries
-				./migrate-all-oceans.sh
-			
-		
-	IN PROGRESS: how can i issue remote commands to the server?
-		SSH is the easiest
-			Maybe touch a file and have the server read it's contents?
-			The FileWatcher can watch a file that has commands.  Any time it changes, it gets executed
 
+	Remote Commands
+		Show song queue
+		Show ocean name / set name
 	
-	Can i restart apv in the middle of a stream remotely?
-
 
 	Build out Arranger Set Pack
 		Build the tools to automatically import songs from the hard drive
