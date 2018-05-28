@@ -185,7 +185,9 @@ public class Main extends PApplet {
 		FONT_STYLE("font.style", "PLAIN|ITALIC|BOLD"),
 		SET_LIST("setList", "true|false"),
 		SET_LIST_FOLDER("setListFolder", "directory"),
+		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
 		LINE_IN("lineIn", "true|false"),
+		LISTEN_ONLY("listenOnly", "true|false"),
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory"),
 		MONGO_HOST_PORT("mongoHostPort", "string"),
@@ -305,6 +307,10 @@ public class Main extends PApplet {
 	
 	public String getConfigValueForFlag(FLAGS flag) {
 		return getConfigurator().getRootConfig().getString(flag.apvName());
+	}
+	
+	public boolean getConfigBooleanForFlag(FLAGS flag) {
+		return getConfigurator().getRootConfig().getBoolean(flag.apvName());
 	}
 	
 	public String getConfigString(String path) {
@@ -506,6 +512,10 @@ public class Main extends PApplet {
 	
 	public boolean isSetList() {
 		return getConfigBoolean(FLAGS.SET_LIST.apvName());
+	}
+	
+	public boolean isListenOnly() {
+		return getConfigBoolean(FLAGS.LISTEN_ONLY.apvName());
 	}
 	
 	public int getDefaultShapeSystemAlpha() {
@@ -1094,7 +1104,7 @@ public class Main extends PApplet {
 	
 	protected void checkStartupSetList() {
 		ensureSetListReadyToPlay();
-		if (isSetList()) {
+		if (isSetList() && !isListenOnly()) {
 			setListPlayer.playStartupSetList();
 		}
 	}
@@ -1309,6 +1319,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
+		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));

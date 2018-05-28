@@ -2,11 +2,16 @@ BRANCH: cl-tools
 https://github.com/mimelator/apv
 
 Timeline:
+
 Todo:
+	Listen ONLY MODE (So when set packs or set lists play, ignore it... just use line in)
+	Review changes to SetPackList
 
 	Remote Commands
 		Show song queue
-		Show ocean name / set name
+		Show ocean name / setPack name
+		Play setPack (from the current ocean)
+		List SetPacks(from the current ocean)
 	
 
 	Build out Arranger Set Pack
@@ -90,12 +95,14 @@ New Job = June 18th? (or 25)
 *****************************************************************************
 *****************************************************************************
 Current High Score: 
-					8743, 0.742379, 03:16:17	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT
-					8041, 1.633685 	01:22:02  	(Apr 29, 2018)
-					8298, 0.878374, 02:37:27	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT STREAMING
-					7507, 1.147859, 01:49:00  	(May 26, 2018) APV Version: 0.3.1-SNAPSHOT
-					5513, 1.730383, 00:53:06 	(May 25, 2018) APV Version: 0.3.1-SNAPSHOT
-					1627, 0.149431 	03:01:28  	(May  8, 2018)
+
+				  122435, 	1.039196, 	32:43:37	(May 28, 2018)	APV Version: 0.3.3-SNAPSHOT
+					8743, 	0.742379, 	03:16:17	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
+					8041, 	1.633685 	01:22:02  	(Apr 29, 2018)
+					8298,	0.878374,	02:37:27	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT STREAMING
+					7507, 	1.147859,	01:49:00  	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
+					5513, 	1.730383, 	00:53:06 	(May 25, 2018) 	APV Version: 0.3.1-SNAPSHOT
+					1627, 	0.149431 	03:01:28  	(May  8, 2018)
 *****************************************************************************
 *****************************************************************************
 TODO:

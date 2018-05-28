@@ -29,9 +29,10 @@ public class SetPackList extends APVPlugin {
 			ConfigList configList = parent.getConfigurator().getRootConfig().getList(SET_PACK_LIST);
 			stringList = configList.stream().map(e -> (String) e.unwrapped()).collect(Collectors.toList());
 
-			if (stringList.isEmpty()) {
+			boolean autoLoad = parent.getConfigBooleanForFlag(Main.FLAGS.AUTO_LOAD_SET_LIST_FOLDER);
+			if (stringList.isEmpty() && autoLoad) {
 				File spFolder = new FileHelper(parent).getSetPacksFolder();
-				System.out.println("No setpack list defined.  Loading all available setpacks in setpack directory: " + spFolder.getAbsolutePath());
+				System.out.println("No setpack list defined.  AutoLoading all setpacks in setpack directory: " + spFolder.getAbsolutePath());
 				
 				File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
 				stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
