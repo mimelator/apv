@@ -76,6 +76,10 @@ public enum Command {
 	QUIET_WINDOW_LENGTH_DEC(DeadCommandCode.next(), "QuietWindow--", "Decreases the duration of the Quiet Window in Snap mode"),
 	SHOW_WATERMARK(DeadCommandCode.next(), "Show Watermark", "Displays the watermark"),
 	
+	//Newer Remote oriented commands
+	SHOW_SONG_QUEUE(DeadCommandCode.next(), "Show SongQueue", "Displays the current set of songs queued to be played"),
+	SHOW_OCEAN_SET_INFO(DeadCommandCode.next(), "Show Ocean Set Info", "Displays the current Ocean and Set"),
+	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),

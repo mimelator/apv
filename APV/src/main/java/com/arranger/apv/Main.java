@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
@@ -36,7 +37,7 @@ import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.PerformanceMonitor;
-import com.arranger.apv.helpers.SetPackList;
+import com.arranger.apv.helpers.SetPackLoader;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
@@ -130,7 +131,7 @@ public class Main extends PApplet {
 	protected VideoGameHelper videoGameHelper;
 	protected MacroHelper macroHelper;
 	protected HotKeyHelper hotKeyHelper;
-	protected SetPackList setPackList;
+	protected SetPackLoader setPackLoader;
 	protected FontHelper fontHelper;
 	protected RandomMessagePainter randomMessagePainter;
 	protected SplineHelper splineHelper;
@@ -333,8 +334,8 @@ public class Main extends PApplet {
 		return fontHelper;
 	}
 
-	public SetPackList getSetPackList() {
-		return setPackList;
+	public SetPackLoader getSetPackLoader() {
+		return setPackLoader;
 	}
 	
 	public MacroHelper getMacroHelper() {
@@ -750,7 +751,7 @@ public class Main extends PApplet {
 		pulseListener = new APVPulseListener(this);
 		macroHelper = new MacroHelper(this);
 		hotKeyHelper = new HotKeyHelper(this);
-		setPackList = new SetPackList(this);
+		setPackLoader = new SetPackLoader(this);
 		randomMessagePainter = new RandomMessagePainter(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
@@ -904,14 +905,31 @@ public class Main extends PApplet {
 	}
 	
 	public void sendMarqueeMessage(String message) {
-//		Marquee marquee = (Marquee)scenes.getFirstInstanceOf(Marquee.class);
-//		marquee.setText(message);
-		
 		Marquee marquee = new Marquee(this, message);
 		setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile
 		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
+	}
+	
+	public void showSongQueue() {
+		List<String> messages = new ArrayList<String>();
+		messages.add("Song Queue:");
+		
+		SongsModel model = getSongsModel();
+		List<File> songs = model.getSongs();
+		songs = songs.subList(model.getIndex(), songs.size() - 1);
+		messages.addAll(songs.stream().map(f -> f.getName()).collect(Collectors.toList()));
+		
+		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
+	}
+	
+	public void showOceanSetInfo() {
+		List<String> messages = new ArrayList<String>();
+		messages.add("Ocean: " + getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
+		messages.add("SetPack: " + getSetPackModel().getSetPackName());
+		
+		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.MIDDLE);
 	}
 	
 	@Override
@@ -947,7 +965,7 @@ public class Main extends PApplet {
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
 		watermark.reloadConfiguration();
-		setPackList.reset();
+		setPackLoader.reset();
 		
 		songsModel.reset();
 		colorsModel.reset();
@@ -1166,6 +1184,9 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SHOW_WATERMARK, (cmd,src,mod) -> getWatermarkEvent().fire());
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
+		
+		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
+		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());

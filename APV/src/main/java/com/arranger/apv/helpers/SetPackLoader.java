@@ -12,13 +12,13 @@ import com.arranger.apv.util.JSONQuoter;
 import com.typesafe.config.ConfigList;
 
 
-public class SetPackList extends APVPlugin {
+public class SetPackLoader extends APVPlugin {
 
 	private static final String SET_PACK_LIST = "setPackList";
 	private static final String [] DEFAULT_SETS = {""};
 	private List<String> stringList;
 	
-	public SetPackList(Main parent) {
+	public SetPackLoader(Main parent) {
 		super(parent);
 		setupRegistration();
 	}

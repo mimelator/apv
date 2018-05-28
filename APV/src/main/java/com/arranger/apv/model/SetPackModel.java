@@ -19,6 +19,7 @@ public class SetPackModel extends APVModel {
 	private int index;
 	
 	private SetpackEntity setpackEntity;
+	private String setPackName;
 	
 	public SetPackModel(Main parent) {
 		super(parent);
@@ -57,6 +58,10 @@ public class SetPackModel extends APVModel {
 	public void setSetPackList(List<String> setPackList) {
 		this.setPackList = new ArrayList<String>(setPackList);
 	}
+	
+	public String getSetPackName() {
+		return setPackName;
+	}
 
 	public void launchNextSetPack() {
 		launchSetPack(index++);
@@ -77,12 +82,13 @@ public class SetPackModel extends APVModel {
 			index = setPackList.size() - 1;
 		}
 		
-		String setPackName = setPackList.get(index);
+		setPackName = setPackList.get(index);
 		
 		//preserve some state before reload
 		CONTROL_MODES currentControlMode = parent.getCurrentControlMode();
 		int currentIndex = index;
 		SetpackEntity setpackEntity = parent.getDBSupport().findSetpackEntityByName(setPackName);
+		List<String> prevSetPackList = getSetPackList();
 		
 		//start working on reload
 		Path setPackPath = fh.getSetPacksFolder().toPath().resolve(setPackName);
@@ -104,6 +110,7 @@ public class SetPackModel extends APVModel {
 		this.index = currentIndex + 1;
 		parent.setCurrentControlMode(currentControlMode);
 		this.setpackEntity = setpackEntity;
+		setSetPackList(prevSetPackList);
 		
 		//Fire event?  Only agents will remain?
 	}

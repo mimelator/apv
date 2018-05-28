@@ -1,12 +1,8 @@
-BRANCH: cl-tools
+BRANCH: remote-commands
 https://github.com/mimelator/apv
 
-Timeline:
 
 Todo:
-	Listen ONLY MODE (So when set packs or set lists play, ignore it... just use line in)
-	Review changes to SetPackList
-
 	Remote Commands
 		Show song queue
 		Show ocean name / setPack name

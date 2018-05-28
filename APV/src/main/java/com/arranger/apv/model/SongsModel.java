@@ -97,6 +97,10 @@ public class SongsModel extends APVModel {
 		playSong(index);
 	}
 	
+	public int getIndex() {
+		return index;
+	}
+	
 	public List<File> getSongs() {
 		return new ArrayList<File>(songs);
 	}
