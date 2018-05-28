@@ -3,13 +3,6 @@ https://github.com/mimelator/apv
 
 
 Todo:
-	Remote Commands
-		Show song queue
-		Show ocean name / setPack name
-		List SetPacks(from the current ocean)
-		
-	
-
 	Build out Arranger Set Pack
 		Build the tools to automatically import songs from the hard drive
 			Do it in node.js or java -> Let's try node
