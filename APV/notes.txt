@@ -6,8 +6,8 @@ Todo:
 	Remote Commands
 		Show song queue
 		Show ocean name / setPack name
-		Play setPack (from the current ocean)
 		List SetPacks(from the current ocean)
+		
 	
 
 	Build out Arranger Set Pack
