@@ -33,7 +33,7 @@ public class FileCommandRunner extends StartupCommandRunner {
 
 	@Override
 	public String getConfig() {
-		return FILE_KEY + " = \"" + parent.getConfigString(FILE_KEY) + "\"";
+		return FILE_KEY + " = \"" + parent.getConfigString(FILE_KEY) + "\"" + System.lineSeparator();
 	}
 	
 }

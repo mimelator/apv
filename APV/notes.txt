@@ -1,70 +1,50 @@
-BRANCH: remote-commands
+BRANCH: master
 https://github.com/mimelator/apv
 
+BUG:
+	java.lang.RuntimeException: unable to unregister handler for event: SETLIST_COMPLETE
+		at com.arranger.apv.helpers.APVCallbackHelper.lambda$resetHandlerMap$0(APVCallbackHelper.java:37)
+		at java.util.HashMap$EntrySet.forEach(HashMap.java:1044)
+		at com.arranger.apv.helpers.APVCallbackHelper.resetHandlerMap(APVCallbackHelper.java:33)
+		at com.arranger.apv.agent.APVAgent.reloadConfiguration(APVAgent.java:23)
+		at com.arranger.apv.Main.reloadConfiguration(Main.java:938)
+		at com.arranger.apv.model.SetPackModel.launchSetPack(SetPackModel.java:101)
+		at com.arranger.apv.gui.SetPackLauncher$1.mouseClicked(SetPackLauncher.java:46)
 
-Todo:
-	Build out Arranger Set Pack
-		Build the tools to automatically import songs from the hard drive
-			Do it in node.js or java -> Let's try node
-			
-			require fs
-			for each .mp3 in $IMPORT_SONG_DIR
-				Add a song to the database 
-				However, the $IMPORT_SONG_DIR will be on a different volume than the $APV_HOME/songs
-			
-			for each .png in a $IMPORT_IMAGE_DIR 
-				Convert the image to transparent
-				Add the image to the database
-				However, the $IMPORT_IMAGE_DIR will be on a different volume than the $APV_HOME/icons
-				
-			for each line(message) in $MESSAGES_TEXT
-				Add the message to the database
-				
-			for each line(color) in $COLORS_TEXT
-				Add the colors to the database	
-				
-			Should this be a standalone node.js file that is executed from docker-compose.yml?
-					That could be pretty sweet
-					
-			
-			This will provide the json template for the wizard that i need to make.
-			
-			In fact, this can just be the internal REST API for the front-end wizard
-			The wizard can be a completely different node js installation the exposes 8000 on the web
-				It can be a react-based single page wizard that builds up the json doc for the import.js script
-				
-			Investigate:
-				* REST API Nodes
-				* Authentication based Single Page Applications that can post a JSON document
-					It can use angular/react/keyston whatever.... it's a different runtime than wevlength:3000 server
-					
-					In fact, it could be running on amazon's cloud and post the JSON document to my internal server
-						The internal REST API could be unique-user-key and the import JSON document.
-						This would make it easier to have the nightbot from twitch post
-						
-						https://medium.com/@sgobinda007/setting-up-react-redux-application-for-production-and-hosting-in-aws-ec2-8bbb8bf3c643	
-				
-				Static website in 10 minutes hosted free on AWS
-				https://hackernoon.com/how-to-deploy-a-live-reactjs-redux-website-in-under-10-minutes-cadf73cfc75a
-			
-				Great Reesponsive UI for static sites
-				* https://semantic-ui.com
-				* https://foundation.zurb.com/sites.html
-				* HTML Kick Start: http://www.99lime.com/elements/
+	Repro: ./apv-no-db.sh default
+		Open Window
+		Load 5 set packs
+		Cycle Set Pack (twice in quick succession?)
 
-	Evaluate new features:
-		* Soundcloud play list
-		* Napster play list
-		* Branding has 3 layers: Wavelength - Ocean-Name - DJ
+Import:
+	Cleanup:
+		after util/import XXX delete photo-storage
+		
+	Setup:
+		prior to node util/import-setpacks-firebase need a photo-storage folder
+		
+		docker exec -d wavelength-testDB2 mkdir /tmp/photo-storage
+		docker exec -d wavelength-testDB2 node util/import-setpacks-firebase
+		docker exec -d wavelength-testDB2 node util/import public/apv/incoming/Boats.json
+		
+
+
+	#connect to the wavelength shell
+	docker exec -it wavelength-arranger /bin/bash
 	
+	#import all of the setpacks from firebase to local json files and photo-storage
+	node util/import-setpacks-firebase
+	
+	#create mongodb data for all of the incoming json files
+	node util/import public/apv/incoming/Boats.json
 
-LLC + BankAccount + Domainname
-	http://wavelength.rocks
-		admin/admin
-		admin@wavelength.rocks
-	$200 estimate to open the account with
-		-> Internet charge
-		-> iMac cose
+	#Run a command to create setpacks for each mongo db setpack
+	DB_CREATE_SET_PACK_FOLDERS in the hotcommands.txt
+
+
+	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
+		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx
+		https://developers.facebook.com/docs/plugins/share-button
 
 *****************************************************************************
 LOCAL DEVELOPMENT
@@ -95,9 +75,12 @@ Current High Score:
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Importer.  Create a script that generates the appropriate import.json file
 * SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
 * Tree scene?  Puzzle animation of a background iamge
 * Window blinds background
+* Soundcloud play list
+* Napster play list
 * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
 * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
 * Render vector graphics
@@ -122,24 +105,8 @@ WL: When creating a new setpack, the select picker for images doesn't show the i
 When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
 *****************************************************************************
 *****************************************************************************
-Set Pack Names could be:
-	PurpleHaze
-	Homecoming
-	Aquamarine
-	HeavyMetal
-	
-Messages:
-	Can you keep up with me?
-	Still there?
-	You're doing great.
-	That's the way to race...	
-*****************************************************************************
-*****************************************************************************
 Remote Debugging:
 java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
-
-Opt Eclipse params:
--Xms1024M -Xmx1024M  -XX:MinHeapFreeRatio=20 -XX:NewRatio=4 
 *****************************************************************************			
 *****************************************************************************
 Build & Release to local artifactory and github
@@ -186,100 +153,37 @@ db.setpacks.update(
 *****************************************************************************
 DOCKER COMMANDS NOTES
 
-	MONGO:
-	#start an instance of mongo pointing at your database	
-	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo	
-		
-	#start an instance that is exposed as port 37017	
-	sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
-	#connect to it	
-	mongodb://localhost:37017/test	
-		
-	#name an instance
-	sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo 	
-		
-		
-	NODE:
-	https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+MONGO:
+#start an instance of mongo pointing at your database	
+sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo	
 	
-	#build the image (in the wl directory)
-	docker build -t mimel/wl .	
+#start an instance that is exposed as port 37017	
+sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
+
+#connect to it	
+mongodb://localhost:37017/test	
 	
-	#run an instance of it
-	docker run -p 49160:3000 -d mimel/wl
+#name an instance
+sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo 	
 	
-	//connect to an instance of docker
-	docker exec -it wavelength-arranger /bin/bash
-	
-	COMPOSE:
-	https://ciphertrick.com/2017/10/23/dockerize-nodejs-service-with-mongodb-docker-compose/
-		
-	COMPOSE: MONGO|NODE|WAVELENGTH|IMAGEMAGICK
-	#Dockerfile in ~/git/wl/Dockerfile (and a .dockerignore)
-	#docker-compose.yml at ~/docker/docker-compose.yml	
-	docker-compose up --build	
-		
-	Wednesday 22nd: Docker research on mongo db
-		DONE!!!! Move mongo db to be inside the apv directory
-		DONE!!!! Each Apv can be in a different user's home folder
+#build the image (in the wl directory)
+docker build -t mimel/wl .	
+
+#run an instance of it
+docker run -p 49160:3000 -d mimel/wl
+
+//connect to an instance of docker
+docker exec -it wavelength-arranger /bin/bash
 *****************************************************************************
-*****************************************************************************
-DOCKER DEVELOPMENT NOTES
-* Because i need to fix something locally, i need to change the mongdb url in config.json
-		"mongoDB": "mongodb://database:27017/test",
-		I'm not sure how i should pass in database vs localhost for both docker and local development convenience yet.
-
-	I might need a variety of techniques to pass params:
-		1) For passing during the execution of docker-compose.yml
-		
-		At least 2 files need to be modified by looking up env params
-		2) app.js needs to be updated for the port?  huh?
-		3) config.json needs an updated url
-
-
-	* Figure out how to tell node express which port to listen to
-
-	* Enhance the wavelength script to: 
-	
-		Require a param for the named ocean: eg: ./wavelength.sh -wl-port=3000 mongo-port=27017 -o=arranger 
-			<OCEAN_NAME> = "arranger"
-			<WL-PORT> = 3000
-			<MONGO-PORT> = 27017
-			Create any necessary folders and
-			Launch the docker-compose with the correct params
-				Volume location
-					- ~/apv/<OCEAN_NAME>:/usr/src/app/public/apv
-					- ~/apv/<OCEAN_NAME>/data/db:/data/db
-				Ports  
-					- <MONGO-PORT>:<MONGO-PORT>
-					- <WL-PORT>:<WL-PORT> 
-				
-	
-		
-	*create a folder structure for apv oceans
-	*Parameterize the mongodb, ports and paths for the docker command line tool	
-	* reference.conf and all application.conf files need to reference:
-		apv.mongoDbName = <OCEAN-NAME>
-		apv.mongoHostPort = "localhost:<OCEAN-PORT>"
-		
-		It would be good to have this be Ocean Specific	
-	
-		~/apv/<OCEAN-NAME>/
-							data
-							icons
-							playlist
-							reference.conf
-							setPacks
-							stats
-*****************************************************************************	
 *****************************************************************************
 Setup a softlink inside of public to the apv directory:
 cd git/wl/public
 ln -s ~/apv apv
+*****************************************************************************
 *****************************************************************************
 How to override the DefaultCommands.
 -DdefaultCommands.0
 -DdefaultCommands.0=DB_CREATE_SET_PACK_FOLDERS
 -DdefaultCommands.1=CYCLE_SET_PACK
 see apv-no-db.sh for example			
-*****************************************************************************			
+*****************************************************************************		
