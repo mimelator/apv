@@ -3,32 +3,22 @@ https://github.com/mimelator/apv
 
 hotCommands error
 
-Email Subscriptions to a specifc setpack
-	Every time the setpack starts any subscriber gets an email notification
-	
-	APV writes to the firebase database about the current setpack
-		WL listens for changes to current setpack playing
-			anyone subscribed gets notified
-			
-			subscriptions should happen during the twitch chat window
-			
-	Routinely (or better solution)
-	clean the icons and storage of the firebase solution
-	and /tmp/photo-storage
-	
-	
+Twitch Commands:
+	!help
+	!commands
+	!song
+	!songQueue
+	!setpack
+	!showSetPacks
 
-APV:
-	Place current stream info in Firebase	
-
+	
 Alpha-One:
 	Some sort of notification (email, twillio)
-	
+	Scheduling of set packs
 		
 WL (import):
 	Twilio to send sms to me and djs
 	
-
 	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx
 		https://developers.facebook.com/docs/plugins/share-button
@@ -62,6 +52,11 @@ Current High Score:
 *****************************************************************************
 *****************************************************************************
 TODO:
+* Scheduled Maintenance: clean the icons and storage of firebase and processed
+* Email Subscriptions to a specifc setpack
+	Every time the setpack starts any subscriber gets an email notification
+	anyone subscribed gets notified
+	subscriptions should happen during the twitch chat window
 * Importer.  Create a script that generates the appropriate import.json file
 * SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
 * Tree scene?  Puzzle animation of a background iamge

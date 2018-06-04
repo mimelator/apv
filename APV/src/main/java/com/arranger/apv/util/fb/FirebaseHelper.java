@@ -1,11 +1,15 @@
 package com.arranger.apv.util.fb;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.util.FileHelper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -51,11 +55,27 @@ public class FirebaseHelper extends APVPlugin {
 	protected void updateSong(String title) {
 		DatabaseReference ref = database.getReference("liveStream/song");
 		ref.setValueAsync(title);
+		updateSongQueue();
 	}
 	
 	protected void updateSetPack(String title) {
 		DatabaseReference ref = database.getReference("liveStream/setpack");
 		ref.setValueAsync(title);
+		updateSongQueue();
 	}
 
+	protected void updateSongQueue() {
+		SongsModel songsModel = parent.getSongsModel();
+		List<File> songs = songsModel.getSongs();
+		int index = songsModel.getIndex();
+		String result = songs.subList(index, songs.size()).stream().map(f -> f.getName()).collect(Collectors.joining(", "));
+		DatabaseReference ref = database.getReference("liveStream/queue");
+		ref.setValueAsync(result);
+	}
+	
+	protected void updateSetPacks() {
+		String setpacks = parent.getSetPackModel().getSetPackList().stream().collect(Collectors.joining(", "));
+		DatabaseReference ref = database.getReference("liveStream/setpacks");
+		ref.setValueAsync(setpacks);
+	}
 }
