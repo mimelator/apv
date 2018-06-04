@@ -938,7 +938,7 @@ public class Main extends PApplet {
 		List<String> collect = getSetPackModel().getSetPackList().stream().map(s -> getFriendlySetPackName(s)).collect(Collectors.toList());
 		messages.addAll(collect);
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.LOWER_LEFT);
+		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	@Override
@@ -1197,6 +1197,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
 		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
 		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
+		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());

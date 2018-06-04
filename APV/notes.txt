@@ -1,46 +1,35 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-BUG:
-	java.lang.RuntimeException: unable to unregister handler for event: SETLIST_COMPLETE
-		at com.arranger.apv.helpers.APVCallbackHelper.lambda$resetHandlerMap$0(APVCallbackHelper.java:37)
-		at java.util.HashMap$EntrySet.forEach(HashMap.java:1044)
-		at com.arranger.apv.helpers.APVCallbackHelper.resetHandlerMap(APVCallbackHelper.java:33)
-		at com.arranger.apv.agent.APVAgent.reloadConfiguration(APVAgent.java:23)
-		at com.arranger.apv.Main.reloadConfiguration(Main.java:938)
-		at com.arranger.apv.model.SetPackModel.launchSetPack(SetPackModel.java:101)
-		at com.arranger.apv.gui.SetPackLauncher$1.mouseClicked(SetPackLauncher.java:46)
 
-	Repro: ./apv-no-db.sh default
-		Open Window
-		Load 5 set packs
-		Cycle Set Pack (twice in quick succession?)
-
-Import:
-	Cleanup:
-		after util/import XXX delete photo-storage
-		
-	Setup:
-		prior to node util/import-setpacks-firebase need a photo-storage folder
-		
-		docker exec -d wavelength-testDB2 mkdir /tmp/photo-storage
-		docker exec -d wavelength-testDB2 node util/import-setpacks-firebase
-		docker exec -d wavelength-testDB2 node util/import public/apv/incoming/Boats.json
-		
-
-
-	#connect to the wavelength shell
-	docker exec -it wavelength-arranger /bin/bash
+Routinely (or better solution)
+	clean the icons and storage of the firebase solution
+	and /tmp/photo-storage
 	
-	#import all of the setpacks from firebase to local json files and photo-storage
-	node util/import-setpacks-firebase
+Delete items like SetPacks	
+
+
+Email Subscriptions to a specifc setpack
+	Every time the setpack starts any subscriber gets an email notification
 	
-	#create mongodb data for all of the incoming json files
-	node util/import public/apv/incoming/Boats.json
+	APV writes to the firebase database about the current setpack
+		WL listens for changes to current setpack playing
+			anyone subscribed gets notified
+			
+			subscriptions should happen during the twitch chat window
 
-	#Run a command to create setpacks for each mongo db setpack
-	DB_CREATE_SET_PACK_FOLDERS in the hotcommands.txt
+APV:
+	Place current stream info in Firebase	
+	Don't start the thread stuff to early	
 
+Alpha-One:
+	Some sort of notification (email, twillio)
+	
+		
+
+WL (import):
+	Twilio to send sms to me and djs
+	Delete the storage when we're done with it
 
 	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx
@@ -174,6 +163,9 @@ docker run -p 49160:3000 -d mimel/wl
 
 //connect to an instance of docker
 docker exec -it wavelength-arranger /bin/bash
+
+#one stop importing
+docker exec wavelength-testDB4 ./shell/importFromFirebase.sh 
 *****************************************************************************
 *****************************************************************************
 Setup a softlink inside of public to the apv directory:

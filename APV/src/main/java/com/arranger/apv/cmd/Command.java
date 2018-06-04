@@ -80,6 +80,7 @@ public enum Command {
 	SHOW_SONG_QUEUE(DeadCommandCode.next(), "Show SongQueue", "Displays the current set of songs queued to be played"),
 	SHOW_OCEAN_SET_INFO(DeadCommandCode.next(), "Show Ocean Set Info", "Displays the current Ocean and Set"),
 	SHOW_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Shows Available Set Packs", "Shows the available set packs"),
+	LOAD_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Loads all Available Set Packs", "Loads the available set packs"),
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),

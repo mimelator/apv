@@ -31,15 +31,20 @@ public class SetPackLoader extends APVPlugin {
 
 			boolean autoLoad = parent.getConfigBooleanForFlag(Main.FLAGS.AUTO_LOAD_SET_LIST_FOLDER);
 			if (stringList.isEmpty() && autoLoad) {
-				File spFolder = new FileHelper(parent).getSetPacksFolder();
-				System.out.println("No setpack list defined.  AutoLoading all setpacks in setpack directory: " + spFolder.getAbsolutePath());
-				
-				File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
-				stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
+				loadAllAvailableSetPacks();
 			}
 			
 			parent.getSetPackModel().setSetPackList(stringList);
 		});
+	}
+	
+	public void loadAllAvailableSetPacks() {
+		File spFolder = new FileHelper(parent).getSetPacksFolder();
+		System.out.println("No setpack list defined.  AutoLoading all setpacks in setpack directory: " + spFolder.getAbsolutePath());
+		
+		File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
+		stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
+		parent.getSetPackModel().setSetPackList(stringList);
 	}
 	
 	public void reset() {
