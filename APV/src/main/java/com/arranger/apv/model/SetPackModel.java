@@ -112,6 +112,6 @@ public class SetPackModel extends APVModel {
 		this.setpackEntity = setpackEntity;
 		setSetPackList(prevSetPackList);
 		
-		//Fire event?  Only agents will remain?
+		parent.getSetPackStartEvent().fire();
 	}
 }

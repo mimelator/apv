@@ -71,6 +71,7 @@ import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.StarPainter;
 import com.arranger.apv.util.draw.TextDrawHelper;
+import com.arranger.apv.util.fb.FirebaseHelper;
 import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
@@ -139,6 +140,7 @@ public class Main extends PApplet {
 	protected StartupCommandRunner startupCommandRunner;
 	protected FileCommandRunner fileCommandRunner;
 	protected PostFX postFX;
+	protected FirebaseHelper firebaseHelper;
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -499,6 +501,14 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.COLOR_CHANGE);
 	}
 	
+	public CoreEvent getSongStartEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.SONG_START);
+	}
+	
+	public CoreEvent getSetPackStartEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.SET_PACK_START);
+	}
+	
 	public boolean isMonitoringEnabled() {
 		return getConfigBoolean(FLAGS.MONITORING_ENABLED.apvName());	
 	}
@@ -649,6 +659,10 @@ public class Main extends PApplet {
 		return fileCommandRunner;
 	}
 	
+	public FirebaseHelper getFirebaseHelper() {
+		return firebaseHelper;
+	}
+	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		sendMessage(new String[] {"Liked :)"});
@@ -760,6 +774,7 @@ public class Main extends PApplet {
 		videoGameHelper = new VideoGameHelper(this);
 		startupCommandRunner = new StartupCommandRunner(this);
 		fileCommandRunner = new FileCommandRunner(this);
+		firebaseHelper = new FirebaseHelper(this);
 		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
@@ -1331,6 +1346,8 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
 		eventMap.put(EventTypes.COLOR_CHANGE, new CoreEvent(this, EventTypes.COLOR_CHANGE));
+		eventMap.put(EventTypes.SONG_START, new CoreEvent(this, EventTypes.SONG_START));
+		eventMap.put(EventTypes.SET_PACK_START, new CoreEvent(this, EventTypes.SET_PACK_START));
 	}
 	
 	

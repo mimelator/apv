@@ -1,13 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-
-Routinely (or better solution)
-	clean the icons and storage of the firebase solution
-	and /tmp/photo-storage
-	
-Delete items like SetPacks	
-
+hotCommands error
 
 Email Subscriptions to a specifc setpack
 	Every time the setpack starts any subscriber gets an email notification
@@ -17,19 +11,23 @@ Email Subscriptions to a specifc setpack
 			anyone subscribed gets notified
 			
 			subscriptions should happen during the twitch chat window
+			
+	Routinely (or better solution)
+	clean the icons and storage of the firebase solution
+	and /tmp/photo-storage
+	
+	
 
 APV:
 	Place current stream info in Firebase	
-	Don't start the thread stuff to early	
 
 Alpha-One:
 	Some sort of notification (email, twillio)
 	
 		
-
 WL (import):
 	Twilio to send sms to me and djs
-	Delete the storage when we're done with it
+	
 
 	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx

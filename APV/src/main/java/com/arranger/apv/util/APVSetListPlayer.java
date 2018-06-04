@@ -34,6 +34,8 @@ public class APVSetListPlayer extends APVPlugin {
 	private AudioPlayer currentPlayer;
 	private String relConfigDir = "songs";
 	
+	private String currentSongTitle;
+	
 	public APVSetListPlayer(Main parent){
 		super(parent);
 	}
@@ -83,6 +85,10 @@ public class APVSetListPlayer extends APVPlugin {
 		return setList;
 	}
 	
+	public String getCurrentSongTitle() {
+		return currentSongTitle;
+	}
+	
 	protected void playSetList(int index) {
 		Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {
@@ -111,6 +117,8 @@ public class APVSetListPlayer extends APVPlugin {
 		if (title == null || title.isEmpty()) {
 			title = new File(metaData.fileName()).getName();
 		}
+		currentSongTitle = title;
+		parent.getSongStartEvent().fire();
 		parent.sendMarqueeMessage(title);
 		player.play();
 		while (player.isPlaying()) {
