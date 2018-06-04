@@ -25,7 +25,11 @@ public class StartupCommandRunner extends APVPlugin {
 		cmdList.forEach(cmdString -> {
 			if (!cmdString.isEmpty() && !cmdString.startsWith("#")) {
 				Command cmd = Command.valueOf(cmdString);
-				parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);
+				try {
+					parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
