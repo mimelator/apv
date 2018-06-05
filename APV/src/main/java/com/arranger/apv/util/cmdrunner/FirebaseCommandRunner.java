@@ -13,6 +13,11 @@ public class FirebaseCommandRunner extends StartupCommandRunner {
 
 	public FirebaseCommandRunner(Main parent) {
 		super(parent);
+		
+		if (parent.isListenOnly()) {
+			return;
+		}
+		
 		parent.getSetupEvent().register(() -> {
 			FirebaseDatabase database = parent.getFirebaseHelper().getDatabase();
 			DatabaseReference ref = database.getReference("liveStream/command");
