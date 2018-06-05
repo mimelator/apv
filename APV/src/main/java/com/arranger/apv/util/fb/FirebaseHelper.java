@@ -26,6 +26,10 @@ public class FirebaseHelper extends APVPlugin {
 	public FirebaseHelper(Main parent) {
 		super(parent);
 		
+		if (parent.isListenOnly()) {
+			return;
+		}
+		
 		try {
 			FileHelper fh = new FileHelper(parent);
 			String fullPath = fh.getFullPath("../../admin.json");

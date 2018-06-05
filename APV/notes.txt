@@ -2,12 +2,44 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+Business account:
+	sign up for github privacy
+	don't need anything for firebase for a MASSIVE time
+	don't need any twitch payments
+	don't need any youtube or google payments
+	need a credit card for the printers
+	sign up for spotify
+
 Approval process could be:
 	Update a record in the db approved=true Test
 	DatabaseReference ref = database.getReference("liveStream/command"); Test
+
+I'd like an arranger setpack that can be added to every database
+
+	maybe enhance uniqueIDs to have a prefix (defaults/assumes yt)
+	
+		spotify:playlist?
+		pandora:station
+	
+		yt: youtube
+		fs: filesystem
+		sc: soundcloud
+			https://github.com/Miserlou/SoundScrape
+				pip install soundscrape
+				soundscrape https://soundcloud.com/fllsnice/the-road-spacedad20xx-x-cuzo-key
 		
 
-	
+	This could lead to an all-star database where i can import setpacks from other databases
+	So i need an import/export setpack function
+	And i need an importSetPack.json for my arranger set pack
+		Songs:
+		
+		Icons:
+		
+		Messages:
+		
+		
+
 Alpha-One:
 	Scheduling of set packs
 	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
@@ -16,61 +48,34 @@ Alpha-One:
 	
 
 *****************************************************************************
-LOCAL DEVELOPMENT
-Start node local
-cd git\wl	
-edit .env
-npm run devstart
-	
-Start mongo
-~/mongod.sh default
-*****************************************************************************	
-Project Timeline:
-New Job = June 18th? (or 25)
- NJ - 7 days: Go Live June 11
- NJ - 14 days: 12 hour stream June 4
- NJ - 21 days: 1 hour stream w/database setpacks entered by at least one person other than me May 28th
-*****************************************************************************
-*****************************************************************************
-Current High Score: 
-
-				  122435, 	1.039196, 	32:43:37	(May 28, 2018)	APV Version: 0.3.3-SNAPSHOT
-					8743, 	0.742379, 	03:16:17	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
-					8041, 	1.633685 	01:22:02  	(Apr 29, 2018)
-					8298,	0.878374,	02:37:27	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT STREAMING
-					7507, 	1.147859,	01:49:00  	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
-					5513, 	1.730383, 	00:53:06 	(May 25, 2018) 	APV Version: 0.3.1-SNAPSHOT
-					1627, 	0.149431 	03:01:28  	(May  8, 2018)
-*****************************************************************************
-*****************************************************************************
 TODO:
-* Scheduled Maintenance: clean the icons and storage of firebase and processed
-* Email Subscriptions to a specifc setpack
+[WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
+[WEB] * Email Subscriptions to a specifc setpack
 	Every time the setpack starts any subscriber gets an email notification
 	anyone subscribed gets notified
 	subscriptions should happen during the twitch chat window
-* Importer.  Create a script that generates the appropriate import.json file
-* SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
-* Tree scene?  Puzzle animation of a background iamge
-* Window blinds background
-* Soundcloud play list
-* Napster play list
-* add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
-* All backgrounds should be able to rotate around the center of the screen (slowly is fine)
-* Render vector graphics
-* Shrink the 3d blocks to be smaller than the projected screen.  It's cool
-* A laminated command sheet
-* Ability to fire any of the events
-* Another animation: 
+[WEB] * Importer.  Create a script that generates the appropriate import.json file
+[GE] * SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
+[GE] * Tree scene?  Puzzle animation of a background iamge
+[GE] * Window blinds background
+[WEB] * Soundcloud play list
+[WEB] * Napster play list
+[GE] * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
+[GE] * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
+[GE] * Render vector graphics
+[GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
+[WEB] * A laminated command sheet
+[GE] * Ability to fire any of the events
+[GE] * Another animation: 
 	These are for transitions where the song name isn't known
 	Such as a hindu goddess with many limbs
 	This will be a nice task where i can use a different set of sketches that don't perform quite as well
-* Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
-* Document Commands (for creating Macros and Hot Keys and Agents)
+[GE] * Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
+[GE] * Document Commands (for creating Macros and Hot Keys and Agents)
 	* Add documentation in reference.conf to each plugin to describe it's arguments
-* Use ShaderDemo2 to start rendering images with glsl
-* Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
-** The training data going into the model would be encoded information describing all of the current scene components
+[GE] * Use ShaderDemo2 to start rendering images with glsl
+[WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
+	** The training data going into the model would be encoded information describing all of the current scene components
 *****************************************************************************
 *****************************************************************************
 Issues:
@@ -164,3 +169,24 @@ How to override the DefaultCommands.
 -DdefaultCommands.1=CYCLE_SET_PACK
 see apv-no-db.sh for example			
 *****************************************************************************		
+*****************************************************************************
+LOCAL DEVELOPMENT
+Start node local
+cd git\wl	
+edit .env
+npm run devstart
+	
+Start mongo
+~/mongod.sh default
+*****************************************************************************
+*****************************************************************************
+Current High Score: 
+
+  122435, 	1.039196, 	32:43:37	(May 28, 2018)	APV Version: 0.3.3-SNAPSHOT
+	8743, 	0.742379, 	03:16:17	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
+	8041, 	1.633685 	01:22:02  	(Apr 29, 2018)
+	8298,	0.878374,	02:37:27	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT STREAMING
+	7507, 	1.147859,	01:49:00  	(May 26, 2018) 	APV Version: 0.3.1-SNAPSHOT
+	5513, 	1.730383, 	00:53:06 	(May 25, 2018) 	APV Version: 0.3.1-SNAPSHOT
+	1627, 	0.149431 	03:01:28  	(May  8, 2018)
+*****************************************************************************
