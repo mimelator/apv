@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
@@ -49,6 +50,15 @@ public class SetPackModel extends APVModel {
 	@SuppressWarnings("rawtypes")
 	public void loadFromEntities(List entities) {
 		
+	}
+	
+	public void playSetPack(String setPackName) {
+		IntStream.range(0, setPackList.size()).forEach(i -> {
+			String setPack = setPackList.get(i);
+			if (setPackName.equalsIgnoreCase(setPack)) {
+				launchSetPack(i);
+			}
+		});
 	}
 
 	public List<String> getSetPackList() {

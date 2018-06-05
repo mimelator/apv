@@ -82,6 +82,8 @@ public enum Command {
 	SHOW_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Shows Available Set Packs", "Shows the available set packs"),
 	LOAD_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Loads all Available Set Packs", "Loads the available set packs"),
 	
+	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
+	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),
@@ -131,6 +133,8 @@ public enum Command {
 	private int modifiers;
 	private boolean acceptAnyModifier = true;
 	
+	private String argument;
+	
 	private Command(char charKey, String displayName, String helpText) {
 		this(charKey, displayName, helpText, 0);
 	}
@@ -158,6 +162,14 @@ public enum Command {
 		hasCharKey = false;
 	}
 	
+	public String getArgument() {
+		return argument;
+	}
+
+	public void setArgument(String argument) {
+		this.argument = argument;
+	}
+
 	public boolean hasCharKey() {
 		return hasCharKey;
 	}

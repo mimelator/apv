@@ -62,6 +62,7 @@ public class FirebaseHelper extends APVPlugin {
 		DatabaseReference ref = database.getReference("liveStream/setpack");
 		ref.setValueAsync(title);
 		updateSongQueue();
+		updateSetPacks();
 	}
 
 	protected void updateSongQueue() {
@@ -74,7 +75,7 @@ public class FirebaseHelper extends APVPlugin {
 	}
 	
 	protected void updateSetPacks() {
-		String setpacks = parent.getSetPackModel().getSetPackList().stream().collect(Collectors.joining(", "));
+		String setpacks = parent.getSetPackModel().getSetPackList().stream().map(sp -> new File(sp).getName()).collect(Collectors.joining(", "));
 		DatabaseReference ref = database.getReference("liveStream/setpacks");
 		ref.setValueAsync(setpacks);
 	}

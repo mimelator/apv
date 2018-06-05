@@ -3,14 +3,6 @@ https://github.com/mimelator/apv
 
 hotCommands error
 
-Twitch Commands:
-	!help
-	!commands
-	!song
-	!songQueue
-	!setpack
-	!showSetPacks
-
 	
 Alpha-One:
 	Some sort of notification (email, twillio)
