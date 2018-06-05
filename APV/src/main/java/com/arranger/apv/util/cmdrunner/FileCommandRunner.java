@@ -1,9 +1,11 @@
-package com.arranger.apv.util;
+package com.arranger.apv.util.cmdrunner;
 
 import java.io.File;
 import java.util.Arrays;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FileWatcher;
 
 
 public class FileCommandRunner extends StartupCommandRunner {

@@ -58,15 +58,16 @@ import com.arranger.apv.transition.TransitionSystem;
 import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.FileCommandRunner;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
-import com.arranger.apv.util.StartupCommandRunner;
 import com.arranger.apv.util.VersionInfo;
+import com.arranger.apv.util.cmdrunner.FileCommandRunner;
+import com.arranger.apv.util.cmdrunner.FirebaseCommandRunner;
+import com.arranger.apv.util.cmdrunner.StartupCommandRunner;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.StarPainter;
@@ -141,6 +142,7 @@ public class Main extends PApplet {
 	protected FileCommandRunner fileCommandRunner;
 	protected PostFX postFX;
 	protected FirebaseHelper firebaseHelper;
+	protected FirebaseCommandRunner firebaseCommandRunner;
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -659,6 +661,10 @@ public class Main extends PApplet {
 		return fileCommandRunner;
 	}
 	
+	public FirebaseCommandRunner getFirebaseCommandRunner() {
+		return firebaseCommandRunner;
+	}
+	
 	public FirebaseHelper getFirebaseHelper() {
 		return firebaseHelper;
 	}
@@ -775,6 +781,7 @@ public class Main extends PApplet {
 		startupCommandRunner = new StartupCommandRunner(this);
 		fileCommandRunner = new FileCommandRunner(this);
 		firebaseHelper = new FirebaseHelper(this);
+		firebaseCommandRunner = new FirebaseCommandRunner(this);
 		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));

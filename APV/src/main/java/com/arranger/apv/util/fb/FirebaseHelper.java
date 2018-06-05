@@ -52,6 +52,10 @@ public class FirebaseHelper extends APVPlugin {
 		});
 	}
 	
+	public FirebaseDatabase getDatabase() {
+		return database;
+	}
+	
 	protected void updateSong(String title) {
 		DatabaseReference ref = database.getReference("liveStream/song");
 		ref.setValueAsync(title);

@@ -1,19 +1,19 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-hotCommands error
+
+Approval process could be:
+	Update a record in the db approved=true Test
+	DatabaseReference ref = database.getReference("liveStream/command"); Test
+		
 
 	
 Alpha-One:
-	Some sort of notification (email, twillio)
 	Scheduling of set packs
-		
-WL (import):
-	Twilio to send sms to me and djs
-	
 	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx
-		https://developers.facebook.com/docs/plugins/share-button
+		https://developers.facebook.com/docs/plugins/share-button	
+	
 
 *****************************************************************************
 LOCAL DEVELOPMENT
