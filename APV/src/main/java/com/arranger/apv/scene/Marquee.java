@@ -30,12 +30,14 @@ public class Marquee extends Animation {
 	private static final int ASCII_HIGH = 126;
 	private static final int ASCII_LOW = 33;
 	
+	private int threshold;
 	private String text;
 	private int characterColor;
 	private PGraphics pg;
 	private ArrayList<OneChr> chrs;
 	private Tracker<Marquee> tracker;
 	private int drawCount = 0;
+	private int requiredHitsPerFrame;
 
 	private Map<SetpackEntity, DJEntity> djMap = new HashMap<SetpackEntity, DJEntity>();
 	
@@ -45,6 +47,9 @@ public class Marquee extends Animation {
 		if (text.length() > MAX_TEXT_LENGTH) {
 			text = text.substring(0, MAX_TEXT_LENGTH);
 		}
+		float countdownPct = Float.parseFloat(parent.getConfigValueForFlag(Main.FLAGS.COUNTDOWN_PCT));
+		this.threshold = (int)(DRAWN_CHAR_THRESHOLD * countdownPct);
+		this.requiredHitsPerFrame = (int)(REQUIRED_HITS_PER_FRAME / countdownPct);
 	}
 
 	public Marquee(Configurator.Context ctx) {
@@ -90,7 +95,7 @@ public class Marquee extends Animation {
 		
 		int hits = 0;
 		
-		while (hits < REQUIRED_HITS_PER_FRAME) {
+		while (hits < requiredHitsPerFrame) {
 			float x = parent.random(parent.width);
 			float y = parent.random(parent.height);
 			int c = pg.get((int) x, (int) y);
@@ -126,7 +131,7 @@ public class Marquee extends Animation {
 			new TextPainter(parent).drawText(messages, SafePainter.LOCATION.UPPER_LEFT);
 		}
 		
-		if (tracker != null && tracker.isActive(e -> drawCount > DRAWN_CHAR_THRESHOLD)) {
+		if (tracker != null && tracker.isActive(e -> drawCount > threshold)) {
 			tracker.fireEvent();
 			tracker = null;
 		}

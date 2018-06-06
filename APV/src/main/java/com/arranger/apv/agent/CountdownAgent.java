@@ -15,13 +15,15 @@ public class CountdownAgent extends BaseAgent {
 	}
 	
 	private Countdown getCountdown() {
-		return new Countdown(parent, 10);
+		int countDownStart = (int)(10 * Float.parseFloat(parent.getConfigValueForFlag(Main.FLAGS.COUNTDOWN_PCT)));
+		return new Countdown(parent, countDownStart);
 	}
 	
 	private class Drawer {
 		private EventHandler register;
 		private Drawer() {
-			DrawHelper drawHelper = new DrawHelper(parent, COUNTDOWN_FRAMES, getCountdown(), () -> {});
+			int countdownFrames = (int)(COUNTDOWN_FRAMES * Float.parseFloat(parent.getConfigValueForFlag(Main.FLAGS.COUNTDOWN_PCT)));
+			DrawHelper drawHelper = new DrawHelper(parent, countdownFrames, getCountdown(), () -> {});
 			register = getSceneCompleteEvent().register(() -> {
 				drawHelper.complete();
 				getSceneCompleteEvent().unregister(register);

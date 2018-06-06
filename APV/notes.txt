@@ -2,8 +2,12 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 Production tasks:
-	Out-of-heap?
-	SET_PACK_COMPLETE
+	Re-Sync apv and WL
+	
+	All set packs need to be re-sync'd so that they have the wavelength rocks sub-titles
+		Read the issue below before proceeding
+	Change the timing of the marquee
+		1/2 time
 
 SetPack Tasks:
 	Alpha-one testing:

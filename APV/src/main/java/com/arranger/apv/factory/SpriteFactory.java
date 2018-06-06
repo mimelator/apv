@@ -33,6 +33,9 @@ public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 		}
 		
 		sprite = parent.getImageHelper().loadImage(icon, resolvedImage, this);
+		if (sprite == null) {
+			sprite = new PImage(1, 1);
+		}
 	}
 	
 	public SpriteFactory(Configurator.Context ctx) {

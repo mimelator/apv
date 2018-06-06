@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
@@ -18,6 +19,8 @@ import com.arranger.apv.util.ImageHelper.ICON_NAMES;
 import processing.core.PImage;
 
 public class IconsModel extends APVModel {
+	
+	private static final Logger logger = Logger.getLogger(IconsModel.class.getName());
 
 	public static final Dimension PREFERRED_ICON_SIZE = new Dimension(400, 400);
 	
@@ -31,7 +34,13 @@ public class IconsModel extends APVModel {
 	protected void init() {
 		ICON_NAMES.VALUES.forEach(icon -> {
 			String iconFile = parent.getConfigString(icon.getFullTitle());
-			Image img = parent.loadImage(iconFile).getImage();
+			Image img = null;
+			try {
+				img = parent.loadImage(iconFile).getImage();
+			} catch (Exception e) {
+				logger.severe(e.getMessage());
+				img = new PImage(1, 1).getImage();
+			}
 			ImageHolder imageHolder = new ImageHolder(iconFile, img);
 			checkAlpha(imageHolder);
 			iconMap.put(icon, imageHolder);
@@ -117,7 +126,12 @@ public class IconsModel extends APVModel {
 
 		public Image getImage() {
 			if (image == null) {
-				image = parent.loadImage(file.getAbsolutePath()).getImage();
+				try {
+					image = parent.loadImage(file.getAbsolutePath()).getImage();
+				} catch (Exception e) {
+					logger.severe(e.getMessage());
+					image = new PImage(1, 1).getImage();
+				}
 			}
 			return image;
 		}

@@ -182,6 +182,7 @@ public class Main extends PApplet {
 		SCREEN_HEIGHT("screen.height", "integer"),
 		MONITORING_ENABLED("monitoring.enabled", "true|false"),
 		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
+		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
 		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
@@ -324,6 +325,10 @@ public class Main extends PApplet {
 	
 	public int getConfigInt(String path) {
 		return getConfigurator().getRootConfig().getInt(path);
+	}
+	
+	public float getConfigFloat(String path) {
+		return Float.parseFloat(getConfigString(path));
 	}
 	
 	public boolean getConfigBoolean(String path) {
@@ -1372,6 +1377,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
 		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
 		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
+		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
@@ -1382,6 +1388,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
 		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
+		
 		
 		//helper configs
 		addHelperConfig(buffer, getFontHelper());
