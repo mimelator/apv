@@ -73,6 +73,7 @@ public class FirebaseHelper extends APVPlugin {
 		ref.setValueAsync(title);
 		updateSongQueue();
 		updateSetPacks();
+		updateDJ();
 	}
 	
 	protected void updateDJ() {
