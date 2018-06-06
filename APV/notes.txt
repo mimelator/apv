@@ -1,79 +1,37 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Production tasks:
+	Out-of-heap?
+	SET_PACK_COMPLETE
 
-Business account:
-	sign up for github privacy
-	don't need anything for firebase for a MASSIVE time
-	don't need any twitch payments
-	don't need any youtube or google payments
-	need a credit card for the printers
-	sign up for spotify
+SetPack Tasks:
+	Alpha-one testing:
 
-Approval process could be:
-	Update a record in the db approved=true Test
-	DatabaseReference ref = database.getReference("liveStream/command"); Test
-
-I'd like an arranger setpack that can be added to every database
-
-	maybe enhance uniqueIDs to have a prefix (defaults/assumes yt)
-	
-		spotify:playlist?
-		pandora:station
-	
-		yt: youtube
-		fs: filesystem
-		sc: soundcloud
-			https://github.com/Miserlou/SoundScrape
-				pip install soundscrape
-				soundscrape https://soundcloud.com/fllsnice/the-road-spacedad20xx-x-cuzo-key
-		
-
-	This could lead to an all-star database where i can import setpacks from other databases
-	So i need an import/export setpack function
-	And i need an importSetPack.json for my arranger set pack
-		Songs:
-		
-		Icons:
-		
-		Messages:
-		
-		
-
-Alpha-One:
-	Scheduling of set packs
-	Social Media badges that guest Djs can use (snapchat, instagram, facebook)
-		https://blog.hubspot.com/blog/tabid/6307/bid/29544/the-ultimate-cheat-sheet-for-creating-social-media-buttons.aspx
-		https://developers.facebook.com/docs/plugins/share-button	
+Development Tasks:
 	
 
 *****************************************************************************
 TODO:
-[WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
-[WEB] * Email Subscriptions to a specifc setpack
-	Every time the setpack starts any subscriber gets an email notification
-	anyone subscribed gets notified
-	subscriptions should happen during the twitch chat window
-[WEB] * Importer.  Create a script that generates the appropriate import.json file
-[GE] * SetListComplete Agent that Special create a random mixed setpack on the fly and play that with a few songs
+[*] * HotCommands with arguments
+[WEB] * PhoneTests
+[WEB] * Scheduling
+[WEB] * Social Media badges that guest Djs can use (snapchat, instagram, facebook)
+[WEB] * Subscriptions for setpacks/djs/etc...
+[GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs
 [GE] * Tree scene?  Puzzle animation of a background iamge
 [GE] * Window blinds background
-[WEB] * Soundcloud play list
-[WEB] * Napster play list
+[GE] * More shaders here: https://github.com/maierfelix/rokon/tree/master/shaders
+[GE] * Use ShaderDemo2 to start rendering images with glsl
 [GE] * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
 [GE] * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
 [GE] * Render vector graphics
 [GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 [WEB] * A laminated command sheet
 [GE] * Ability to fire any of the events
-[GE] * Another animation: 
-	These are for transitions where the song name isn't known
-	Such as a hindu goddess with many limbs
-	This will be a nice task where i can use a different set of sketches that don't perform quite as well
-[GE] * Configuration GUI (tree) for each APVSystem that would allow you to disable/enable plugins for your set
-[GE] * Document Commands (for creating Macros and Hot Keys and Agents)
-	* Add documentation in reference.conf to each plugin to describe it's arguments
-[GE] * Use ShaderDemo2 to start rendering images with glsl
+[*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
+[GE] * Animations: Such as a hindu goddess with many limbs
+[WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
 [WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 	** The training data going into the model would be encoded information describing all of the current scene components
 *****************************************************************************
@@ -82,6 +40,7 @@ Issues:
 APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
 WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
 When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
+Import/Export is just a simple folder move, but there is no DB support :) but needs an update to the application.conf for the ocean
 *****************************************************************************
 *****************************************************************************
 Remote Debugging:

@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.DJEntity;
+import com.arranger.apv.db.entity.SetpackEntity;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.util.FileHelper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -71,6 +73,17 @@ public class FirebaseHelper extends APVPlugin {
 		ref.setValueAsync(title);
 		updateSongQueue();
 		updateSetPacks();
+	}
+	
+	protected void updateDJ() {
+		SetpackEntity setpackEntity = parent.getSetPackModel().getSetpackEntity();
+		if (setpackEntity != null) {
+			DJEntity dj = parent.getDBSupport().getDJforSetpack(setpackEntity);
+			if (dj != null) {
+				DatabaseReference ref = database.getReference("liveStream/dj");
+				ref.setValueAsync(dj.getName());
+			}
+		}
 	}
 
 	protected void updateSongQueue() {
