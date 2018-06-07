@@ -59,9 +59,24 @@ public class Audio extends APVPlugin {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> db++);
-			cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> db--);
+			cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> onCommand(command));
+			cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> onCommand(command));
 		});
+	}
+	
+	public void onCommand(Command command) {
+		int offset = 1;
+		String arg = command.getArgument();
+		if (arg != null) {
+			offset = Integer.parseInt(arg);
+		}
+		command.setArgument(null);
+		
+		if (command.equals(Command.AUDIO_DEC)) {
+			offset = -offset;
+		}
+		
+		db += offset;
 	}
 	
 	public float getDB() {

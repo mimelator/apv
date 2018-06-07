@@ -13,6 +13,8 @@ private static final int TEN_SECONDS = 10000;
 	private long lastTime = System.currentTimeMillis();
 	private Monitor monitor = new Monitor();
 	
+	private boolean enableThreadDump = false;
+	private boolean enableMemoryDump = true;
 	private boolean enabled;
 
 	public MonitorAgent(Main parent, boolean enabled) {
@@ -48,18 +50,30 @@ private static final int TEN_SECONDS = 10000;
 	private class Monitor implements Runnable {
 
 		private static final String APV_THREAD_DUMP_TXT = "apvThreadDump.txt";
+		private static final String APV_MEMORY_DUMP_TXT = "apvMemoryDump.txt";
 
 		@Override
 		public void run() {
 			while (true) {
+				boolean didDump = false;
 				if (System.currentTimeMillis() > lastTime + TEN_SECONDS) {
-					String threadDump = runtimeHelper.generateThreadDump();
-					System.out.println(threadDump);
-					new FileHelper(parent).saveFile(APV_THREAD_DUMP_TXT, threadDump);
+					didDump = true;
+					if (enableThreadDump) {
+						String threadDump = runtimeHelper.generateThreadDump();
+						System.out.println(threadDump);
+						new FileHelper(parent).saveFile(APV_THREAD_DUMP_TXT, threadDump);
+					}
+					
+					if (enableMemoryDump) {
+						String memoryDump = runtimeHelper.generateMemoryDump();
+						System.out.println(memoryDump);
+						new FileHelper(parent).saveFile(APV_MEMORY_DUMP_TXT, memoryDump);
+					}
 				}
 				
 				try {
-					Thread.sleep(1000);
+					long timeToSleep = 1000 * (didDump ? 10 : 1);
+					Thread.sleep(timeToSleep);
 				} catch (InterruptedException e) {
 					System.out.println("Unexpected exception: " + e);
 					e.printStackTrace();

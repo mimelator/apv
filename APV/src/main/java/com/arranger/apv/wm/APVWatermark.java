@@ -11,7 +11,10 @@ public class APVWatermark extends APV<WatermarkPainter> {
 
 	public APVWatermark(Main parent) {
 		super(parent, Main.SYSTEM_NAMES.WATERMARKS, false);
-		
+		register(parent);
+	}
+
+	protected void register(Main parent) {
 		parent.getSetupEvent().register(() -> {
 			token = parent.getWatermarkEvent().register(() -> {
 				WatermarkPainter wp =  getPlugin();
@@ -24,5 +27,6 @@ public class APVWatermark extends APV<WatermarkPainter> {
 	public void reloadConfiguration() {
 		parent.getWatermarkEvent().unregister(token);
 		initialize(parent, Main.SYSTEM_NAMES.WATERMARKS, false);
+		register(parent);
 	}
 }

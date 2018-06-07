@@ -9,7 +9,9 @@ import java.util.Map;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
+import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.opengl.Texture;
 
 public class ImageHelper extends APVPlugin {
 	
@@ -50,12 +52,26 @@ public class ImageHelper extends APVPlugin {
 	private Map<ICON_NAMES, List<ImageChangeHandler>> handlers = new HashMap<ICON_NAMES, List<ImageChangeHandler>>();
 	private Map<ICON_NAMES, String> alternateIconMap = new HashMap<ICON_NAMES, String>();
 	
+	private List<PImage> images = new ArrayList<PImage>();
+	
 	public ImageHelper(Main parent) {
 		super(parent);
 	}
 	
 	public Map<ICON_NAMES, String> getAlternateMap() {
 		return alternateIconMap;
+	}
+	
+	public void dispose(PGraphics pg) {
+		for (PImage img : images) {
+			Object cache = pg.getCache(img);
+			if (cache instanceof Texture) {
+				((Texture) cache).disposeSourceBuffer();
+			}
+			pg.removeCache(img);
+			
+		}
+		images.clear();
 	}
 
 	public PImage loadImage(ICON_NAMES icon, String path, ImageChangeHandler handler) {
@@ -70,7 +86,9 @@ public class ImageHelper extends APVPlugin {
 			alternateIconMap.put(icon, path);
 		}
 		
-		return parent.loadImage(path);
+		PImage result = parent.loadImage(path);
+		images.add(result);
+		return result;
 	}
 
 	public void updateImage(ICON_NAMES icon, PImage image, String fileName) {

@@ -16,15 +16,28 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 		
 		parent.getSetupEvent().register(() -> {
 			CommandSystem cs = parent.getCommandSystem();
-			cs.registerHandler(Command.PULSE_SKIP_INC,
-					(command, source, modifiers) -> autoSkipPulseListener.incrementPulsesToSkip());
-			cs.registerHandler(Command.PULSE_SKIP_DEC,
-					(command, source, modifiers) -> autoSkipPulseListener.deccrementPulsesToSkip());
+			cs.registerHandler(Command.PULSE_SKIP_INC, (cmd, src, mod) -> onCommand(cmd));
+			cs.registerHandler(Command.PULSE_SKIP_DEC, (cmd, src, mod) -> onCommand(cmd));
 		});
 	}
 
 	protected abstract int getDefaultPulsesToSkip();
 	protected abstract Command _getNextCommand();
+	
+	protected void onCommand(Command command) {
+		int offset = 1;
+		String arg = command.getArgument();
+		if (arg != null) {
+			offset = Integer.parseInt(arg);
+		}
+		command.setArgument(null);
+		
+		if (command.equals(Command.PULSE_SKIP_DEC)) {
+			offset = -offset;
+		}
+		
+		autoSkipPulseListener.adjustPulsesToSkip(offset);
+	}
 
 	@Override
 	public boolean allowsMouseLocation() {

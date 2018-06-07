@@ -15,6 +15,16 @@ public class RuntimeHelper extends APVPlugin {
 	public RuntimeHelper(Main parent) {
 		super(parent);
 	}
+	
+	public String generateMemoryDump() {
+		StringBuilder dump = new StringBuilder();
+		Runtime rt = Runtime.getRuntime();
+		
+		dump.append("total memory: ").append(rt.totalMemory()).append(System.lineSeparator());
+		dump.append("free memory: ").append(rt.freeMemory()).append(System.lineSeparator());
+		
+		return dump.toString();
+	}
 
 	public String generateThreadDump() {
 		final StringBuilder dump = new StringBuilder();

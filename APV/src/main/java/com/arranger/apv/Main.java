@@ -968,8 +968,13 @@ public class Main extends PApplet {
 		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
+	private List<QueuedCommand> queuedCommands = new ArrayList<QueuedCommand>();
+	
 	@Override
-	public synchronized void draw() {
+	public void draw() {
+		queuedCommands.forEach(q -> q.doCommand());
+		queuedCommands.clear();
+		
 		safePainter.paint();
 	}
 	
@@ -984,13 +989,26 @@ public class Main extends PApplet {
 		}).paint(null, safe);
 	}
 	
-	public synchronized void reloadConfiguration() {
+	public void reloadConfiguration() {
 		reloadConfiguration(null);
 	}
 	
-	public synchronized void reloadConfiguration(String file) {
+	@FunctionalInterface
+	private static interface QueuedCommand {
+		void doCommand();
+	}
+	
+	public void reloadConfiguration(final String file) {
+		queuedCommands.add(() -> {
+			doReloadConfiguration(file);
+		});
+	}
+	
+	protected void doReloadConfiguration(String file) {
 		//Color helper is used by the configurator during reload
 		colorHelper.reset();
+		
+		getImageHelper().dispose(g);
 		
 		configurator.reload(file);
 		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
@@ -1226,6 +1244,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
 		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getArgument()));
+		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getArgument()));
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());

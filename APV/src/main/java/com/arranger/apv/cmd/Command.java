@@ -83,6 +83,8 @@ public enum Command {
 	LOAD_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Loads all Available Set Packs", "Loads the available set packs"),
 	
 	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
+	SHOW_MARQUEE_MESSAGE(DeadCommandCode.next(), "Shows a marquee Message", "Shows a marquee message"),
+	
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),

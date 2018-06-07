@@ -78,6 +78,14 @@ public class PulseListener extends APVPlugin {
 		return false;
 	}
 	
+	public void adjustPulsesToSkip(int adjust) {
+		pulsesToSkip += adjust;
+		if (pulsesToSkip < 1) {
+			pulsesToSkip = 1;
+		}
+		newPulse();
+	}
+	
 	public void incrementPulsesToSkip() {
 		pulsesToSkip++;
 		newPulse();
