@@ -10,6 +10,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseCommandRunner extends StartupCommandRunner {
+	
+	private static final String COMPLETED_MESSAGE = "#completed";
 
 	public FirebaseCommandRunner(Main parent) {
 		super(parent);
@@ -25,7 +27,15 @@ public class FirebaseCommandRunner extends StartupCommandRunner {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
 					String value = dataSnapshot.getValue(String.class);
-					runCommands(Arrays.asList(new String[]{value}));
+					try {
+						runCommands(Arrays.asList(new String[]{value}));
+					} catch (Throwable t) {
+						t.printStackTrace();
+					} finally {
+						if (value != null && value.equals(COMPLETED_MESSAGE)) {
+							ref.setValueAsync(COMPLETED_MESSAGE);
+						}
+					}
 				}
 
 				@Override
