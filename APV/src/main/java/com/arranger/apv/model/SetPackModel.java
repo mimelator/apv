@@ -81,9 +81,6 @@ public class SetPackModel extends APVModel {
 	}
 	
 	public void launchSetPack(int newIndex) {
-		System.out.println("incomingIndex: " + newIndex);
-		System.out.println("incomingIndex: " + newIndex);
-		System.out.println("incomingIndex: " + newIndex);
 		if (setPackList.isEmpty()) {
 			return;
 		}
@@ -122,10 +119,6 @@ public class SetPackModel extends APVModel {
 		this.setpackEntity = setpackEntity;
 		setSetPackList(prevSetPackList);
 		this.index = setPackList.indexOf(setPackName);
-		System.out.println("postIndex: " + this.index);
-		System.out.println("postIndex: " + this.index);
-		System.out.println("postIndex: " + this.index);
-		
 		parent.getSetPackStartEvent().fire();
 	}
 }
