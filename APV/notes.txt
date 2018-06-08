@@ -1,26 +1,61 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Production Tasks:
+	BUG: CYCLE_SET_PACK reverts to the first set every time
+	PRI 1: Can't stop playing the same set pack
+		Has to do with reloadConfiguration and not keeping state
+
+
+	I deleted all of the songs under monday/playlist to conserve rooom when
+		transferring a zip archive to my dev laptop
+		However, the song of each song Model points not to to the SetPack but to the location in playlist
+		
+		So right now, all monday songs are broken from the DB.  Not the eetpacks...
+
+
+
+
+	BUG: wavelength-monday | GET /apv/playlist/80S_EARLY_90S_NEW_WAVE_POST_PUNK_GOTHIC_DARKWAVE.mp3 404 113.484 ms - 3189
+	TEST: standard-hot-import doesn't work
+	ISSUE: Streaming over LTE isn't working.  I'm experimenting with Lower Bit Rate to 2000 and change source to auto
+
 SetPack Tasks:
-	Alpha-one testing:
+	Alpha-one testing: ???
 
 Development Tasks:
+	Each like would count for:
+		The song
+		The setpack
+		The Dj
+	it would also capture the following metadata:
+		Time of Like
+		Person who liked	
 	
-	
-	why is the watermark not showing up in production?
-	Macros get scrambled after cycle set pack?
-	
-	
+	Likes:
+		* would be listened by the chat bot
+		* Have stats available in the chat
+		* I could even create a scene that shows the stats eventually
+		
+		* How to prevent spam:
+			Usage: /r9kbeta
+		* How to prevent excessive voting?  Hmm..
+			https://docs.nightbot.tv/commands/filters  Nightbot filter repetitions
+			
+		
 	
 
 *****************************************************************************
 TODO:
+[WEB] * Liking Scenes and stats... Like an online video game
 [WEB] * PhoneTests
 [WEB] * Scheduling
 [WEB] * Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 [WEB] * Subscriptions for setpacks/djs/etc...
+[GE] * Have a set pack transition animation (The tree with a marquee message of the SetPack name)
 [GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs
 [GE] * Tree scene?  Puzzle animation of a background iamge
+[GE] * Animations: Such as a hindu goddess with many limbs
 [GE] * Window blinds background
 [GE] * More shaders here: https://github.com/maierfelix/rokon/tree/master/shaders
 [GE] * Use ShaderDemo2 to start rendering images with glsl
@@ -31,7 +66,6 @@ TODO:
 [WEB] * A laminated command sheet
 [GE] * Ability to fire any of the events
 [*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
-[GE] * Animations: Such as a hindu goddess with many limbs
 [WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
 [WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 	** The training data going into the model would be encoded information describing all of the current scene components

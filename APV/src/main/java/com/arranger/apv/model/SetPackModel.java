@@ -38,7 +38,6 @@ public class SetPackModel extends APVModel {
 	@Override
 	public void reset() {
 		setPackList.clear();
-		index = 0;
 	}
 
 	@Override
@@ -74,29 +73,31 @@ public class SetPackModel extends APVModel {
 	}
 
 	public void launchNextSetPack() {
-		launchSetPack(index++);
+		launchSetPack(index + 1);
 	}
 	
 	public void launchPrevSetPack() {
-		launchSetPack(index--);
+		launchSetPack(index - 1);
 	}
 	
-	public void launchSetPack(int index) {
+	public void launchSetPack(int newIndex) {
+		System.out.println("incomingIndex: " + newIndex);
+		System.out.println("incomingIndex: " + newIndex);
+		System.out.println("incomingIndex: " + newIndex);
 		if (setPackList.isEmpty()) {
 			return;
 		}
 		
-		if (index >= setPackList.size()) {
-			index = 0;
-		} else if (index < 0) {
-			index = setPackList.size() - 1;
+		if (newIndex >= setPackList.size()) {
+			newIndex = 0;
+		} else if (newIndex < 0) {
+			newIndex = setPackList.size() - 1;
 		}
 		
-		setPackName = setPackList.get(index);
+		setPackName = setPackList.get(newIndex);
 		
 		//preserve some state before reload
 		CONTROL_MODES currentControlMode = parent.getCurrentControlMode();
-		int currentIndex = index;
 		SetpackEntity setpackEntity = parent.getDBSupport().findSetpackEntityByName(setPackName);
 		List<String> prevSetPackList = getSetPackList();
 		
@@ -117,10 +118,13 @@ public class SetPackModel extends APVModel {
 		parent.reloadConfiguration(configFilePath);
 		
 		//restore some state
-		this.index = currentIndex + 1;
 		parent.setCurrentControlMode(currentControlMode);
 		this.setpackEntity = setpackEntity;
 		setSetPackList(prevSetPackList);
+		this.index = setPackList.indexOf(setPackName);
+		System.out.println("postIndex: " + this.index);
+		System.out.println("postIndex: " + this.index);
+		System.out.println("postIndex: " + this.index);
 		
 		parent.getSetPackStartEvent().fire();
 	}

@@ -999,6 +999,7 @@ public class Main extends PApplet {
 	}
 	
 	public void reloadConfiguration(final String file) {
+		//if the current thread is a painting thread, then execute
 		queuedCommands.add(() -> {
 			doReloadConfiguration(file);
 		});
