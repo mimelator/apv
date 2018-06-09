@@ -1027,8 +1027,8 @@ public class Main extends PApplet {
 		restart(file);
 		
 		queuedCommands.add(() -> {
-			//doReloadConfiguration(file);
-			restart(file);
+			doReloadConfiguration(file);
+			//restart(file);
 		});
 	}
 	
