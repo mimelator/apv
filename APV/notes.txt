@@ -2,28 +2,25 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 Production Tasks:
-	BUG: CYCLE_SET_PACK reverts to the first set every time
-	PRI 1: Can't stop playing the same set pack
-		Has to do with reloadConfiguration and not keeping state
-
-
-	I deleted all of the songs under monday/playlist to conserve rooom when
-		transferring a zip archive to my dev laptop
-		However, the song of each song Model points not to to the SetPack but to the location in playlist
-		
-		So right now, all monday songs are broken from the DB.  Not the eetpacks...
-
-
-
-
-	BUG: wavelength-monday | GET /apv/playlist/80S_EARLY_90S_NEW_WAVE_POST_PUNK_GOTHIC_DARKWAVE.mp3 404 113.484 ms - 3189
-	TEST: standard-hot-import doesn't work
-	ISSUE: Streaming over LTE isn't working.  I'm experimenting with Lower Bit Rate to 2000 and change source to auto
-
-SetPack Tasks:
-	Alpha-one testing: ???
+	
 
 Development Tasks:
+
+	BETTER STATS
+	[GE]
+		Show Ocean and setpack
+		Emphasize the things i've been interested in:
+			FPS
+			FPS / minute
+			Audio DB:
+			PulseSkip (Perlin)
+			PulseAgent
+			More recent flags
+
+
+	LIKES:
+	[*]
+
 	Each like would count for:
 		The song
 		The setpack
@@ -34,19 +31,21 @@ Development Tasks:
 	
 	Likes:
 		* would be listened by the chat bot
-		* Have stats available in the chat
+			See below for excessive voting
+		* Have stats available in the chat: !leaderboard
 		* I could even create a scene that shows the stats eventually
 		
 		* How to prevent spam:
 			Usage: /r9kbeta
 		* How to prevent excessive voting?  Hmm..
 			https://docs.nightbot.tv/commands/filters  Nightbot filter repetitions
-			
-		
 	
 
 *****************************************************************************
 TODO:
+[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
+[*] * I might want a runtime method to disable agents, but for right now i'll do it manually
+[WEB] * Execute certain mod commands over chat window?
 [WEB] * Liking Scenes and stats... Like an online video game
 [WEB] * PhoneTests
 [WEB] * Scheduling
@@ -76,6 +75,13 @@ APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was
 WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
 When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
 Import/Export is just a simple folder move, but there is no DB support :) but needs an update to the application.conf for the ocean
+[WL]: wavelength-monday | GET /apv/playlist/80S_EARLY_90S_NEW_WAVE_POST_PUNK_GOTHIC_DARKWAVE.mp3 404 113.484 ms - 3189
+	I deleted all of the songs under monday/playlist to conserve rooom when
+	transferring a zip archive to my dev laptop
+	However, the song of each song Model points not to to the SetPack but to the location in playlist
+	So right now, all monday songs are broken from the DB.  Not the setpacks...
+	FIX: Maybe also show all the possible set pack locations.  Just like searching for djs, try to search
+		for setpacks that contain this song.
 *****************************************************************************
 *****************************************************************************
 Remote Debugging:

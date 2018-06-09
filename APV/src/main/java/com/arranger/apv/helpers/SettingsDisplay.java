@@ -52,20 +52,13 @@ public class SettingsDisplay extends APVPlugin implements TextSupplier {
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
-		addSettingsMessage("Monitoring Enabled: " + p.isMonitoringEnabled());
+		addSettingsMessage("Ocean: " + p.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControl().addSettingsMessages();
 		addSettingsMessage("Cmds/Sec: " + VideoGameHelper.decFormat.format(p.getVideoGameHelper().getCommandsPerSec()));
-		addSettingsMessage("Loc: " + p.getLocations().getPlugin().getDisplayName());
-		addSettingsMessage("Color: " + p.getColor().getDisplayName());
 		addSettingsMessage("db: " + p.getAudio().getDB());
-		addSettingsMessage("ParticlePct: " + String.format("%.0f%%", parent.getParticles().getPct() * 100));
-		addSettingsMessage("Num Liked Scenes: " + p.getLikedScenes().size());
-		addSettingsMessage("MouseXY:  " + p.mouseX + " " + p.mouseY);
-		addSettingsMessage("Transitions Frames : " + p.getTransition().getTransitionFrames());
-		addSettingsMessage("FrameStrober SkipRate: " + p.getFrameStrober().getSkipNFrames());
 		p.getPulseListener().addSettingsMessages();
-		
+		addSettingsMessage("---------Switches-------");
 		List<String> switchList = p.getSwitches().values().
 				stream().map(s -> s.getDisplayName()).collect(Collectors.toList());
 		switchList.sort(null);
