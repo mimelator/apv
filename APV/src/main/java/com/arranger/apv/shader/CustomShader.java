@@ -55,7 +55,13 @@ public class CustomShader extends Shader {
 
 	@Override
 	public void draw() {
-		PostFXBuilder render = parent.getPostFX().render();
+		PostFXBuilder render;
+		try {
+			render = parent.getPostFX().render();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
 		
 		if (shaders != null) {
 			shaders.forEach(s -> {
