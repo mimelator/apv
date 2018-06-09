@@ -100,32 +100,12 @@ Development Tasks:
 		If so, update the document to say 'starting:<setpack>'
 			Then PLAY_SET_PACK:<setpack-name>
 
-	RELAUNCH_AVP:<setpack-name>
-		This will improve performance and stability
-			with the expense of a startup and shotdown time
-			
-			
 		Maybe WL listens to a firebase command (actually a new entry to apv-control) to start:stop:restart a ShellScript
 			The WL already knows the current ports and ocean.  It just needs info about the next setpack
 			So AVP will only really restart with a scheduled or commanded restart
 			Hopefully it will be smart enough so when it reads a setpack from the database that is equal to itself it will ignore it
 
 
-	[AVP] PLAY_SET_PACK:<setpack-name>
-		Listens for the hot command/firebase command
-		When invoked, it fires an event: PREPARE_FOR_SET_PACK:<setpack-name>
-		
-			Change the handling of Main command handling:
-				Fire a new animation
-					I Want a tree animation.
-					I want the set pack name to slowly be painted
-					When enough of the scene is drawn:
-						Fire a START_SET_PACK:<setpack-name> event
-							That will invoke the current logic for PLAY_SET_PACK 
-								cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getArgument()));
-									This does a reload configuration()
-							
-	
 	[WEB] 2 minutes after the new set pack starts, draw a help message regarding the like commands:	
 		Must listen to a set-pack change()
 		!likeAll or !likeSong or !likeSetPack or !likeDj

@@ -32,7 +32,7 @@ public class FirebaseCommandRunner extends StartupCommandRunner {
 					} catch (Throwable t) {
 						t.printStackTrace();
 					} finally {
-						if (value != null && value.equals(COMPLETED_MESSAGE)) {
+						if (value != null && !value.equals(COMPLETED_MESSAGE)) {
 							ref.setValueAsync(COMPLETED_MESSAGE);
 						}
 					}
