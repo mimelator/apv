@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.agent.APVAgent;
+import com.arranger.apv.agent.MonitorAgent;
 import com.arranger.apv.audio.Audio;
 import com.arranger.apv.back.BackDropSystem;
 import com.arranger.apv.cmd.Command;
@@ -52,6 +53,7 @@ import com.arranger.apv.msg.MessageSystem;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Marquee;
 import com.arranger.apv.scene.Scene;
+import com.arranger.apv.scene.Tree;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
@@ -68,8 +70,10 @@ import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.cmdrunner.FileCommandRunner;
 import com.arranger.apv.util.cmdrunner.FirebaseCommandRunner;
 import com.arranger.apv.util.cmdrunner.StartupCommandRunner;
+import com.arranger.apv.util.draw.DrawHelper;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.util.draw.SafePainter;
+import com.arranger.apv.util.draw.SafePainter.LOCATION;
 import com.arranger.apv.util.draw.StarPainter;
 import com.arranger.apv.util.draw.TextDrawHelper;
 import com.arranger.apv.util.fb.FirebaseHelper;
@@ -78,6 +82,7 @@ import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
 import com.arranger.apv.util.frame.SplineHelper;
 import com.arranger.apv.wm.APVWatermark;
+import com.arranger.apv.wm.WatermarkPainter;
 import com.typesafe.config.Config;
 
 import ch.bildspur.postfx.builder.PostFX;
@@ -291,7 +296,7 @@ public class Main extends PApplet {
 	public static void main(String[] args) {
 		PApplet.main(Main.class, new String[0]);
 	}
-
+	
 	public void settings() {
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
@@ -944,6 +949,16 @@ public class Main extends PApplet {
 		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
+	public void sendTreeMessage(String message) {
+		Tree tree = new Tree(this);
+		setNextScene(tree, "tree");
+		
+		//Send message and watermark
+		sendMessage(new String[] {message});
+		WatermarkPainter wp = new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE);
+		new DrawHelper(this, wp.getNumFrames(), wp, () -> {});
+	}
+	
 	public void fireEvent(String event) {
 		try {
 			EventTypes evt = EventTypes.valueOf(event);
@@ -1008,16 +1023,59 @@ public class Main extends PApplet {
 		reloadConfiguration(null);
 	}
 	
+	public void reloadConfiguration(String file) {
+		restart(file);
+		
+		queuedCommands.add(() -> {
+			//doReloadConfiguration(file);
+			restart(file);
+		});
+	}
+	
 	@FunctionalInterface
 	private static interface QueuedCommand {
 		void doCommand();
 	}
 	
-	public void reloadConfiguration(final String file) {
-		//if the current thread is a painting thread, then execute
-		queuedCommands.add(() -> {
-			doReloadConfiguration(file);
-		});
+	protected boolean restart = false;
+	
+	protected void restart(String file) {
+		restart = true;
+		
+		//stop music
+		getSongsModel().stop();
+		
+		//file watcher
+		getFileCommandRunner().shutdown();
+		
+		//stop monitor agent
+		MonitorAgent monitorAgent = (MonitorAgent)getAgent().getFirstInstanceOf(MonitorAgent.class);
+		monitorAgent.shutdown();
+		
+		//processing
+		exit();
+		
+		//restart
+		_restart(file);
+	}
+	
+	protected void _restart(String file) {
+		//no more default commands
+		System.setProperty("defaultCommands.0", Command.SHOW_TREE_SCENE.name() + ":" + new FileHelper(this).getConfigBasedSetPackName(file));
+		
+		//set the config file
+		System.setProperty("config.file", file);
+		
+		//start it
+		Main.main(new String[] {});
+	}
+	
+	@Override
+	public void exitActual() {
+		//If restarting, i don't want to exit the process
+		if (!restart) {
+			super.exitActual();
+		}
 	}
 	
 	protected void doReloadConfiguration(String file) {
@@ -1261,10 +1319,13 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getArgument()));
 		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getArgument()));
+		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getArgument()));
 		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getArgument()));
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());
+		
+		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
 	}
 	
 	protected void registerSystemCommands() {

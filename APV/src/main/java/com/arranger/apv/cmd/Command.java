@@ -85,7 +85,8 @@ public enum Command {
 	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
 	SHOW_MARQUEE_MESSAGE(DeadCommandCode.next(), "Shows a marquee Message", "Shows a marquee message"),
 	FIRE_EVENT(DeadCommandCode.next(), "Fires an event", "Fires an event"),
-	
+	SHUTDOWN(DeadCommandCode.next(), "Shutsdown", "No Restart"),
+	SHOW_TREE_SCENE(DeadCommandCode.next(), "Shows a tree Message", "Shows a tree message"),
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),

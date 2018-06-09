@@ -32,9 +32,9 @@ public class SetPackLoader extends APVPlugin {
 			boolean autoLoad = parent.getConfigBooleanForFlag(Main.FLAGS.AUTO_LOAD_SET_LIST_FOLDER);
 			if (stringList.isEmpty() && autoLoad) {
 				loadAllAvailableSetPacks();
+			} else {
+				parent.getSetPackModel().setSetPackList(stringList);
 			}
-			
-			parent.getSetPackModel().setSetPackList(stringList);
 		});
 	}
 	

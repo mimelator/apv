@@ -45,6 +45,21 @@ public class FileHelper extends APVPlugin {
 		}
 	}
 	
+	public String getDefaultSetPackName() {
+		String currentConfigFile = System.getProperty("config.file");
+		return getConfigBasedSetPackName(currentConfigFile);
+	}
+	
+	public String getConfigBasedSetPackName(String configFile) {
+		if (configFile != null) {
+			File f = new File(configFile);
+			if (f.exists()) {
+				return f.getParentFile().getName();
+			}
+		}
+		return null;
+	}
+	
 	public File getSetPacksFolder() {
 		String setPacksString = getFullPath(SET_PACKS);
 		return new File(setPacksString);

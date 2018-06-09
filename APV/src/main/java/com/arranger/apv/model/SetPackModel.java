@@ -66,6 +66,12 @@ public class SetPackModel extends APVModel {
 
 	public void setSetPackList(List<String> setPackList) {
 		this.setPackList = new ArrayList<String>(setPackList);
+		
+		//try to find the correct index
+		String currentSetPackName = new FileHelper(parent).getDefaultSetPackName();
+		if (currentSetPackName != null && setPackList.contains(currentSetPackName)) {
+			index = setPackList.indexOf(currentSetPackName);
+		}
 	}
 	
 	public String getSetPackName() {

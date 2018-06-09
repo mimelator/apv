@@ -44,7 +44,10 @@ private static final int TEN_SECONDS = 10000;
 			lastTime = System.currentTimeMillis();
 		});
 		new Thread(monitor).start();
-		
+	}
+	
+	public void shutdown() {
+		monitor.shutdown = true;
 	}
 	
 	private class Monitor implements Runnable {
@@ -52,9 +55,11 @@ private static final int TEN_SECONDS = 10000;
 		private static final String APV_THREAD_DUMP_TXT = "apvThreadDump.txt";
 		private static final String APV_MEMORY_DUMP_TXT = "apvMemoryDump.txt";
 
+		private boolean shutdown = false;
+		
 		@Override
 		public void run() {
-			while (true) {
+			while (!shutdown) {
 				boolean didDump = false;
 				if (System.currentTimeMillis() > lastTime + TEN_SECONDS) {
 					didDump = true;

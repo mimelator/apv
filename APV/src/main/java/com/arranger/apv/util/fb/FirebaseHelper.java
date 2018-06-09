@@ -32,20 +32,25 @@ public class FirebaseHelper extends APVPlugin {
 			return;
 		}
 		
-		try {
-			FileHelper fh = new FileHelper(parent);
-			String fullPath = fh.getFullPath("../../admin.json");
-			
-			FileInputStream serviceAccount = new FileInputStream(fullPath);
-			FirebaseOptions options = new FirebaseOptions.Builder()
-			    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-			    .setDatabaseUrl("https://alpha-one-dae37.firebaseio.com")
-			    .build();
-			FirebaseApp.initializeApp(options);
-			database = FirebaseDatabase.getInstance();
-		} catch (Throwable t) {
-			logger.log(Level.SEVERE, t.getMessage(), t);
+		//already initialized?
+		boolean needsInit = FirebaseApp.getApps().isEmpty();
+		if (needsInit) {
+			try {
+				FileHelper fh = new FileHelper(parent);
+				String fullPath = fh.getFullPath("../../admin.json");
+				
+				FileInputStream serviceAccount = new FileInputStream(fullPath);
+				FirebaseOptions options = new FirebaseOptions.Builder()
+				    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				    .setDatabaseUrl("https://alpha-one-dae37.firebaseio.com")
+				    .build();
+				FirebaseApp.initializeApp(options);
+			} catch (Throwable t) {
+				logger.log(Level.SEVERE, t.getMessage(), t);
+			}
 		}
+		
+		database = FirebaseDatabase.getInstance();
 		
 		parent.getSetupEvent().register(() -> {
 			parent.getSongStartEvent().register(() -> {

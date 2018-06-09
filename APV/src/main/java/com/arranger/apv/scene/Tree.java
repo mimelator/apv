@@ -33,6 +33,8 @@ public class Tree extends Animation {
 
 	@Override
 	public void drawScene() {
+		super.drawScene();
+		
 		if (paths.isEmpty()) {
 			paths.add(new PathFinder());
 			tracker = new Tracker<Tree>(parent, parent.getSceneCompleteEvent());

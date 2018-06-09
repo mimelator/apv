@@ -11,6 +11,7 @@ import com.arranger.apv.util.FileWatcher;
 public class FileCommandRunner extends StartupCommandRunner {
 
 	public static final String FILE_KEY = "watchedCommandFile";
+	private FileWatcher fileWatcher;
 	
 	public FileCommandRunner(Main parent) {
 		super(parent);
@@ -21,9 +22,10 @@ public class FileCommandRunner extends StartupCommandRunner {
 		
 		//set up a file watcher
 		System.out.println("watching: " + file.getAbsolutePath());
-		new FileWatcher(file, () -> {
+		fileWatcher = new FileWatcher(file, () -> {
 			runCommands(file);
-		}).start();
+		});
+		fileWatcher.start();
 	}
 	
 	protected void runCommands(File file) {
@@ -38,4 +40,9 @@ public class FileCommandRunner extends StartupCommandRunner {
 		return FILE_KEY + " = \"" + parent.getConfigString(FILE_KEY) + "\"" + System.lineSeparator();
 	}
 	
+	public void shutdown() {
+		if (fileWatcher != null) {
+			fileWatcher.stopThread();
+		}
+	}
 }
