@@ -1024,8 +1024,6 @@ public class Main extends PApplet {
 	}
 	
 	public void reloadConfiguration(String file) {
-		//restart(file);
-		
 		queuedCommands.add(() -> {
 			doReloadConfiguration(file);
 			//restart(file);
@@ -1079,6 +1077,8 @@ public class Main extends PApplet {
 	}
 	
 	protected void doReloadConfiguration(String file) {
+		stop();
+		
 		//Color helper is used by the configurator during reload
 		colorHelper.reset();
 		
@@ -1108,6 +1108,11 @@ public class Main extends PApplet {
 		checkStartupSetList();
 		
 		fireSetupEvent();
+		
+		String treeMsg = new FileHelper(this).getConfigBasedSetPackName(file);
+		sendTreeMessage(treeMsg);
+		
+		start();
 	}
 
 	protected void fireSetupEvent() {
