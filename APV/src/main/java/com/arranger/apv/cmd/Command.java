@@ -84,6 +84,7 @@ public enum Command {
 	
 	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
 	SHOW_MARQUEE_MESSAGE(DeadCommandCode.next(), "Shows a marquee Message", "Shows a marquee message"),
+	FIRE_EVENT(DeadCommandCode.next(), "Fires an event", "Fires an event"),
 	
 	
 	//Key code Commands

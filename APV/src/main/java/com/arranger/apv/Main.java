@@ -944,6 +944,16 @@ public class Main extends PApplet {
 		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
+	public void fireEvent(String event) {
+		try {
+			EventTypes evt = EventTypes.valueOf(event);
+			APVEvent<?> apvEvent = eventMap.get(evt);
+			apvEvent.fire();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
+	
 	public void showSongQueue() {
 		List<String> messages = new ArrayList<String>();
 		messages.add("Song Queue:");
@@ -1251,6 +1261,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getArgument()));
 		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getArgument()));
+		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getArgument()));
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());

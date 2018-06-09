@@ -6,18 +6,6 @@ Production Tasks:
 
 Development Tasks:
 
-	BETTER STATS
-	[GE]
-		Show Ocean and setpack
-		Emphasize the things i've been interested in:
-			FPS
-			FPS / minute
-			Audio DB:
-			PulseSkip (Perlin)
-			PulseAgent
-			More recent flags
-
-
 	LIKES:
 	[*]
 
@@ -43,14 +31,14 @@ Development Tasks:
 
 *****************************************************************************
 TODO:
-[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
-[*] * I might want a runtime method to disable agents, but for right now i'll do it manually
+
 [WEB] * Execute certain mod commands over chat window?
 [WEB] * Liking Scenes and stats... Like an online video game
 [WEB] * PhoneTests
 [WEB] * Scheduling
 [WEB] * Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 [WEB] * Subscriptions for setpacks/djs/etc...
+[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
 [GE] * Have a set pack transition animation (The tree with a marquee message of the SetPack name)
 [GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs
 [GE] * Tree scene?  Puzzle animation of a background iamge
@@ -63,7 +51,8 @@ TODO:
 [GE] * Render vector graphics
 [GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 [WEB] * A laminated command sheet
-[GE] * Ability to fire any of the events
+
+[*] * I might want a runtime method to disable agents, but for right now i'll do it manually
 [*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
 [WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
 [WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
