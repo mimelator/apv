@@ -998,6 +998,16 @@ public class Main extends PApplet {
 		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
+	@FunctionalInterface
+	private static interface QueuedCommand {
+		void doCommand();
+	}
+	
+	@FunctionalInterface
+	public static interface QueuedCommandCompletionCallback {
+		void onComplete();
+	}
+	
 	private List<QueuedCommand> queuedCommands = new ArrayList<QueuedCommand>();
 	
 	@Override
@@ -1020,19 +1030,19 @@ public class Main extends PApplet {
 	}
 	
 	public void reloadConfiguration() {
-		reloadConfiguration(null);
+		reloadConfiguration(null, null);
 	}
 	
-	public void reloadConfiguration(String file) {
+	public void reloadConfiguration(String file, QueuedCommandCompletionCallback callback) {
 		queuedCommands.add(() -> {
+			System.setProperty("defaultCommands.0", ""); //no default commands with reload
 			doReloadConfiguration(file);
+			if (callback != null) {
+				callback.onComplete();
+			}
+			
 			//restart(file);
 		});
-	}
-	
-	@FunctionalInterface
-	private static interface QueuedCommand {
-		void doCommand();
 	}
 	
 	protected boolean restart = false;
@@ -1159,12 +1169,12 @@ public class Main extends PApplet {
 		postScene(transition != null, () -> drawSystem(t, "transition"));
 		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
 		postScene(videoGameSwitch, () -> videoGameHelper.showStats());
-		postScene(showSettingsSwitch, () -> settingsDisplay.drawSettingsMessages());
 		postScene(helpSwitch, () -> helpDisplay.showHelp());
 		postScene(scrambleMode, () -> doScramble());
 		postScene(() -> runControlMode());
 		postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
 		postScene(() -> getDrawEvent().fire());
+		postScene(showSettingsSwitch, () -> settingsDisplay.drawSettingsMessages());
 	}
 	
 	@FunctionalInterface

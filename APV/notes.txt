@@ -2,67 +2,79 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 Production Tasks:
-	Crash
+
+	The FrameBlurAgent will be pushed to production
+		But we have to pass a migration test first
+		The test would be to build, release and then 'upgrade' a previously saved version of arranger
+			Can't upgrade setPacks that aren't in the database. KNOWN ISSUE
+			Any setPack not registered in the DB must be 'upgraded' manually
+		
+		TREE-TIME must be tuneable
+		Tree.GROWTH_THRESHOLD must be configurable (probably a flag, since it is created on-demand)
+		
+		So far, really happy with:
+			{FrameBlurAgent : [0, 6, 12]}
+		
+		Plan on going to something like: 1, 12, 12
+
+
+	Out of Heap Space.  Setup Cron job... Every 60 minutes.
+		Right now, that is man
+		
+		Cron will be difficult because there's no restart function
+			I'll have to write a script that stop and starts
 	
 	
-Questions:
-	What do i think about the difference in experience between the unlimited/unregistered setpacks vs official setpacks?	
-		Is it 'fair'?  Is it too limiting?
-		What if anything should i change?
-			Should i add additional default icons/colors/messages?
+	fix firebase login problem on production
+		This was due to docker clock drift
+		
+	
+	Add start commands to turn down audio and change pulse skip and cycle_set_pack
+	
+	Add a flag to disable firebase connections in APV
+	
+	Change the frequency of some of those backdrops/shaders/backgrounds that i don't like	
+
+	PULSE_SKIP_INC isn't working as advertised
+		only getting one at a time
+	
+	Live Stats:
+		Capture ms since last frame
+		every 100 store current 'rolling' avg to larger collection
+		every 1000
+		every 10000
+		
+		
+		Command to show a sepcific setting as a watermark
+		Firebase response should be #completed or #error-msg
+	
 
 Development Tasks:
+
+	
+
+	Schduling:
+		Can i query for the status/availability of the next 48 slots?
+			Calculate an array of the next 48 entries.
+			Query each in order.
+			Find out if they exist and if so, what's their status
+			
+			Each result object should include the ScheduleDocument
+			
+		
+		Can i populate a drop down box that has only certain items available?
+		Can i find the record with the next upcoming slot?
+			Can i send the email and update that record?  (eg.  NotificationSent=true)
+
+
 	https://momentjs.com/
 	https://stackoverflow.com/questions/24538345/get-times-in-15-minute-increments-up-to-a-specific-time
 	http://jsfiddle.net/9u3QD/1/
 
-	HTML:
-		<div id='output'></div>
-
-	JS:
-		function calculate(endTime) {
-		    var ROUNDING = 30 * 60 * 1000; /*ms*/
-		    var start = moment();
-		    var startTime = moment(Math.ceil((+start) / ROUNDING) * ROUNDING);
-		    var timeStops = [];
-		
-			while (startTime < endTime) {
-		    	var mnt = new moment(startTime);
-		        var text = mnt.format('hh:mm a');
-		        text += ':(' + mnt + ')';
-		        timeStops.push(text);
-		        startTime.add('m', 30);
-		    }
-		
-		    return timeStops;
-		}
-		
-		var result = calculate(moment().add('h', 24));
-		var output = document.getElementById('output');
-		
-		output.innerHTML = '<ul><li>' + result.join('</li><li>') + '</li></ul>';
-		
 	Notes:	
 	I think the queries would be by the timestamp, and the other fields would be:
 		(pretty time for my sanity sake)
 		reservation status: Pending|Reserved
-		
-		Either Pending or Reserved would have this info:
-			The setpack name
-			The setpack id
-			The DJ-name
-		 
-		Status: <> 
-			 
-	Output:			
-		08:00 pm:(1528513200000)
-		08:30 pm:(1528515000000)
-		09:00 pm:(1528516800000)
-		...................... Total of 24 
-		06:30 pm:(1528594200000)
-		07:00 pm:(1528596000000)
-		07:30 pm:(1528597800000)
-		
 
 	[WEB] SCHEDULING:
 		i want to show all the available 30 minute sections in the next 24 hours
@@ -76,12 +88,6 @@ Development Tasks:
 			an appropriate record is modified in the firebase.  (state changed from 'Pending' to 'Reserved') 		
 			If i update an approved status to 'rejected' then i'll need to clear out the associated timeslot
 			
-		SetPack schema enhancements:
-			init-timeslot
-			approval-options
-				email: 
-				sms: 	
-		
 		Once a setpack is approved, the DJ should have the option to recieve:
 			E-Mail 
 			
@@ -97,18 +103,17 @@ Development Tasks:
 	}
 	This daemon would wake up every 30 seconds
 		find the nearest (<14 minutes either way >14) to see if any of the calculated timestamps have a reserved status
+		If so, notifiy the subscriber (according to options) and change the notification status
+		
+		if (within 1 minute either way)
 		If so, update the document to say 'starting:<setpack>'
-			Then PLAY_SET_PACK:<setpack-name>
-
-		Maybe WL listens to a firebase command (actually a new entry to apv-control) to start:stop:restart a ShellScript
-			The WL already knows the current ports and ocean.  It just needs info about the next setpack
-			So AVP will only really restart with a scheduled or commanded restart
-			Hopefully it will be smart enough so when it reads a setpack from the database that is equal to itself it will ignore it
+			Then update the remote command file with PLAY_SET_PACK:<setpack-name>
 
 
 	[WEB] 2 minutes after the new set pack starts, draw a help message regarding the like commands:	
 		Must listen to a set-pack change()
-		!likeAll or !likeSong or !likeSetPack or !likeDj
+		Then, two minutes later (via setTimeout)
+			!likeAll or !likeSong or !likeSetPack or !likeDj
 
 
 	[WEB] LIKES:
@@ -172,8 +177,7 @@ TODO:
 *****************************************************************************
 *****************************************************************************
 Issues:
-APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline
-WL: When creating a new setpack, the select picker for images doesn't show the images in Safari.
+APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline (This is a feature)
 When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
 Import/Export is just a simple folder move, but there is no DB support :) but needs an update to the application.conf for the ocean
 [WL]: wavelength-monday | GET /apv/playlist/80S_EARLY_90S_NEW_WAVE_POST_PUNK_GOTHIC_DARKWAVE.mp3 404 113.484 ms - 3189
@@ -183,6 +187,8 @@ Import/Export is just a simple folder move, but there is no DB support :) but ne
 	So right now, all monday songs are broken from the DB.  Not the setpacks...
 	FIX: Maybe also show all the possible set pack locations.  Just like searching for djs, try to search
 		for setpacks that contain this song.
+[*] : The difference in experience between the unlimited/unregistered setpacks vs official setpacks?	
+		Should i add additional default icons/colors/messages?
 *****************************************************************************
 *****************************************************************************
 Remote Debugging:

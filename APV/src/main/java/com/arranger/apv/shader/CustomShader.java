@@ -73,6 +73,22 @@ public class CustomShader extends Shader {
 		render.compose();
 	}
 	
+	public float getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
+	}
+	
+	public PImage getImage() {
+		return image;
+	}
+
+	public void setImage(PImage image) {
+		this.image = image;
+	}
+
 	protected class CustomShaderPass extends BasePass {
 
 		protected CustomShaderPass(PApplet sketch) {

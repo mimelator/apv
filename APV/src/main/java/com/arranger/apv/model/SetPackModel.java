@@ -51,10 +51,15 @@ public class SetPackModel extends APVModel {
 		
 	}
 	
-	public void playSetPack(String setPackName) {
+	public void playSetPack(String newSetPackName) {
+		if (setPackName != null && setPackName.equals(newSetPackName)) {
+			//Already playing this set pack
+			return;
+		}
+		
 		IntStream.range(0, setPackList.size()).forEach(i -> {
 			String setPack = setPackList.get(i);
-			if (setPackName.equalsIgnoreCase(setPack)) {
+			if (newSetPackName.equalsIgnoreCase(setPack)) {
 				launchSetPack(i);
 			}
 		});
@@ -118,13 +123,13 @@ public class SetPackModel extends APVModel {
 		}
 		
 		//This will cause #reset to be triggered 
-		parent.reloadConfiguration(configFilePath);
-		
-		//restore some state
-		parent.setCurrentControlMode(currentControlMode);
-		this.setpackEntity = setpackEntity;
-		setSetPackList(prevSetPackList);
-		this.index = setPackList.indexOf(setPackName);
-		parent.getSetPackStartEvent().fire();
+		parent.reloadConfiguration(configFilePath, () -> {
+			//restore some state
+			parent.setCurrentControlMode(currentControlMode);
+			this.setpackEntity = setpackEntity;
+			setSetPackList(prevSetPackList);
+			this.index = setPackList.indexOf(setPackName);
+			parent.getSetPackStartEvent().fire();
+		});
 	}
 }

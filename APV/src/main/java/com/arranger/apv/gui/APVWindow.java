@@ -112,7 +112,7 @@ public class APVWindow extends APVFrame {
 			JFileChooser fc = fileHelper.getJFileChooser();
 			fc.setFileFilter(new FileNameExtensionFilter("Configuration Files", "conf"));
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath());
+				parent.reloadConfiguration(fc.getSelectedFile().getAbsolutePath(), null);
 			}
 		});
 		
