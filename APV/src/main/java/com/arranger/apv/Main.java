@@ -189,7 +189,8 @@ public class Main extends PApplet {
 		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
 		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
-		PIXEL_DENSITY("pixelDensity", "2"),
+		TREE_COMPLEXITY_CUTOFF("treeComplexityCutoff", "0<100"),
+		TREE_MIN_SIZE("treeMinSize", "0<10"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
 		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
 		FONT_NAME("font.name", "string"),
@@ -315,14 +316,20 @@ public class Main extends PApplet {
 		initEvents();
 		
 		dumpStartupFlags();
-		
-		//processing hint
-		int density = getConfigInt(FLAGS.PIXEL_DENSITY.apvName());
-		pixelDensity(density);
+	}
+	
+	public String getConfigValueForFlag(FLAGS flag, String defVal) {
+		Config rootConfig = getConfigurator().getRootConfig();
+		if (rootConfig.hasPath(flag.apvName())) {
+			return rootConfig.getString(flag.apvName());
+		} else {
+			return defVal;
+		}
 	}
 	
 	public String getConfigValueForFlag(FLAGS flag) {
-		return getConfigurator().getRootConfig().getString(flag.apvName());
+		Config rootConfig = getConfigurator().getRootConfig();
+		return rootConfig.getString(flag.apvName());
 	}
 	
 	public boolean getConfigBooleanForFlag(FLAGS flag) {
@@ -1491,7 +1498,8 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
-		addConstant(buffer, FLAGS.PIXEL_DENSITY, getConfigString(FLAGS.PIXEL_DENSITY.apvName()));
+		addConstant(buffer, FLAGS.TREE_COMPLEXITY_CUTOFF, getConfigString(FLAGS.TREE_COMPLEXITY_CUTOFF.apvName()));
+		addConstant(buffer, FLAGS.TREE_MIN_SIZE, getConfigString(FLAGS.TREE_MIN_SIZE.apvName()));
 		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));

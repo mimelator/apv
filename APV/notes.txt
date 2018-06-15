@@ -3,28 +3,10 @@ https://github.com/mimelator/apv
 
 Production Tasks:
 
-	The FrameBlurAgent will be pushed to production
-		But we have to pass a migration test first
-		The test would be to build, release and then 'upgrade' a previously saved version of arranger
-			Can't upgrade setPacks that aren't in the database. KNOWN ISSUE
-			Any setPack not registered in the DB must be 'upgraded' manually
+	TREE-TIME must be tuneable
+	Tree.GROWTH_THRESHOLD must be configurable (probably a flag, since it is created on-demand)
 		
-		TREE-TIME must be tuneable
-		Tree.GROWTH_THRESHOLD must be configurable (probably a flag, since it is created on-demand)
-		
-		So far, really happy with:
-			{FrameBlurAgent : [0, 6, 12]}
-		
-		Plan on going to something like: 1, 12, 12
 
-
-	Out of Heap Space.  Setup Cron job... Every 60 minutes.
-		Right now, that is man
-		
-		Cron will be difficult because there's no restart function
-			I'll have to write a script that stop and starts
-	
-	
 	fix firebase login problem on production
 		This was due to docker clock drift
 		

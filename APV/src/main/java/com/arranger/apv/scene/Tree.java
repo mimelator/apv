@@ -15,15 +15,21 @@ import processing.core.PVector;
  **/
 public class Tree extends Animation {
 
+	private static final float MIN_SIZE = 3.5f;
 	private static final int GROWTH_THRESHOLD = 50;
-	
 	private static final float SPEED = 1.5f;
 	
 	private Tracker<Tree> tracker;
 	private List<PathFinder> paths = new ArrayList<PathFinder>();
+	private int threshold;
+	private float minSize;
 	
 	public Tree(Main parent) {
 		super(parent);
+		String threshVal = parent.getConfigValueForFlag(Main.FLAGS.TREE_COMPLEXITY_CUTOFF, String.valueOf(GROWTH_THRESHOLD));
+		threshold = Integer.parseInt(threshVal);
+		String minSizeVal = parent.getConfigValueForFlag(Main.FLAGS.TREE_MIN_SIZE, String.valueOf(MIN_SIZE));
+		minSize = Float.parseFloat(minSizeVal);
 	}
 	
 	@Override
@@ -59,11 +65,12 @@ public class Tree extends Animation {
 			paths.addAll(newPaths);
 		}
 		
-		paths.removeIf(pf -> pf.diameter <= .5);
+		paths.removeIf(pf -> pf.diameter <= minSize);
 		
 		if (tracker != null) {
-			if (tracker.isActive(e -> {return paths.size() > GROWTH_THRESHOLD;})) {
-				if (paths.size() < GROWTH_THRESHOLD) {
+			if (tracker.isActive(e -> {return paths.size() > threshold;})) {
+				if (paths.size() < threshold) {
+					System.out.println("Finished threshold: " + threshold);
 					tracker.fireEvent();
 					tracker = null;
 				}
