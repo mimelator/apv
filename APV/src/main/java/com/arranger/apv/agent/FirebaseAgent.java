@@ -1,13 +1,13 @@
-package com.arranger.apv.util.fb;
+package com.arranger.apv.agent;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.db.entity.DJEntity;
 import com.arranger.apv.db.entity.SetpackEntity;
@@ -16,23 +16,27 @@ import com.arranger.apv.util.FileHelper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class FirebaseHelper extends APVPlugin {
-
-	private static final Logger logger = Logger.getLogger(FirebaseHelper.class.getName());
-
-	private FirebaseDatabase database;
+public class FirebaseAgent extends BaseAgent {
 	
-	public FirebaseHelper(Main parent) {
+	private static final Logger logger = Logger.getLogger(FirebaseAgent.class.getName());
+	private static final String COMPLETED_MESSAGE = "#completed";
+	
+	private FirebaseDatabase database;
+
+	public FirebaseAgent(Main parent) {
 		super(parent);
 		
-		if (parent.isListenOnly()) {
-			return;
+		if (!parent.isFirebaseEnabled()) {
+			return; //all done :)
 		}
 		
-		//already initialized?
+		logger.info("Starting Firebase support");
 		boolean needsInit = FirebaseApp.getApps().isEmpty();
 		if (needsInit) {
 			try {
@@ -52,6 +56,7 @@ public class FirebaseHelper extends APVPlugin {
 		
 		database = FirebaseDatabase.getInstance();
 		
+		//Register for changes to the song or setpack
 		parent.getSetupEvent().register(() -> {
 			parent.getSongStartEvent().register(() -> {
 				updateSong(parent.getSetListPlayer().getCurrentSongTitle());
@@ -61,8 +66,34 @@ public class FirebaseHelper extends APVPlugin {
 				updateSetPack(parent.getSetPackModel().getSetPackName());
 			});
 		});
+		
+		//Register for incoming commands
+		parent.getSetupEvent().register(() -> {
+			FirebaseDatabase database = getDatabase();
+			DatabaseReference ref = database.getReference("liveStream/command");
+			ref.addValueEventListener(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot dataSnapshot) {
+					String value = dataSnapshot.getValue(String.class);
+					try {
+						parent.getStartupCommandRunner().runCommands(Arrays.asList(new String[]{value}));
+					} catch (Throwable t) {
+						t.printStackTrace();
+					} finally {
+						if (value != null && !value.equals(COMPLETED_MESSAGE)) {
+							ref.setValueAsync(COMPLETED_MESSAGE);
+						}
+					}
+				}
+
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+
+				}
+			});
+		});
 	}
-	
+
 	public FirebaseDatabase getDatabase() {
 		return database;
 	}

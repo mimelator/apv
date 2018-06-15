@@ -25,7 +25,7 @@ public class StartupCommandRunner extends APVPlugin {
 		runCommands(cmdList);
 	}
 
-	protected void runCommands(List<String> cmdList) {
+	public void runCommands(List<String> cmdList) {
 		cmdList.forEach(cmdString -> {
 			if (!cmdString.isEmpty() && !cmdString.startsWith("#")) {
 				String argument = null;

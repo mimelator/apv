@@ -68,7 +68,6 @@ import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.cmdrunner.FileCommandRunner;
-import com.arranger.apv.util.cmdrunner.FirebaseCommandRunner;
 import com.arranger.apv.util.cmdrunner.StartupCommandRunner;
 import com.arranger.apv.util.draw.DrawHelper;
 import com.arranger.apv.util.draw.RandomMessagePainter;
@@ -76,7 +75,6 @@ import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.SafePainter.LOCATION;
 import com.arranger.apv.util.draw.StarPainter;
 import com.arranger.apv.util.draw.TextDrawHelper;
-import com.arranger.apv.util.fb.FirebaseHelper;
 import com.arranger.apv.util.frame.FrameStrober;
 import com.arranger.apv.util.frame.Oscillator;
 import com.arranger.apv.util.frame.Oscillator.Listener;
@@ -146,8 +144,6 @@ public class Main extends PApplet {
 	protected StartupCommandRunner startupCommandRunner;
 	protected FileCommandRunner fileCommandRunner;
 	protected PostFX postFX;
-	protected FirebaseHelper firebaseHelper;
-	protected FirebaseCommandRunner firebaseCommandRunner;
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -205,6 +201,7 @@ public class Main extends PApplet {
 		MUSIC_DIR("musicDir", "directory"),
 		MONGO_HOST_PORT("mongoHostPort", "string"),
 		MONGO_DB_NAME("mongoDbName", "string"),
+		FIREBASE_ENABLED("firebase", "true|false"),
 		OCEAN_NAME("ocean", "string");
 		
 		private String name;
@@ -553,6 +550,10 @@ public class Main extends PApplet {
 		return getConfigBoolean(FLAGS.LISTEN_ONLY.apvName());
 	}
 	
+	public boolean isFirebaseEnabled() {
+		return getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName());
+	}
+	
 	public int getDefaultShapeSystemAlpha() {
 		return getConfigInt(FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA.apvName());
 	}
@@ -683,14 +684,6 @@ public class Main extends PApplet {
 		return fileCommandRunner;
 	}
 	
-	public FirebaseCommandRunner getFirebaseCommandRunner() {
-		return firebaseCommandRunner;
-	}
-	
-	public FirebaseHelper getFirebaseHelper() {
-		return firebaseHelper;
-	}
-	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		sendMessage(new String[] {"Liked :)"});
@@ -802,9 +795,6 @@ public class Main extends PApplet {
 		videoGameHelper = new VideoGameHelper(this);
 		startupCommandRunner = new StartupCommandRunner(this);
 		fileCommandRunner = new FileCommandRunner(this);
-		firebaseHelper = new FirebaseHelper(this);
-		firebaseCommandRunner = new FirebaseCommandRunner(this);
-		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -1504,6 +1494,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
+		addConstant(buffer, FLAGS.FIREBASE_ENABLED, String.valueOf(getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName())));
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));

@@ -3,17 +3,16 @@ https://github.com/mimelator/apv
 
 Production Tasks:
 
-	TREE-TIME must be tuneable
-	Tree.GROWTH_THRESHOLD must be configurable (probably a flag, since it is created on-demand)
-		
-
 	fix firebase login problem on production
 		This was due to docker clock drift
 		
-	
 	Add start commands to turn down audio and change pulse skip and cycle_set_pack
 	
 	Add a flag to disable firebase connections in APV
+		Both FirebaseHelper & FirebaseCommandRunner should be disabled if the flag is false
+		Combine the two into one file and just be an agent that Main doesn't need to know about
+		
+			FirebaseAgent extends ...
 	
 	Change the frequency of some of those backdrops/shaders/backgrounds that i don't like	
 
