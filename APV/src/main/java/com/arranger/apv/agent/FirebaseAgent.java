@@ -26,6 +26,7 @@ public class FirebaseAgent extends BaseAgent {
 	
 	private static final Logger logger = Logger.getLogger(FirebaseAgent.class.getName());
 	private static final String COMPLETED_MESSAGE = "#completed";
+	private static final String ERROR_MESSAGE = "#error: ";
 	
 	private FirebaseDatabase database;
 
@@ -76,13 +77,13 @@ public class FirebaseAgent extends BaseAgent {
 				public void onDataChange(DataSnapshot dataSnapshot) {
 					String value = dataSnapshot.getValue(String.class);
 					try {
-						parent.getStartupCommandRunner().runCommands(Arrays.asList(new String[]{value}));
-					} catch (Throwable t) {
-						t.printStackTrace();
-					} finally {
-						if (value != null && !value.equals(COMPLETED_MESSAGE)) {
+						if (value != null && !value.startsWith("#")) {
+							parent.getStartupCommandRunner().runCommands(Arrays.asList(new String[]{value}));
 							ref.setValueAsync(COMPLETED_MESSAGE);
 						}
+					} catch (Throwable t) {
+						t.printStackTrace();
+						ref.setValueAsync(ERROR_MESSAGE + t.getMessage());
 					}
 				}
 

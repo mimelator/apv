@@ -20,8 +20,9 @@ Production Tasks:
 		every 10000
 		
 		
-		Command to show a sepcific setting as a watermark
-		Firebase response should be #completed or #error-msg
+	SUPER_USEFUL_DEBUG: Command to show a sepcific setting as a watermark
+		Command takes an argument of a flag? something.... ideally something from the settings
+			
 	
 
 Development Tasks:
