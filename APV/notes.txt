@@ -8,12 +8,6 @@ Production Tasks:
 		
 	Add start commands to turn down audio and change pulse skip and cycle_set_pack
 	
-	Add a flag to disable firebase connections in APV
-		Both FirebaseHelper & FirebaseCommandRunner should be disabled if the flag is false
-		Combine the two into one file and just be an agent that Main doesn't need to know about
-		
-			FirebaseAgent extends ...
-	
 	Change the frequency of some of those backdrops/shaders/backgrounds that i don't like	
 
 	PULSE_SKIP_INC isn't working as advertised
