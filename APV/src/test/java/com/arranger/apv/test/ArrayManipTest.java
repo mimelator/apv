@@ -1,8 +1,6 @@
 package com.arranger.apv.test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ArrayManipTest extends APVPluginTest {
 	
@@ -33,11 +31,11 @@ public class ArrayManipTest extends APVPluginTest {
 			}
 		}
 		
-		assertTrue(primaryArg != null);
-		assertTrue(args != null);
+		assert(primaryArg != null);
+		assert(args != null);
 		
-		assertTrue(primaryArg.equals("FLAG"));
-		assertTrue(args.length == 1);
-		assertTrue(args[0].equals("TREE_MIN_SIZE"));
+		assert(primaryArg.equals("FLAG"));
+		assert(args.length == 1);
+		assert(args[0].equals("TREE_MIN_SIZE"));
 	}
 }
