@@ -1,0 +1,62 @@
+Scheduling Campaign:
+	Can i query for the status/availability of the next 48 slots?
+		Calculate an array of the next 48 entries.
+		Query each in order.
+		Find out if they exist and if so, what's their status
+		
+		Each result object should include the ScheduleDocument
+		
+	
+	Can i populate a drop down box that has only certain items available?
+	Can i find the record with the next upcoming slot?
+		Can i send the email and update that record?  (eg.  NotificationSent=true)
+		
+		
+	https://momentjs.com/
+	https://stackoverflow.com/questions/24538345/get-times-in-15-minute-increments-up-to-a-specific-time
+	http://jsfiddle.net/9u3QD/1/
+
+	Notes:	
+	I think the queries would be by the timestamp, and the other fields would be:
+		(pretty time for my sanity sake)
+		reservation status: Pending|Reserved
+
+	[WEB] SCHEDULING:
+		i want to show all the available 30 minute sections in the next 24 hours
+		
+			Alpha-One must be able to access the next 48 30 minute records.
+			For all of the records that available, allow that time slot to be picked from a drop-down list.
+				If there are no slots available, then i don't think you can create a set pack
+			When a record is created for the set pack, it's time slot is set to pending	
+				
+		Once a set-pack is approved, instead of playing it right away (via the commands of standard-import-hotcommand)
+			an appropriate record is modified in the firebase.  (state changed from 'Pending' to 'Reserved') 		
+			If i update an approved status to 'rejected' then i'll need to clear out the associated timeslot
+			
+		Once a setpack is approved, the DJ should have the option to recieve:
+			E-Mail 
+			
+			and share via
+				Facebook
+				Instagram
+				Snapchat	
+				
+	/git/wl/app.js
+	if (process.env.FIREBASE === 'true') {
+		...
+		require('./util/auto-setpack-player').followFirebaseSchedule();
+	}
+	This daemon would wake up every 30 seconds
+		find the nearest (<14 minutes either way >14) to see if any of the calculated timestamps have a reserved status
+		If so, notifiy the subscriber (according to options) and change the notification status
+		
+		if (within 1 minute either way)
+		If so, update the document to say 'starting:<setpack>'
+			Then update the remote command file with PLAY_SET_PACK:<setpack-name>
+
+
+	[WEB] 2 minutes after the new set pack starts, draw a help message regarding the like commands:	
+		Must listen to a set-pack change()
+		Then, two minutes later (via setTimeout)
+			!likeAll or !likeSong or !likeSetPack or !likeDj
+					

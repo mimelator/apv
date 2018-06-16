@@ -30,7 +30,6 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 		if (arg != null) {
 			offset = Integer.parseInt(arg);
 		}
-		command.setArgument(null);
 		
 		if (command.equals(Command.PULSE_SKIP_DEC)) {
 			offset = -offset;

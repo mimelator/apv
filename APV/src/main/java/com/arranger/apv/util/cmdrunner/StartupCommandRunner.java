@@ -42,6 +42,7 @@ public class StartupCommandRunner extends APVPlugin {
 					}
 					
 					parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);
+					cmd.reset();
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}

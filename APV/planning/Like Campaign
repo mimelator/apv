@@ -1,0 +1,34 @@
+
+Like Campaign:
+
+	Still Feature stories to understand & create
+	
+	LIKE all the way to a persistent store
+	
+	Survival of the fittest plugins. If they aren’t popular they get retired
+	Can Every N Likes trigger a response via NightBot as well as being counted in the DB?
+
+	[WEB] LIKES:
+	WL would listen for chat messages: !likeAll or !likeSong or !likeSetPack or !likeDj
+		If heard, it would write a new document to Mongo
+		Each document would have current (accurate or not):
+			Song, Setpack, Dj, timestamp, twitchId
+		
+	Queries would need to be:
+		Top N collections of Songs
+		Top N collections of Setpacks
+		Top N collections of Djs
+			
+			
+	Those queries could be executed every 10 minutes.
+		Each result would be placed into firebase
+		!leaderboard would be able to say this result on twitch-bot
+			
+
+	* Have stats available in the chat: !leaderboard
+	* Create a scene that shows the stats
+	
+	* How to prevent spam:
+		Usage: /r9kbeta
+	* How to prevent excessive voting?  Hmm..
+		https://docs.nightbot.tv/commands/filters  Nightbot filter repetitions

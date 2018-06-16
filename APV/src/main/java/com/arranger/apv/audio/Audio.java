@@ -70,7 +70,6 @@ public class Audio extends APVPlugin {
 		if (arg != null) {
 			offset = Integer.parseInt(arg);
 		}
-		command.setArgument(null);
 		
 		if (command.equals(Command.AUDIO_DEC)) {
 			offset = -offset;

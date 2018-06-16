@@ -173,6 +173,10 @@ public enum Command {
 	public void setArgument(String argument) {
 		this.argument = argument;
 	}
+	
+	public void reset() {
+		this.argument = null;
+	}
 
 	public boolean hasCharKey() {
 		return hasCharKey;
