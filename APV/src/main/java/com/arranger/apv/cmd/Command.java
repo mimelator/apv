@@ -87,6 +87,7 @@ public enum Command {
 	FIRE_EVENT(DeadCommandCode.next(), "Fires an event", "Fires an event"),
 	SHUTDOWN(DeadCommandCode.next(), "Shutsdown", "No Restart"),
 	SHOW_TREE_SCENE(DeadCommandCode.next(), "Shows a tree Message", "Shows a tree message"),
+	LIVE_SETTING(DeadCommandCode.next(), "Shows a watermark for the available live settings", "eg: LIVE_SETTING:FLAG:TREE_MIN_SIZE"),
 	
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
@@ -137,7 +138,8 @@ public enum Command {
 	private int modifiers;
 	private boolean acceptAnyModifier = true;
 	
-	private String argument;
+	private String primaryArg;
+	private String [] args;
 	
 	private Command(char charKey, String displayName, String helpText) {
 		this(charKey, displayName, helpText, 0);
@@ -166,16 +168,25 @@ public enum Command {
 		hasCharKey = false;
 	}
 	
-	public String getArgument() {
-		return argument;
+	public String getPrimaryArg() {
+		return primaryArg;
 	}
 
-	public void setArgument(String argument) {
-		this.argument = argument;
+	public void setPrimaryArg(String argument) {
+		this.primaryArg = argument;
 	}
 	
+	public String[] getArgs() {
+		return args;
+	}
+
+	public void setArgs(String[] args) {
+		this.args = args;
+	}
+
 	public void reset() {
-		this.argument = null;
+		this.primaryArg = null;
+		this.args = null;
 	}
 
 	public boolean hasCharKey() {

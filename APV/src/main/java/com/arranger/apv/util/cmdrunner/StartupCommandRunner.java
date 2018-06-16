@@ -28,17 +28,27 @@ public class StartupCommandRunner extends APVPlugin {
 	public void runCommands(List<String> cmdList) {
 		cmdList.forEach(cmdString -> {
 			if (!cmdString.isEmpty() && !cmdString.startsWith("#")) {
-				String argument = null;
+				String primaryArg = null;
+				String [] args = null;
+				
 				if (cmdString.contains(":")) {
 					String[] split = cmdString.split(":");
 					cmdString = split[0];
-					argument = split[1];
+					primaryArg = split[1];
+					if (split.length > 2) {
+						int newLength = split.length - 2;
+						args = new String[newLength];
+						System.arraycopy(split, 2, args, 0, newLength);
+					}
 				}
 				
 				try {
 					Command cmd = Command.valueOf(cmdString);
-					if (argument != null) {
-						cmd.setArgument(argument);
+					if (primaryArg != null) {
+						cmd.setPrimaryArg(primaryArg);
+					}
+					if (args != null) {
+						cmd.setArgs(args);
 					}
 					
 					parent.getCommandSystem().invokeCommand(cmd, getDisplayName(), 0);

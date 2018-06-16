@@ -36,6 +36,7 @@ import com.arranger.apv.gui.APVWindow;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
+import com.arranger.apv.helpers.LIVE_SETTINGS;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.PerformanceMonitor;
 import com.arranger.apv.helpers.SetPackLoader;
@@ -946,6 +947,12 @@ public class Main extends PApplet {
 		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
+	public void showLiveSetting(Command cmd) {
+		String argument = cmd.getPrimaryArg();
+		LIVE_SETTINGS liveSetting = LIVE_SETTINGS.valueOf(argument);
+		liveSetting.onCommand(this, cmd.getArgs());
+	}
+	
 	public void sendTreeMessage(String message) {
 		Tree tree = new Tree(this);
 		setNextScene(tree, "tree");
@@ -1329,10 +1336,12 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
 		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
 		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
-		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getArgument()));
-		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getArgument()));
-		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getArgument()));
-		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getArgument()));
+		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
+		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
+		
+		cs.registerHandler(Command.LIVE_SETTING, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
 		
 		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
 		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());

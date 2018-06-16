@@ -26,7 +26,7 @@ public abstract class PulseListeningControlSystem extends ControlSystem {
 	
 	protected void onCommand(Command command) {
 		int offset = 1;
-		String arg = command.getArgument();
+		String arg = command.getPrimaryArg();
 		if (arg != null) {
 			offset = Integer.parseInt(arg);
 		}
