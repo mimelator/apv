@@ -2,14 +2,11 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-	SUPER_USEFUL_DEBUG: Command to show a sepcific setting as a watermark
-		Command takes an argument of a flag? something.... ideally something from the settings
-		new DrawHelper(this, 1200, new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE), () -> {});
+Defect:
+	A set pack titled: "Who Me?" brought down testDB4 in production when it attempted to load/run that setPack
 
-		Create an Enum Like: LIVE_SETTINGS
-			Each element would have a Name, and a method to invoke
-			A new command would be LIVE_SETTING:<SETTING_ENUM> (and a default 1200 num of frames)
-			Main->RegisterCommand(delegate to the enum)
+Deprecation:
+	Consider deprecating: postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
 
 *****************************************************************************
 TODO:
@@ -35,7 +32,7 @@ TODO:
 [GE] * Render vector graphics
 [GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 
-[*] Change the frequency of some of those backdrops/shaders/backgrounds that i don't like
+[*] Change the frequency of some of those backdrops/shaders/backgrounds that i don't like.  This should be solved by the Like Campaign
 [*] * I might want a runtime method to disable agents, but for right now i'll do it manually
 [*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
 {*] * Imagine allowing DJs to add scripts to their setpacks: (Basically create custom agents for their setpacks)

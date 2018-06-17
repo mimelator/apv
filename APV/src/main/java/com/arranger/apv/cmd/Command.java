@@ -23,6 +23,7 @@ public enum Command {
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
+	SWITCH_CONSOLE_OUTPUT(DeadCommandCode.next(), "Console Output Frame Switch", "Enables/Disables the frame info to console"),
 	SWITCH_PULSE_LISTENER(DeadCommandCode.next(), "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
 	SWITCH_WATERMARK(DeadCommandCode.next(), "WatermarkSwitch", "Enables/Disables watermarks"),
 	SWITCH_FRAME_STROBER(DeadCommandCode.next(), "FrameStroberSwitch", "Enables/Disables the strobing the screen"),

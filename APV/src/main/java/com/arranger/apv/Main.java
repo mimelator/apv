@@ -173,7 +173,8 @@ public class Main extends PApplet {
 					continuousCaptureSwitch,
 					videoGameSwitch,
 					scrambleModeSwitch,
-					debugPulseSwitch;
+					debugPulseSwitch,
+					consoleOutputSwitch;
 	
 	public enum FLAGS {
 		
@@ -237,6 +238,7 @@ public class Main extends PApplet {
 		CONTINUOUS_CAPTURE("ContinuousCapture"),
 		SCRAMBLE_MODE("Scramble"),
 		VIDEO_GAME("VideoGame"),
+		CONSOLE_OUTPUT("ConsoleOutputSwitch"),
 		DEBUG_PULSE("DebugPulse");
 		
 		public String name;
@@ -1179,6 +1181,7 @@ public class Main extends PApplet {
 		postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
 		postScene(() -> getDrawEvent().fire());
 		postScene(showSettingsSwitch, () -> settingsDisplay.drawSettingsMessages());
+		postScene(consoleOutputSwitch, () -> drawConsoleFrameInfo());
 	}
 	
 	@FunctionalInterface
@@ -1224,6 +1227,18 @@ public class Main extends PApplet {
 		if (nextCommand != null) {
 			int modifiers = randomBoolean() ? Event.SHIFT : 0;
 			getCommandSystem().invokeCommand(nextCommand, cs.getDisplayName(), modifiers);
+		}
+	}
+	
+	protected void drawConsoleFrameInfo() {
+		Switch switch1 = this.switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
+		int skipFrames = 0;
+		if (switch1.data != null) {
+			skipFrames = Integer.parseInt(switch1.data);
+		}
+		
+		if (this.frameCount % skipFrames == 0) {
+			System.out.printf("Frame[%s]: %s (fps) %s", this.frameCount, this.frameRate, System.lineSeparator());
 		}
 	}
 	
@@ -1308,6 +1323,7 @@ public class Main extends PApplet {
 		registerSwitch(continuousCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
+		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 	}
 
 	protected void registerMainCommands() {
@@ -1444,6 +1460,7 @@ public class Main extends PApplet {
 		
 		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
 		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
 		continuousCaptureSwitch = switches.get(SWITCH_NAMES.CONTINUOUS_CAPTURE.name);
 		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);

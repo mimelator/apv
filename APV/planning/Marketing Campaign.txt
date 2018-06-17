@@ -1,3 +1,59 @@
 Marketing Tasks:
 	Slogan campaign where a simple web-form captures their vote and presents them with 2 links: twitch or Wavelength Rocks
 	The WL helpers (minions) are the emojis: Default emojis should be mostly honery (stubborn and ill-tempered)
+
+	
+	Points Campaign where
+		Everybody gets 100 points to spend / hour
+		They can spend any amount of points 1 - 9 at any time for the current moment
+		They will be limited in how frequently they can vote (currently 100 likes / hour)
+		
+		Plugins that over time fall below a certain like percentage threshold (with a minimum time frame)
+			will be retired.  Plugins that trend at lower percentages might be above the retirement threshold, but
+			they will have diminished screen time.  Conversely, plugins that are above average will recieve more screen time.
+			
+		
+		RETIREMENT for Plugins and Setpacks:
+			Objects that over time fall below a certain like percentage threshold (with a minimum time frame)
+			will be retired.  
+			
+			Objects that trend at lower percentages might be above the retirement threshold, but
+			they will have diminished screen time.  
+			
+			Objects that are above average will recieve more screen time.
+			
+		
+		New users can create 5 set packs until they are 'charged' to be able to create the set packs.
+		In other words, the 6th setPack will cost your account 250 points.
+		
+		However, users can earn points by spending their 100 likes / hour on their liked moments.
+		So for every 100 likes you spend, you earn 100 points.
+		So a user can quickly vote (like command) and simultaneously earn points to create more setpacks.
+		
+		When any moment is liked, the following information is gathered:
+			* timestamp
+			* version
+			* user
+			* quantity
+			* ocean
+			* DJ
+			* setPack
+			* Song
+			* scene components (This is a data structure of course)
+				* Out-of-Scope: Specific Message
+				
+		When a dj gets a like, that Dj's points increases by 1 for every like (based on the quantity of course)		
+			
+			
+		When any user spends their likes the following must happen:
+			* Do they have any likes left to spend?
+			* When will they have sufficient likes to spend.
+			* How many total likes do they currently have
+			* How many points do they currently have
+		
+		The more points you accumulate, the more that you can exchange those points for:
+			* Discounts on merch
+			* Free merch
+			* Custom merch
+			
+	

@@ -10,27 +10,31 @@ public class Switch extends APVPlugin {
 	
 	public STATE state;
 	public String name;
+	public String data;
 	
 	public Switch(Main parent, String name) {
-		super(parent);
-		this.name = name;
-		this.state = STATE.ENABLED;
+		this(parent, name, true, null);
 	}
 	
 	public Switch(Main parent, String name, boolean enabled) {
+		this(parent, name, enabled, null);
+	}
+	
+	public Switch(Main parent, String name, boolean enabled, String data) {
 		super(parent);
 		this.name = name;
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
+		this.data = data;
 	}
 	
 	public Switch(Configurator.Context ctx) {
-		this(ctx.getParent(), ctx.getString(0, ""), ctx.getBoolean(1, true));
+		this(ctx.getParent(), ctx.getString(0, ""), ctx.getBoolean(1, true), ctx.getString(2, null));
 	}
 
 	@Override
 	public String getConfig() {
 		//{Switch : [ForeGround, true]}
-		return String.format("{%s : [%s, %b]}", super.getName(), getName(), isEnabled());
+		return String.format("{%s : [%s, %b]}", super.getName(), getName(), isEnabled(), data);
 	}
 
 	@Override
@@ -38,6 +42,10 @@ public class Switch extends APVPlugin {
 		return name;
 	}
 
+	public String getData() {
+		return data;
+	}
+	
 	@Override
 	public String getDisplayName() {
 		return name + "[" + state + "]";
