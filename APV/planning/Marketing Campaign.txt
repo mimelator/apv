@@ -6,13 +6,9 @@ Marketing Tasks:
 	Points Campaign where
 		Everybody gets 100 points to spend / hour
 		They can spend any amount of points 1 - 9 at any time for the current moment
-		They will be limited in how frequently they can vote (currently 100 likes / hour)
+		They will be limited in how frequently they can vote (currently 50 likes / hour) (100 points / hour)
 		
-		Plugins that over time fall below a certain like percentage threshold (with a minimum time frame)
-			will be retired.  Plugins that trend at lower percentages might be above the retirement threshold, but
-			they will have diminished screen time.  Conversely, plugins that are above average will recieve more screen time.
-			
-		
+
 		RETIREMENT for Plugins and Setpacks:
 			Objects that over time fall below a certain like percentage threshold (with a minimum time frame)
 			will be retired.  
@@ -21,30 +17,47 @@ Marketing Tasks:
 			they will have diminished screen time.  
 			
 			Objects that are above average will recieve more screen time.
+
+			(Legacy) Plugins that over time fall below a certain like percentage threshold (with a minimum time frame)
+					will be retired.  Plugins that trend at lower percentages might be above the retirement threshold, but
+					they will have diminished screen time.  Conversely, plugins that are above average will recieve more screen time.
 			
-		
 		New users can create 5 set packs until they are 'charged' to be able to create the set packs.
 		In other words, the 6th setPack will cost your account 250 points.
 		
-		However, users can earn points by spending their 100 likes / hour on their liked moments.
-		So for every 100 likes you spend, you earn 100 points.
-		So a user can quickly vote (like command) and simultaneously earn points to create more setpacks.
+		However, users can earn points by spending their 50 likes / hour on their liked moments.
+		So for every 50 likes you spend, you earn 50 points and the current DJ earns 50 points.
+		So a user can quickly "like" and simultaneously earn points to create more setpacks.
 		
 		When any moment is liked, the following information is gathered:
 			* timestamp
 			* version
-			* user
-			* quantity
-			* ocean
-			* DJ
-			* setPack
-			* Song
+			* user (logged in twitch user, who will get their 'account' (nightbot?) credited with the same amount that they 'spent')
+			* quantity (0 - 9)
+			* ocean (arranger, default, testDB4, etc...)
+			* DJ (Whatever name was chosen by the google authenticated DJ)
+			* setPack (Setpack unique ID)
+			* Song (Which song during the setpack)
 			* scene components (This is a data structure of course)
 				* Out-of-Scope: Specific Message
 				
 		When a dj gets a like, that Dj's points increases by 1 for every like (based on the quantity of course)		
 			
-			
+		So I suppose we could queue up messages like:
+			User 82346g liked frame 88264834725 for 2 points
+			Archive the record for long term storage:
+				Glacial retrieval
+			The first message handler would:
+				look up the user record and deduct two points.
+				If two points could not be deducted, it would cancel the rest
+			The next message handler woud:
+				Lookup frame  88264834725 and credit each of it's components including the dj and song: 2 points
+				
+			Maybe we keep stats for the current Song, 
+				and those likes for that Song get distributed among 
+				all of the plugins based on on the stats for the song
+		
+		
 		When any user spends their likes the following must happen:
 			* Do they have any likes left to spend?
 			* When will they have sufficient likes to spend.
@@ -56,4 +69,6 @@ Marketing Tasks:
 			* Free merch
 			* Custom merch
 			
+	If i can properly model this, than i know what my target transactions / hour is.  That would be awesome!!!!
+		
 	

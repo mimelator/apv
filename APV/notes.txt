@@ -19,6 +19,7 @@ TODO:
 [WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 			The training data going into the model would be encoded information describing all of the current scene components
 
+[GE] * No diagnostic insights into any of the agents
 [GE] * Add start commands to turn down audio and change pulse skip and cycle_set_pack
 [GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
 [GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs

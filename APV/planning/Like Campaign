@@ -1,34 +1,59 @@
-
 Like Campaign:
 
-	Still Feature stories to understand & create
+	Research:
+	Store google-prefix:user-id data to Amazon RDBMS 
+		Query from js:
+			Amazon Lambda to get user's account based on google user-id
 	
-	LIKE all the way to a persistent store
+	
+	
+		Done from node.js
+		
+		Constant freakin' RDBMS traffic
+			Every time a user joins the chat
+			Every time the users spends a like
+			Somehow communicate to the user the available discount
+			
+		The total energy in the system must be available not quite in real time, but in 1 minute increments
+		
+		Console to visualize the data?
+		easy to administer?  Delete/edit/data
+		
+		LIKE all the way to a persistent store
 	
 	Survival of the fittest plugins. If they aren’t popular they get retired
 	Can Every N Likes trigger a response via NightBot as well as being counted in the DB?
 
-	[WEB] LIKES:
-	WL would listen for chat messages: !likeAll or !likeSong or !likeSetPack or !likeDj
-		If heard, it would write a new document to Mongo
-		Each document would have current (accurate or not):
-			Song, Setpack, Dj, timestamp, twitchId
+	[WL] Each like (1-9):
+		After verifying that the current user has enough likes left would:
+			Store a record specifying that the user has spent N likes on:
+				Current Song/Setpack/DJ 
+				UserId
+				timestamp
+				Scene-components??? Would be nice
+			
+		Node js should just be firing events:
+			A separateable serice (lambda?) should listen for the event
+				Validate it, execute the transaction to store and update records appropriately
+			Send a message to be eventually delivered to the user
+			
+		Subscriptions should be available to configure when a user has gained a point, 10 points, 50 points, 100 points, etc...		
 		
-	Queries would need to be:
-		Top N collections of Songs
-		Top N collections of Setpacks
-		Top N collections of Djs
+		Every time a user shows up to the chat room, Node js should fire an event
+			This will allow us to keep a tally of how many likes the user has accumulated.
 			
-			
-	Those queries could be executed every 10 minutes.
-		Each result would be placed into firebase
-		!leaderboard would be able to say this result on twitch-bot
-			
-
+	
 	* Have stats available in the chat: !leaderboard
 	* Create a scene that shows the stats
+		Queries would need to be:
+			Top N collections of Songs
+			Top N collections of Setpacks
+			Top N collections of Djs
+			
+		Those queries could be executed every 10 minutes.
+			Each result would be placed into firebase
+			!leaderboard would be able to say this result on twitch-bot
+			
 	
-	* How to prevent spam:
-		Usage: /r9kbeta
-	* How to prevent excessive voting?  Hmm..
-		https://docs.nightbot.tv/commands/filters  Nightbot filter repetitions
+
+	If any component is active during a “memory condition” they should be penalized… probably
