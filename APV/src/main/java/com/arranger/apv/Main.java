@@ -99,6 +99,7 @@ public class Main extends PApplet {
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
 	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
+	public static final int DEFAULT_SKIP_FRAMES_FOR_CONSOLE_OUTPUT = 200;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
 	protected APV<ShapeSystem> backgrounds;
@@ -306,11 +307,11 @@ public class Main extends PApplet {
 		configureSwitches();
 		
 		Config rootConfig = configurator.getRootConfig();
-		boolean isFullScreen = rootConfig.getBoolean("apv.fullScreen");
+		boolean isFullScreen = rootConfig.getBoolean(FLAGS.FULL_SCREEN.apvName());
 		if (isFullScreen) {
 			fullScreen(RENDERER);
 		} else {
-			size(rootConfig.getInt("apv.screen.width"), rootConfig.getInt("apv.screen.height"), RENDERER);
+			size(rootConfig.getInt(FLAGS.SCREEN_WIDTH.apvName()), rootConfig.getInt(FLAGS.SCREEN_HEIGHT.apvName()), RENDERER);
 		}
 		
 		initEvents();
@@ -1232,7 +1233,7 @@ public class Main extends PApplet {
 	
 	protected void drawConsoleFrameInfo() {
 		Switch switch1 = this.switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
-		int skipFrames = 0;
+		int skipFrames = DEFAULT_SKIP_FRAMES_FOR_CONSOLE_OUTPUT;
 		if (switch1.data != null) {
 			skipFrames = Integer.parseInt(switch1.data);
 		}

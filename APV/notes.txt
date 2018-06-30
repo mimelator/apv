@@ -2,31 +2,11 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-APV Release process:
-
-* Build APV.jar
-	./package.sh
-	cp to apv/bin
-
-* Test
-	./apv.sh
-
-
-* Create Release
-	start artifactory
-		./artifactory.sh
-	./release.sh
-		cp to apv/bin
-		
-* Production
-	./sync-server
-	cp to apv/bin
-
-
-
-
-Create Oceans should be:
-1) Run ./wavelength.sh with any new name
+How to Update SetPacks who have old application.conf:
+./apv-db-refresh.sh 
+	Run command: DB_REFRESH_SET_PACK_CONFIGURATION
+	
+	This will only work on setpacks that are registered in the mongo DB.
 
 
 Guide on how to create SetPacks:
@@ -37,10 +17,7 @@ Guide on how to create SetPacks:
 	Production
 		: Ensure Firebase is on
 
-
-
-Defect:
-	A set pack titled: "Who Me?" brought down testDB4 in production when it attempted to load/run that setPack
+	
 
 Deprecation:
 	Consider deprecating: postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
@@ -89,6 +66,7 @@ Import/Export is just a simple folder move, but there is no DB support :) but ne
 	So right now, all monday songs are broken from the DB.  Not the setpacks...
 	FIX: Maybe also show all the possible set pack locations.  Just like searching for djs, try to search
 		for setpacks that contain this song.
+[*] A set pack titled: "Who Me?" brought down testDB4 in production when it attempted to load/run that setPack		
 [*] : The difference in experience between the unlimited/unregistered setpacks vs official setpacks?	
 		Should i add additional default icons/colors/messages?
 *****************************************************************************

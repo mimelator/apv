@@ -58,7 +58,7 @@
 						<addMavenDescriptor>true</addMavenDescriptor>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.arranger.apv.Main</mainClass>
+							<mainClass>com.arranger.apv.ProcessControl</mainClass>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               				<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
