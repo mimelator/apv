@@ -1,19 +1,52 @@
 package com.arranger.apv;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.arranger.apv.util.FileHelper;
+import com.arranger.apv.util.FolderWatcher;
 
 public class ProcessControl {
-
 	
-
-	public static void main(String[] args) {
-		start("/Users/markimel/apv/oceans/monday/setPacks/pitstop/application.conf");
-		start("/Users/markimel/apv/oceans/monday/setPacks/Pink/application.conf");
-		start("/Users/markimel/apv/oceans/monday/setPacks/Rush/application.conf");
+	private Queue<File> queue = new ConcurrentLinkedQueue<File>();
+	private File setPackFolder;
+	private Main main;
+	
+	private void populateQueue() {
+		File[] listFiles = setPackFolder.listFiles(f -> f.isDirectory());
+		for (File f : listFiles) {
+			queue.offer(f);
+		}
+	}
+	
+	private void consumeQueue() {
+		File spf = queue.poll();
+		String confFile = spf.toPath().resolve("application.conf").toAbsolutePath().toString();
+		startAPV(confFile);
+	}
+	
+	private void watchFolder() {
+		//Watch folder
+		new FolderWatcher(setPackFolder, () -> populateQueue()).start();
+	}
+	
+	private ProcessControl() {
+		main = new Main(true);
+		main.settings();
+		
+		setPackFolder = new FileHelper(main).getSetPacksFolder();
+		populateQueue();
+		watchFolder();
+		
+		while (!queue.isEmpty()) {
+			consumeQueue();
+		}
 	}
 
-	protected static int start(String file) {
+	private int startAPV(String file) {
 		List<String> cmds = new ArrayList<String>();
 		cmds.add("java");
 		
@@ -25,8 +58,6 @@ public class ProcessControl {
 				buffer.append(flag.apvName()).append('=');
 				buffer.append(property);
 				cmds.add(buffer.toString());
-			} else {
-				//System.out.println("Null value for flag: " + flag.apvName());
 			}
 		});
 		
@@ -50,5 +81,9 @@ public class ProcessControl {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	public static void main(String[] args) {
+		new ProcessControl();
 	}
 }

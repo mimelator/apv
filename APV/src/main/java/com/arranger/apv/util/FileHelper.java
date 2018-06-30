@@ -21,9 +21,9 @@ public class FileHelper extends APVPlugin {
 	
 	public static final String HOME_DIR = System.getProperty("user.home");
 	
-	private static final String STATS = "stats";
-	private static final String SET_PACKS = "setPacks";
-	private static final String MUSIC_DIR = "Music";
+	public static final String STATS = "stats";
+	public static final String SET_PACKS = "setPacks";
+	public static final String MUSIC_DIR = "Music";
 	
 	private static final String APV_MUSIC_DIR = Main.FLAGS.MUSIC_DIR.apvName();
 	private static final Logger logger = Logger.getLogger(FileHelper.class.getName());

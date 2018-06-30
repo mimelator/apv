@@ -298,6 +298,16 @@ public class Main extends PApplet {
 	public static void main(String[] args) {
 		PApplet.main(Main.class, new String[0]);
 	}
+
+	private boolean procControl = false;
+	
+	public Main() {
+		this(false);
+	}
+	
+	public Main(boolean procControl) {
+		this.procControl = procControl;
+	}
 	
 	public void settings() {
 		loggingConfig = new LoggingConfig(this);
@@ -306,15 +316,17 @@ public class Main extends PApplet {
 		configurator = new Configurator(this);
 		configureSwitches();
 		
-		Config rootConfig = configurator.getRootConfig();
-		boolean isFullScreen = rootConfig.getBoolean(FLAGS.FULL_SCREEN.apvName());
-		if (isFullScreen) {
-			fullScreen(RENDERER);
-		} else {
-			size(rootConfig.getInt(FLAGS.SCREEN_WIDTH.apvName()), rootConfig.getInt(FLAGS.SCREEN_HEIGHT.apvName()), RENDERER);
+		if (!procControl) {
+			Config rootConfig = configurator.getRootConfig();
+			boolean isFullScreen = rootConfig.getBoolean(FLAGS.FULL_SCREEN.apvName());
+			if (isFullScreen) {
+				fullScreen(RENDERER);
+			} else {
+				size(rootConfig.getInt(FLAGS.SCREEN_WIDTH.apvName()), rootConfig.getInt(FLAGS.SCREEN_HEIGHT.apvName()), RENDERER);
+			}
+			
+			initEvents();
 		}
-		
-		initEvents();
 		
 		dumpStartupFlags();
 	}
