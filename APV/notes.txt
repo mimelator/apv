@@ -2,6 +2,43 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+APV Release process:
+
+* Build APV.jar
+	./package.sh
+	cp to apv/bin
+
+* Test
+	./apv.sh
+
+
+* Create Release
+	start artifactory
+		./artifactory.sh
+	./release.sh
+		cp to apv/bin
+		
+* Production
+	./sync-server
+	cp to apv/bin
+
+
+
+
+Create Oceans should be:
+1) Run ./wavelength.sh with any new name
+
+
+Guide on how to create SetPacks:
+	Locally
+		: Copy an existing?
+	On-Line
+		: Ensure Firebase is on
+	Production
+		: Ensure Firebase is on
+
+
+
 Defect:
 	A set pack titled: "Who Me?" brought down testDB4 in production when it attempted to load/run that setPack
 
@@ -155,8 +192,10 @@ Start mongo
 Current High Score: 
 
   			122435, 1.039196, 	32:43:37	(May 28, 2018)	0.3.3-SNAPSHOT
+ monday,	80213,  0.969494,	22:58:57	(June 11, 2018)	0.3.8-SNAPSHOT	
  arranger,	61772, 	1.121618, 	15:17:54	(June 12, 2018) 0.3.8-SNAPSHOT
  arranger,	54608, 	1.129945, 	13:25:28 	(June 13, 2018) 0.3.8-SNAPSHOT
+ arranger,  41431,	0.505459,	22:46:07	(June 20, 2018) 0.3.13-SNAPSHOT
 			8743, 	0.742379, 	03:16:17	(May 26, 2018) 	0.3.1-SNAPSHOT
 			8041, 	1.633685 	01:22:02  	(Apr 29, 2018)
 			8298,	0.878374,	02:37:27	(May 26, 2018) 	0.3.1-SNAPSHOT STREAMING
