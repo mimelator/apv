@@ -1,6 +1,8 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Firebase isn't working in production on APV
+
 
 How to Update SetPacks who have old application.conf:
 ./apv-db-refresh.sh 
