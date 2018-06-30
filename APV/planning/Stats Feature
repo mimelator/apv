@@ -1,6 +1,0 @@
-[STATS_FEATURE]:
-		Live Stats:
-		Capture ms since last frame
-		every 100 store current 'rolling' avg to larger collection
-		every 1000
-		every 10000
