@@ -43,6 +43,10 @@ public class ProcessControl {
 		
 		while (!queue.isEmpty()) {
 			consumeQueue();
+			
+			if (queue.isEmpty()) {
+				populateQueue();
+			}
 		}
 	}
 
