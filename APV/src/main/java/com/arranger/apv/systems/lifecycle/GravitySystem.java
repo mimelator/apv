@@ -2,8 +2,10 @@ package com.arranger.apv.systems.lifecycle;
 
 import java.awt.geom.Point2D;
 
+import com.arranger.apv.APV;
 import com.arranger.apv.Main;
 import com.arranger.apv.factory.ShapeFactory;
+import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.util.Configurator;
 
 import processing.core.PApplet;
@@ -42,10 +44,15 @@ public class GravitySystem extends LifecycleSystem {
 	/**
 	 * Delegate to the LocationSystem
 	 */
-//	@Override
-//	public String getDisplayName() {
-//		return super.getDisplayName() + "[" + parent.getLocations().getPlugin().getDisplayName() + "]";
-//	}
+	@Override
+	public String getDisplayName() {
+		APV<LocationSystem> locations = parent.getLocations();
+		if (locations != null) {
+			return super.getDisplayName() + "[" + locations.getPlugin().getDisplayName() + "]";
+		} else {
+			return super.getDisplayName();
+		}
+	}
 
 	protected class GravityData extends LifecycleData {
 		private static final int HIGH_SPEED_RANGE = 4;

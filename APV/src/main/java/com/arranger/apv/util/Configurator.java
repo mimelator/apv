@@ -299,20 +299,22 @@ public class Configurator extends APVPlugin {
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
 			
-			APVPlugin plugin = null;
-			try {
-				plugin = loadPlugin(key, argList);
-			} catch (Exception e) {
-				System.out.println(e);
-				e.printStackTrace();
-			}
-			if (plugin == null) {
-				throw new RuntimeException("Unable to load plugin: " + name);
-			}
-			
-			//is plugin on the disabled list?
-			if (!isDisabled(plugin)) {
-				systems.add(plugin);
+			if (!isDisabled(key)) {
+				APVPlugin plugin = null;
+				try {
+					plugin = loadPlugin(key, argList);
+				} catch (Exception e) {
+					System.out.println(e);
+					e.printStackTrace();
+				}
+				if (plugin == null) {
+					throw new RuntimeException("Unable to load plugin: " + name);
+				}
+				
+				//is plugin display name on the disabled list?
+				if (!isDisabled(plugin)) {
+					systems.add(plugin);
+				}
 			}
 		});
 		
@@ -323,14 +325,33 @@ public class Configurator extends APVPlugin {
 		return systems;
 	}
 	
+	protected boolean isDisabled(String className) {
+		Set<String> disabledSet = getDisabledPluginSet();
+		
+		boolean contains = disabledSet.contains(className);
+		if (contains) {
+			System.out.println("Not loading disabled plugin: " + className);
+		}
+		return contains;
+	}
+	
 	protected boolean isDisabled(APVPlugin plugin) {
+		Set<String> disabledSet = getDisabledPluginSet();
+		
+		String pluginDisplayName = plugin.getDisplayName();
+		boolean contains = disabledSet.contains(pluginDisplayName);
+		if (contains) {
+			System.out.println("Not loading disabled plugin: " + pluginDisplayName);
+		}
+		return contains;
+	}
+
+	protected Set<String> getDisabledPluginSet() {
 		if (disabledPlugins == null) {
 			List<String> stringList = parent.getConfigurator().getRootConfig().getStringList(DISABLED_PLUGIN_KEY);
 			disabledPlugins = new HashSet<String>(stringList);
 		}
-		
-		String pluingName = plugin.getDisplayName().toLowerCase();
-		return disabledPlugins.contains(pluingName);
+		return disabledPlugins;
 	}
 	
 	public List<? extends Config> getSystemConfigList(Main.SYSTEM_NAMES systemName) {

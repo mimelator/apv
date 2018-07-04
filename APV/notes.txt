@@ -8,8 +8,8 @@ Actively working on:
 * Trying to override switches but tests are broken
 * Oh boy...
 
-
-
+Firebase agent has hard coded endpoint
+.setDatabaseUrl("https://alpha-one-dae37.firebaseio.com")
 
 	
 
