@@ -32,10 +32,10 @@ public class RotatorSystem extends LifecycleSystem {
 	/**
 	 * Delegate to the LocationSystem
 	 */
-	@Override
-	public String getDisplayName() {
-		return super.getDisplayName() + "[" + parent.getLocations().getPlugin().getDisplayName() + "]";
-	}
+//	@Override
+//	public String getDisplayName() {
+//		return super.getDisplayName() + "[" + parent.getLocations().getPlugin().getDisplayName() + "]";
+//	}
 	
 	@Override
 	protected LifecycleData createData() {

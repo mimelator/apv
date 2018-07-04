@@ -42,10 +42,10 @@ public class GravitySystem extends LifecycleSystem {
 	/**
 	 * Delegate to the LocationSystem
 	 */
-	@Override
-	public String getDisplayName() {
-		return super.getDisplayName() + "[" + parent.getLocations().getPlugin().getDisplayName() + "]";
-	}
+//	@Override
+//	public String getDisplayName() {
+//		return super.getDisplayName() + "[" + parent.getLocations().getPlugin().getDisplayName() + "]";
+//	}
 
 	protected class GravityData extends LifecycleData {
 		private static final int HIGH_SPEED_RANGE = 4;

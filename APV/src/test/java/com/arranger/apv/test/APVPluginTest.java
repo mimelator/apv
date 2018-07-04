@@ -39,11 +39,11 @@ import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FileHelper.StreamConsumer;
-import com.arranger.apv.util.cmdrunner.StartupCommandRunner;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.PeekIterator;
 import com.arranger.apv.util.VersionInfo;
+import com.arranger.apv.util.cmdrunner.StartupCommandRunner;
 import com.arranger.apv.util.draw.RandomMessagePainter;
 import com.arranger.apv.wm.APVWatermark;
 
@@ -145,6 +145,7 @@ public abstract class APVPluginTest {
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
         when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));
+        
         when(sceneList.getConfig()).thenCallRealMethod();
         
         setupConfigurator();

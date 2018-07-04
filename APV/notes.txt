@@ -1,23 +1,15 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Firebase isn't working in production on APV
+
+Actively working on:
+* Acckk, things are broken
+* ConsoleOutputSwitch is throwing exceptions
+* Trying to override switches but tests are broken
+* Oh boy...
 
 
-How to Update SetPacks who have old application.conf:
-./apv-db-refresh.sh 
-	Run command: DB_REFRESH_SET_PACK_CONFIGURATION
-	
-	This will only work on setpacks that are registered in the mongo DB.
 
-
-Guide on how to create SetPacks:
-	Locally
-		: Copy an existing?
-	On-Line
-		: Ensure Firebase is on
-	Production
-		: Ensure Firebase is on
 
 	
 

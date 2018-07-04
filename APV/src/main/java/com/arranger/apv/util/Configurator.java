@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -42,7 +44,9 @@ public class Configurator extends APVPlugin {
 	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF = "application.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
+	public static final String DISABLED_PLUGIN_KEY = "disabledPlugins";
 	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
+	
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
 	
@@ -51,6 +55,7 @@ public class Configurator extends APVPlugin {
 	private RegisteredClasses registeredClasses;
 	private boolean shouldScrambleInitialSystems;
 	private ColorHelper colorHelper;
+	private Set<String> disabledPlugins;
 	
 	public class Context {
 		public ConfigList argList;
@@ -304,7 +309,11 @@ public class Configurator extends APVPlugin {
 			if (plugin == null) {
 				throw new RuntimeException("Unable to load plugin: " + name);
 			}
-			systems.add(plugin);
+			
+			//is plugin on the disabled list?
+			if (!isDisabled(plugin)) {
+				systems.add(plugin);
+			}
 		});
 		
 		if (shouldScrambleInitialSystems && allowScramble) {
@@ -312,6 +321,16 @@ public class Configurator extends APVPlugin {
 		}
 		
 		return systems;
+	}
+	
+	protected boolean isDisabled(APVPlugin plugin) {
+		if (disabledPlugins == null) {
+			List<String> stringList = parent.getConfigurator().getRootConfig().getStringList(DISABLED_PLUGIN_KEY);
+			disabledPlugins = new HashSet<String>(stringList);
+		}
+		
+		String pluingName = plugin.getDisplayName().toLowerCase();
+		return disabledPlugins.contains(pluingName);
 	}
 	
 	public List<? extends Config> getSystemConfigList(Main.SYSTEM_NAMES systemName) {
