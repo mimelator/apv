@@ -47,7 +47,7 @@ public class FirebaseAgent extends BaseAgent {
 				FileInputStream serviceAccount = new FileInputStream(fullPath);
 				FirebaseOptions options = new FirebaseOptions.Builder()
 				    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-				    .setDatabaseUrl("https://alpha-one-dae37.firebaseio.com")
+				    .setDatabaseUrl(parent.getFirebaseDBEndpoint())
 				    .build();
 				FirebaseApp.initializeApp(options);
 			} catch (Throwable t) {

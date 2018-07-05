@@ -171,7 +171,6 @@ public class Main extends PApplet {
 	private Switch helpSwitch,
 					showSettingsSwitch,
 					frameStroberSwitch,
-					continuousCaptureSwitch,
 					videoGameSwitch,
 					scrambleModeSwitch,
 					debugPulseSwitch,
@@ -205,6 +204,7 @@ public class Main extends PApplet {
 		MONGO_HOST_PORT("mongoHostPort", "string"),
 		MONGO_DB_NAME("mongoDbName", "string"),
 		FIREBASE_ENABLED("firebase", "true|false"),
+		FIREBASE_DB_ENDPOINT("firebaseDBEndpoint", "URL"),
 		OCEAN_NAME("ocean", "string");
 		
 		private String name;
@@ -236,7 +236,6 @@ public class Main extends PApplet {
 		HELP("Help"),
 		SHOW_SETTINGS("ShowSettings"),
 		FRAME_STROBER("FrameStrober"),
-		CONTINUOUS_CAPTURE("ContinuousCapture"),
 		SCRAMBLE_MODE("Scramble"),
 		VIDEO_GAME("VideoGame"),
 		CONSOLE_OUTPUT("ConsoleOutputSwitch"),
@@ -568,6 +567,10 @@ public class Main extends PApplet {
 	
 	public boolean isFirebaseEnabled() {
 		return getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName());
+	}
+	
+	public String getFirebaseDBEndpoint() {
+		return getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName());
 	}
 	
 	public int getDefaultShapeSystemAlpha() {
@@ -1191,7 +1194,7 @@ public class Main extends PApplet {
 		postScene(helpSwitch, () -> helpDisplay.showHelp());
 		postScene(scrambleMode, () -> doScramble());
 		postScene(() -> runControlMode());
-		postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
+		postScene(screenshotMode, () -> doScreenCapture());
 		postScene(() -> getDrawEvent().fire());
 		postScene(showSettingsSwitch, () -> settingsDisplay.drawSettingsMessages());
 		postScene(consoleOutputSwitch, () -> drawConsoleFrameInfo());
@@ -1207,6 +1210,9 @@ public class Main extends PApplet {
 	}
 	
 	private void postScene(Switch sw, Action action) {
+		if (sw == null) {
+			return;
+		}
 		postScene(sw.isEnabled(), action);
 	}
 	
@@ -1333,7 +1339,6 @@ public class Main extends PApplet {
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
 		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
-		registerSwitch(continuousCaptureSwitch, Command.SWITCH_CONTINUOUS_CAPTURE);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
@@ -1475,7 +1480,6 @@ public class Main extends PApplet {
 		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
-		continuousCaptureSwitch = switches.get(SWITCH_NAMES.CONTINUOUS_CAPTURE.name);
 		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
 		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
@@ -1534,6 +1538,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
 		addConstant(buffer, FLAGS.FIREBASE_ENABLED, String.valueOf(getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName())));
+		addConstant(buffer, FLAGS.FIREBASE_DB_ENDPOINT, "\"" + getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName()) + "\"");
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
