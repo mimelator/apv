@@ -889,9 +889,13 @@ public class Main extends PApplet {
 		transitions.scramble(true);
 	}
 	
-	public void randomizeCurrentSetPack() {
+	public void randomizeCurrentSetPackColors() {
 		colorsModel.randomize();
 		colorsModel.setCurrentColors(false);
+	}
+	
+	public void randomizeCurrentSetPack() {
+		randomizeCurrentSetPackColors();
 		
 		songsModel.randomize();
 		songsModel.playSong(0);
@@ -1349,7 +1353,8 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(!Command.isShiftDown(mod)));  
 		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
-		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPack());
+		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
+		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
 		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
 		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
 		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());

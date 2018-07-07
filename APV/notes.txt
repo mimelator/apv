@@ -1,9 +1,7 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
-Need to promote the two builds together
-GE & WL
-
+remove ports from scripts for awhile
 
 Production challenges:
 Mapping apv in wl-twitch-bot
