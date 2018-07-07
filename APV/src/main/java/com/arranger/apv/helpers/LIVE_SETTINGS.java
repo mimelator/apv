@@ -14,6 +14,7 @@ public enum LIVE_SETTINGS {
 	DB((p, args) -> String.valueOf(p.getAudio().getDB())),
 	SWITCH((p, args) -> getSwitchValue(p, args)),
 	FLAG((p, args) -> getFlagValue(p, args)),
+	SONG((p, args) -> p.getSetListPlayer().getCurrentSongTitle()),
 	SET_PACK((p, args) -> p.getSetPackModel().getSetPackName()),
 	FRAME_RATE((p, args) -> String.valueOf(p.frameRate));
 	

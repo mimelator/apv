@@ -1,34 +1,27 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Need to promote the two builds together
+GE & WL
 
-Actively working on:
-* Acckk, things are broken
-* ConsoleOutputSwitch is throwing exceptions
-* Trying to override switches but tests are broken
-* Oh boy...
 
-DON Firebase agent has hard coded endpoint
-.setDatabaseUrl("https://alpha-one-dae37.firebaseio.com")
+Production challenges:
+Mapping apv in wl-twitch-bot
+recreating worm, wl-twitch-bot, wl
+dotenv import
 
-	
 
-Deprecation:
-	Consider deprecating: postScene(continuousCaptureSwitch.isEnabled() || screenshotMode == true, () -> doScreenCapture());
+
 
 *****************************************************************************
 TODO:
-
 [WEB] * Social Media badges that guest Djs can use (snapchat, instagram, facebook)
 [WEB] * Subscriptions for setpacks/djs/etc...
-[WEB] * Execute certain mod commands over chat window?
-[WEB] * A laminated command sheet
 [WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
 [WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
 			The training data going into the model would be encoded information describing all of the current scene components
 
 [GE] * No diagnostic insights into any of the agents
-[GE] * Add start commands to turn down audio and change pulse skip and cycle_set_pack
 [GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
 [GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs
 [GE] * Puzzle animation of a background iamge
@@ -42,7 +35,6 @@ TODO:
 [GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 
 [*] Change the frequency of some of those backdrops/shaders/backgrounds that i don't like.  This should be solved by the Like Campaign
-[*] * I might want a runtime method to disable agents, but for right now i'll do it manually
 [*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
 {*] * Imagine allowing DJs to add scripts to their setpacks: (Basically create custom agents for their setpacks)
 			Every 5 mintues fire this event: WATERMARK
@@ -168,6 +160,7 @@ Current High Score:
  arranger,	61772, 	1.121618, 	15:17:54	(June 12, 2018) 0.3.8-SNAPSHOT
  arranger,	54608, 	1.129945, 	13:25:28 	(June 13, 2018) 0.3.8-SNAPSHOT
  arranger,  41431,	0.505459,	22:46:07	(June 20, 2018) 0.3.13-SNAPSHOT
+ testDB4,	10006,	0.659591,	04:12:50	(July 5, 2018) 	0.3.15-SNAPSHOT
 			8743, 	0.742379, 	03:16:17	(May 26, 2018) 	0.3.1-SNAPSHOT
 			8041, 	1.633685 	01:22:02  	(Apr 29, 2018)
 			8298,	0.878374,	02:37:27	(May 26, 2018) 	0.3.1-SNAPSHOT STREAMING
