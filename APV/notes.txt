@@ -3,6 +3,9 @@ https://github.com/mimelator/apv
 
 remove ports from scripts for awhile
 
+Exit early!
+if (MonitorAgent ... too many times)  Exit
+
 Production challenges:
 Mapping apv in wl-twitch-bot
 recreating worm, wl-twitch-bot, wl

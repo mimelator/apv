@@ -14,7 +14,8 @@ private static final int TEN_SECONDS = 10000;
 	private Monitor monitor = new Monitor();
 	
 	private boolean enableThreadDump = false;
-	private boolean enableMemoryDump = true;
+	private boolean enableMemoryDump = false;
+	private boolean enableExit = true;
 	private boolean enabled;
 
 	public MonitorAgent(Main parent, boolean enabled) {
@@ -73,6 +74,10 @@ private static final int TEN_SECONDS = 10000;
 						String memoryDump = runtimeHelper.generateMemoryDump();
 						System.out.println(memoryDump);
 						new FileHelper(parent).saveFile(APV_MEMORY_DUMP_TXT, memoryDump);
+					}
+					
+					if (enableExit) {
+						System.exit(1);
 					}
 				}
 				
