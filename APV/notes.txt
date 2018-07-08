@@ -2,19 +2,18 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-Bug:
--Dapv aren't getting transferred to child processes if they aren't flags
-Lousy hack in ProcessControl#77 and reference.conf#365
-
+Should i deprecate older features?  Maybe save some, but document why they are kept
+reference.conf
+	apv.setList = false
+	apv.setListFolder = ""
+	apv.autoLoadSetListFolder = true
+	setPackList : []
+	likedScenes : []
+	hotKeys : []
+	macros : []	
 
 twitch bot should reply to commands with whispers
 Commands that take arguments should just be whispered
-
-Production challenges:
-Mapping apv in wl-twitch-bot
-recreating worm, wl-twitch-bot, wl
-dotenv import
-
 
 
 
