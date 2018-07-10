@@ -42,6 +42,6 @@ public enum LIVE_SETTINGS {
 	public void onCommand(Main parent, String [] args) {
 		String msgValue = ch.onCommand(parent, args);
 		String msg = this.name() + ":" + msgValue;
-		new DrawHelper(parent, 1200, new WatermarkPainter(parent, 1200, msg, .25f, LOCATION.MIDDLE), () -> {});
+		new DrawHelper(parent, 1200, new WatermarkPainter(parent, 1200, msg, .25f, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA), () -> {});
 	}
 }

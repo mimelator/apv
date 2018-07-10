@@ -16,6 +16,7 @@ import processing.core.PImage;
 
 public class WatermarkPainter extends ShapeSystem {
 	
+	public static final float WATERMARK_ALPHA = .15f;
 	private static final int DEFAULT_NUM_FRAMES = 500;
 	private static final int TEXT_SIZE = 250;
 	
@@ -23,15 +24,18 @@ public class WatermarkPainter extends ShapeSystem {
 	private float scale;
 	private String msg;
 	private SafePainter.LOCATION location;
+	private float watermarkAlpha;
 	private DynamicWatermark dw;
 	
 	
-	public WatermarkPainter(Main parent, int numFrames, String msg, float scale, LOCATION location) {
+	
+	public WatermarkPainter(Main parent, int numFrames, String msg, float scale, LOCATION location, float watermarkAlpha) {
 		super(parent, null);
 		this.numFrames = numFrames;
 		this.scale = scale;
 		this.msg = msg;
 		this.location = location;
+		this.watermarkAlpha = watermarkAlpha;
 	}
 
 	public WatermarkPainter(Configurator.Context ctx) {
@@ -39,23 +43,25 @@ public class WatermarkPainter extends ShapeSystem {
 				ctx.getInt(0, DEFAULT_NUM_FRAMES),
 				ctx.getString(1, ""),
 				ctx.getFloat(2, 1),
-				LOCATION.valueOf(ctx.getString(3, LOCATION.MIDDLE.name())));
+				LOCATION.valueOf(ctx.getString(3, LOCATION.MIDDLE.name())),
+				ctx.getFloat(4, WATERMARK_ALPHA));
 	}
 	
 	@Override
 	public String getConfig() {
 		// {WatermarkPainter : [${apv.watermarkFrames}, "Wavelength Rocks", .5, LOWER_RIGHT]}
-		return String.format("{%s : [%s, \"%s\", %s, %s]}", getName(),
+		return String.format("{%s : [%s, \"%s\", %s, %s, %s]}", getName(),
 							numFrames,
 							msg,
 							scale,
-							location.name());
+							location.name(),
+							watermarkAlpha);
 	}
 
 	@Override
 	public void draw() {
 		if (dw == null) {
-			dw = new DynamicWatermark(parent, .5f, msg, generateImage(), null);
+			dw = new DynamicWatermark(parent, watermarkAlpha, msg, generateImage(), null);
 		}
 		APV<Shader> shaders = parent.getShaders();
 		shaders.setEnabled(true);

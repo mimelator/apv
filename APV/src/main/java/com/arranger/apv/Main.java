@@ -981,7 +981,7 @@ public class Main extends PApplet {
 		
 		//Send message and watermark
 		sendMessage(new String[] {message});
-		WatermarkPainter wp = new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE);
+		WatermarkPainter wp = new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
 		new DrawHelper(this, wp.getNumFrames(), wp, () -> {});
 	}
 	
