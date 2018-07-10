@@ -2,22 +2,7 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-
-Should i deprecate older features?  Maybe save some, but document why they are kept
-reference.conf
-	apv.setList = false
-	apv.setListFolder = ""
-	apv.autoLoadSetListFolder = true
-	setPackList : []
-	likedScenes : []
-	hotKeys : []
-	macros : []	
-
-twitch bot should reply to commands with whispers
-Commands that take arguments should just be whispered
-
-Upgrade after a few more days.
-
+Get the Frame Blur Agent to fuck off if the FPS is too slow
 
 
 *****************************************************************************

@@ -37,6 +37,12 @@ public class FrameBlurAgent extends BaseAgent {
 	}
 	
 	public void updateFades() {
+		if (parent.frameRate < 20) {
+			rollingFades.clear();
+			return;
+		}
+		
+		
 		//what if i modulate the num Fades
 		float oscillate = parent.oscillate(low, high, cycleTime);
 		
