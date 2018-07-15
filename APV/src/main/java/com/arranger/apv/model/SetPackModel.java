@@ -33,6 +33,9 @@ public class SetPackModel extends APVModel {
 
 	public void setSetpackEntity(SetpackEntity setpackEntity) {
 		this.setpackEntity = setpackEntity;
+		if (setpackEntity != null) {
+			setPackName = setpackEntity.getName();
+		}
 	}
 
 	@Override

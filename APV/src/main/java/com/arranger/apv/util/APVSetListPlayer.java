@@ -9,6 +9,7 @@ import java.util.ListIterator;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.db.entity.SetpackEntity;
 
 import ddf.minim.AudioMetaData;
 import ddf.minim.AudioPlayer;
@@ -30,7 +31,7 @@ public class APVSetListPlayer extends APVPlugin {
 	private static final String CONFIG = KEY + " = ${apv.setPack.home}" + File.separator + "%s";
 
 	
-	private List<Path> setList = new ArrayList<Path>();
+	private List<Path> songList = new ArrayList<Path>();
 	private AudioPlayer currentPlayer;
 	private String relConfigDir = "songs";
 	
@@ -49,7 +50,7 @@ public class APVSetListPlayer extends APVPlugin {
 		this.relConfigDir = relConfigDir;
 	}
 	
-	public void playStartupSetList() {
+	public void playStartupSongList() {
 		String configString = parent.getConfigString(KEY);
 		Path currentDir = Paths.get(".");
 		Path songFolder = currentDir.resolve(configString);
@@ -60,40 +61,45 @@ public class APVSetListPlayer extends APVPlugin {
 		if (currentPlayer != null) {
 			currentPlayer.close();
 		}
-		setList.clear();
+		songList.clear();
 	}
 	
 	public void play(List<File> files, int indexToStart) {
-		setList.clear();
-		files.forEach(f -> setList.add(f.toPath()));
-		playSetList(indexToStart);
+		songList.clear();
+		files.forEach(f -> songList.add(f.toPath()));
+		playSongList(indexToStart);
 	}
 	
 	public void play(File directory) {
-		setList.clear();
+		songList.clear();
 		
 		if (directory.isDirectory()) {
-			setList = new FileHelper(parent).getAllMp3sFromDir(directory.toPath());
+			songList = new FileHelper(parent).getAllMp3sFromDir(directory.toPath());
 		} else {
-			setList.add(directory.toPath());
+			songList.add(directory.toPath());
 		}
 		
-		playSetList(0);
+		playSongList(0);
 	}
 	
 	public List<Path> getSetList() {
-		return setList;
+		return songList;
 	}
 	
 	public String getCurrentSongTitle() {
 		return currentSongTitle;
 	}
 	
-	protected void playSetList(int index) {
+	protected void playSongList(int index) {
+		Path path2 = songList.get(index);
+		String name = path2.getParent().getParent().toFile().getName();
+		SetpackEntity setPackEntity = parent.getDBSupport().findSetpackEntityByName(name);
+		parent.getSetPackModel().setSetpackEntity(setPackEntity);
+		
 		Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {
 			try {
-				ListIterator<Path> it = setList.listIterator(index);
+				ListIterator<Path> it = songList.listIterator(index);
 				while (it.hasNext()) {
 					playSong(minim.loadFile(it.next().toString()));
 				}

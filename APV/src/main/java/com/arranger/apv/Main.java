@@ -1308,7 +1308,7 @@ public class Main extends PApplet {
 	protected void checkStartupSetList() {
 		ensureSetListReadyToPlay();
 		if (isSetList() && !isListenOnly()) {
-			setListPlayer.playStartupSetList();
+			setListPlayer.playStartupSongList();
 		}
 	}
 	
