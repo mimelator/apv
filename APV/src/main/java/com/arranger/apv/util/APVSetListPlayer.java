@@ -95,6 +95,7 @@ public class APVSetListPlayer extends APVPlugin {
 		String name = path2.getParent().getParent().toFile().getName();
 		SetpackEntity setPackEntity = parent.getDBSupport().findSetpackEntityByName(name);
 		parent.getSetPackModel().setSetpackEntity(setPackEntity);
+		parent.getSetPackStartEvent().fire();
 		
 		Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {
