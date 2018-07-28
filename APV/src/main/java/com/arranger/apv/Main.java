@@ -477,6 +477,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.DRAW);
 	}
 	
+	public CoreEvent getKScopeEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.K_SCOPE);
+	}
+	
 	public CoreEvent getSceneCompleteEvent() {
 		return (CoreEvent)eventMap.get(EventTypes.SCENE_COMPLETE);
 	}
@@ -1501,6 +1505,7 @@ public class Main extends PApplet {
 	protected void initEvents() {
 		eventMap.put(EventTypes.SETUP, new CoreEvent(this, EventTypes.SETUP));
 		eventMap.put(EventTypes.DRAW, new CoreEvent(this, EventTypes.DRAW));
+		eventMap.put(EventTypes.K_SCOPE, new CoreEvent(this, EventTypes.K_SCOPE));
 		eventMap.put(EventTypes.SCENE_COMPLETE, new CoreEvent(this, EventTypes.SCENE_COMPLETE));
 		eventMap.put(EventTypes.SETLIST_COMPLETE, new CoreEvent(this, EventTypes.SETLIST_COMPLETE));
 		eventMap.put(EventTypes.STROBE, new CoreEvent(this, EventTypes.STROBE));

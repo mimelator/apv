@@ -100,12 +100,16 @@ public class CustomShader extends Shader {
 	        PShader shader = getShader();
 	        shader.set("resolution", (float)parent.width, (float)parent.height);
 			shader.set("time", parent.millis() / 1000.0f);
-			shader.set("alpha", alpha);
+			shader.set("alpha", getAlphaForShaderPass());
 			
 			if (image != null) {
 				shader.set(textureName, image);
 				shader.set("textureResolution", image.width, image.height);
 			}
 	    }
+
+		protected float getAlphaForShaderPass() {
+			return alpha;
+		}
 	}
 }

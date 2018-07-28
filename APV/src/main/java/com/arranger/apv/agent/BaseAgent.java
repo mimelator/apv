@@ -40,6 +40,10 @@ public class BaseAgent extends APVPlugin {
 		return parent.getDrawEvent();
 	}
 	
+	public APVEvent<EventHandler> getKScopeEvent() {
+		return parent.getKScopeEvent();
+	}
+	
 	public APVEvent<EventHandler> getSparkEvent() {
 		return parent.getSparkEvent();
 	}

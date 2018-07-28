@@ -62,5 +62,10 @@ public class Watermark extends CustomShader {
 			PShader shader = getShader();
 			shader.set("scroll", scroll);
 		}
+		
+		@Override
+		protected float getAlphaForShaderPass() {
+			return parent.oscillate(0, alpha, 10);
+		}
 	}
 }
