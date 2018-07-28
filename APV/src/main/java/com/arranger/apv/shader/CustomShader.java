@@ -69,8 +69,13 @@ public class CustomShader extends Shader {
 			});
 		}
 		
-		render.custom(pass);
-		render.compose();
+		try {
+			render.custom(pass);
+			render.compose();
+		} catch (Exception e) {
+			System.out.println("Exception caught for custom shader: " + getDisplayName());
+			e.printStackTrace();
+		}
 	}
 	
 	public float getAlpha() {
