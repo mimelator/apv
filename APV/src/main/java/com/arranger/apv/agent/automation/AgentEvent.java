@@ -77,7 +77,7 @@ public class AgentEvent extends BaseAgent implements Handler {
 		//skip N, then invoke
 		if (oscillator != null) {
 			float oscillate = oscillator.oscillate(numToSkip, optionalHighNumToSkip, DEFAULT_CYCLE_TIME);
-			System.out.printf("oscillate%s: numToSkip:%s optionalHighNumToSkip:%s\n", oscillate, numToSkip, optionalHighNumToSkip);
+			//System.out.printf("oscillate%s: numToSkip:%s optionalHighNumToSkip:%s\n", oscillate, numToSkip, optionalHighNumToSkip);
 			if (skipped > oscillate) {
 				shouldHandle = true;
 			}
