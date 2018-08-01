@@ -11,13 +11,13 @@ import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.frame.Oscillator;
 
 /**
- * TODO: Must be able to modulate the numToSkip.  Low and High and Cycle Time
+ * TODO: Must be able to configure the Cycle Time
  * @author markimel
  *
  */
 public class AgentEvent extends BaseAgent implements Handler {
 
-	private static final int DEFAULT_CYCLE_TIME = 20;
+	private static final int DEFAULT_CYCLE_TIME = 1000;
 	
 	private APVEvent<EventHandler> event;
 	private int numToSkip;
@@ -72,12 +72,12 @@ public class AgentEvent extends BaseAgent implements Handler {
 	@Override
 	public void handle() {
 		skipped++;
-		
 		boolean shouldHandle = false;
 		
 		//skip N, then invoke
 		if (oscillator != null) {
 			float oscillate = oscillator.oscillate(numToSkip, optionalHighNumToSkip, DEFAULT_CYCLE_TIME);
+			System.out.printf("oscillate%s: numToSkip:%s optionalHighNumToSkip:%s\n", oscillate, numToSkip, optionalHighNumToSkip);
 			if (skipped > oscillate) {
 				shouldHandle = true;
 			}
