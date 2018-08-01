@@ -96,7 +96,10 @@ public class ColorHelper extends APVPlugin {
 	}
 
 	public void updateColor(String key, Color c1, Color c2) {
-		handlerMap2.get(key).getHandler().onColorChange(c1, c2);
+		ColorHolder2 colorHolder2 = handlerMap2.get(key);
+		if (colorHolder2 != null) {
+			colorHolder2.getHandler().onColorChange(c1, c2);
+		}
 	}
 
 	protected Color getColorForName(String colorName) {
