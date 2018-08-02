@@ -57,7 +57,7 @@ public class FrameBlurAgent extends BaseAgent {
 		parent.addSettingsMessage(String.format("   ---Oscillate: %s", oscillate));
 		
 		//Pop an item off of the top of the list and dispose
-		if (rollingFades.size() >= oscillate) {
+		if (!rollingFades.isEmpty() && rollingFades.size() >= oscillate) {
 			rollingFades.pop();
 		}
 		
