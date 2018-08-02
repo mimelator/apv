@@ -1,7 +1,12 @@
 package com.arranger.apv.agent;
 
+import java.awt.geom.Point2D;
+
 import com.arranger.apv.Main;
+import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.loc.PathLocationSystem;
 import com.arranger.apv.systems.ShapeSystem;
+import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.util.Configurator.Context;
 import com.arranger.apv.util.draw.DrawHelper;
 import com.arranger.apv.util.frame.FrameFader;
@@ -27,15 +32,13 @@ public class KaleidoscopeAgent extends BaseAgent {
 	
 	private DrawHelper drawHelper;
 	private int slices;
-	//private float angle;
 	private float userRadius;
 	private int numFrames;
-	private float offset = 0;
+	
 
 	public KaleidoscopeAgent(Main parent, int slices, float userRadius, int numFrames) {
 		super(parent);
 		this.slices = slices;
-//		angle = PI / slices;
 		this.userRadius = userRadius;
 		this.numFrames = numFrames;
 		
@@ -61,11 +64,21 @@ public class KaleidoscopeAgent extends BaseAgent {
 
 	protected class KShapeSystem extends ShapeSystem {
 		
-		FrameFader fader;
+		private FrameFader fader;
+		private float phase;
+		private boolean useLocation = true;
 		
 		public KShapeSystem(Main parent) {
 			super(parent, null);
+			
 			fader = new FrameFader(parent, numFrames / EASE_IN_MODIFIER);
+			phase = parent.random(360);
+			
+			LocationSystem	ls = parent.getLocations().getPlugin();
+			if (ls instanceof PathLocationSystem) {
+				PathLocationSystem pls = (PathLocationSystem)ls;
+				useLocation = !pls.isSplitter();
+			}
 		}
 
 		@Override
@@ -80,7 +93,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, slices, SLICE_CYCLE_TIME);
 			float angle = PI / currentNumSlices;
 			
-			offset += PI / 180;
+			phase += PI / 180;
 			
 			float radius = 0.0f;
 			if (fader.isFadeActive()) {
@@ -99,16 +112,32 @@ public class KaleidoscopeAgent extends BaseAgent {
 			mySlice.vertex(
 					PApplet.cos(angle) * radius, 
 					PApplet.sin(angle) * radius, 
-					PApplet.cos(angle + offset) * radius + img.width / 2,
-					PApplet.sin(angle + offset) * radius + img.height / 2);
+					PApplet.cos(angle + phase) * radius + img.width / 2,
+					PApplet.sin(angle + phase) * radius + img.height / 2);
 			mySlice.vertex(
 					PApplet.cos(-angle) * radius, 
 					PApplet.sin(-angle) * radius, 
-					PApplet.cos(-angle + offset) * radius + img.width / 2,
-					PApplet.sin(-angle + offset) * radius + img.height / 2);
+					PApplet.cos(-angle + phase) * radius + img.width / 2,
+					PApplet.sin(-angle + phase) * radius + img.height / 2);
 			mySlice.endShape();
 	
-			parent.translate(parent.width / 2, parent.height / 2);
+			
+			Point2D pt = parent.getLocations().getPlugin().getCurrentPoint();
+			
+			int centerX = parent.width / 2;
+			int centerY = parent.height / 2;
+			float pct = 1.0f - fader.getFadePct();
+			
+			if (useLocation && fader.isFadeActive()) {
+				float ptX = PApplet.lerp((float)pt.getX(), centerX, pct);
+				float ptY = PApplet.lerp((float)pt.getY(), centerY, pct);
+				parent.translate(ptX, ptY);
+			} else {
+				parent.translate(centerX, centerY);
+			}
+			
+			//parent.translate(parent.width / 2, parent.height / 2);
+			
 			for (int i = 0; i < slices; i++) {
 				parent.rotate(angle * 2);
 				parent.shape(mySlice);
