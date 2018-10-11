@@ -858,6 +858,8 @@ public class Main extends PApplet {
 		fireSetupEvent();
 		
 		startupCommandRunner.runStartupCommands();
+		
+		frameRate(20.0f);
 	}
 
 	public void playSetList(File directory) {

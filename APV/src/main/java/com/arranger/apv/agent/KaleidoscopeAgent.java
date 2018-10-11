@@ -6,7 +6,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.PathLocationSystem;
 import com.arranger.apv.systems.ShapeSystem;
-import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.util.Configurator.Context;
 import com.arranger.apv.util.draw.DrawHelper;
 import com.arranger.apv.util.frame.FrameFader;
@@ -67,6 +66,8 @@ public class KaleidoscopeAgent extends BaseAgent {
 		private FrameFader fader;
 		private float phase;
 		private boolean useLocation = true;
+		private boolean rotateDir;
+		private float rotateRate;
 		
 		public KShapeSystem(Main parent) {
 			super(parent, null);
@@ -79,6 +80,8 @@ public class KaleidoscopeAgent extends BaseAgent {
 				PathLocationSystem pls = (PathLocationSystem)ls;
 				useLocation = !pls.isSplitter();
 			}
+			rotateDir = parent.randomBoolean();
+			rotateRate = PI / parent.random(360);
 		}
 
 		@Override
@@ -93,7 +96,11 @@ public class KaleidoscopeAgent extends BaseAgent {
 			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, slices, SLICE_CYCLE_TIME);
 			float angle = PI / currentNumSlices;
 			
-			phase += PI / 180;
+			if (rotateDir) {
+				phase += rotateRate;
+			} else {
+				phase -= rotateRate;
+			}
 			
 			float radius = 0.0f;
 			if (fader.isFadeActive()) {

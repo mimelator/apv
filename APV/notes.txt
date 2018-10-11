@@ -3,6 +3,8 @@ https://github.com/mimelator/apv
 
 
 
+Adjust the FPS to batch the BPM
+
 
 *****************************************************************************
 TODO:

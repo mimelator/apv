@@ -18,4 +18,9 @@ public class Manual extends ControlSystem {
 	public Command getNextCommand() {
 		return null;
 	}
+	
+	@Override
+	public boolean allowsMouseLocation() {
+		return false;
+	}
 }
