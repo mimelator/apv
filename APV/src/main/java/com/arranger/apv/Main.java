@@ -782,7 +782,14 @@ public class Main extends PApplet {
 			fragFilename = fragFilename.substring(indexOf, fragFilename.length());
 		}
 		
-		return super.loadShader(fragFilename);
+		try {
+			return super.loadShader(fragFilename);
+		} catch (Exception e) {
+			//On Windows, some Custom Shaders aren't loading properly
+			logger.log(Level.INFO, e.getMessage(), e);
+			logger.log(Level.SEVERE, "Unable to load shader: " + fragFilename);
+			return null;
+		}
 	}
 	
 	public void setup() {
