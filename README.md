@@ -7,3 +7,4 @@ A java based visualizer that uses Processing, Minim and many samples from [OpenP
 
 
 For Download instructions see here:
+[[Download Instructions](https://github.com/mimelator/apv/blob/master/Download%20and%20Install%20APV.pdf)]
