@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>APV</groupId>
 	<artifactId>APV</artifactId>
-	<version>0.4.7-SNAPSHOT</version>
+	<version>0.4.7</version>
 	<name>Audio Processing Visualizer</name>
 	
 	<properties>
@@ -13,7 +13,7 @@
 	<scm>
 		<url>https://github.com/mimelator/apv</url>
 		<connection>scm:git:https://github.com/mimelator/apv.git</connection>
-		<tag>APV-0.4.5</tag>
+		<tag>APV-0.4.7</tag>
 	</scm>
 	
 	<distributionManagement>
