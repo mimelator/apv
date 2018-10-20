@@ -19,7 +19,6 @@ public class AgentListTest extends ConfigBasedTest {
 	@BeforeEach
 	public void beforeEach() {
 		super.beforeEach();
-		//add a mock for isDisabled in Configurator to always return true
 	}
 
 	@Test

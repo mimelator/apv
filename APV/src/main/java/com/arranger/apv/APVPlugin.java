@@ -4,6 +4,7 @@ import processing.core.PConstants;
 
 public class APVPlugin implements PConstants {
 	
+	public static int NO_ALPHA = 255;
 	private static int ID = 0;
 	
 	/**
