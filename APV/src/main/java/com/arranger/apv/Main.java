@@ -1360,7 +1360,7 @@ public class Main extends PApplet {
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 	}
-
+	
 	protected void registerMainCommands() {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(!Command.isShiftDown(mod)));  
@@ -1402,22 +1402,22 @@ public class Main extends PApplet {
 	}
 	
 	protected void registerSystemCommands() {
-		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
-		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
-		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS);
-		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS);
-		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
-		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
-		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
-		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
-		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
-		register(SYSTEM_NAMES.WATERMARKS, Command.SWITCH_WATERMARK, Command.CYCLE_WATERMARK);
+		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS, Command.FREEZE_FOREGROUNDS);
+		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS, Command.FREEZE_BACKGROUNDS);
+		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS, Command.FREEZE_BACKDROPS);
+		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS, null);
+		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS, Command.FREEZE_FILTERS);
+		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS, null);
+		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES, Command.FREEZE_MESSAGES);
+		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS, Command.FREEZE_SHADERS);
+		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS, null);
+		register(SYSTEM_NAMES.WATERMARKS, Command.SWITCH_WATERMARK, Command.CYCLE_WATERMARK, null);
 	}
 	
-	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand) {
+	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand, Command freezeCommand) {
 		APV<? extends APVPlugin> apv = systemMap.get(system);
 		if (switchCommand != null) {
-			apv.registerSwitchCommand(switchCommand);
+			apv.registerSwitchCommand(switchCommand, freezeCommand);
 		}
 		apv.registerHandler(handlerCommand);
 	}
@@ -1468,7 +1468,7 @@ public class Main extends PApplet {
 		APV<APVPlugin> reloadedAPV = new APV<APVPlugin>(this, system);
 		systemMap.put(system, reloadedAPV);
 		setupSystem(reloadedAPV);
-		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand());
+		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand(), originalAPV.getFreezeCommand());
 		assignSystems();
 	}
 	

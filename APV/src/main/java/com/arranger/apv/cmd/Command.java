@@ -37,6 +37,14 @@ public enum Command {
 	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>) the transitions", false),
 	SWITCH_SHADERS('7', "ShadersSwitch", "Enables/Disables/Freezes(use <CMD>) the shader", false),
 	
+	FREEZE_FOREGROUNDS(DeadCommandCode.next(), "Foregrounds ", "Freezes/UnFreezes the foregrounds"),
+	FREEZE_BACKGROUNDS(DeadCommandCode.next(), "Backgrounds", "Freezes/UnFreezes the backgrounds"),
+	FREEZE_BACKDROPS(DeadCommandCode.next(), "Backdrops", "Freezes/UnFreezes the backdrops"),
+	FREEZE_FILTERS(DeadCommandCode.next(), "Filters", "Freezes/UnFreezes the filters"),
+	FREEZE_MESSAGES(DeadCommandCode.next(), "Messages", "Freezes/UnFreezes the messages"),
+	FREEZE_TRANSITIONS(DeadCommandCode.next(), "Transitions", "Freezes/UnFreezes the transitions"),
+	FREEZE_SHADERS(DeadCommandCode.next(), "Shaders", "Freezes/UnFreezes the shader"),
+	
 	//Cyclers
 	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT option)"),
 	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT option)"),

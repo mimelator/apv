@@ -1,6 +1,14 @@
 BRANCH: master
 https://github.com/mimelator/apv
 
+Startup: Turn off Agents, Freeze Background
+
+Tubular:
+	* Center the tube
+	* Alpha fade and use dynamic colors
+	* get larger and potentially spin?
+	* Hope to have a good looking border (or lack thereof) for the rest of the picture
+
 
 
 Adjust the FPS to batch the BPM

@@ -24,8 +24,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	protected Switch sw; //switch is a keyword
 	protected List<T> list;
 	protected int index = 0;
-	protected Command command, switchCommand;
-	protected CommandHandler handler, switchHandler;
+	protected Command command, switchCommand, freezeCommand;
+	protected CommandHandler handler, switchHandler, freezeHandler;
 	protected T currentPlugin;
 	protected QuietWindow quietWindow;
 	protected int quietWindowSize = DEFAULT_QUIET_WINDOW;
@@ -64,6 +64,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	public Command getSwitchCommand() {
 		return switchCommand;
+	}
+	
+	public Command getFreezeCommand() {
+		return freezeCommand;
 	}
 	
 	public void setNextPlugin(APVPlugin plugin, String cause) {
@@ -193,6 +197,11 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 				throw new RuntimeException("Unable to switch command: " + switchCommand.getDisplayName());
 			}
 		}
+		if (freezeCommand != null) {
+			if (!cs.unregisterHandler(freezeCommand, freezeHandler)) {
+				throw new RuntimeException("Unable to freeze command: " + freezeCommand.getDisplayName());
+			}
+		}
 	}
 	
 	public void registerHandler(Command command) {
@@ -207,8 +216,8 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 	}
 	
-	public void registerSwitchCommand(Command command) {
-		this.switchCommand = command;
+	public void registerSwitchCommand(Command switchCommand, Command freezeCommand) {
+		this.switchCommand = switchCommand;
 		switchHandler = new CommandHandler() {
 			@Override
 			public void onCommand(Command e, String source, int modifiers) {
@@ -220,7 +229,19 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			}
 		};
 				
-		parent.getCommandSystem().registerHandler(command, switchHandler);
+		parent.getCommandSystem().registerHandler(switchCommand, switchHandler);
+		
+		if (freezeCommand != null) {
+			this.freezeCommand = freezeCommand;
+			freezeHandler = new CommandHandler() {
+				@Override
+				public void onCommand(Command e, String source, int modifiers) {
+					sw.toggleFrozen();
+				}
+			};
+					
+			parent.getCommandSystem().registerHandler(freezeCommand, freezeHandler);
+		}
 	}
 	
 	protected void setIndex(int newIndex, String cause) {
