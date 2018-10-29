@@ -109,7 +109,7 @@ public class SetPackModel extends APVModel {
 		
 		//preserve some state before reload
 		CONTROL_MODES currentControlMode = parent.getCurrentControlMode();
-		SetpackEntity setpackEntity = parent.getDBSupport().findSetpackEntityByName(setPackName);
+//		SetpackEntity setpackEntity = parent.getDBSupport().findSetpackEntityByName(setPackName);
 		List<String> prevSetPackList = getSetPackList();
 		
 		//start working on reload
@@ -129,7 +129,7 @@ public class SetPackModel extends APVModel {
 		parent.reloadConfiguration(configFilePath, () -> {
 			//restore some state
 			parent.setCurrentControlMode(currentControlMode);
-			this.setpackEntity = setpackEntity;
+//			this.setpackEntity = setpackEntity;
 			setSetPackList(prevSetPackList);
 			this.index = setPackList.indexOf(setPackName);
 			parent.getSetPackStartEvent().fire();

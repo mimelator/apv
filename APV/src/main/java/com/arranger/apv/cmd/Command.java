@@ -18,7 +18,8 @@ public enum Command {
 	
 	//Switches
 	SWITCH_AGENT('x', "AgentSwitch", "Enables/Disables the registered agents"),
-	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen"),
+	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen,"),
+	SWITCH_WELCOME('e', "WelcomeSwitch", "Shows/Hides the Welcome Screen,"),
 	SWITCH_SETTINGS('q', "SettingsSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
@@ -115,7 +116,7 @@ public enum Command {
 //	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
 	
 	//Hot Keys
-	HOT_KEY_1('!', "", ""),
+	HOT_KEY_1('!', "Show Frequency Response", ""),
 	HOT_KEY_2('@', "", ""),
 	HOT_KEY_3('#', "", ""),
 	HOT_KEY_4('$', "", ""),
@@ -132,11 +133,7 @@ public enum Command {
 	MACRO_5('5', "", "", Event.CTRL),
 	MACRO_6('6', "", "", Event.CTRL),
 	MACRO_7('7', "", "", Event.CTRL),
-	MACRO_8('8', "", "", Event.CTRL),
-	
-	//DB Commands
-	DB_CREATE_SET_PACK_FOLDERS(DeadCommandCode.next(), "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them"),
-	DB_REFRESH_SET_PACK_CONFIGURATION(DeadCommandCode.next(), "dbRefreshSetPack", "Updates all of the application.conf to the latest version");
+	MACRO_8('8', "", "", Event.CTRL);
 	
 	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	

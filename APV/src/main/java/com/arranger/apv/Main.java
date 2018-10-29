@@ -23,7 +23,6 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.control.ControlSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
-import com.arranger.apv.db.DBSupport;
 import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.APVEvent;
 import com.arranger.apv.event.APVEvent.EventHandler;
@@ -44,6 +43,7 @@ import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
+import com.arranger.apv.helpers.WelcomeDisplay;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.EmojisModel;
@@ -123,7 +123,6 @@ public class Main extends PApplet {
 	protected Audio audio;
 	protected Configurator configurator;
 	protected CommandSystem commandSystem;
-	protected DBSupport dbSupport;
 	protected Gravity gravity;
 	protected ColorHelper colorHelper;
 	protected ImageHelper imageHelper;
@@ -133,6 +132,7 @@ public class Main extends PApplet {
 	protected Oscillator oscillator;
 	protected LoggingConfig loggingConfig;
 	protected HelpDisplay helpDisplay;
+	protected WelcomeDisplay welcomeDisplay;
 	protected Particles particles;
 	protected VersionInfo versionInfo;
 	protected VideoGameHelper videoGameHelper;
@@ -169,6 +169,7 @@ public class Main extends PApplet {
 	
 	//Switches for runtime
 	private Switch helpSwitch,
+					welcomeSwitch,
 					showSettingsSwitch,
 					frameStroberSwitch,
 					videoGameSwitch,
@@ -201,10 +202,6 @@ public class Main extends PApplet {
 		LISTEN_ONLY("listenOnly", "true|false"),
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory"),
-		MONGO_HOST_PORT("mongoHostPort", "string"),
-		MONGO_DB_NAME("mongoDbName", "string"),
-		FIREBASE_ENABLED("firebase", "true|false"),
-		FIREBASE_DB_ENDPOINT("firebaseDBEndpoint", "URL"),
 		OCEAN_NAME("ocean", "string");
 		
 		private String name;
@@ -234,6 +231,7 @@ public class Main extends PApplet {
 	public enum SWITCH_NAMES {
 		
 		HELP("Help"),
+		WELCOME("Welcome"),
 		SHOW_SETTINGS("ShowSettings"),
 		FRAME_STROBER("FrameStrober"),
 		SCRAMBLE_MODE("Scramble"),
@@ -400,10 +398,6 @@ public class Main extends PApplet {
 		return gravity;
 	}
 	
-	public DBSupport getDBSupport() {
-		return dbSupport;
-	}
-	
 	public FrameStrober getFrameStrober() {
 		return frameStrober;
 	}
@@ -442,6 +436,10 @@ public class Main extends PApplet {
 	
 	public HelpDisplay getHelpDisplay() {
 		return helpDisplay;
+	}
+	
+	public WelcomeDisplay getWelcomeDisplay() {
+		return welcomeDisplay;
 	}
 	
 	public Particles getParticles() {
@@ -567,14 +565,6 @@ public class Main extends PApplet {
 	
 	public boolean isListenOnly() {
 		return getConfigBoolean(FLAGS.LISTEN_ONLY.apvName());
-	}
-	
-	public boolean isFirebaseEnabled() {
-		return getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName());
-	}
-	
-	public String getFirebaseDBEndpoint() {
-		return getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName());
 	}
 	
 	public int getDefaultShapeSystemAlpha() {
@@ -801,7 +791,6 @@ public class Main extends PApplet {
 		
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		dbSupport = new DBSupport(this);
 		commandSystem = new CommandSystem(this);
 		frameStrober = new FrameStrober(this);
 		imageHelper = new ImageHelper(this);
@@ -809,6 +798,7 @@ public class Main extends PApplet {
 		fontHelper = new FontHelper(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);
+		welcomeDisplay = new WelcomeDisplay(this);
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
@@ -1209,6 +1199,7 @@ public class Main extends PApplet {
 		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
 		postScene(videoGameSwitch, () -> videoGameHelper.showStats());
 		postScene(helpSwitch, () -> helpDisplay.showHelp());
+		postScene(welcomeSwitch, () -> welcomeDisplay.showHelp());
 		postScene(scrambleMode, () -> doScramble());
 		postScene(() -> runControlMode());
 		postScene(screenshotMode, () -> doScreenCapture());
@@ -1351,6 +1342,7 @@ public class Main extends PApplet {
 
 	protected void registerMainSwitches() {
 		registerSwitch(helpSwitch, Command.SWITCH_HELP);
+		registerSwitch(welcomeSwitch, Command.SWITCH_WELCOME);
 		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
 		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
@@ -1394,9 +1386,6 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
 		
 		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
-		
-		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
-		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());
 		
 		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
 	}
@@ -1495,6 +1484,7 @@ public class Main extends PApplet {
 		ss.forEach(s -> switches.put(s.name, s));
 		
 		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
+		welcomeSwitch = switches.get(SWITCH_NAMES.WELCOME.name);
 		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
@@ -1556,12 +1546,8 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
-		addConstant(buffer, FLAGS.FIREBASE_ENABLED, String.valueOf(getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName())));
-		addConstant(buffer, FLAGS.FIREBASE_DB_ENDPOINT, "\"" + getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName()) + "\"");
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
-		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
-		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		
 		

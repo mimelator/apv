@@ -2,16 +2,9 @@ package com.arranger.apv.scene;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.db.entity.DJEntity;
-import com.arranger.apv.db.entity.SetpackEntity;
 import com.arranger.apv.util.Configurator;
-import com.arranger.apv.util.draw.SafePainter;
-import com.arranger.apv.util.draw.TextPainter;
 import com.arranger.apv.util.frame.Tracker;
 
 import processing.core.PApplet;
@@ -39,7 +32,7 @@ public class Marquee extends Animation {
 	private int drawCount = 0;
 	private int requiredHitsPerFrame;
 
-	private Map<SetpackEntity, DJEntity> djMap = new HashMap<SetpackEntity, DJEntity>();
+//	private Map<SetpackEntity, DJEntity> djMap = new HashMap<SetpackEntity, DJEntity>();
 	
 	public Marquee(Main parent, String text) {
 		super(parent);
@@ -113,23 +106,23 @@ public class Marquee extends Animation {
 		}
 
 		//Automatically draw the SetPack Name
-		SetpackEntity setpackEntity = parent.getSetPackModel().getSetpackEntity();
-		if (setpackEntity != null) {
-			DJEntity dJforSetpack = djMap.get(setpackEntity);
-			if (dJforSetpack == null) {
-				dJforSetpack = parent.getDBSupport().getDJforSetpack(setpackEntity);
-				djMap.put(setpackEntity, dJforSetpack);
-			}
-			
-			//draw some stuff!
-			List<String> messages = new ArrayList<String>();
-			messages.add(String.format("SetPack: %s", setpackEntity.getName()));
-			if (dJforSetpack != null) {
-				messages.add(String.format("DJ: %s", dJforSetpack.getName()));
-			}
-			
-			new TextPainter(parent).drawText(messages, SafePainter.LOCATION.UPPER_LEFT);
-		}
+//		SetpackEntity setpackEntity = parent.getSetPackModel().getSetpackEntity();
+//		if (setpackEntity != null) {
+//			DJEntity dJforSetpack = djMap.get(setpackEntity);
+//			if (dJforSetpack == null) {
+//				dJforSetpack = parent.getDBSupport().getDJforSetpack(setpackEntity);
+//				djMap.put(setpackEntity, dJforSetpack);
+//			}
+//			
+//			//draw some stuff!
+//			List<String> messages = new ArrayList<String>();
+//			messages.add(String.format("SetPack: %s", setpackEntity.getName()));
+//			if (dJforSetpack != null) {
+//				messages.add(String.format("DJ: %s", dJforSetpack.getName()));
+//			}
+//			
+//			new TextPainter(parent).drawText(messages, SafePainter.LOCATION.UPPER_LEFT);
+//		}
 		
 		if (tracker != null && tracker.isActive(e -> drawCount > threshold)) {
 			tracker.fireEvent();
