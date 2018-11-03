@@ -2,16 +2,6 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-Welcome Screen (done in branch)
-
-kill-dead-features
-apv.firebase = true
-apv.firebaseDBEndpoint = "https://alpha-one-dae37.firebaseio.com"
-apv.mongoDbName = test
-apv.mongoHostPort = ""
-
-
-
 Adjust the FPS to batch the BPM
 
 

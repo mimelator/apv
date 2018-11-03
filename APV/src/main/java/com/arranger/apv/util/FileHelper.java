@@ -178,10 +178,14 @@ public class FileHelper extends APVPlugin {
 	}
 	
 	public List<Path> getAllMp3sFromDir(Path directory) {
+		return getAllFilesFromDir(directory, ".mp3");
+	}
+	
+	public List<Path> getAllFilesFromDir(Path directory, String extension) {
 		List<Path> result = null;
 		try {
 			result = Files.find(directory, Integer.MAX_VALUE, (p, bfa) -> { 
-				return p.toString().endsWith(".mp3");
+				return p.toString().endsWith(extension);
 			}).collect(Collectors.toList());
 		} catch (IOException e) {
 			debug(e);

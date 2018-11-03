@@ -202,7 +202,8 @@ public class Main extends PApplet {
 		LISTEN_ONLY("listenOnly", "true|false"),
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory"),
-		OCEAN_NAME("ocean", "string");
+		OCEAN_NAME("ocean", "string"),
+		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory");
 		
 		private String name;
 		private String description;
@@ -1549,6 +1550,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
+		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
 		
 		
 		//helper configs

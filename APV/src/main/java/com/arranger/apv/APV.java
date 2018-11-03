@@ -70,6 +70,14 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		return freezeCommand;
 	}
 	
+	public void addPlugin(T plugin) {
+		list.add(plugin);
+	}
+	
+	public boolean removePlugin(T plugin) {
+		return list.remove(plugin);
+	}
+	
 	public void setNextPlugin(APVPlugin plugin, String cause) {
 		setNextPlugin(plugin, cause, true);
 	}
