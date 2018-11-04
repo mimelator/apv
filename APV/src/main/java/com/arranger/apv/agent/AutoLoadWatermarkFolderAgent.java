@@ -23,6 +23,9 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 	
 	private static final Logger logger = Logger.getLogger(AutoLoadWatermarkFolderAgent.class.getName());
 	
+	@SuppressWarnings("unchecked")
+	private static List<SHADERS> bannedShaders = Arrays.asList(new SHADERS[] {SHADERS.BLOOM, SHADERS.TOON});
+	
 	private List<SHADERS> shaders;
 	private float alpha;
 	private boolean hasLoaded = false;
@@ -51,7 +54,7 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 					
 					for (Path p : backgrounds) {
 						SHADERS random = rh.random(shaders);
-						while (random.equals(SHADERS.TOON)) {	//see note
+						while (!isShaderOk(random)) {	//see note
 							random = rh.random(shaders);
 						}
 						@SuppressWarnings("unchecked")
@@ -82,5 +85,9 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 				getName(), 
 				alpha,
 				shaderString);
+	}
+	
+	private boolean isShaderOk(SHADERS s) {
+		return !bannedShaders.contains(s);
 	}
 }
