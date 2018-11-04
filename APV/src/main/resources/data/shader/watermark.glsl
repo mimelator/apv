@@ -34,9 +34,5 @@ void main() {
 	}
 
   	//mix
-  	if (mix) {
-  		gl_FragColor = vec4(backCol.rgb, alpha) * vertColor;
-  	} else {
-  		gl_FragColor = vec4(backCol.rgb, alpha);
-  	}
+  	gl_FragColor = vec4(backCol.rgb, alpha);
 }

@@ -34,8 +34,10 @@ public class FileHelper extends APVPlugin {
 	public FileHelper(Main parent)  {
 		super(parent);
 		
-		String oceanName = parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME);
-		apvDir = HOME_DIR + File.separator + "apv" + File.separator + "oceans" + File.separator + oceanName;
+//		String oceanName = parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME);
+//		apvDir = HOME_DIR + File.separator + "apv" + File.separator + "oceans" + File.separator + oceanName;
+		
+		apvDir = new File(".").getAbsolutePath();
 		
 		try {
 			rootFolder = new File(apvDir);

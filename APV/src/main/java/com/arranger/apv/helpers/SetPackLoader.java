@@ -3,6 +3,7 @@ package com.arranger.apv.helpers;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.APVPlugin;
@@ -43,8 +44,12 @@ public class SetPackLoader extends APVPlugin {
 		System.out.println("No setpack list defined.  AutoLoading all setpacks in setpack directory: " + spFolder.getAbsolutePath());
 		
 		File[] listFiles = spFolder.listFiles(f -> f.isDirectory());
-		stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
-		parent.getSetPackModel().setSetPackList(stringList);
+		if (listFiles != null && listFiles.length > 0) {
+			stringList = Arrays.asList(listFiles).stream().map(f -> f.getName()).collect(Collectors.toList());
+			parent.getSetPackModel().setSetPackList(stringList);
+		} else {
+			stringList = new ArrayList<String>();
+		}
 	}
 	
 	public void reset() {

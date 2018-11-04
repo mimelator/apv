@@ -61,14 +61,10 @@ public class Watermark extends CustomShader {
 			super.prepare(supervisor);
 			PShader shader = getShader();
 			shader.set("scroll", scroll);
-			//boolean mix = parent.getFrameCount() % 2 == 0;
-			//System.out.println("mix: " + mix);
-			shader.set("mix", false);
 		}
 		
 		@Override
 		protected float getAlphaForShaderPass() {
-			//return parent.oscillate(0, alpha, 10);
 			return alpha;
 		}
 	}

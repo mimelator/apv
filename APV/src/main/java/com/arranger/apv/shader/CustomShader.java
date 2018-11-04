@@ -65,9 +65,6 @@ public class CustomShader extends Shader {
 		
 		render.custom(pass);
 		
-		/**
-		 * Unfortunately, these shaders never seem to get used.  I'm not sure what can be done about that
-		 */
 		if (shaders != null) {
 			shaders.forEach(s -> {
 				s.getShaderPass().addPass(render);
@@ -75,7 +72,6 @@ public class CustomShader extends Shader {
 		}
 		
 		try {
-			//render.custom(pass);
 			render.compose();
 		} catch (Exception e) {
 			System.out.println("Exception caught for custom shader: " + getDisplayName());

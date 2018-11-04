@@ -3,6 +3,8 @@ package com.arranger.apv.agent;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.Main;
@@ -19,6 +21,8 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  */
 public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 	
+	private static final Logger logger = Logger.getLogger(AutoLoadWatermarkFolderAgent.class.getName());
+	
 	private List<SHADERS> shaders;
 	private float alpha;
 	private boolean hasLoaded = false;
@@ -34,28 +38,32 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 			}
 			
 			hasLoaded = true;
-			String autoLoadedFolder = parent.getConfigValueForFlag(Main.FLAGS.AUTO_LOADED_BACKGROUND_FOLDER);
-			if (autoLoadedFolder != null) {
-				FileHelper fh = new FileHelper(parent);
-				
-				String fullPath = fh.getFullPath(autoLoadedFolder);
-				Path path = new File(fullPath).toPath().normalize();
-				List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
-				
-				RandomHelper rh = new RandomHelper(parent);
-				
-				for (Path p : backgrounds) {
-					SHADERS random = rh.random(shaders);
-					while (random.equals(SHADERS.TOON)) {	//see note
-						random = rh.random(shaders);
-					}
-					@SuppressWarnings("unchecked")
-					List<SHADERS> randShader = Arrays.asList(new SHADERS[] {random});
+			try {
+				String autoLoadedFolder = parent.getConfigValueForFlag(Main.FLAGS.AUTO_LOADED_BACKGROUND_FOLDER);
+				if (autoLoadedFolder != null) {
+					FileHelper fh = new FileHelper(parent);
 					
-					Watermark watermark = new Watermark(parent, p.getFileName().toString(), alpha, false, p.toString(), randShader);
-					parent.getShaders().addPlugin(watermark);
-					System.out.println("Loading watermark shader: " + watermark.getDisplayName() + " with shader: " + random.name());
+					String fullPath = fh.getFullPath(autoLoadedFolder);
+					Path path = new File(fullPath).toPath().normalize();
+					List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
+					
+					RandomHelper rh = new RandomHelper(parent);
+					
+					for (Path p : backgrounds) {
+						SHADERS random = rh.random(shaders);
+						while (random.equals(SHADERS.TOON)) {	//see note
+							random = rh.random(shaders);
+						}
+						@SuppressWarnings("unchecked")
+						List<SHADERS> randShader = Arrays.asList(new SHADERS[] {random});
+						
+						Watermark watermark = new Watermark(parent, p.getFileName().toString(), alpha, false, p.toString(), randShader);
+						parent.getShaders().addPlugin(watermark);
+						System.out.println("Loading watermark shader: " + watermark.getDisplayName() + " with shader: " + random.name());
+					}
 				}
+			} catch (Exception e) {
+				logger.log(Level.INFO, e.getMessage(), e);
 			}
 		});
 	}
