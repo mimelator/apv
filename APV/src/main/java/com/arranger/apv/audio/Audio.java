@@ -127,8 +127,7 @@ public class Audio extends APVPlugin {
 		
 		protected void createFFT() {
 			fft = new FFT(source.bufferSize(), source.sampleRate());
-			fft.logAverages(15, 5); // This is a 'tuned' set of buckets that i like
-			//fft.window(FourierTransform.COSINE);
+			fft.logAverages(10, 7); //Hard coded constants
 		}
 		
 		public AudioSource getSource() {

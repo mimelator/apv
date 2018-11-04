@@ -16,6 +16,8 @@ import processing.core.PShape;
 
 public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 	
+	private static final int CYCLE_TIME = 10;
+	
 	protected PImage sprite;  
 	protected String imageKey;
 	
@@ -83,6 +85,9 @@ public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 	}
 
 	public class SpriteShape extends APVShape {
+		private static final float SCALE_HIGH = 5f;
+		private static final float SCALE_LOW = .5f;
+
 		public SpriteShape(Main parent, Data data) {
 			super(parent, data);
 			if (data instanceof LifecycleData) {
@@ -109,8 +114,12 @@ public class SpriteFactory extends ShapeFactory implements ImageChangeHandler {
 		@Override
 		protected PShape createNewShape() {
 			float size = parent.random(10,60);
-			size *= getScale();
 			
+			float tempScale = getScale();
+			tempScale = parent.oscillate(tempScale * SCALE_LOW, tempScale * SCALE_HIGH, CYCLE_TIME);
+			size *= tempScale;
+			
+
 			PShape s = parent.createShape();
 		    s.beginShape(PApplet.QUAD);
 		    s.noStroke();
