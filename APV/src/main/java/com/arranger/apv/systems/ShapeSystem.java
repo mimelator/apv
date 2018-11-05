@@ -13,6 +13,10 @@ public abstract class ShapeSystem extends APVPlugin {
 	
 	public ShapeSystem(Main parent, ShapeFactory factory) {
 		super(parent);
+		setShapeFactory(factory);
+	}
+
+	protected void setShapeFactory(ShapeFactory factory) {
 		this.factory = factory;
 		if (factory != null) {
 			factory.setShapeSystem(this);
