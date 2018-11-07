@@ -21,7 +21,8 @@ public class WelcomeDisplay extends HelpDisplay {
 			Command.SCRAMBLE,
 			Command.SWITCH_WELCOME,
 			Command.HOT_KEY_1,
-			Command.RANDOMIZE_COLORS
+			Command.RANDOMIZE_COLORS,
+			Command.SWITCH_DEBUG_AGENT
 			});
 	
 

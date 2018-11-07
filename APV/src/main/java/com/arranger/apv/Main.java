@@ -175,6 +175,7 @@ public class Main extends PApplet {
 					videoGameSwitch,
 					scrambleModeSwitch,
 					debugPulseSwitch,
+					debugAgentSwitch,
 					consoleOutputSwitch;
 	
 	public enum FLAGS {
@@ -203,7 +204,8 @@ public class Main extends PApplet {
 		WATERMARK_FRAMES("watermarkFrames", "integer"),
 		MUSIC_DIR("musicDir", "directory"),
 		OCEAN_NAME("ocean", "string"),
-		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory");
+		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
+		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false");
 		
 		private String name;
 		private String description;
@@ -238,6 +240,7 @@ public class Main extends PApplet {
 		SCRAMBLE_MODE("Scramble"),
 		VIDEO_GAME("VideoGame"),
 		CONSOLE_OUTPUT("ConsoleOutputSwitch"),
+		DEBUG_AGENT("DebugAgent"),
 		DEBUG_PULSE("DebugPulse");
 		
 		public String name;
@@ -1350,6 +1353,7 @@ public class Main extends PApplet {
 		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(debugAgentSwitch, Command.SWITCH_DEBUG_AGENT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 	}
@@ -1491,6 +1495,7 @@ public class Main extends PApplet {
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
 		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
 		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
+		debugAgentSwitch = switches.get(SWITCH_NAMES.DEBUG_AGENT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 	}
 	
@@ -1551,6 +1556,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
+		addConstant(buffer, FLAGS.DEBUG_AGENT_MESSAGES, String.valueOf(getConfigBoolean(FLAGS.DEBUG_AGENT_MESSAGES.apvName())));
 		
 		
 		//helper configs

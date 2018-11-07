@@ -22,6 +22,7 @@ public enum Command {
 	SWITCH_WELCOME('e', "WelcomeSwitch", "Shows/Hides the Welcome Screen,"),
 	SWITCH_SETTINGS('q', "SettingsSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
+	SWITCH_DEBUG_AGENT('a', "DebugAgentSwitch", "Displays the debug agent messages"),
 	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
 	SWITCH_CONSOLE_OUTPUT(DeadCommandCode.next(), "Console Output Frame Switch", "Enables/Disables the frame info to console"),
