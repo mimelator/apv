@@ -19,7 +19,7 @@ import processing.core.PShape;
  */
 public class KaleidoscopeAgent extends BaseAgent {
 	
-	private static final int DEFAULT_NUM_SLICES = 32;
+	private static final int DEFAULT_MAX_SLICES = 32;
 	private static final int MIN_NUM_SLICES = 5;
 	
 	private static final int SLICE_CYCLE_TIME = 15;
@@ -30,14 +30,14 @@ public class KaleidoscopeAgent extends BaseAgent {
 	private static final int EASE_IN_MODIFIER = 2;
 	
 	private DrawHelper drawHelper;
-	private int slices;
+	private int maxSlices;
 	private float userRadius;
 	private int numFrames;
 	
 
-	public KaleidoscopeAgent(Main parent, int slices, float userRadius, int numFrames) {
+	public KaleidoscopeAgent(Main parent, int maxSlices, float userRadius, int numFrames) {
 		super(parent);
-		this.slices = slices;
+		this.maxSlices = maxSlices;
 		this.userRadius = userRadius;
 		this.numFrames = numFrames;
 		
@@ -50,7 +50,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 	
 	public KaleidoscopeAgent(Context ctx) {
 		this(ctx.getParent(), 
-				ctx.getInt(0, DEFAULT_NUM_SLICES),
+				ctx.getInt(0, DEFAULT_MAX_SLICES),
 				ctx.getFloat(1, DEFAULT_RADIUS),
 				ctx.getInt(2, DEFAULT_NUM_FLASH_DRAWS));
 	}
@@ -58,7 +58,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 	@Override
 	public String getConfig() {
 		//{KaleidoscopeAgent : [32, 3, 75]}
-		return String.format("{%s : [%s, %s, %s]}", getName(), slices, userRadius, numFrames);
+		return String.format("{%s : [%s, %s, %s]}", getName(), maxSlices, userRadius, numFrames);
 	}
 
 	protected class KShapeSystem extends ShapeSystem {
@@ -93,7 +93,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 		public void draw() {
 			PImage img = parent.get();
 			
-			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, slices, SLICE_CYCLE_TIME);
+			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, maxSlices, SLICE_CYCLE_TIME);
 			float angle = PI / currentNumSlices;
 			
 			if (rotateDir) {
@@ -145,7 +145,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 			
 			//parent.translate(parent.width / 2, parent.height / 2);
 			
-			for (int i = 0; i < slices; i++) {
+			for (int i = 0; i < maxSlices; i++) {
 				parent.rotate(angle * 2);
 				parent.shape(mySlice);
 			}
