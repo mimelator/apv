@@ -2,9 +2,6 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
-Adjust the FPS to batch the BPM
-
-
 *****************************************************************************
 TODO:
 [GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
@@ -12,9 +9,7 @@ TODO:
 [GE] * Animations: Such as a hindu goddess with many limbs
 [GE] * More shaders here: https://github.com/maierfelix/rokon/tree/master/shaders
 [GE] * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
-[GE] * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
 [GE] * Render vector graphics
-[GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
 *****************************************************************************
 *****************************************************************************
 Remote Debugging:

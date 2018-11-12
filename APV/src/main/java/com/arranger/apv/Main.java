@@ -92,6 +92,8 @@ import processing.opengl.PShader;
 
 public class Main extends PApplet {
 	
+	
+
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	public static final int NUMBER_PARTICLES = 50;//100;
@@ -205,7 +207,8 @@ public class Main extends PApplet {
 		MUSIC_DIR("musicDir", "directory"),
 		OCEAN_NAME("ocean", "string"),
 		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
-		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false");
+		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
+		FRAME_RATE("frameRate", "integer");
 		
 		private String name;
 		private String description;
@@ -579,6 +582,10 @@ public class Main extends PApplet {
 		return getConfigInt(FLAGS.WATERMARK_FRAMES.apvName());
 	}
 	
+	public float getFrameRate() {
+		return getConfigFloat(FLAGS.FRAME_RATE.apvName());
+	}
+	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
 		activateNextPlugin(systemName, pluginDisplayName, cause, false);
 	}
@@ -860,7 +867,7 @@ public class Main extends PApplet {
 		
 		startupCommandRunner.runStartupCommands();
 		
-		frameRate(20.0f);
+		frameRate(getFrameRate());
 	}
 
 	public void playSetList(File directory) {
@@ -1557,6 +1564,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
 		addConstant(buffer, FLAGS.DEBUG_AGENT_MESSAGES, String.valueOf(getConfigBoolean(FLAGS.DEBUG_AGENT_MESSAGES.apvName())));
+		addConstant(buffer, FLAGS.FRAME_RATE, String.valueOf(getFrameRate()));
 		
 		
 		//helper configs
