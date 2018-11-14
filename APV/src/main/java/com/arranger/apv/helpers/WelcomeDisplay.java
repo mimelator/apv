@@ -14,6 +14,8 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class WelcomeDisplay extends HelpDisplay {
 	
+	private List<String> messages;
+	
 	@SuppressWarnings("unchecked")
 	private static final List<Command> WELCOME_COMMANDS = Arrays.asList(
 			new Command[] {
@@ -32,6 +34,14 @@ public class WelcomeDisplay extends HelpDisplay {
 	
 	
 	public List<String> getMessages() {
+		if (messages == null) {
+			messages = createMessages();
+		}
+		
+		return messages;
+	}
+
+	private List<String> createMessages() {
 		Main p = parent;
 		Set<String> messages = new HashSet<String>();
 		Map<Command, List<RegisteredCommandHandler>> commands = p.getCommandSystem().getCommands();
@@ -62,7 +72,8 @@ public class WelcomeDisplay extends HelpDisplay {
 			});
 		});
 		
-		return new ArrayList<String>(messages);
+		ArrayList<String> msgs = new ArrayList<String>(messages);
+		msgs.add("APV Version: " + parent.getVersionInfo().getVersion());
+		return msgs;
 	}
-
 }

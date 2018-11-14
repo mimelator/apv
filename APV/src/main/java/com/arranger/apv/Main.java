@@ -178,7 +178,8 @@ public class Main extends PApplet {
 					scrambleModeSwitch,
 					debugPulseSwitch,
 					debugAgentSwitch,
-					consoleOutputSwitch;
+					consoleOutputSwitch,
+					audioListenerDiagnosticSwitch;
 	
 	public enum FLAGS {
 		
@@ -188,6 +189,7 @@ public class Main extends PApplet {
 		SCREEN_WIDTH("screen.width", "integer"),
 		SCREEN_HEIGHT("screen.height", "integer"),
 		MONITORING_ENABLED("monitoring.enabled", "true|false"),
+		PULSE_SENSITIVITY("pulseSensitivity", "integer"),
 		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
 		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
@@ -242,9 +244,10 @@ public class Main extends PApplet {
 		FRAME_STROBER("FrameStrober"),
 		SCRAMBLE_MODE("Scramble"),
 		VIDEO_GAME("VideoGame"),
-		CONSOLE_OUTPUT("ConsoleOutputSwitch"),
+		CONSOLE_OUTPUT("ConsoleOutput"),
 		DEBUG_AGENT("DebugAgent"),
-		DEBUG_PULSE("DebugPulse");
+		DEBUG_PULSE("DebugPulse"),
+		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic");
 		
 		public String name;
 
@@ -540,6 +543,10 @@ public class Main extends PApplet {
 	
 	public CoreEvent getLocationEvent() {
 		return (CoreEvent)eventMap.get(EventTypes.LOCATION);
+	}
+	
+	public CoreEvent getALDAEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.ALDA);
 	}
 	
 	public CoreEvent getColorChangeEvent() {
@@ -1363,6 +1370,7 @@ public class Main extends PApplet {
 		registerSwitch(debugAgentSwitch, Command.SWITCH_DEBUG_AGENT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
+		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
 	}
 	
 	protected void registerMainCommands() {
@@ -1398,7 +1406,6 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
 		
 		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
-		
 		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
 	}
 	
@@ -1504,6 +1511,7 @@ public class Main extends PApplet {
 		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
 		debugAgentSwitch = switches.get(SWITCH_NAMES.DEBUG_AGENT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
+		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
 	}
 	
 	protected void resetSwitches() {
@@ -1532,6 +1540,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.WATERMARK, new DrawShapeEvent(this, EventTypes.WATERMARK));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
+		eventMap.put(EventTypes.ALDA, new CoreEvent(this, EventTypes.ALDA));
 		eventMap.put(EventTypes.COLOR_CHANGE, new CoreEvent(this, EventTypes.COLOR_CHANGE));
 		eventMap.put(EventTypes.SONG_START, new CoreEvent(this, EventTypes.SONG_START));
 		eventMap.put(EventTypes.SET_PACK_START, new CoreEvent(this, EventTypes.SET_PACK_START));
@@ -1550,6 +1559,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.SCREEN_WIDTH, String.valueOf(width));
 		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
 		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
+		addConstant(buffer, FLAGS.PULSE_SENSITIVITY, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.PULSE_SENSITIVITY.apvName())));
 		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
 		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));

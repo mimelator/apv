@@ -70,6 +70,10 @@ public class BaseAgent extends APVPlugin {
 		return parent.getMarqueeEvent();
 	}
 	
+	public APVEvent<EventHandler> getALDAEvent() {
+		return parent.getALDAEvent();
+	}
+	
 	public void fireDebugMessage() {
 		fireDebugMessage(getDisplayName());
 	}

@@ -104,8 +104,11 @@ public class Audio extends APVPlugin {
 
 		protected void setup(AudioSource source) {
 			this.source = source;
+			
+			int sensitivity = parent.getConfigInt(Main.FLAGS.PULSE_SENSITIVITY.apvName());
+			
 			pulseDetector = new BeatDetect(); 
-			pulseDetector.setSensitivity(60);
+			pulseDetector.setSensitivity(sensitivity);
 			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
 			freqDetector.setSensitivity(5);
 			createFFT();

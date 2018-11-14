@@ -2,6 +2,14 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+For the Audience Listener Diagnostic Message, we could create a Pulse Listener that 
+checks to see if there is at least one pulse in the last N seconds.
+
+Of course, it would only perform this check if the flag|switch was enabled.
+
+
+
+
 Not sure why APV is crashing at the start.  Could be the shaders are the cause?
 
 [GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
