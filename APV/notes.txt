@@ -2,13 +2,18 @@ BRANCH: master
 https://github.com/mimelator/apv
 
 
+Not sure why APV is crashing at the start.  Could be the shaders are the cause?
+
+[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
+See about using the FFTanalysis for the modulation.  Se
+
+Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
+	SpriteFactory (and other clients of ImageHelper) might be affected
+
+
 *****************************************************************************
 TODO:
-[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
 [GE] * Puzzle animation of a background image
-[GE] * Animations: Such as a hindu goddess with many limbs
-[GE] * More shaders here: https://github.com/maierfelix/rokon/tree/master/shaders
-[GE] * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
 [GE] * Render vector graphics
 *****************************************************************************
 *****************************************************************************

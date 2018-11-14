@@ -67,7 +67,7 @@ public class CustomShader extends Shader {
 		
 		if (shaders != null) {
 			shaders.forEach(s -> {
-				s.getShaderPass().addPass(render);
+				s.getShaderPass().addPass(render, parent);
 			});
 		}
 		

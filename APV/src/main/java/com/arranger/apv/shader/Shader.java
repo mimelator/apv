@@ -6,37 +6,123 @@ import java.util.stream.Collectors;
 import com.arranger.apv.Main;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.FFTAnalysis;
 import com.arranger.apv.util.JSONQuoter;
 
 import ch.bildspur.postfx.builder.PostFXBuilder;
 
 public class Shader extends ShapeSystem {
 	
+	private static float LOW = .75f;
+	private static float HIGH = 1.25f;
+	
 	public static enum SHADERS {
-		BINARYGLITCH(b -> b.binaryGlitch(.5f)),
-		BLOOM(b -> b.bloom(0.7f, 10, 20)),
-		BLUR(b -> b.blur(10, 20, true)),
-		BRIGHTNESSCONTRAST(b -> b.brightnessContrast(-.2f, 3.5f)),
-		BRIGHTPASS(b -> b.brightPass(0.7f)),
-		CHROMATICABERRATION(b -> b.chromaticAberration()),
-		DENOISE(b -> b.denoise(-5)), 
-		EXPOSURE(b -> b.exposure(25)),
-		GRAYSCALE(b -> b.grayScale()),
-		INVERT(b -> b.invert()),
-		NOISE(b -> b.noise(0.1f, 10)),
-		PIXELATE(b -> b.pixelate(50)), 
-		PIXELATE200(b -> b.pixelate(200)), 
-		RGBSPLIT(b -> b.rgbSplit(50)),
-		SATURATIONVIBRANCE(b -> b.saturationVibrance(-0.5f, 1.0f)),
-		SOBEL(b -> b.sobel()),
-		TONEMAPPING(b -> b.toneMapping(.5f)),
-		TOON(b -> b.toon()),
-		VIGNETTE(b -> b.vignette(0.8f, 0.3f));
+		BINARYGLITCH((b, p) -> {
+			float def = .5f;
+			float res = map(p, def);
+			
+			b.binaryGlitch(res);
+		}),
+		BLOOM((b, p) -> {
+			float def = .7f;
+			float res = map(p, def);
+			
+			b.bloom(res, 10, 20);
+		}),
+		BLUR((b, p) -> {
+			int def = 10;
+			int res = (int)map(p, def);
+			
+			b.blur(res, 20, true);
+		}),
+		BRIGHTNESSCONTRAST((b, p) -> {
+			float def = 3.5f;
+			float res = map(p, def);
+			
+			b.brightnessContrast(-.2f, res);
+		}),
+		BRIGHTPASS((b, p) -> {
+			float def = .7f;
+			float res = map(p, def);
+			
+			b.brightPass(res);
+		}),
+		CHROMATICABERRATION((b, p) -> {
+			b.chromaticAberration();
+		}),
+		DENOISE((b, p) -> {
+			int def = -5;
+			int res = (int)map(p, def);
+			
+			b.denoise(res);
+		}), 
+		EXPOSURE((b, p) -> {
+			int def = 25;
+			int res = (int)map(p, def);
+			
+			b.exposure(res);
+		}),
+		GRAYSCALE((b, p) -> {
+			b.grayScale();
+		}),
+		INVERT((b, p) -> {
+			b.invert();
+		}),
+		NOISE((b, p) -> {
+			float def = .1f;
+			float res = map(p, def);
+			
+			b.noise(res, 10);
+		}),
+		PIXELATE((b, p) -> {
+			int def = 50;
+			int res = (int)map(p, def);
+			
+			b.pixelate(res);
+		}), 
+		PIXELATE200((b, p) -> {
+			int def = 200;
+			int res = (int)map(p, def);
+			
+			b.pixelate(res);
+		}), 
+		RGBSPLIT((b, p) -> {
+			int def = 50;
+			int res = (int)map(p, def);
+			
+			b.rgbSplit(res);
+		}),
+		SATURATIONVIBRANCE((b, p) -> {
+			float def = -.5f;
+			float res = map(p, def);
+			
+			b.saturationVibrance(res, 1.0f);
+		}),
+		SOBEL((b, p) -> {
+			b.sobel();
+		}),
+		TONEMAPPING((b, p) -> {
+			float def = .5f;
+			float res = map(p, def);
+			
+			b.toneMapping(res);
+		}),
+		TOON((b, p) -> {
+			b.toon();
+		}),
+		VIGNETTE((b, p) -> {
+			float def = .8f;
+			float res = map(p, def);
+			
+			b.vignette(res, 0.3f);
+		});
 		
 		private ShaderPass shaderPass;
 		
 		private SHADERS() {
-			this((b) -> b.bloom(0.5f, 20, 30));
+			this((b, p) -> {
+				b.bloom(0.5f, 20, 30);
+			});
 		}
 		
 		private SHADERS(ShaderPass shaderPass) {
@@ -48,9 +134,18 @@ public class Shader extends ShapeSystem {
 		}
 	};
 	
+	private static FFTAnalysis fftAnalysis;
+	
+	private static float map(Main parent, float defaultValue) {
+		if (fftAnalysis == null) {
+			fftAnalysis = new FFTAnalysis(parent);
+		}
+		return fftAnalysis.getMappedAmp(0, 1, LOW * defaultValue, HIGH * defaultValue);
+	}
+	
 	@FunctionalInterface
 	protected static interface ShaderPass {
-		void addPass(PostFXBuilder builder);
+		void addPass(PostFXBuilder builder, Main parent);
 	}
 	
 	protected List<SHADERS> shaders;
@@ -94,7 +189,7 @@ public class Shader extends ShapeSystem {
 		
 		PostFXBuilder render = parent.getPostFX().render();
 		shaders.forEach(s -> {
-			s.shaderPass.addPass(render);
+			s.shaderPass.addPass(render, parent);
 		});
 		
 		render.compose();
