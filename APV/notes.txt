@@ -1,15 +1,40 @@
-BRANCH: master
 https://github.com/mimelator/apv
 
-[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
-See about using the FFTanalysis for the modulation.  Se
 
-Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
-	SpriteFactory (and other clients of ImageHelper) might be affected
+Menus:
+
+The menu size must be a large enough font.  Maybe the colors should be 16 bit cycled
+
+Once i turn on menu size, the first thing can be to shrink the size of the screen to preview mode
+
+
+
+Menu priorities 
+* make config changes live
+* Not monitor data (yet)
+
+Wavelength preview mode
+
+Turn things on and off:
+* Switches
+* systems (any SYSTEM_NAMES where fullSystem = true)
+	* enable/disable/freeze
+	* enable/disable plugins (including agents) 
+
+Execute commands 
+* simple 
+* Advanced 
+
+Save default config
+* create backup 
 
 
 *****************************************************************************
 TODO:
+[GE] Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
+	SpriteFactory (and other clients of ImageHelper) might be affected
+[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
+See about using the FFTanalysis for the modulation. 
 [GE] * Puzzle animation of a background image
 [GE] * Render vector graphics
 *****************************************************************************

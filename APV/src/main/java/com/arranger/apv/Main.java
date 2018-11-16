@@ -45,6 +45,7 @@ import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.helpers.WelcomeDisplay;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.menu.StandardMenu;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.model.IconsModel;
@@ -112,7 +113,8 @@ public class Main extends PApplet {
 	protected APV<ShapeSystem> foregrounds; 
 	protected APV<LikedScene> likedScenes;
 	protected APV<LocationSystem> locations; 
-	protected APV<MessageSystem> messages;	
+	protected APV<MessageSystem> messages;
+	protected APV<StandardMenu> menu;
 	protected APV<Scene> scenes;	
 	protected APV<Shader> shaders;	
 	protected APV<TransitionSystem> transitions;
@@ -239,6 +241,7 @@ public class Main extends PApplet {
 	public enum SWITCH_NAMES {
 		
 		HELP("Help"),
+		MENU("Menu"),
 		WELCOME("Welcome"),
 		SHOW_SETTINGS("ShowSettings"),
 		FRAME_STROBER("FrameStrober"),
@@ -270,6 +273,7 @@ public class Main extends PApplet {
 		LOCATIONS("locations"),
 		MACROS("macros", false),
 		MESSAGES("messages"),
+		MENU("menu"),
 		PULSELISTENERS("pulseListeners", false),
 		SCENES("scenes"),
 		SHADERS("shaders"),
@@ -684,6 +688,10 @@ public class Main extends PApplet {
 		return messages.getPlugin();
 	}
 	
+	public APV<StandardMenu> getMenu() {
+		return menu;
+	}
+	
 	public  APV<LocationSystem> getLocations() {
 		return locations;
 	}
@@ -843,6 +851,7 @@ public class Main extends PApplet {
 		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
 		systemMap.put(SYSTEM_NAMES.LOCATIONS, new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
 		systemMap.put(SYSTEM_NAMES.MESSAGES, new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
+		systemMap.put(SYSTEM_NAMES.MENU, new APV<StandardMenu>(this, SYSTEM_NAMES.MENU));
 		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
 		systemMap.put(SYSTEM_NAMES.SHADERS, new APV<Shader>(this, SYSTEM_NAMES.SHADERS));
 		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
@@ -1181,6 +1190,11 @@ public class Main extends PApplet {
 	protected void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
+		if (menu.isEnabled()) {
+			menu.getPlugin().draw();
+			return;
+		}
+		
 		scrambleModeSwitch.setState(isScrambleModeAvailable() ? STATE.ENABLED : STATE.DISABLED);
 		if (frameStroberSwitch.isEnabled()) {
 			if (frameStrober.isSkippingFrames()) {
@@ -1416,6 +1430,7 @@ public class Main extends PApplet {
 		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS, null);
 		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS, Command.FREEZE_FILTERS);
 		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS, null);
+		register(SYSTEM_NAMES.MENU, Command.SWITCH_MENU, null, null);
 		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES, Command.FREEZE_MESSAGES);
 		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS, Command.FREEZE_SHADERS);
 		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS, null);
@@ -1491,6 +1506,7 @@ public class Main extends PApplet {
 		likedScenes = (APV<LikedScene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
+		menu = (APV<StandardMenu>) systemMap.get(SYSTEM_NAMES.MENU);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);

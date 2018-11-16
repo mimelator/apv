@@ -19,6 +19,7 @@ public enum Command {
 	//Switches
 	SWITCH_AGENT('x', "AgentSwitch", "Enables/Disables the registered agents"),
 	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen,"),
+	SWITCH_MENU('m', "MenuSwitch", "Shows/Hides the Menu Screen,"),
 	SWITCH_WELCOME('e', "WelcomeSwitch", "Shows/Hides the Welcome Screen,"),
 	SWITCH_SETTINGS('q', "SettingsSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
@@ -49,7 +50,7 @@ public enum Command {
 	FREEZE_SHADERS(DeadCommandCode.next(), "Shaders", "Freezes/UnFreezes the shader"),
 	
 	//Cyclers
-	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT option)"),
+	CYCLE_MESSAGES('i', "Message", "Cycles through the message (SHIFT option)"),
 	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT option)"),
 	CYCLE_COLORS('c', "Colors", "Cycles through the colors (SHIFT and ALT options)"),
 	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (SHIFT and ALT options)"),
@@ -71,7 +72,7 @@ public enum Command {
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),
 	RELOAD_CONFIGURATION('u', "Reloads Configuration", "Reloads all of the current configuration"),
-	SCREEN_SHOT('i', "ScreenShot", "Saves the current frame to disk"),
+	SCREEN_SHOT(DeadCommandCode.next(), "ScreenShot", "Saves the current frame to disk"),
 	PERF_MONITOR('j', "Perf Monitor", "Outputs the slow monitor data to the console"),
 	REVERSE('r', "Reverse Path", "Changes the direction of the path"),
 	AUDIO_INC('+', "Audio++", "Increases the audio sensitivity"),
