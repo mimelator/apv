@@ -45,7 +45,7 @@ import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
 import com.arranger.apv.helpers.WelcomeDisplay;
 import com.arranger.apv.loc.LocationSystem;
-import com.arranger.apv.menu.StandardMenu;
+import com.arranger.apv.menu.APVMenu;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.model.IconsModel;
@@ -66,6 +66,7 @@ import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
+import com.arranger.apv.util.KeyListener;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
@@ -92,8 +93,6 @@ import processing.event.Event;
 import processing.opengl.PShader;
 
 public class Main extends PApplet {
-	
-	
 
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
@@ -114,42 +113,44 @@ public class Main extends PApplet {
 	protected APV<LikedScene> likedScenes;
 	protected APV<LocationSystem> locations; 
 	protected APV<MessageSystem> messages;
-	protected APV<StandardMenu> menu;
 	protected APV<Scene> scenes;	
 	protected APV<Shader> shaders;	
 	protected APV<TransitionSystem> transitions;
 	
 	//Useful helper classes
 	protected APVAgent agent;
-	protected APVPulseListener pulseListener;
-	protected APVWatermark watermark;
-	protected APVSetListPlayer setListPlayer;
 	protected Audio audio;
-	protected Configurator configurator;
-	protected CommandSystem commandSystem;
-	protected Gravity gravity;
 	protected ColorHelper colorHelper;
-	protected ImageHelper imageHelper;
-	protected FrameStrober frameStrober;
-	protected PerformanceMonitor perfMonitor;
-	protected SettingsDisplay settingsDisplay;
-	protected Oscillator oscillator;
-	protected LoggingConfig loggingConfig;
-	protected HelpDisplay helpDisplay;
-	protected WelcomeDisplay welcomeDisplay;
-	protected Particles particles;
-	protected VersionInfo versionInfo;
-	protected VideoGameHelper videoGameHelper;
-	protected MacroHelper macroHelper;
-	protected HotKeyHelper hotKeyHelper;
-	protected SetPackLoader setPackLoader;
+	protected CommandSystem commandSystem;
+	protected Configurator configurator;
 	protected FontHelper fontHelper;
+	protected FrameStrober frameStrober;
+	protected Gravity gravity;
+	protected HelpDisplay helpDisplay;
+	protected HotKeyHelper hotKeyHelper;
+	protected ImageHelper imageHelper;
+	protected KeyListener keyListener;
+	protected FileCommandRunner fileCommandRunner;
+	protected LoggingConfig loggingConfig;
+	protected MacroHelper macroHelper;
+	protected APVMenu menu;
+	protected Oscillator oscillator;
+	protected Particles particles;
+	protected PerformanceMonitor perfMonitor;
+	protected PostFX postFX;
+	protected APVPulseListener pulseListener;
 	protected RandomMessagePainter randomMessagePainter;
+	protected APVSetListPlayer setListPlayer;
+	protected SetPackLoader setPackLoader;
+	protected SettingsDisplay settingsDisplay;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	protected StartupCommandRunner startupCommandRunner;
-	protected FileCommandRunner fileCommandRunner;
-	protected PostFX postFX;
+	protected VersionInfo versionInfo;
+	protected VideoGameHelper videoGameHelper;
+	protected APVWatermark watermark;
+	protected WelcomeDisplay welcomeDisplay;
+	
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -382,6 +383,10 @@ public class Main extends PApplet {
 	
 	public FontHelper getFontHelper() {
 		return fontHelper;
+	}
+	
+	public KeyListener getKeyListener() {
+		return keyListener;
 	}
 
 	public SetPackLoader getSetPackLoader() {
@@ -688,7 +693,7 @@ public class Main extends PApplet {
 		return messages.getPlugin();
 	}
 	
-	public APV<StandardMenu> getMenu() {
+	public APVMenu getMenu() {
 		return menu;
 	}
 	
@@ -817,30 +822,32 @@ public class Main extends PApplet {
 		
 		agent = new APVAgent(this);
 		audio = new Audio(this, BUFFER_SIZE);
+		colorHelper = new ColorHelper(this);
 		commandSystem = new CommandSystem(this);
 		frameStrober = new FrameStrober(this);
-		imageHelper = new ImageHelper(this);
-		colorHelper = new ColorHelper(this);
+		fileCommandRunner = new FileCommandRunner(this);
 		fontHelper = new FontHelper(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);
-		welcomeDisplay = new WelcomeDisplay(this);
+		hotKeyHelper = new HotKeyHelper(this);
+		imageHelper = new ImageHelper(this);
+		keyListener = new KeyListener(this);
+		macroHelper = new MacroHelper(this);
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
 		postFX  = new PostFX(this);
 		pulseListener = new APVPulseListener(this);
-		macroHelper = new MacroHelper(this);
-		hotKeyHelper = new HotKeyHelper(this);
-		setPackLoader = new SetPackLoader(this);
 		randomMessagePainter = new RandomMessagePainter(this);
+		setPackLoader = new SetPackLoader(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		starPainter = new StarPainter(this);
+		startupCommandRunner = new StartupCommandRunner(this);
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
-		startupCommandRunner = new StartupCommandRunner(this);
-		fileCommandRunner = new FileCommandRunner(this);
+		welcomeDisplay = new WelcomeDisplay(this);
+		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -851,7 +858,7 @@ public class Main extends PApplet {
 		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
 		systemMap.put(SYSTEM_NAMES.LOCATIONS, new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
 		systemMap.put(SYSTEM_NAMES.MESSAGES, new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
-		systemMap.put(SYSTEM_NAMES.MENU, new APV<StandardMenu>(this, SYSTEM_NAMES.MENU));
+		systemMap.put(SYSTEM_NAMES.MENU, new APVMenu(this));
 		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
 		systemMap.put(SYSTEM_NAMES.SHADERS, new APV<Shader>(this, SYSTEM_NAMES.SHADERS));
 		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
@@ -1191,7 +1198,7 @@ public class Main extends PApplet {
 		logger.info("Drawing frame: " + getFrameCount());
 		
 		if (menu.isEnabled()) {
-			menu.getPlugin().draw();
+			menu.drawMenu();
 			return;
 		}
 		
@@ -1506,7 +1513,7 @@ public class Main extends PApplet {
 		likedScenes = (APV<LikedScene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
-		menu = (APV<StandardMenu>) systemMap.get(SYSTEM_NAMES.MENU);
+		menu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);

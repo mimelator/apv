@@ -10,10 +10,11 @@ import java.util.logging.Logger;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.util.KeyListener.KeyEventListener;
 
 import processing.event.KeyEvent;
 
-public class CommandSystem extends APVPlugin {
+public class CommandSystem extends APVPlugin implements KeyEventListener {
 	
 	private static final Logger logger = Logger.getLogger(CommandSystem.class.getName());
 	
@@ -24,7 +25,6 @@ public class CommandSystem extends APVPlugin {
 	
 	public CommandSystem(Main parent) {
 		super(parent);
-		parent.registerMethod("keyEvent", this);
 	}
 	
 	/**
@@ -63,11 +63,7 @@ public class CommandSystem extends APVPlugin {
 		list.add(rch);
 	}
 	
-	public void keyEvent(KeyEvent keyEvent) {
-		if (keyEvent.getAction() != KeyEvent.RELEASE) {
-			return;
-		}
-		
+	public void onKeyEvent(KeyEvent keyEvent) {
 		String key = Command.getKeyForKeyEvent(keyEvent);
 		Command cmd = keyBindingMap.get(key);
 		int modifiers = keyEvent.getModifiers();

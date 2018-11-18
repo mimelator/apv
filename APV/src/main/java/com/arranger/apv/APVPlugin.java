@@ -16,6 +16,7 @@ public class APVPlugin implements PConstants {
 	
 	protected Main parent;
 	protected int id;
+	protected boolean enabled = true;
 
 	public APVPlugin(Main parent) {
 		this.parent = parent;
@@ -50,5 +51,13 @@ public class APVPlugin implements PConstants {
 	
 	public void setup() {
 		
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

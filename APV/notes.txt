@@ -1,32 +1,12 @@
 https://github.com/mimelator/apv
 
 
-Menus:
-
-The menu size must be a large enough font.  Maybe the colors should be 16 bit cycled
-
-Once i turn on menu size, the first thing can be to shrink the size of the screen to preview mode
-
-
-
-Menu priorities 
-* make config changes live
-* Not monitor data (yet)
-
-Wavelength preview mode
-
-Turn things on and off:
-* Switches
-* systems (any SYSTEM_NAMES where fullSystem = true)
-	* enable/disable/freeze
-	* enable/disable plugins (including agents) 
-
-Execute commands 
-* simple 
-* Advanced 
-
-Save default config
-* create backup 
+Menu challenges:
+Enable / Disable Plugins
+	That property would need to be serialized
+	
+Menu Tracking
+	Where is the state managed for what the current selection is on
 
 
 *****************************************************************************

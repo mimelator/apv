@@ -17,7 +17,7 @@ public class AudienceListenerDiagnosticAgent extends BaseAgent {
 	@SuppressWarnings("unchecked")
 	private static final List<String> MESSAGES = Arrays.asList(new String[]{
 			"Not hearing any music.  Please check your audio routing.",
-			"You can click '!' to see the Frequency chart.",
+			"You can click '!' or the '@' to see the Frequency chart or the audio sensitivity response.",
 			"Then you can use the '+' and '-' buttons to adjust the audio sensitivity",
 			"If the vertical bars aren't appearing, that means that there is no music being listened to",
 			"You can press '" + Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC.getCharKey() + "' to disable this message"

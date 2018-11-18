@@ -1,5 +1,7 @@
 package com.arranger.apv.helpers;
 
+import java.util.Observable;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
@@ -11,6 +13,7 @@ public class Switch extends APVPlugin {
 	public STATE state;
 	public String name;
 	public String data;
+	public Observable observable;
 	
 	public Switch(Main parent, String name) {
 		this(parent, name, true, null);
@@ -25,6 +28,7 @@ public class Switch extends APVPlugin {
 		this.name = name;
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
 		this.data = data;
+		this.observable = new Observable();
 	}
 	
 	public Switch(Configurator.Context ctx) {
@@ -79,6 +83,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.FROZEN;
 		}
+		observable.notifyObservers();
 	}
 	
 	/**
@@ -90,6 +95,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.ENABLED;
 		}
+		observable.notifyObservers();
 	}
 	
 	/**
@@ -108,6 +114,6 @@ public class Switch extends APVPlugin {
 			state = STATE.DISABLED;
 			break;
 		}
+		observable.notifyObservers();
 	}
-	
 }
