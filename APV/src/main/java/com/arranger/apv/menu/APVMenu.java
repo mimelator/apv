@@ -1,11 +1,13 @@
 package com.arranger.apv.menu;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.arranger.apv.APV;
+import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
-import com.arranger.apv.menu.MenuPainter.MENU_LOCATION;
-import com.arranger.apv.menu.MenuPainter.MenuItem;
-import com.arranger.apv.menu.MenuPainter.MenuProvider;
 import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 import com.arranger.apv.util.KeyListener.KeyEventListener;
 
@@ -13,89 +15,117 @@ import processing.event.KeyEvent;
 
 /**
  * 
- * 		//Configuration
-		// Not sure what to do with the reference.conf plugins
-		// Do i make things configurable?
-		// If so, then i probably need to ensure that when starting the menu system
-		// it goes to the main menu first.  However, that's only at the 'start' of a menu 'session'
-		
-		//key strokes
-		// At the start (and end) of a menu 'session', i'll need to capture the keyboard input
-		// Like the Command Manager: parent.registerMethod("keyEvent", this);
-		// I'll need to disable the CM when the MenuM is active
-		// I could create a custom APV class for the Menu
-		// It will handle all the menu plugins as well as the 'session' mgmt required for keystrokes
-		
-		
-		// Master menu:
-		//  * Switches
-		//  * Plugins (Full Systems)
-		//  * Commands (Basic/Advanced)
-		//  * Configuration
-		//     Save, Reload, Load?
-		// Each Menu has
-		//  An Active outline
-		//  Up / Down arrows for navigation
-		//  A Back 'button'
-		
-		// Probably have various menus encapsulate ListHelper
-		
-		
-		//List Helper
-		//How do i capture keyboard input and then pass to the currently active list?
+	Master menu:
+	  * Switches
+	  * Plugins (Full Systems)
+	  * Commands (Basic/Advanced)
+	  * Configuration
+	     Save, Reload, Load?
+	 
+	 Each Menu has
+	  	An Active outline
+	  	Up / Down keyboard strokes for navigation
+	  	A Back 'button'
+	 
+	 There needs to be instructions at the bottom which talk about using the arrow keys and the space bar or Esc to exit
+	 the current menu or the menu mode
  *
  */
-public class APVMenu extends APV<StandardMenu> implements KeyEventListener, MenuProvider {
+public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 
-	private MenuPainter menuPainter;
+	@FunctionalInterface
+	interface MenuCommand {
+		void onCommand();
+	}
+
+	private Map<String, MenuCommand> keyBindingMap = new HashMap<String, MenuCommand>();
+	private MainMenu mainMenu;
+	private BaseMenu currentMenu; 
 	
 	public APVMenu(Main parent) {
 		super(parent, Main.SYSTEM_NAMES.MENU, false);
+		mainMenu = new MainMenu(parent);
 		
 		sw.observable.addObserver((o, a) -> {
 			if (sw.isEnabled()) {
-				prepareMenu();
+				parent.getKeyListener().setSystem(KEY_SYSTEMS.MENU);
+				currentMenu = mainMenu;
+				currentMenu.setIndex(0);
 			} else {
-				closeMenu();
+				parent.getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
 			}
 		});
 		
-		menuPainter = new MenuPainter(parent, this, MENU_LOCATION.PRIMARY);
+		keyBindingMap.put("m", () -> onExit());
+		keyBindingMap.put("↑", () -> onUp());
+		keyBindingMap.put("↓", () -> onDown());
+		keyBindingMap.put(" ", () -> onSelect());
+		keyBindingMap.put("\n", () -> onSelect());
+		keyBindingMap.put("⌫", () -> onBack());
 	}
 
+	protected void onExit() {
+		parent.getCommandSystem().invokeCommand(Command.SWITCH_MENU, getDisplayName(), 0);
+	}
+	
+	protected void onUp() {
+		int i = currentMenu.getIndex();
+		if (i > 0) {
+			currentMenu.setIndex(i - 1);
+		}
+	}
+	
+	protected void onDown() {
+		int i = currentMenu.getIndex();
+		if (i < currentMenu.size() - 1) {
+			currentMenu.setIndex(i + 1);
+		}
+	}
+
+	protected void onBack() {
+		System.out.println("onBack");
+		if (currentMenu != mainMenu) {
+			currentMenu = mainMenu;
+		} else {
+			onExit();
+		}
+	}
+	
+	protected void onSelect() {
+		if (currentMenu == mainMenu) {
+			//activate the appropriate menu
+			currentMenu = (BaseMenu)mainMenu.getPlugins().get(mainMenu.getIndex());
+		} else {
+			//for the main menu, this should drill into other menus
+			currentMenu.getPlugins().get(currentMenu.getIndex()).toggleEnabled();
+		}
+		
+		//TODO: update the disabled plugin list
+	}
+	
 	public void drawMenu() {
 		parent.fill(0);
 		parent.rect(0, 0, parent.width, parent.height);
 		
-		menuPainter.draw();
+		currentMenu.draw();
 	}
 	
 	public void onKeyEvent(KeyEvent keyEvent) {
-		System.out.println("Getting key Event");
-		char charKey = keyEvent.getKey();
-		if (charKey == 'm') {
-			parent.getCommandSystem().invokeCommand(Command.SWITCH_MENU, getDisplayName(), 0);
+		String keyForKeyEvent = Command.getKeyForKeyEvent(keyEvent);
+		if (keyBindingMap.containsKey(keyForKeyEvent)) {
+			keyBindingMap.get(keyForKeyEvent).onCommand();
 		}
 	}
 	
-	@Override
-	public int size() {
-		return list.size();
-	}
-
-	@Override
-	public MenuItem getMenuItem(int index) {
-		return new MenuItemAdapter(list.get(index));
-	}
-
-	protected void prepareMenu() {
-		System.out.println("prepareMenu");
-		parent.getKeyListener().setSystem(KEY_SYSTEMS.MENU);
+	public class MainMenu extends BaseMenu {
 		
-	}
-	
-	protected void closeMenu() {
-		System.out.println("closeMenu");
-		parent.getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
+		public MainMenu(Main parent) {
+			super(parent, true);
+		}
+
+		@Override
+		public List<? extends APVPlugin> getPlugins() {
+			return getList();
+		}
 	}
 }

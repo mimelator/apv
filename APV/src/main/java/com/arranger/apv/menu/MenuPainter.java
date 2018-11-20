@@ -17,6 +17,7 @@ import com.arranger.apv.Main;
  */
 public class MenuPainter extends APVPlugin {
 
+	private static final int DISABLED_COLOR = Color.gray.getRGB();
 	public static final int INSET = 40;	//TODO make configurable and/or based off of screen size
 	public static final int OFFSET = INSET;
 	
@@ -43,33 +44,29 @@ public class MenuPainter extends APVPlugin {
 		this.location = location;
 		this.provider = provider;
 	}
-
+	
 	public void draw() {
-		
 		Point2D pt = getCoordinatesForLocation(location);
 		int x = (int) pt.getX();
 		int y = (int) pt.getY();
 		parent.translate(x, y);
 		int currentColor = parent.getColor().getCurrentColor().getRGB();
 		
-		int offset = 0;
 		int count = provider.size();
 		for (int index = 0; index < count; index++) {
 			MenuItem item = provider.getMenuItem(index);
-			
 			if (item.isSelected()) {
-				//TODO draw box around menu item
-			}
-			
-			if (!item.isEnabled()) {
-				//TODO fix styling Draw alternate
-				parent.fill(Color.white.getRGB());
-			} else {
+				parent.rectMode(CORNER);
 				parent.fill(currentColor);
-				parent.text(item.getText(), OFFSET, offset);
+				parent.rect(0, index * OFFSET, OFFSET / 2, OFFSET);
 			}
-			
-			offset += OFFSET;
+
+			//set the color
+			int color = item.isEnabled() ? currentColor : DISABLED_COLOR;
+			parent.fill(color);
+			parent.textAlign(LEFT, TOP);
+			//maybe change the font size based on enabled?
+			parent.text(item.getText(), OFFSET, index * OFFSET);
 		}
 		
 		parent.translate(-x, -y);

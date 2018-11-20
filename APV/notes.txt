@@ -1,22 +1,36 @@
 https://github.com/mimelator/apv
 
 
-Menu challenges:
-Enable / Disable Plugins
-	That property would need to be serialized
+Menu TODO:
+
+Fix the rectangle drawing
+
+
 	
-Menu Tracking
-	Where is the state managed for what the current selection is on
+Refactor into common base class the:
+* MenuHandlers
+  * Including Back and Selection
+  * hook up the enabled / disabled
+	 Main menu will not allow this
+* Current Index
+* MenuPainter
+* Directions to Draw
+	Draw directions at the bottom for each menu
+
+Enable / Disable Plugins
+	Use the Configurator.getDisabledPluginSet to track what plugins are disabled
+	
 
 
 *****************************************************************************
-TODO:
-[GE] Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
+* Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
 	SpriteFactory (and other clients of ImageHelper) might be affected
-[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
-See about using the FFTanalysis for the modulation. 
-[GE] * Puzzle animation of a background image
-[GE] * Render vector graphics
+* Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
+	See about using the FFTanalysis for the modulation. 
+* Render vector graphics  
+	See ScaleShape under Processing Examples
+* Puzzle animation of a background image
+* Look to use easing for some motions: https://processing.org/examples/easing.html
 *****************************************************************************
 *****************************************************************************
 Remote Debugging:

@@ -6,9 +6,11 @@ import com.arranger.apv.menu.MenuPainter.MenuItem;
 public class MenuItemAdapter implements MenuItem {
 
 	private APVPlugin plugin;
+	private boolean selected;
 	
-	public MenuItemAdapter(APVPlugin plugin) {
+	public MenuItemAdapter(APVPlugin plugin, boolean selected) {
 		this.plugin = plugin;
+		this.selected = selected;
 	}
 
 	@Override
@@ -18,7 +20,7 @@ public class MenuItemAdapter implements MenuItem {
 
 	@Override
 	public boolean isSelected() {
-		return false;
+		return selected;
 	}
 
 	@Override

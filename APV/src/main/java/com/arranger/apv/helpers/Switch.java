@@ -13,7 +13,15 @@ public class Switch extends APVPlugin {
 	public STATE state;
 	public String name;
 	public String data;
-	public Observable observable;
+	public ObservalbleAdapter observable;
+	
+	public class ObservalbleAdapter extends Observable {
+		
+		public void update() {
+			setChanged();
+			notifyObservers();
+		}
+	}
 	
 	public Switch(Main parent, String name) {
 		this(parent, name, true, null);
@@ -28,7 +36,7 @@ public class Switch extends APVPlugin {
 		this.name = name;
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
 		this.data = data;
-		this.observable = new Observable();
+		this.observable = new ObservalbleAdapter();
 	}
 	
 	public Switch(Configurator.Context ctx) {
@@ -83,7 +91,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.FROZEN;
 		}
-		observable.notifyObservers();
+		observable.update();
 	}
 	
 	/**
@@ -95,7 +103,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.ENABLED;
 		}
-		observable.notifyObservers();
+		observable.update();
 	}
 	
 	/**
@@ -114,6 +122,6 @@ public class Switch extends APVPlugin {
 			state = STATE.DISABLED;
 			break;
 		}
-		observable.notifyObservers();
+		observable.update();
 	}
 }

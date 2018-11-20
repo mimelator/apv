@@ -60,4 +60,8 @@ public class APVPlugin implements PConstants {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public void toggleEnabled() {
+		setEnabled(!enabled);
+	}
 }
