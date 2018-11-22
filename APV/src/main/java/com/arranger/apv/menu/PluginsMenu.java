@@ -43,6 +43,7 @@ public class PluginsMenu extends BaseMenu {
 		public PluginSystemMenu(Main parent, APV<? extends APVPlugin> system) {
 			super(parent);
 			this.system = system;
+			this.drawPlugin = true;
 		}
 
 		@Override

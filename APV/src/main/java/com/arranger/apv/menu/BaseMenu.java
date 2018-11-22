@@ -6,6 +6,8 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.menu.MenuPainter.MenuItem;
 import com.arranger.apv.menu.MenuPainter.MenuProvider;
+import com.arranger.apv.systems.ShapeSystem;
+import com.arranger.apv.util.draw.SafePainter;
 import com.arranger.apv.util.draw.SafePainter.LOCATION;
 import com.arranger.apv.util.draw.TextPainter;
 
@@ -19,6 +21,7 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	protected TextPainter titlePainter;
 	protected List<String> title;
 	protected boolean showDetails;
+	protected boolean drawPlugin;
 	
 	@SuppressWarnings("unchecked")
 	public BaseMenu(Main parent) {
@@ -27,11 +30,25 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 		titlePainter = new TextPainter(parent);
 		title = Arrays.asList(new String[] {getDisplayName()});
 		showDetails = true;
+		drawPlugin = false;
 	}
 	
 	public void draw() {
 		titlePainter.drawText(title, LOCATION.UPPER_RIGHT);
 		menuPainter.draw(showDetails);
+		
+		if (drawPlugin) {
+			APVPlugin plugin = getPlugins().get(index);
+			if (plugin instanceof ShapeSystem) {
+				new SafePainter(parent, ()->{
+					
+					parent.scale(.5f);
+					parent.translate(parent.width * .5f, parent.height * .5f);
+					
+					((ShapeSystem)plugin).draw();	
+				}).paint();
+			}
+		}
 	}
 	
 	/**
