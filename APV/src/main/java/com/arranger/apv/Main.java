@@ -187,34 +187,35 @@ public class Main extends PApplet {
 	
 	public enum FLAGS {
 		
-		CONTROL_MODE("controlMode", "PERLIN|AUTO|MANUAL|SNAP"),
-		FULL_SCREEN("fullScreen", "true|false"),
-		SCRAMBLE_SYSTEMS("scrambleSystems", "true|false"),
-		SCREEN_WIDTH("screen.width", "integer"),
-		SCREEN_HEIGHT("screen.height", "integer"),
-		MONITORING_ENABLED("monitoring.enabled", "true|false"),
-		PULSE_SENSITIVITY("pulseSensitivity", "integer"),
-		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
-		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
-		TREE_COMPLEXITY_CUTOFF("treeComplexityCutoff", "0<100"),
-		TREE_MIN_SIZE("treeMinSize", "0<10"),
+		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
+		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
+		CONTROL_MODE("controlMode", "PERLIN|AUTO|MANUAL|SNAP"),
+		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
+		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
 		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
 		FONT_NAME("font.name", "string"),
 		FONT_SIZE("font.size", "integer"),
 		FONT_STYLE("font.style", "PLAIN|ITALIC|BOLD"),
-		SET_LIST("setList", "true|false"),
-		SET_LIST_FOLDER("setListFolder", "directory"),
-		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
+		FRAME_RATE("frameRate", "integer"),
+		FULL_SCREEN("fullScreen", "true|false"),
 		LINE_IN("lineIn", "true|false"),
 		LISTEN_ONLY("listenOnly", "true|false"),
-		WATERMARK_FRAMES("watermarkFrames", "integer"),
+		MONITORING_ENABLED("monitoring.enabled", "true|false"),
 		MUSIC_DIR("musicDir", "directory"),
 		OCEAN_NAME("ocean", "string"),
-		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
-		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
-		FRAME_RATE("frameRate", "integer");
+		PULSE_SENSITIVITY("pulseSensitivity", "integer"),
+		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
+		SCRAMBLE_SYSTEMS("scrambleSystems", "true|false"),
+		SCREEN_WIDTH("screen.width", "integer"),
+		SCREEN_HEIGHT("screen.height", "integer"),
+		SET_LIST("setList", "true|false"),
+		SET_LIST_FOLDER("setListFolder", "directory"),
+		TREE_COMPLEXITY_CUTOFF("treeComplexityCutoff", "0<100"),
+		TREE_MIN_SIZE("treeMinSize", "0<10"),
+		WATERMARK_FRAMES("watermarkFrames", "integer");
+		
 		
 		private String name;
 		private String description;

@@ -1,8 +1,6 @@
 https://github.com/mimelator/apv
 
 Menu TODO:
- * APV switch (frozen, enabled, disabled)
- * Commands (Basic/Advanced)
  * Backgrounds, Emojis, icons
  * Configuration
      Save, Reload, Load?
