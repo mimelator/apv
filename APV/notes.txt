@@ -1,9 +1,13 @@
 https://github.com/mimelator/apv
 
 
-Menu TODO:
 
-Fix the rectangle drawing
+
+Menu TODO:
+* Fix Plugins Enable/Disable for all Full Systems
+* Font size needs to be scalable and configurable
+* Draw instructions
+
 
 
 	

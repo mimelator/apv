@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -379,6 +380,10 @@ public class Main extends PApplet {
 	
 	public APV<? extends APVPlugin> getSystem(SYSTEM_NAMES name) {
 		return systemMap.get(name);
+	}
+	
+	public Collection<APV<? extends APVPlugin>> getSystems() {
+		return systemMap.values();
 	}
 	
 	public FontHelper getFontHelper() {

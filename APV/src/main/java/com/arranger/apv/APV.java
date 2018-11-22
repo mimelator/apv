@@ -126,6 +126,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		list.forEach(action);
 	}
 	
+	/*
+	 * This doesn't scramble the overall order of the plugins
+	 * it just jumps to a random index
+	 */
 	public void scramble(boolean checkSwitch) {
 		if (checkSwitch && sw.isFrozen()) {
 			return;
@@ -172,6 +176,11 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		});
 		
 		return results;
+	}
+	
+	@Override
+	public String getDisplayName() {
+		return systemName.toString();
 	}
 
 	@Override
@@ -267,7 +276,16 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		}
 		
 		//set current plugin
-		currentPlugin = list.get(Math.abs(index) % list.size());
+		//if it's enabled
+		currentPlugin = null;
+		while (currentPlugin == null) {
+			currentPlugin = list.get(Math.abs(index) % list.size());
+			if (!currentPlugin.isEnabled()) {
+				currentPlugin = null;
+				scramble(false); //side effects of changing the index
+			} 
+		}
+		
 		fireEvent(currentPlugin, cause);
 		quietWindow.reset(quietWindowSize);
 	}

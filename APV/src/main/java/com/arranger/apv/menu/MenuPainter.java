@@ -45,6 +45,9 @@ public class MenuPainter extends APVPlugin {
 		this.provider = provider;
 	}
 	
+	/*
+	 * TODO scale font size based on size() 
+	 */
 	public void draw() {
 		Point2D pt = getCoordinatesForLocation(location);
 		int x = (int) pt.getX();
@@ -88,5 +91,4 @@ public class MenuPainter extends APVPlugin {
 		
 		return new Point2D.Float(x, y);
 	}
-
 }

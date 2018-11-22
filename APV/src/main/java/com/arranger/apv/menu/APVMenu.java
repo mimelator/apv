@@ -3,6 +3,7 @@ package com.arranger.apv.menu;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
@@ -14,22 +15,12 @@ import com.arranger.apv.util.KeyListener.KeyEventListener;
 import processing.event.KeyEvent;
 
 /**
- * 
-	Master menu:
+ * Master menu:
 	  * Switches
 	  * Plugins (Full Systems)
 	  * Commands (Basic/Advanced)
 	  * Configuration
 	     Save, Reload, Load?
-	 
-	 Each Menu has
-	  	An Active outline
-	  	Up / Down keyboard strokes for navigation
-	  	A Back 'button'
-	 
-	 There needs to be instructions at the bottom which talk about using the arrow keys and the space bar or Esc to exit
-	 the current menu or the menu mode
- *
  */
 public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 
@@ -41,10 +32,12 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	private Map<String, MenuCommand> keyBindingMap = new HashMap<String, MenuCommand>();
 	private MainMenu mainMenu;
 	private BaseMenu currentMenu; 
+	private Stack<BaseMenu> menuStack;
 	
 	public APVMenu(Main parent) {
 		super(parent, Main.SYSTEM_NAMES.MENU, false);
 		mainMenu = new MainMenu(parent);
+		menuStack = new Stack<BaseMenu>();
 		
 		sw.observable.addObserver((o, a) -> {
 			if (sw.isEnabled()) {
@@ -83,24 +76,23 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	}
 
 	protected void onBack() {
-		System.out.println("onBack");
 		if (currentMenu != mainMenu) {
-			currentMenu = mainMenu;
+			currentMenu = menuStack.pop();
 		} else {
 			onExit();
 		}
 	}
 	
 	protected void onSelect() {
-		if (currentMenu == mainMenu) {
-			//activate the appropriate menu
-			currentMenu = (BaseMenu)mainMenu.getPlugins().get(mainMenu.getIndex());
+		if (currentMenu.hasChildMenus()) {
+			menuStack.push(currentMenu);
+			currentMenu = currentMenu.getChildMenu();
 		} else {
-			//for the main menu, this should drill into other menus
+			//select it
 			currentMenu.getPlugins().get(currentMenu.getIndex()).toggleEnabled();
+			
+			//TODO: update the disabled plugin list
 		}
-		
-		//TODO: update the disabled plugin list
 	}
 	
 	public void drawMenu() {
@@ -126,6 +118,11 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		@Override
 		public List<? extends APVPlugin> getPlugins() {
 			return getList();
+		}
+
+		@Override
+		public boolean hasChildMenus() {
+			return true;
 		}
 	}
 }
