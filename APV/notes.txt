@@ -1,10 +1,12 @@
 https://github.com/mimelator/apv
 
 Menu TODO:
-* APV switch (frozen, enabled, disabled)
-* update the disabled plugin list for serialization
-
-
+ * APV switch (frozen, enabled, disabled)
+ * Commands (Basic/Advanced)
+ * Backgrounds, Emojis, icons
+ * Configuration
+     Save, Reload, Load?
+ * update the disabled plugin list for serialization
 
 *****************************************************************************
 * Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper

@@ -1,5 +1,6 @@
 package com.arranger.apv.menu;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Stack;
 import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 import com.arranger.apv.util.KeyListener.KeyEventListener;
@@ -110,7 +112,8 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		
 		new SafePainter(parent, ()-> {
 			parent.textAlign(CENTER);
-			parent.text(DIRECTIONS, parent.width / 2, parent.height * .8f);
+			parent.textSize(parent.getGraphics().textSize * .75f);
+			parent.text(DIRECTIONS, parent.width / 2, parent.height * .85f);
 		}).paint();
 	}
 	
@@ -137,5 +140,20 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		public boolean hasChildMenus() {
 			return true;
 		}
+	}
+	
+	List<? extends APVPlugin> getAPVPluginList() {
+		List<APV<? extends APVPlugin>> results = new ArrayList<APV<? extends APVPlugin>>();
+		results.add(parent.getAgent());
+		results.add(parent.getBackgrounds());
+		results.add(parent.getBackDrops());
+		results.add(parent.getSystem(SYSTEM_NAMES.CONTROLS));
+		results.add(parent.getFilters());
+		results.add(parent.getForegrounds());
+		results.add(parent.getLocations());
+		results.add(parent.getShaders());
+		results.add(parent.getTransitions());
+		results.add(parent.getWatermark());
+		return results;
 	}
 }
