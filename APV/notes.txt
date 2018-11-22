@@ -1,29 +1,9 @@
 https://github.com/mimelator/apv
 
-
-
-
 Menu TODO:
-* Fix Plugins Enable/Disable for all Full Systems
-* Font size needs to be scalable and configurable
-* Draw instructions
+* APV switch (frozen, enabled, disabled)
+* update the disabled plugin list for serialization
 
-
-
-	
-Refactor into common base class the:
-* MenuHandlers
-  * Including Back and Selection
-  * hook up the enabled / disabled
-	 Main menu will not allow this
-* Current Index
-* MenuPainter
-* Directions to Draw
-	Draw directions at the bottom for each menu
-
-Enable / Disable Plugins
-	Use the Configurator.getDisabledPluginSet to track what plugins are disabled
-	
 
 
 *****************************************************************************

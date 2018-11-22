@@ -105,6 +105,7 @@ public class Main extends PApplet {
 	public static final int DEFAULT_SKIP_FRAMES_FOR_CONSOLE_OUTPUT = 200;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
+	protected APVAgent agent;
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
 	protected APV<ColorSystem> colors;
@@ -117,9 +118,9 @@ public class Main extends PApplet {
 	protected APV<Scene> scenes;	
 	protected APV<Shader> shaders;	
 	protected APV<TransitionSystem> transitions;
+	protected APVWatermark watermark;
 	
 	//Useful helper classes
-	protected APVAgent agent;
 	protected Audio audio;
 	protected ColorHelper colorHelper;
 	protected CommandSystem commandSystem;
@@ -149,7 +150,6 @@ public class Main extends PApplet {
 	protected StartupCommandRunner startupCommandRunner;
 	protected VersionInfo versionInfo;
 	protected VideoGameHelper videoGameHelper;
-	protected APVWatermark watermark;
 	protected WelcomeDisplay welcomeDisplay;
 	
 	
@@ -241,18 +241,17 @@ public class Main extends PApplet {
 	}
 
 	public enum SWITCH_NAMES {
-		
-		HELP("Help"),
-		MENU("Menu"),
-		WELCOME("Welcome"),
-		SHOW_SETTINGS("ShowSettings"),
-		FRAME_STROBER("FrameStrober"),
-		SCRAMBLE_MODE("Scramble"),
-		VIDEO_GAME("VideoGame"),
+		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic"),
 		CONSOLE_OUTPUT("ConsoleOutput"),
 		DEBUG_AGENT("DebugAgent"),
 		DEBUG_PULSE("DebugPulse"),
-		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic");
+		FRAME_STROBER("FrameStrober"),
+		HELP("Help"),
+		MENU("Menu"),
+		SCRAMBLE_MODE("Scramble"),
+		SHOW_SETTINGS("ShowSettings"),
+		VIDEO_GAME("VideoGame"),
+		WELCOME("Welcome");
 		
 		public String name;
 
@@ -282,7 +281,6 @@ public class Main extends PApplet {
 		SWITCHES("switches", false),
 		TRANSITIONS("transitions"),
 		WATERMARKS("watermarks", false);
-		
 		
 		public String name;
 		public boolean isFullSystem;

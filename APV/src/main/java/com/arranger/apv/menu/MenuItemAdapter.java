@@ -28,4 +28,8 @@ public class MenuItemAdapter implements MenuItem {
 		return plugin.getDisplayName();
 	}
 
+	@Override
+	public APVPlugin getPlugin() {
+		return plugin;
+	}
 }
