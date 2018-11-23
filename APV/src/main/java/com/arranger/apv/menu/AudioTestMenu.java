@@ -30,8 +30,6 @@ public class AudioTestMenu extends CommandBasedMenu {
 		results.add(new MenuCallback(parent, Command.AUDIO_INC.getDisplayName(), ()-> fireCommand(Command.AUDIO_INC)));
 		results.add(new MenuCallback(parent, Command.AUDIO_DEC.getDisplayName(), ()-> fireCommand(Command.AUDIO_DEC)));
 		
-		
 		return results;
 	}
-
 }

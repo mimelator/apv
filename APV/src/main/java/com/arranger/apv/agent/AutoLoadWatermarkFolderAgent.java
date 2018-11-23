@@ -9,22 +9,13 @@ import java.util.stream.Collectors;
 
 import com.arranger.apv.Main;
 import com.arranger.apv.shader.Shader.SHADERS;
-import com.arranger.apv.shader.Watermark;
 import com.arranger.apv.util.Configurator;
+import com.arranger.apv.util.DynamicShaderHelper;
 import com.arranger.apv.util.FileHelper;
-import com.arranger.apv.util.RandomHelper;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
-/**
- * NB: Don't use TOON from shaders as in this situation it hides all foreground activity
- */
 public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 	
 	private static final Logger logger = Logger.getLogger(AutoLoadWatermarkFolderAgent.class.getName());
-	
-	@SuppressWarnings("unchecked")
-	private static List<SHADERS> bannedShaders = Arrays.asList(new SHADERS[] {SHADERS.BLOOM, SHADERS.TOON});
 	
 	private List<SHADERS> shaders;
 	private float alpha;
@@ -50,27 +41,14 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 					Path path = new File(fullPath).toPath().normalize();
 					List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
 					
-					RandomHelper rh = new RandomHelper(parent);
-					
-					for (Path p : backgrounds) {
-						SHADERS random = rh.random(shaders);
-						while (!isShaderOk(random)) {	//see note
-							random = rh.random(shaders);
-						}
-						@SuppressWarnings("unchecked")
-						List<SHADERS> randShader = Arrays.asList(new SHADERS[] {random});
-						
-						Watermark watermark = new Watermark(parent, p.getFileName().toString(), alpha, false, p.toString(), randShader);
-						parent.getShaders().addPlugin(watermark);
-						System.out.println("Loading watermark shader: " + watermark.getDisplayName() + " with shader: " + random.name());
-					}
+					new DynamicShaderHelper(parent).loadBackgrounds(parent, alpha, shaders, backgrounds, false);
 				}
 			} catch (Exception e) {
 				logger.log(Level.INFO, e.getMessage(), e);
 			}
 		});
 	}
-	
+
 	public AutoLoadWatermarkFolderAgent(Configurator.Context ctx) {
 		this(ctx.getParent(), 
 				ctx.getFloat(0, ALPHA),
@@ -85,9 +63,5 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 				getName(), 
 				alpha,
 				shaderString);
-	}
-	
-	private boolean isShaderOk(SHADERS s) {
-		return !bannedShaders.contains(s);
 	}
 }

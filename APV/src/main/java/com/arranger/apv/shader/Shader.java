@@ -1,9 +1,12 @@
 package com.arranger.apv.shader;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.Main.FLAGS;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FFTAnalysis;
@@ -132,6 +135,8 @@ public class Shader extends ShapeSystem {
 		public ShaderPass getShaderPass() {
 			return shaderPass;
 		}
+		
+		public static final List<SHADERS> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	};
 	
 	private static FFTAnalysis fftAnalysis;

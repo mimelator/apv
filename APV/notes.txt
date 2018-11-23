@@ -2,6 +2,38 @@ https://github.com/mimelator/apv
 
 Menu TODO:
  * Backgrounds, Emojis, icons
+ 
+ Backgrounds:
+ ReloadAPVWatermark system
+ 
+ FileHelper fh = new FileHelper(parent);
+					
+					String fullPath = fh.getFullPath(autoLoadedFolder);
+					Path path = new File(fullPath).toPath().normalize();
+					List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
+					
+					RandomHelper rh = new RandomHelper(parent);
+					
+					for (Path p : backgrounds) {
+						SHADERS random = rh.random(shaders);
+						while (!isShaderOk(random)) {	//see note
+							random = rh.random(shaders);
+						}
+						@SuppressWarnings("unchecked")
+						List<SHADERS> randShader = Arrays.asList(new SHADERS[] {random});
+						
+						Watermark watermark = new Watermark(parent, p.getFileName().toString(), alpha, false, p.toString(), randShader);
+						parent.getShaders().addPlugin(watermark);
+						System.out.println("Loading watermark shader: " + watermark.getDisplayName() + " with shader: " + random.name());
+					}
+					
+					
+after loading the folder
+ 
+ 
+ 
+ 
+ 
  * Configuration
      Save, Reload, Load?
  * update the disabled plugin list for serialization
