@@ -85,4 +85,12 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	public BaseMenu getChildMenu(int index) {
 		return (BaseMenu)getPlugins().get(index);
 	}
+	
+	public void onActivate() {
+		
+	}
+	
+	public void onDeactivate() {
+		
+	}
 }

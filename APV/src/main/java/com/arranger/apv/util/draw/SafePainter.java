@@ -23,7 +23,8 @@ public class SafePainter extends APVPlugin {
 		UPPER_RIGHT(RIGHT, TOP), 
 		LOWER_RIGHT(RIGHT, BOTTOM), 
 		LOWER_LEFT(LEFT, BOTTOM), 
-		MIDDLE(CENTER, CENTER), 
+		MIDDLE(CENTER, CENTER),
+		UPPER_MIDDLE(CENTER, TOP),
 		NONE(CENTER, CENTER);
 	
 		private int alignX, alignY;
@@ -126,6 +127,10 @@ public class SafePainter extends APVPlugin {
 		case MIDDLE:
 			x = parent.width / 2;
 			y = parent.height / 2;
+			break;
+		case UPPER_MIDDLE:
+			x = parent.width / 2;
+			y = INSET;			
 			break;
 		case NONE:
 			default:

@@ -35,6 +35,7 @@ public abstract class CommandBasedMenu extends BaseMenu {
 	
 	public CommandBasedMenu(Main parent) {
 		super(parent);
+		showDetails = false;
 	}
 
 	protected void fireCommand(Command cmd) {

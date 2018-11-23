@@ -53,6 +53,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 				parent.getKeyListener().setSystem(KEY_SYSTEMS.MENU);
 				currentMenu = mainMenu;
 				currentMenu.setIndex(0);
+				currentMenu.onActivate();
 			} else {
 				parent.getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
 			}
@@ -67,6 +68,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	}
 
 	protected void onExit() {
+		currentMenu.onDeactivate();
 		parent.getCommandSystem().invokeCommand(Command.SWITCH_MENU, getDisplayName(), 0);
 	}
 	
@@ -86,7 +88,9 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 
 	protected void onBack() {
 		if (currentMenu != mainMenu) {
+			currentMenu.onDeactivate();
 			currentMenu = menuStack.pop();
+			currentMenu.onActivate();
 		} else {
 			onExit();
 		}
@@ -96,6 +100,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		if (currentMenu.hasChildMenus()) {
 			menuStack.push(currentMenu);
 			currentMenu = currentMenu.getChildMenu();
+			currentMenu.onActivate();
 		} else {
 			//select it
 			currentMenu.getPlugins().get(currentMenu.getIndex()).toggleEnabled();
@@ -105,11 +110,12 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	}
 	
 	public void drawMenu() {
+		//prep and draw menu
 		parent.fill(0);
 		parent.rect(0, 0, parent.width, parent.height);
-		
 		currentMenu.draw();
-		
+
+		//Directions
 		new SafePainter(parent, ()-> {
 			parent.textAlign(CENTER);
 			parent.textSize(parent.getGraphics().textSize * .75f);
