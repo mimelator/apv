@@ -5,20 +5,12 @@ JFileChooser GUI bug
 Cancel button bricks
 Ok with keyboard bricks except w/hack
 
-Loading watermark shader: leaves.jpg with shader: BRIGHTNESSCONTRAST
-OpenGL error 1282 at bot endDraw(): invalid operation
-The file /Users/markimel/apv/oceans/monday/icons/x5enwe-icon.png contains bad image data, or may not be an image.
-The file /Users/markimel/apv/oceans/monday/icons/x5enwe-icon.png contains bad image data, or may not be an image.
-
 
 Menu TODO:
- * Emojis, icons
- 
- 
-
- * Configuration
-     Save, Reload, Load?
- * update the disabled plugin list for serialization
+Emojis
+Configuration
+	Save, Reload, Load?
+ 	update the disabled plugin list for serialization
 
 *****************************************************************************
 * Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper

@@ -64,11 +64,11 @@ public class IconSelectorMenu extends ImageSelector {
 		this.paths = paths;
 		ImageHelper imageHelper = parent.getImageHelper();
 		for (Path p : paths) {
-			ICON_NAMES.VALUES.forEach(icon -> {
-				String pathString = p.toString();
-				PImage image = parent.loadImage(pathString);
-				imageHelper.updateImage(icon, image, pathString);
-			});
+			String pathString = p.toString();
+			PImage image = parent.loadImage(pathString);
+			if (image != null) {
+				imageHelper.updateImage(ICON_NAMES.random(), image, pathString);
+			}
 		}
 	}
 }
