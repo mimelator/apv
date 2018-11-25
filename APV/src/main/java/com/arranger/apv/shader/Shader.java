@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.Main.FLAGS;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.FFTAnalysis;

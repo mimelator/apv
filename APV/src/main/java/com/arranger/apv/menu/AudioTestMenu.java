@@ -10,7 +10,35 @@ import com.arranger.apv.systems.lite.FreqDetector;
 
 public class AudioTestMenu extends CommandBasedMenu {
 
+	protected static class MenuAdapterCallback extends APVPlugin {
+		
+		@FunctionalInterface
+		public interface MenuCommand {
+			void onCommand();
+		}
+
+		private String text;
+		private MenuCommand menuCommand;
+		
+		public MenuAdapterCallback(Main parent, String text, MenuCommand menuCommand) {
+			super(parent);
+			this.text = text;
+			this.menuCommand = menuCommand;
+		}
+
+		@Override
+		public void toggleEnabled() {
+			menuCommand.onCommand();
+		}
+
+		@Override
+		public String getDisplayName() {
+			return text;
+		}
+	}
+	
 	protected FreqDetector freqDetector;
+	
 	
 	public AudioTestMenu(Main parent) {
 		super(parent);
@@ -25,10 +53,10 @@ public class AudioTestMenu extends CommandBasedMenu {
 
 	@Override
 	public List<? extends APVPlugin> getPlugins() {
-		List<MenuCallback> results = new ArrayList<MenuCallback>();
+		List<MenuAdapterCallback> results = new ArrayList<MenuAdapterCallback>();
 		
-		results.add(new MenuCallback(parent, Command.AUDIO_INC.getDisplayName(), ()-> fireCommand(Command.AUDIO_INC)));
-		results.add(new MenuCallback(parent, Command.AUDIO_DEC.getDisplayName(), ()-> fireCommand(Command.AUDIO_DEC)));
+		results.add(new MenuAdapterCallback(parent, Command.AUDIO_INC.getDisplayName(), ()-> fireCommand(Command.AUDIO_INC)));
+		results.add(new MenuAdapterCallback(parent, Command.AUDIO_DEC.getDisplayName(), ()-> fireCommand(Command.AUDIO_DEC)));
 		
 		return results;
 	}

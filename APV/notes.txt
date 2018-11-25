@@ -1,7 +1,19 @@
 https://github.com/mimelator/apv
 
+
+JFileChooser GUI bug
+Cancel button bricks
+Ok with keyboard bricks except w/hack
+
+Loading watermark shader: leaves.jpg with shader: BRIGHTNESSCONTRAST
+OpenGL error 1282 at bot endDraw(): invalid operation
+The file /Users/markimel/apv/oceans/monday/icons/x5enwe-icon.png contains bad image data, or may not be an image.
+The file /Users/markimel/apv/oceans/monday/icons/x5enwe-icon.png contains bad image data, or may not be an image.
+
+
 Menu TODO:
  * Emojis, icons
+ 
  
 
  * Configuration

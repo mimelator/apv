@@ -4,38 +4,77 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.shader.Shader.SHADERS;
-import com.arranger.apv.shader.Watermark;
-import com.arranger.apv.util.DynamicShaderHelper;
 import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.draw.SafePainter;
-import com.arranger.apv.util.draw.SafePainter.LOCATION;
-import com.arranger.apv.util.draw.TextPainter;
 
 public class ImageSelectorMenu extends CommandBasedMenu {
 	
-	private static final float DEFAULT_ALPHA = .5f;
-	public static final String DIRECTIONS = "Choose a group of images to use as backgrounds.\n" + 
-			"  The images must be JPG images and end with the .jpg extension.  \n" + 
-			"  If you use images larger than 1MB the program might crash or run erratically. \n" + 
-			"  After choosing the photos, you can navigate to the Plugins Menu->Shaders to see that they were registered. ";
+	public abstract static class ImageSelector extends BaseMenu {
+		
+		public ImageSelector(Main parent) {
+			super(parent);
+		}
+		
+		@Override
+		public List<? extends APVPlugin> getPlugins() {
+			return Arrays.asList(new APVPlugin[0]);
+		}
+		
+		protected abstract void onSelectedImages(List<Path> paths);
+		protected abstract String getMenuTitle();
+		protected abstract String getDirections();
+		protected abstract FileNameExtensionFilter getFileFilter();
+	}
+	
+	public static class ImageAdapterCallback extends APVPlugin {
+		
+		@FunctionalInterface
+		public interface MenuCommand {
+			void onCommand();
+		}
+
+		private ImageSelector imageSelector;
+		private MenuCommand menuCommand;
+		
+		
+		public ImageAdapterCallback(Main parent, ImageSelector imageSelector, MenuCommand menuCommand) {
+			super(parent);
+			this.imageSelector = imageSelector;
+			this.menuCommand = menuCommand;
+		}
+
+		@Override
+		public void toggleEnabled() {
+			menuCommand.onCommand();
+		}
+
+		@Override
+		public String getDisplayName() {
+			return imageSelector.getDisplayName();
+		}
+		
+		public ImageSelector getImageSelector() {
+			return imageSelector;
+		}
+	}
 	
 	private FileHelper fileHelper;
 	private JFileChooser fc;
-	private List<Watermark> watermarks;
-	private List<MenuCallback> menuItems = new ArrayList<MenuCallback>();
-	
+	private List<ImageAdapterCallback> menuItems = new ArrayList<ImageAdapterCallback>();
+
 	public ImageSelectorMenu(Main parent) {
 		super(parent);
+		
 		fileHelper = new FileHelper(parent);
-		menuItems.add(new MenuCallback(parent, "Load Background Images", ()-> onLoadImagesSelection()));
+		
+		menuItems.add(new ImageAdapterCallback(parent, new BackgroundSelectorMenu(parent), ()-> onLoadImagesSelection()));
+		menuItems.add(new ImageAdapterCallback(parent, new IconSelectorMenu(parent), ()-> onLoadImagesSelection()));
 	}
 	
 	@Override
@@ -44,38 +83,48 @@ public class ImageSelectorMenu extends CommandBasedMenu {
 		new SafePainter(parent, ()-> {
 			parent.textAlign(CENTER);
 			parent.textSize(parent.getGraphics().textSize * .75f);
-			parent.text(DIRECTIONS, parent.width / 2, parent.height * .5f);			
+			parent.text(getCurrentSelector().getDirections(), parent.width / 2, parent.height * .5f);			
 		}).paint();
 		
-		if (watermarks != null) {
-			List<String> loadedImages = watermarks.stream().map(wm -> wm.getDisplayName()).collect(Collectors.toList());
-			loadedImages.add(0, "Added Images");
-			new TextPainter(parent).drawText(loadedImages, LOCATION.UPPER_MIDDLE);
-		}
+		getCurrentSelector().draw();
 	}
 
 	@Override
 	public void onActivate() {
 		super.onActivate();
-		watermarks = null;
 		fc = fileHelper.getJFileChooser();
+		menuItems.forEach(mac -> mac.getImageSelector().onActivate());
 	}
-
+	
+	@Override
+	public void onDeactivate() {
+		super.onDeactivate();
+		menuItems.forEach(mac -> mac.getImageSelector().onDeactivate());
+		fc = null;
+	}
+	
 	@Override
 	public List<? extends APVPlugin> getPlugins() {
 		return menuItems;
 	}
+	
+	protected ImageSelector getCurrentSelector() {
+		return menuItems.get(getIndex()).getImageSelector();
+	}
 
 	protected void onLoadImagesSelection() {
+		ImageSelector imageSelector = getCurrentSelector();
+		
 		//There's some double selection going on.  For right now, this is a bit of a hack
+		//If the user dismisses the dialog with a keyboard stroke that gets routed back here which we don't want
 		if (fc != null) {
 			fc.setMultiSelectionEnabled(true);
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.setFileFilter(new FileNameExtensionFilter("JPGs", "jpg"));
-			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			fc.setFileFilter(imageSelector.getFileFilter());
+			if (fc.showOpenDialog(parent.frame) == JFileChooser.APPROVE_OPTION) {
 				List<Path> paths = new ArrayList<Path>();
 				Arrays.asList(fc.getSelectedFiles()).forEach(file -> paths.add(file.toPath()));
-				watermarks = new DynamicShaderHelper(parent).loadBackgrounds(parent, DEFAULT_ALPHA, SHADERS.VALUES, paths, true);
+				imageSelector.onSelectedImages(paths);
 				fc = null; //hack
 			}
 		}
