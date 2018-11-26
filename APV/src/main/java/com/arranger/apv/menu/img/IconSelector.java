@@ -1,13 +1,11 @@
-package com.arranger.apv.menu;
+package com.arranger.apv.menu.img;
 
+import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.arranger.apv.Main;
-import com.arranger.apv.menu.ImageSelectorMenu.ImageSelector;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.ImageHelper.ICON_NAMES;
 import com.arranger.apv.util.draw.SafePainter.LOCATION;
@@ -15,7 +13,7 @@ import com.arranger.apv.util.draw.TextPainter;
 
 import processing.core.PImage;
 
-public class IconSelectorMenu extends ImageSelector {
+public class IconSelector extends ImageSelector {
 	
 	private static final String DIRECTIONS = "Choose a group of images to use as backgrounds.\n" + 
 			"  The images must be PNGs and look much better with transparent sections..  \n" + 
@@ -24,7 +22,7 @@ public class IconSelectorMenu extends ImageSelector {
 	
 	private List<Path> paths;
 
-	public IconSelectorMenu(Main parent) {
+	public IconSelector(Main parent) {
 		super(parent);
 	}
 
@@ -46,7 +44,7 @@ public class IconSelectorMenu extends ImageSelector {
 	
 	@Override
 	protected String getMenuTitle() {
-		return "Load Emojis";
+		return "Load Icons";
 	}
 	
 	@Override
@@ -55,8 +53,8 @@ public class IconSelectorMenu extends ImageSelector {
 	}
 	
 	@Override
-	protected FileNameExtensionFilter getFileFilter() {
-		return new FileNameExtensionFilter("PNGs", "png");
+	protected FilenameFilter getFileFilter() {
+		return ((dir, name) -> name.endsWith("png")); 
 	}
 
 	@Override

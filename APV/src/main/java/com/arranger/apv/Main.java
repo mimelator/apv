@@ -817,6 +817,34 @@ public class Main extends PApplet {
 		}
 	}
 	
+	//Folder Selection Support.  JFileChooser (and similar) are buggy with processing
+	
+	@FunctionalInterface
+	public interface FolderSelectionHandler {
+		void onFolder(File folder);
+	}
+	
+	private transient FolderSelectionHandler fsh;
+	
+	public void selectFolder(String prompt, FolderSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectFolder(prompt, "onFolderSelected");
+	}
+	
+	/**
+	 * The PApplet.selectFolder() API requires a named call back in the class extending PApplet.
+	 */
+	public void onFolderSelected(File selection) {
+		if (selection == null) {
+			return;
+		}
+		
+		if (fsh != null) {
+			fsh.onFolder(selection);
+			fsh = null;
+		}
+	}
+	
 	public void setup() {
 		songsModel = new SongsModel(this);
 		colorsModel = new ColorsModel(this);

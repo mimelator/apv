@@ -1,11 +1,6 @@
 https://github.com/mimelator/apv
 
 
-JFileChooser GUI bug
-Cancel button bricks
-Ok with keyboard bricks except w/hack
-
-
 Menu TODO:
 Emojis
 Configuration
