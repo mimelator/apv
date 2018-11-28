@@ -1,15 +1,5 @@
 https://github.com/mimelator/apv
 
-
-popularity pool
-	https://stackoverflow.com/questions/6409652/random-weighted-selection-in-java
-
-	APV.scramble() use poularity pool
-	Command.UP_ARROW and Command.DOWN_ARROW trigger Main.likeCurrentScene()
-	If popularityPool switch is activated, then
-		the scramble pools should be modified by a like or a dislike
-
-
 Menu TODO:
 Emojis
 	List each emoji on a line
