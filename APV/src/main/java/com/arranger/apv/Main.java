@@ -95,6 +95,8 @@ import processing.opengl.PShader;
 
 public class Main extends PApplet {
 
+	private static final int NUM_FRAMES_FOR_MARQUEE_MSG = 1200;
+
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	public static final int NUMBER_PARTICLES = 50;//100;
@@ -174,16 +176,18 @@ public class Main extends PApplet {
 	
 	
 	//Switches for runtime
-	private Switch helpSwitch,
-					welcomeSwitch,
-					showSettingsSwitch,
-					frameStroberSwitch,
-					videoGameSwitch,
-					scrambleModeSwitch,
-					debugPulseSwitch,
-					debugAgentSwitch,
-					consoleOutputSwitch,
-					audioListenerDiagnosticSwitch;
+	private Switch 
+		audioListenerDiagnosticSwitch,
+		consoleOutputSwitch,
+		debugPulseSwitch,
+		debugAgentSwitch,
+		frameStroberSwitch,				
+		helpSwitch,
+		popularityPoolSwitch,
+		showSettingsSwitch,
+		scrambleModeSwitch,
+		videoGameSwitch,
+		welcomeSwitch;
 	
 	public enum FLAGS {
 		
@@ -249,6 +253,7 @@ public class Main extends PApplet {
 		FRAME_STROBER("FrameStrober"),
 		HELP("Help"),
 		MENU("Menu"),
+		POPULARITY_POOL("PopularityPool"),
 		SCRAMBLE_MODE("Scramble"),
 		SHOW_SETTINGS("ShowSettings"),
 		VIDEO_GAME("VideoGame"),
@@ -734,11 +739,13 @@ public class Main extends PApplet {
 	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
+		updatePopularity(currentScene, true);
 		sendMessage(new String[] {"Liked :)"});
 	}
 	
 	public void disLikeCurrentScene() {
 		likedScenes.getList().remove(currentScene);
+		updatePopularity(currentScene, false);
 		sendMessage(new String[] {"Disliked :("});
 	}
 	
@@ -1035,7 +1042,7 @@ public class Main extends PApplet {
 		setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile
-		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
+		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
 	public void showLiveSetting(Command cmd) {
@@ -1050,7 +1057,7 @@ public class Main extends PApplet {
 		
 		//Send message and watermark
 		sendMessage(new String[] {message});
-		WatermarkPainter wp = new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
+		WatermarkPainter wp = new WatermarkPainter(this, NUM_FRAMES_FOR_MARQUEE_MSG, message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
 		new DrawHelper(this, wp.getNumFrames(), wp, () -> {});
 	}
 	
@@ -1073,7 +1080,7 @@ public class Main extends PApplet {
 		songs = songs.subList(model.getIndex(), songs.size() - 1);
 		messages.addAll(songs.stream().map(f -> f.getName()).collect(Collectors.toList()));
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	public void showOceanSetInfo() {
@@ -1081,7 +1088,7 @@ public class Main extends PApplet {
 		messages.add("Ocean: " + getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
 		messages.add("SetPack: " + getFriendlySetPackName(getSetPackModel().getSetPackName()));
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.MIDDLE);
+		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.MIDDLE);
 	}
 	
 	public void showAvailableSetPacks() {
@@ -1090,7 +1097,7 @@ public class Main extends PApplet {
 		List<String> collect = getSetPackModel().getSetPackList().stream().map(s -> getFriendlySetPackName(s)).collect(Collectors.toList());
 		messages.addAll(collect);
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	@FunctionalInterface
@@ -1412,18 +1419,19 @@ public class Main extends PApplet {
 	}
 
 	protected void registerMainSwitches() {
-		registerSwitch(helpSwitch, Command.SWITCH_HELP);
-		registerSwitch(welcomeSwitch, Command.SWITCH_WELCOME);
-		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
-		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
-		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
-		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
-		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
+		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 		registerSwitch(debugAgentSwitch, Command.SWITCH_DEBUG_AGENT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
-		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
-		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
+		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
+		registerSwitch(helpSwitch, Command.SWITCH_HELP);
+		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
+		registerSwitch(popularityPoolSwitch, Command.SWITCH_POPULARITY_POOL);
+		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
+		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
+		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(welcomeSwitch, Command.SWITCH_WELCOME);
 	}
 	
 	protected void registerMainCommands() {
@@ -1505,6 +1513,13 @@ public class Main extends PApplet {
 		}
 	}
 	
+	protected void updatePopularity(Scene scene, boolean increment) {
+		int value = increment ? 1 : -1;
+		for (APVPlugin p : scene.getComponentsToDrawScene().getPlugins()) {
+			p.setPopularityIndex(p.getPopularityIndex() + value);
+		}
+	}
+	
 	protected void setupSystems() {
 		systemMap.values().forEach(apv -> setupSystem(apv));
 	}
@@ -1557,16 +1572,17 @@ public class Main extends PApplet {
 		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
 		ss.forEach(s -> switches.put(s.name, s));
 		
-		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
-		welcomeSwitch = switches.get(SWITCH_NAMES.WELCOME.name);
-		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
-		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
-		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
-		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
 		debugAgentSwitch = switches.get(SWITCH_NAMES.DEBUG_AGENT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
-		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
+		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
+		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
+		popularityPoolSwitch = switches.get(SWITCH_NAMES.POPULARITY_POOL.name);
+		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
+		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
+		welcomeSwitch = switches.get(SWITCH_NAMES.WELCOME.name);
 	}
 	
 	protected void resetSwitches() {

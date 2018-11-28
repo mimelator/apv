@@ -1,5 +1,8 @@
 package com.arranger.apv.scene;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.back.BackDropSystem;
@@ -81,6 +84,33 @@ public class Scene extends ShapeSystem {
 			}
 			
 			return found;
+		}
+		
+		public List<APVPlugin> getPlugins() {
+			List<APVPlugin> plugins = new ArrayList<APVPlugin>();
+			
+			if (backDrop != null) {
+				plugins.add(backDrop);
+			}
+			if (bgSys != null) {
+				plugins.add(bgSys);
+			}
+			if (fgSys != null) {
+				plugins.add(fgSys);
+			}
+			if (filter != null) {
+				plugins.add(filter);
+			}
+			if (shader != null) {
+				plugins.add(shader);
+			}
+			if (colorSys != null) {
+				plugins.add(colorSys);
+			}
+			if (locSys != null) {
+				plugins.add(locSys);
+			}
+			return plugins;
 		}
 	}
 	

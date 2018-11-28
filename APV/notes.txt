@@ -1,10 +1,13 @@
 https://github.com/mimelator/apv
 
 
-Like
-	--> increase the pct in the popularity pool
-		APV.scramble() use poularity pool
-	
+popularity pool
+	https://stackoverflow.com/questions/6409652/random-weighted-selection-in-java
+
+	APV.scramble() use poularity pool
+	Command.UP_ARROW and Command.DOWN_ARROW trigger Main.likeCurrentScene()
+	If popularityPool switch is activated, then
+		the scramble pools should be modified by a like or a dislike
 
 
 Menu TODO:
@@ -21,25 +24,16 @@ Configuration
  		update the disabled plugin list for serialization
 
 *****************************************************************************
-* Work on reading the icon images from a directory.  Hopefully all the changes will be limitied to ImageHelper
-	SpriteFactory (and other clients of ImageHelper) might be affected
-* Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
-	See about using the FFTanalysis for the modulation. 
 * Render vector graphics  
 	See ScaleShape under Processing Examples
 * Puzzle animation of a background image
 * Look to use easing for some motions: https://processing.org/examples/easing.html
 *****************************************************************************
 *****************************************************************************
-Remote Debugging:
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
-*****************************************************************************
-*****************************************************************************
 Build & Release to local artifactory and github
 mvn package
 mvn release:clean release:prepare release:perform
 *****************************************************************************
-
 *****************************************************************************
 How to override the DefaultCommands.
 -DdefaultCommands.0
@@ -47,8 +41,6 @@ How to override the DefaultCommands.
 -DdefaultCommands.1=CYCLE_SET_PACK
 see apv-no-db.sh for example
 *****************************************************************************
-
-
 *****************************************************************************
 Current High Score:
 

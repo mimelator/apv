@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
+import com.arranger.apv.Main.SWITCH_NAMES;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.cmd.CommandSystem.CommandHandler;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
+import com.arranger.apv.util.RandomCollection;
 import com.arranger.apv.util.RandomHelper;
 import com.arranger.apv.util.frame.QuietWindow;
 
@@ -135,9 +137,18 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 			return;
 		}
 		
-		//TODO: Use Popularity pool to choose the index list
-		
-		setIndex((int)parent.random(list.size()), "scramble");
+		if (usePopularityPool()) {
+			RandomCollection<T> collection = new RandomCollection<T>();
+			for (T item : list) {
+				collection.add(item.getPopularityIndex(), item);
+			}
+			
+			T next = collection.next();
+			setNextPlugin(next, "scramble");
+			
+		} else {
+			setIndex((int)parent.random(list.size()), "scramble");
+		}
 	}
 	
 	public void increment(String cause) {
@@ -295,6 +306,10 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 	
 	protected void fireEvent(APVPlugin plugin, String cause) {
 		parent.getAPVChangeEvent().fire(this, plugin, cause);
+	}
+	
+	protected boolean usePopularityPool() {
+		return parent.getSwitches().get(SWITCH_NAMES.POPULARITY_POOL.name).isEnabled();
 	}
 }
 

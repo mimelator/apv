@@ -29,6 +29,7 @@ public enum Command {
 	SWITCH_AUDIO_LISTENER_DIAGNOSTIC('d', "Helps to Diagnose Audio Routing issues", "Enables/Disables the warning message to the screen"),
 	SWITCH_CONSOLE_OUTPUT(DeadCommandCode.next(), "Console Output Frame Switch", "Enables/Disables the frame info to console"),
 	SWITCH_PULSE_LISTENER(DeadCommandCode.next(), "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
+	SWITCH_POPULARITY_POOL(DeadCommandCode.next(), "PopularityPoolSwitch", "Enables/Disables the weighted like popularity of plugins when scrambled"),
 	SWITCH_WATERMARK(DeadCommandCode.next(), "WatermarkSwitch", "Enables/Disables watermarks"),
 	SWITCH_FRAME_STROBER(DeadCommandCode.next(), "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE(DeadCommandCode.next(), "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),

@@ -16,6 +16,7 @@ public class APVPlugin implements PConstants {
 	
 	protected Main parent;
 	protected int id;
+	protected int popularityIndex = 1;
 	protected boolean enabled = true;
 
 	public APVPlugin(Main parent) {
@@ -63,5 +64,13 @@ public class APVPlugin implements PConstants {
 	
 	public void toggleEnabled() {
 		setEnabled(!enabled);
+	}
+
+	public int getPopularityIndex() {
+		return popularityIndex;
+	}
+
+	public void setPopularityIndex(int popularityIndex) {
+		this.popularityIndex = popularityIndex;
 	}
 }
