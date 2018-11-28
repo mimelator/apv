@@ -134,6 +134,9 @@ public class APV<T extends APVPlugin> extends APVPlugin implements CommandHandle
 		if (checkSwitch && sw.isFrozen()) {
 			return;
 		}
+		
+		//TODO: Use Popularity pool to choose the index list
+		
 		setIndex((int)parent.random(list.size()), "scramble");
 	}
 	
