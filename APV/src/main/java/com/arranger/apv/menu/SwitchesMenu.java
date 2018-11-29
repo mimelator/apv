@@ -33,6 +33,7 @@ public class SwitchesMenu extends BaseMenu {
 		results.add(map.get(Main.SWITCH_NAMES.DEBUG_AGENT.name));
 		results.add(map.get(Main.SWITCH_NAMES.DEBUG_PULSE.name));
 		results.add(map.get(Main.SWITCH_NAMES.HELP.name));
+		results.add(map.get(Main.SWITCH_NAMES.POPULARITY_POOL.name));
 		results.add(map.get(Main.SWITCH_NAMES.SCRAMBLE_MODE.name));
 		results.add(map.get(Main.SWITCH_NAMES.SHOW_SETTINGS.name));
 		results.add(map.get(Main.SWITCH_NAMES.VIDEO_GAME.name));

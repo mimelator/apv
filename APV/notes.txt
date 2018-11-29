@@ -1,6 +1,8 @@
 https://github.com/mimelator/apv
 
-Menu TODO:
+
+Update WelcomeDisplay
+
 Emojis
 	List each emoji on a line
 	if selected, show a selectInput box
