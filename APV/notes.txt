@@ -1,9 +1,13 @@
 https://github.com/mimelator/apv
 
 
-Update WelcomeDisplay
 
-Emojis
+Popularity Contest
+	PluginsMenu want to accept left & right arrow
+	
+
+
+Menus:Emojis
 	List each emoji on a line
 	if selected, show a selectInput box
 	have a clear all and reset buttons at the bottom

@@ -71,6 +71,6 @@ public class APVPlugin implements PConstants {
 	}
 
 	public void setPopularityIndex(int popularityIndex) {
-		this.popularityIndex = popularityIndex;
+		this.popularityIndex = Math.max(0, popularityIndex);
 	}
 }

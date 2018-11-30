@@ -28,7 +28,8 @@ import processing.event.KeyEvent;
  */
 public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	
-	public static final String DIRECTIONS = "Use the Arrow keys to navigate up and down the list\n" + 
+	public static final String DIRECTIONS = "Use the Arrow keys to navigate up and down the list.\n" +
+			"  Use the left and right Arrow keys to vote up or down the 'popularity' of the plugins.\n" +
 			"  Press the spacebar or the enter key to select a menu item.  \n" + 
 			"  This will either drill into the next menu or enable / disable the current item.\n" + 
 			"  Press the Backspace (delete) to return to the previous menu or to exit the main menu";
@@ -62,6 +63,8 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		keyBindingMap.put("m", () -> onExit());
 		keyBindingMap.put("↑", () -> onUp());
 		keyBindingMap.put("↓", () -> onDown());
+		keyBindingMap.put("←", () -> onIncrement(-1));
+		keyBindingMap.put("→", () -> onIncrement(1));
 		keyBindingMap.put(" ", () -> onSelect());
 		keyBindingMap.put("\n", () -> onSelect());
 		keyBindingMap.put("⌫", () -> onBack());
@@ -70,6 +73,11 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	protected void onExit() {
 		currentMenu.onDeactivate();
 		parent.getCommandSystem().invokeCommand(Command.SWITCH_MENU, getDisplayName(), 0);
+	}
+	
+	protected void onIncrement(int i) {
+		APVPlugin cp = getCurrentPlugin();
+		cp.setPopularityIndex(cp.getPopularityIndex() + i);
 	}
 	
 	protected void onUp() {
@@ -103,10 +111,14 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 			currentMenu.onActivate();
 		} else {
 			//select it
-			currentMenu.getPlugins().get(currentMenu.getIndex()).toggleEnabled();
+			getCurrentPlugin().toggleEnabled();
 			
 			//TODO: update the disabled plugin list for serialization
 		}
+	}
+
+	protected APVPlugin getCurrentPlugin() {
+		return currentMenu.getPlugins().get(currentMenu.getIndex());
 	}
 	
 	public void drawMenu() {

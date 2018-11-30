@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
+import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.util.draw.TextPainter;
 
 /**
@@ -24,7 +25,7 @@ public class MenuPainter extends APVPlugin {
 	public static interface MenuItem {
 		boolean isEnabled();
 		boolean isSelected();
-		String getText();
+		String getText(boolean showDetails);
 		APVPlugin getPlugin();
 	}
 	
@@ -84,7 +85,10 @@ public class MenuPainter extends APVPlugin {
 			//set the color
 			int color = item.isEnabled() ? currentColor : DISABLED_COLOR;
 			parent.fill(color);
-			parent.text(item.getText(), offset, index * offset);
+			
+			//can the item provide an alternate api
+			boolean isSwitch = (item.getPlugin() instanceof Switch); 
+			parent.text(item.getText(showDetails && !isSwitch) , offset, index * offset);
 		}
 		
 		parent.translate(-x, -y);

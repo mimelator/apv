@@ -24,8 +24,14 @@ public class MenuItemAdapter implements MenuItem {
 	}
 
 	@Override
-	public String getText() {
-		return plugin.getDisplayName();
+	public String getText(boolean showDetails) {
+		if (showDetails) {
+			return String.format("%s: [%s]", 
+				plugin.getDisplayName(), 
+				plugin.getPopularityIndex());
+		} else {
+			return plugin.getDisplayName();
+		}
 	}
 
 	@Override

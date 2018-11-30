@@ -38,15 +38,18 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 		menuPainter.draw(showDetails);
 		
 		if (drawPlugin) {
-			APVPlugin plugin = getPlugins().get(index);
-			if (plugin instanceof ShapeSystem) {
-				new SafePainter(parent, ()->{
-					
-					parent.scale(.5f);
-					parent.translate(parent.width * .5f, parent.height * .5f);
-					
-					((ShapeSystem)plugin).draw();	
-				}).paint();
+			List<? extends APVPlugin> plugins = getPlugins();
+			if (plugins != null && index < plugins.size()) {
+				APVPlugin plugin = plugins.get(index);
+				if (plugin instanceof ShapeSystem) {
+					new SafePainter(parent, ()->{
+						
+						parent.scale(.5f);
+						parent.translate(parent.width * .5f, parent.height * .5f);
+						
+						((ShapeSystem)plugin).draw();	
+					}).paint();
+				}
 			}
 		}
 	}
