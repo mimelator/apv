@@ -1056,6 +1056,11 @@ public class Main extends PApplet {
 	}
 	
 	public void sendTreeMessage(String message) {
+		if (message == null) {
+			//get one
+			message = getRandomMessagePainter().getRandomMessage();
+		}
+		
 		Tree tree = new Tree(this);
 		setNextScene(tree, "tree");
 		
@@ -1164,7 +1169,9 @@ public class Main extends PApplet {
 		
 		//stop monitor agent
 		MonitorAgent monitorAgent = (MonitorAgent)getAgent().getFirstInstanceOf(MonitorAgent.class);
-		monitorAgent.shutdown();
+		if (monitorAgent != null) {
+			monitorAgent.shutdown();
+		}
 		
 		//processing
 		exit();

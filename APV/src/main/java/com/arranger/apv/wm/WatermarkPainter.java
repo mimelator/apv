@@ -31,6 +31,10 @@ public class WatermarkPainter extends ShapeSystem {
 	
 	public WatermarkPainter(Main parent, int numFrames, String msg, float scale, LOCATION location, float watermarkAlpha) {
 		super(parent, null);
+		if (msg == null) {
+			throw new IllegalStateException("No message for WatemarkPainter");
+		}
+		
 		this.numFrames = numFrames;
 		this.scale = scale;
 		this.msg = msg;

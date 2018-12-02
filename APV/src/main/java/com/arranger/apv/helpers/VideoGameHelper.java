@@ -98,6 +98,7 @@ public class VideoGameHelper extends APVPlugin {
 				String.format("Last New Plugin: %s", lastNewPluginName),
 				String.format("Total Cmd Count: %d", totalCommands),
 				String.format("Total Plugin Changes: %d", totalPluginChanges),
+				String.format("FPS: %s", parent.getFrameRate()),
 		};
 
 		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);

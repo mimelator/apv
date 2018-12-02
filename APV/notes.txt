@@ -1,19 +1,6 @@
 https://github.com/mimelator/apv
 
 
-
-Like-feedback
-	Run Some sort of transition everytime a like is triggered.
-		Main.java
-			TransitionSystem transition = prepareTransition(false);
-			
-	Trigger a tree animation or marquee message?
-		Main.java
-			sendTreeMessage()
-			sendMarqueeMessage()
-	
-
-
 Menus:Emojis
 	List each emoji on a line
 	if selected, show a selectInput box
