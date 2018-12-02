@@ -2,8 +2,15 @@ https://github.com/mimelator/apv
 
 
 
-Popularity Contest
-	PluginsMenu want to accept left & right arrow
+Like-feedback
+	Run Some sort of transition everytime a like is triggered.
+		Main.java
+			TransitionSystem transition = prepareTransition(false);
+			
+	Trigger a tree animation or marquee message?
+		Main.java
+			sendTreeMessage()
+			sendMarqueeMessage()
 	
 
 

@@ -95,8 +95,6 @@ import processing.opengl.PShader;
 
 public class Main extends PApplet {
 
-	private static final int NUM_FRAMES_FOR_MARQUEE_MSG = 1200;
-
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	public static final int NUMBER_PARTICLES = 50;//100;
@@ -206,6 +204,7 @@ public class Main extends PApplet {
 		FULL_SCREEN("fullScreen", "true|false"),
 		LINE_IN("lineIn", "true|false"),
 		LISTEN_ONLY("listenOnly", "true|false"),
+		MARQUEE_FRAMES("marqueeFrames", "integer"),
 		MONITORING_ENABLED("monitoring.enabled", "true|false"),
 		MUSIC_DIR("musicDir", "directory"),
 		OCEAN_NAME("ocean", "string"),
@@ -603,6 +602,10 @@ public class Main extends PApplet {
 		return getConfigInt(FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA.apvName());
 	}
 	
+	public int getMarqueeFrames() {
+		return getConfigInt(FLAGS.MARQUEE_FRAMES.apvName());
+	}
+	
 	public int getWatermarkFrames() {
 		return getConfigInt(FLAGS.WATERMARK_FRAMES.apvName());
 	}
@@ -740,7 +743,8 @@ public class Main extends PApplet {
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		updatePopularity(currentScene, true);
-		sendMessage(new String[] {"Liked :)"});
+		String likedMsg = "Liked :)";
+		sendMarqueeMessage(likedMsg);
 	}
 	
 	public void disLikeCurrentScene() {
@@ -1042,7 +1046,7 @@ public class Main extends PApplet {
 		setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile
-		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
+		new TextDrawHelper(this, getMarqueeFrames(), Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
 	public void showLiveSetting(Command cmd) {
@@ -1057,7 +1061,7 @@ public class Main extends PApplet {
 		
 		//Send message and watermark
 		sendMessage(new String[] {message});
-		WatermarkPainter wp = new WatermarkPainter(this, NUM_FRAMES_FOR_MARQUEE_MSG, message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
+		WatermarkPainter wp = new WatermarkPainter(this, getMarqueeFrames(), message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
 		new DrawHelper(this, wp.getNumFrames(), wp, () -> {});
 	}
 	
@@ -1080,7 +1084,7 @@ public class Main extends PApplet {
 		songs = songs.subList(model.getIndex(), songs.size() - 1);
 		messages.addAll(songs.stream().map(f -> f.getName()).collect(Collectors.toList()));
 		
-		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	public void showOceanSetInfo() {
@@ -1088,7 +1092,7 @@ public class Main extends PApplet {
 		messages.add("Ocean: " + getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
 		messages.add("SetPack: " + getFriendlySetPackName(getSetPackModel().getSetPackName()));
 		
-		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.MIDDLE);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.MIDDLE);
 	}
 	
 	public void showAvailableSetPacks() {
@@ -1097,7 +1101,7 @@ public class Main extends PApplet {
 		List<String> collect = getSetPackModel().getSetPackList().stream().map(s -> getFriendlySetPackName(s)).collect(Collectors.toList());
 		messages.addAll(collect);
 		
-		new TextDrawHelper(this, NUM_FRAMES_FOR_MARQUEE_MSG, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	@FunctionalInterface
@@ -1641,6 +1645,7 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
 		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
 		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
+		addConstant(buffer, FLAGS.MARQUEE_FRAMES, String.valueOf(getMarqueeFrames()));
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
 		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
 		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
