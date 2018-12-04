@@ -23,7 +23,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
-import com.arranger.apv.audio.Audio.BeatInfo;
+import com.arranger.apv.audio.BeatInfo;
 import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.APVChangeEvent;

@@ -11,12 +11,9 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.util.FileHelper;
 
 import ddf.minim.AudioInput;
-import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSource;
 import ddf.minim.Minim;
-import ddf.minim.analysis.BeatDetect;
-import ddf.minim.analysis.FFT;
 
 /**
  * http://code.compartmental.net/tools/minim/
@@ -46,7 +43,7 @@ public class Audio extends APVPlugin {
 			source = minim.loadFile(mp3.toAbsolutePath().toString());
 		}
 		
-		beatInfo = new BeatInfo(source);
+		beatInfo = new BeatInfo(parent, source);
 		if (source instanceof AudioPlayer) {
 			AudioPlayer audioPlayer = (AudioPlayer)source;
 			audioPlayer.loop();
@@ -64,6 +61,10 @@ public class Audio extends APVPlugin {
 		});
 	}
 	
+	public boolean isLineIn() {
+		return lineIn;
+	}
+
 	public void onCommand(Command command) {
 		int offset = 1;
 		String arg = command.getPrimaryArg();
@@ -90,84 +91,7 @@ public class Audio extends APVPlugin {
 		return beatInfo;
 	}
 	
-	public class BeatInfo {
-
-		protected AudioSource source;
-		protected BeatDetect pulseDetector;
-		protected BeatDetect freqDetector;
-		protected FFT fft;
-		protected AudioListener listener;
-		
-		public BeatInfo(AudioSource source) {
-			setup(source);
-		}
-
-		protected void setup(AudioSource source) {
-			this.source = source;
-			
-			int sensitivity = parent.getConfigInt(Main.FLAGS.PULSE_SENSITIVITY.apvName());
-			
-			pulseDetector = new BeatDetect(); 
-			pulseDetector.setSensitivity(sensitivity);
-			freqDetector = new BeatDetect(source.bufferSize(), source.sampleRate());
-			freqDetector.setSensitivity(5);
-			createFFT();
-			createListener();
-			source.addListener(listener);
-		}
-		
-		public void updateSource(AudioSource newSource) {
-			if (!lineIn && source != null) {
-				source.removeListener(listener);
-			}
-			
-			if (source instanceof AudioPlayer) {
-				((AudioPlayer)source).close();
-			}
-				
-			setup(newSource);
-		}
-		
-		protected void createFFT() {
-			fft = new FFT(source.bufferSize(), source.sampleRate());
-			fft.logAverages(10, 7); //Hard coded constants
-		}
-		
-		public AudioSource getSource() {
-			return source;
-		}
-		
-		public FFT getFFT() {
-			return fft;
-		}
-		
-		public BeatDetect getPulseDetector() {
-			return pulseDetector;
-		}
-
-		public BeatDetect getFreqDetector() {
-			return freqDetector;
-		}
-		
-		private void createListener() {
-			this.listener =  new AudioListener() {
-				public void samples(float[] samps) {
-					scale(samps, db);
-					pulseDetector.detect(samps);
-					freqDetector.detect(samps);
-					fft.forward(samps);
-				}
-
-				public void samples(float[] sampsL, float[] sampsR) {
-					freqDetector.detect(sampsL); 
-					pulseDetector.detect(sampsL); 
-					fft.forward(sampsL);
-				}
-			};
-		}
-	}
-	
-	protected void scale(float [] samples, float dBvalue) {
+	public static void scale(float [] samples, float dBvalue) {
 		float scalar = (float)Math.pow(10.0, (0.05 * dBvalue));
 		IntStream.range(0, samples.length).parallel().forEach(i -> {
 			samples[i] *= scalar;

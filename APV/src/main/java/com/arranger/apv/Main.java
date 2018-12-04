@@ -578,6 +578,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.SET_PACK_START);
 	}
 	
+	public CoreEvent getMousePulseEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.MOUSE_PULSE);
+	}
+	
 	public boolean isMonitoringEnabled() {
 		return getConfigBoolean(FLAGS.MONITORING_ENABLED.apvName());	
 	}
@@ -1035,6 +1039,15 @@ public class Main extends PApplet {
 		activateNextPlugin(SYSTEM_NAMES.LOCATIONS, "Mouse", Command.MANUAL.name());
 	}
 	
+	/**
+	 * Similar to {@link #manual()} but leaves agents alone
+	 * As a result various agents might change the location mode away quickly
+	 */
+	public void mouseControl() {
+		currentControlMode = CONTROL_MODES.MANUAL;
+		activateNextPlugin(SYSTEM_NAMES.LOCATIONS, "Mouse", Command.MANUAL.name());
+	}
+	
 	public void sendMessage(String [] msgs) {
 		if (messages.isEnabled()) {
 			getMessage().onNewMessage(msgs);
@@ -1457,7 +1470,8 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
 		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
 		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
-		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());	
+		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());
+		cs.registerHandler(Command.MOUSE_CONTROL, (cmd,src,mod) -> mouseControl());	
 		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
 		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
@@ -1626,6 +1640,7 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.COLOR_CHANGE, new CoreEvent(this, EventTypes.COLOR_CHANGE));
 		eventMap.put(EventTypes.SONG_START, new CoreEvent(this, EventTypes.SONG_START));
 		eventMap.put(EventTypes.SET_PACK_START, new CoreEvent(this, EventTypes.SET_PACK_START));
+		eventMap.put(EventTypes.MOUSE_PULSE, new CoreEvent(this, EventTypes.MOUSE_PULSE));
 	}
 	
 	

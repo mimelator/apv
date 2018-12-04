@@ -65,7 +65,8 @@ public enum Command {
 	CYCLE_WATERMARK(DeadCommandCode.next(), "Next Watermark", "Queues up the next Watermark"),
 	
 	//Typical commands
-	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
+	MANUAL(DeadCommandCode.next(), "Manual", "Sets mode to Manual and disabled Agents"),
+	MOUSE_CONTROL('/', "MouseControl", "Sets mode to Manual"),
 	RESET('?', "Reset", "Resets switches to their defaults"),
 	SCRAMBLE(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things"),
 	RANDOMIZE_COLORS('`', "RandomizeSetPackColors", "Randomly changes the current Set Pack color scheme"),
