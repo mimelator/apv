@@ -69,6 +69,7 @@ import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.KeyListener;
 import com.arranger.apv.util.LoggingConfig;
+import com.arranger.apv.util.MouseListener;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.cmdrunner.FileCommandRunner;
@@ -121,10 +122,14 @@ public class Main extends PApplet {
 	protected APVWatermark watermark;
 	
 	//Useful helper classes
+	protected APVMenu apvMenu;
+	protected APVPulseListener apvPulseListener;
+	protected APVSetListPlayer apvSetListPlayer;
 	protected Audio audio;
 	protected ColorHelper colorHelper;
 	protected CommandSystem commandSystem;
 	protected Configurator configurator;
+	protected FileCommandRunner fileCommandRunner;
 	protected FontHelper fontHelper;
 	protected FrameStrober frameStrober;
 	protected Gravity gravity;
@@ -132,17 +137,14 @@ public class Main extends PApplet {
 	protected HotKeyHelper hotKeyHelper;
 	protected ImageHelper imageHelper;
 	protected KeyListener keyListener;
-	protected FileCommandRunner fileCommandRunner;
 	protected LoggingConfig loggingConfig;
 	protected MacroHelper macroHelper;
-	protected APVMenu menu;
+	protected MouseListener mouseListener;
 	protected Oscillator oscillator;
 	protected Particles particles;
 	protected PerformanceMonitor perfMonitor;
 	protected PostFX postFX;
-	protected APVPulseListener pulseListener;
 	protected RandomMessagePainter randomMessagePainter;
-	protected APVSetListPlayer setListPlayer;
 	protected SetPackLoader setPackLoader;
 	protected SettingsDisplay settingsDisplay;
 	protected SplineHelper splineHelper;
@@ -397,6 +399,10 @@ public class Main extends PApplet {
 		return keyListener;
 	}
 
+	public MouseListener getMouseListener() {
+		return mouseListener;
+	}
+	
 	public SetPackLoader getSetPackLoader() {
 		return setPackLoader;
 	}
@@ -450,11 +456,11 @@ public class Main extends PApplet {
 	}
 	
 	public APVPulseListener getPulseListener() {
-		return pulseListener;
+		return apvPulseListener;
 	}
 	
 	public APVSetListPlayer getSetListPlayer() {
-		return setListPlayer;
+		return apvSetListPlayer;
 	}
 	
 	public APVAgent getAgent() {
@@ -710,7 +716,7 @@ public class Main extends PApplet {
 	}
 	
 	public APVMenu getMenu() {
-		return menu;
+		return apvMenu;
 	}
 	
 	public  APV<LocationSystem> getLocations() {
@@ -868,23 +874,24 @@ public class Main extends PApplet {
 		setPackModel = new SetPackModel(this);
 		
 		agent = new APVAgent(this);
+		apvPulseListener = new APVPulseListener(this);
 		audio = new Audio(this, BUFFER_SIZE);
 		colorHelper = new ColorHelper(this);
 		commandSystem = new CommandSystem(this);
-		frameStrober = new FrameStrober(this);
 		fileCommandRunner = new FileCommandRunner(this);
 		fontHelper = new FontHelper(this);
+		frameStrober = new FrameStrober(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);
 		hotKeyHelper = new HotKeyHelper(this);
 		imageHelper = new ImageHelper(this);
 		keyListener = new KeyListener(this);
+		mouseListener = new MouseListener(this);
 		macroHelper = new MacroHelper(this);
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
 		postFX  = new PostFX(this);
-		pulseListener = new APVPulseListener(this);
 		randomMessagePainter = new RandomMessagePainter(this);
 		setPackLoader = new SetPackLoader(this);
 		settingsDisplay = new SettingsDisplay(this);
@@ -942,7 +949,7 @@ public class Main extends PApplet {
 
 	public void playSetList(File directory) {
 		ensureSetListReadyToPlay();
-		setListPlayer.play(directory);
+		apvSetListPlayer.play(directory);
 		songsModel.onSetListPlayerChange();
 	}
 	
@@ -1260,8 +1267,8 @@ public class Main extends PApplet {
 	protected void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
-		if (menu.isEnabled()) {
-			menu.drawMenu();
+		if (apvMenu.isEnabled()) {
+			apvMenu.drawMenu();
 			return;
 		}
 		
@@ -1414,15 +1421,15 @@ public class Main extends PApplet {
 	protected void checkStartupSetList() {
 		ensureSetListReadyToPlay();
 		if (isSetList() && !isListenOnly()) {
-			setListPlayer.playStartupSongList();
+			apvSetListPlayer.playStartupSongList();
 		}
 	}
 	
 	protected void ensureSetListReadyToPlay() {
-		if (setListPlayer != null) {
-			setListPlayer.stop();
+		if (apvSetListPlayer != null) {
+			apvSetListPlayer.stop();
 		} else {
-			setListPlayer = new APVSetListPlayer(this);
+			apvSetListPlayer = new APVSetListPlayer(this);
 		}
 	}
 
@@ -1452,7 +1459,7 @@ public class Main extends PApplet {
 		registerSwitch(helpSwitch, Command.SWITCH_HELP);
 		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
 		registerSwitch(popularityPoolSwitch, Command.SWITCH_POPULARITY_POOL);
-		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
+		registerSwitch(apvPulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
 		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
 		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
 		registerSwitch(welcomeSwitch, Command.SWITCH_WELCOME);
@@ -1585,7 +1592,7 @@ public class Main extends PApplet {
 		likedScenes = (APV<LikedScene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
-		menu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
+		apvMenu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);
