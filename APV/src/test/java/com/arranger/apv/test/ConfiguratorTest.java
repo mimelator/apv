@@ -79,7 +79,7 @@ public class ConfiguratorTest extends APVPluginTest {
 		
 		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.CONTROLS);
 		assert(ss != null);
-		assert(ss.size() > 3);
+		assert(ss.size() > 1);
 		
 		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.LOCATIONS);
 		assert(ss != null);
