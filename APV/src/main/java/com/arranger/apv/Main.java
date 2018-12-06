@@ -841,15 +841,20 @@ public class Main extends PApplet {
 	//Folder Selection Support.  JFileChooser (and similar) are buggy with processing
 	
 	@FunctionalInterface
-	public interface FolderSelectionHandler {
-		void onFolder(File folder);
+	public interface FileSelectionHandler {
+		void onSelection(File fileObject);
 	}
 	
-	private transient FolderSelectionHandler fsh;
+	private transient FileSelectionHandler fsh;
 	
-	public void selectFolder(String prompt, FolderSelectionHandler fsh) {
+	public void selectFolder(String prompt, FileSelectionHandler fsh) {
 		this.fsh = fsh;
 		super.selectFolder(prompt, "onFolderSelected");
+	}
+	
+	public void selectFile(String prompt, FileSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectOutput(prompt, "onFolderSelected");
 	}
 	
 	/**
@@ -861,7 +866,7 @@ public class Main extends PApplet {
 		}
 		
 		if (fsh != null) {
-			fsh.onFolder(selection);
+			fsh.onSelection(selection);
 			fsh = null;
 		}
 	}
@@ -1469,37 +1474,36 @@ public class Main extends PApplet {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(!Command.isShiftDown(mod)));  
 		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
-		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
-		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
-		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
+		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
+		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
 		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
-		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
-		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
-		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
-		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
+		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
+		cs.registerHandler(Command.LOAD_CONFIGURATION, (cmd,src,mod)  -> configurator.reload(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());
 		cs.registerHandler(Command.MOUSE_CONTROL, (cmd,src,mod) -> mouseControl());	
 		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
-		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
-		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
+		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
+		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
+		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
+		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
+		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
 		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
-		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
-		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
+		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
+		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
+		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
+		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
+		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
+		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
 		cs.registerHandler(Command.SHOW_WATERMARK, (cmd,src,mod) -> getWatermarkEvent().fire());
+		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
-		
-		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
-		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
-		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
-		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
-		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
-		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
-		
-		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
-		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
+		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
+		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
 	}
 	
 	protected void registerSystemCommands() {

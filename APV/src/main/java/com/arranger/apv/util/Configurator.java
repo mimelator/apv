@@ -395,11 +395,19 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {
+		saveConfigImpl(new File(APPLICATION_CONF_BAK), alsoSaveOrig);
+	}
+	
+	public void saveCurrentConfig(File targetConfig) {
+		saveConfigImpl(targetConfig, false);
+	}
+	
+	protected void saveConfigImpl(File f, boolean alsoSaveOrig) {
 		String results = generateCurrentConfig();
 		
 		//save application.conf.bak
 		FileHelper fh = new FileHelper(parent);
-		fh.saveFile(APPLICATION_CONF_BAK, results.toString());
+		fh.saveFile(f.getAbsolutePath(), results.toString());
 		
 		//save reference.conf
 		if (alsoSaveOrig) {

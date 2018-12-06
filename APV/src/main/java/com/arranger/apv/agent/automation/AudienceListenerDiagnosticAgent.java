@@ -14,6 +14,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class AudienceListenerDiagnosticAgent extends BaseAgent {
 
+	private static final int STARTUP_QUIET_WINDOW = 100;
 	@SuppressWarnings("unchecked")
 	private static final List<String> MESSAGES = Arrays.asList(new String[]{
 			"Not hearing any music.  Please check your audio routing.",
@@ -53,6 +54,11 @@ public class AudienceListenerDiagnosticAgent extends BaseAgent {
 		registerAgent(getDrawEvent(), () ->{
 			Switch sw = parent.getSwitches().get(Main.SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
 			if (!sw.isEnabled()) {
+				return;
+			}
+			
+			//too early
+			if (parent.frameCount < STARTUP_QUIET_WINDOW) {
 				return;
 			}
 			
