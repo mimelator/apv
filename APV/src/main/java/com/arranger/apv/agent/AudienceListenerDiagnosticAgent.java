@@ -1,9 +1,8 @@
-package com.arranger.apv.agent.automation;
+package com.arranger.apv.agent;
 
 import java.util.List;
 
 import com.arranger.apv.Main;
-import com.arranger.apv.agent.BaseAgent;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.util.Configurator;

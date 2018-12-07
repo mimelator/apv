@@ -34,6 +34,7 @@ import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
 import com.arranger.apv.helpers.APVPulseListener;
+import com.arranger.apv.helpers.AutoAudioAdjuster;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.LIVE_SETTINGS;
@@ -126,6 +127,7 @@ public class Main extends PApplet {
 	protected APVPulseListener apvPulseListener;
 	protected APVSetListPlayer apvSetListPlayer;
 	protected Audio audio;
+	protected AutoAudioAdjuster autoAudioAdjuster;
 	protected ColorHelper colorHelper;
 	protected CommandSystem commandSystem;
 	protected Configurator configurator;
@@ -425,6 +427,10 @@ public class Main extends PApplet {
 	
 	public Audio getAudio() {
 		return audio;
+	}
+	
+	public AutoAudioAdjuster getAutoAudioAdjuster() {
+		return autoAudioAdjuster;
 	}
 	
 	public Gravity getGravity() {
@@ -886,6 +892,7 @@ public class Main extends PApplet {
 		agent = new APVAgent(this);
 		apvPulseListener = new APVPulseListener(this);
 		audio = new Audio(this, BUFFER_SIZE);
+		autoAudioAdjuster = new AutoAudioAdjuster(this);
 		colorHelper = new ColorHelper(this);
 		commandSystem = new CommandSystem(this);
 		fileCommandRunner = new FileCommandRunner(this);
@@ -911,7 +918,6 @@ public class Main extends PApplet {
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
 		welcomeDisplay = new WelcomeDisplay(this);
-		
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -949,11 +955,8 @@ public class Main extends PApplet {
 
 		setDefaultScene("setup");
 		checkStartupSetList();
-		
 		fireSetupEvent();
-		
 		startupCommandRunner.runStartupCommands();
-		
 		frameRate(getFrameRate());
 	}
 

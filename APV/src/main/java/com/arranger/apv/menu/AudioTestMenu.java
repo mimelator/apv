@@ -30,6 +30,10 @@ public class AudioTestMenu extends CommandBasedMenu {
 		results.add(new MenuAdapterCallback(parent, Command.AUDIO_INC.getDisplayName(), ()-> fireCommand(Command.AUDIO_INC)));
 		results.add(new MenuAdapterCallback(parent, Command.AUDIO_DEC.getDisplayName(), ()-> fireCommand(Command.AUDIO_DEC)));
 		
+		//TODO Show the current db level
+		//TODO show the current autoAudioMode: Low, Medium, High or Off
+		
+		
 		return results;
 	}
 }
