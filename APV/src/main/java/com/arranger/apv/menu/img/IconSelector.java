@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.ImageHelper.ICON_NAMES;
-import com.arranger.apv.util.draw.SafePainter.LOCATION;
-import com.arranger.apv.util.draw.TextPainter;
 
 import processing.core.PImage;
 
@@ -27,21 +25,22 @@ public class IconSelector extends ImageSelector {
 	}
 
 	@Override
-	public void draw() {
-		super.draw();
-		if (paths != null) {
-			List<String> loadedImages = paths.stream().map(p -> p.toString()).collect(Collectors.toList());
-			loadedImages.add(0, "Added Icons");
-			new TextPainter(parent).drawText(loadedImages, LOCATION.UPPER_MIDDLE);
-		}
-	}
-	
-	@Override
 	public void onActivate() {
 		super.onActivate();
 		paths = null;
 	}
 	
+	@Override
+	protected boolean shouldDrawResultMsg(List<String> msgs) {
+		if (paths != null) {
+			msgs.addAll(paths.stream().map(p -> p.toString()).collect(Collectors.toList()));
+			msgs.add(0, "Added Icons");
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	protected String getMenuTitle() {
 		return "Load Icons";

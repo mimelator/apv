@@ -9,8 +9,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.shader.Shader.SHADERS;
 import com.arranger.apv.shader.Watermark;
 import com.arranger.apv.util.DynamicShaderHelper;
-import com.arranger.apv.util.draw.SafePainter.LOCATION;
-import com.arranger.apv.util.draw.TextPainter;
 
 public class BackgroundSelector extends ImageSelector {
 	
@@ -25,21 +23,22 @@ public class BackgroundSelector extends ImageSelector {
 	public BackgroundSelector(Main parent) {
 		super(parent);
 	}
-
-	@Override
-	public void draw() {
-		super.draw();
-		if (watermarks != null) {
-			List<String> loadedImages = watermarks.stream().map(wm -> wm.getDisplayName()).collect(Collectors.toList());
-			loadedImages.add(0, "Added Images");
-			new TextPainter(parent).drawText(loadedImages, LOCATION.UPPER_MIDDLE);
-		}
-	}
 	
 	@Override
 	public void onActivate() {
 		super.onActivate();
 		watermarks = null;
+	}
+
+	@Override
+	protected boolean shouldDrawResultMsg(List<String> msgs) {
+		if (watermarks != null) {
+			msgs.addAll(watermarks.stream().map(wm -> wm.getDisplayName()).collect(Collectors.toList()));
+			msgs.add(0, "Added Images");
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override

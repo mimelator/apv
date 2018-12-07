@@ -857,6 +857,11 @@ public class Main extends PApplet {
 		super.selectOutput(prompt, "onFolderSelected");
 	}
 	
+	public void selectInputFile(String prompt, FileSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectInput(prompt, "onFolderSelected");
+	}
+	
 	/**
 	 * The PApplet.selectFolder() API requires a named call back in the class extending PApplet.
 	 */
@@ -1234,6 +1239,7 @@ public class Main extends PApplet {
 		
 		configurator.reload(file);
 		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
+		assignSystems();
 		
 		//special case a couple of helpers
 		randomMessagePainter.reset();
@@ -1554,6 +1560,8 @@ public class Main extends PApplet {
 		for (APVPlugin p : scene.getComponentsToDrawScene().getPlugins()) {
 			p.setPopularityIndex(p.getPopularityIndex() + value);
 		}
+		
+		//save to disk
 	}
 	
 	protected void setupSystems() {
@@ -1578,15 +1586,26 @@ public class Main extends PApplet {
 		APV<? extends APVPlugin> originalAPV = systemMap.get(system);
 		originalAPV.unregisterHandler();
 		
-		APV<APVPlugin> reloadedAPV = new APV<APVPlugin>(this, system);
+		APV<? extends APVPlugin> reloadedAPV;
+		switch (system) {
+		case MENU:
+			reloadedAPV = new APVMenu(this);
+			break;
+		case WATERMARKS:
+			reloadedAPV = new APVWatermark(this);
+			break;
+			default:
+				reloadedAPV = new APV<APVPlugin>(this, system);
+		}
+		
 		systemMap.put(system, reloadedAPV);
 		setupSystem(reloadedAPV);
 		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand(), originalAPV.getFreezeCommand());
-		assignSystems();
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void assignSystems() {
+		apvMenu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
 		backDrops = (APV<BackDropSystem>)systemMap.get(SYSTEM_NAMES.BACKDROPS);
 		backgrounds = (APV<ShapeSystem>) systemMap.get(SYSTEM_NAMES.BACKGROUNDS);
 		colors = (APV<ColorSystem>) systemMap.get(SYSTEM_NAMES.COLORS);
@@ -1596,7 +1615,6 @@ public class Main extends PApplet {
 		likedScenes = (APV<LikedScene>) systemMap.get(SYSTEM_NAMES.LIKED_SCENES);
 		locations = (APV<LocationSystem>) systemMap.get(SYSTEM_NAMES.LOCATIONS);
 		messages = (APV<MessageSystem>) systemMap.get(SYSTEM_NAMES.MESSAGES);
-		apvMenu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
 		scenes = (APV<Scene>) systemMap.get(SYSTEM_NAMES.SCENES);
 		shaders = (APV<Shader>) systemMap.get(SYSTEM_NAMES.SHADERS);
 		transitions = (APV<TransitionSystem>) systemMap.get(SYSTEM_NAMES.TRANSITIONS);

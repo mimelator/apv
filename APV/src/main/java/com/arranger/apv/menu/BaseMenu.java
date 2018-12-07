@@ -1,5 +1,6 @@
 package com.arranger.apv.menu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.APVPlugin;
@@ -52,6 +53,11 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 				}
 			}
 		}
+		
+		List<String> msgs = new ArrayList<String>();
+		if (shouldDrawResultMsg(msgs)) {
+			new TextPainter(parent).drawText(msgs, LOCATION.UPPER_MIDDLE);
+		}
 	}
 	
 	/**
@@ -95,5 +101,9 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	
 	public void onDeactivate() {
 		
+	}
+	
+	protected boolean shouldDrawResultMsg(List<String> msgs) {
+		return false;
 	}
 }
