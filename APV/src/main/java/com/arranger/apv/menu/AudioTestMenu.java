@@ -3,9 +3,10 @@ package com.arranger.apv.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.cmd.Command;
 import com.arranger.apv.systems.lite.FreqDetector;
 
 public class AudioTestMenu extends CommandBasedMenu {
@@ -27,13 +28,19 @@ public class AudioTestMenu extends CommandBasedMenu {
 	public List<? extends APVPlugin> getPlugins() {
 		List<MenuAdapterCallback> results = new ArrayList<MenuAdapterCallback>();
 		
-		results.add(new MenuAdapterCallback(parent, Command.AUDIO_INC.getDisplayName(), ()-> fireCommand(Command.AUDIO_INC)));
-		results.add(new MenuAdapterCallback(parent, Command.AUDIO_DEC.getDisplayName(), ()-> fireCommand(Command.AUDIO_DEC)));
-		
-		//TODO Show the current db level
-		//TODO show the current autoAudioMode: Low, Medium, High or Off
-		
+		String msg = String.format("Responsiveness: [%s]", parent.getAutoAudioAdjuster().getTargetCmdsPerSec());
+		results.add(new MenuAdapterCallback(parent, msg, ()-> updateResponsiveness()));
 		
 		return results;
+	}
+	
+	protected void updateResponsiveness() {
+		String result = JOptionPane.showInputDialog("Responsiveness level");
+		try {
+			float floatResult = Float.parseFloat(result);
+			parent.getAutoAudioAdjuster().setTargetCmdsPerSec(floatResult);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Unable to parse number: " + result, "Responsiveness", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

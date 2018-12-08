@@ -81,7 +81,7 @@ public class BeatInfo extends APVPlugin {
 	}
 	
 	private void createListener() {
-		this.listener =  new AudioListener() {
+		this.listener = new AudioListener() {
 			public void samples(float[] samps) {
 				Audio.scale(samps, parent.getAudio().getDB());
 				pulseDetector.detect(samps);

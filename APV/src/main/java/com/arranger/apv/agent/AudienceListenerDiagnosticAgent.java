@@ -18,8 +18,8 @@ public class AudienceListenerDiagnosticAgent extends BaseAgent {
 	private static final List<String> MESSAGES = Arrays.asList(new String[]{
 			"Not hearing any music.  Please check your audio routing.",
 			"You can click '!' or the '@' to see the Frequency chart or the audio sensitivity response.",
-			"Then you can use the '+' and '-' buttons to adjust the audio sensitivity",
 			"If the vertical bars aren't appearing, that means that there is no music being listened to",
+			"Press 'm' for the menu and go to the Audio Tests Menu.  There you can try some adjustments.",
 			"You can press '" + Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC.getCharKey() + "' to disable this message"
 	});
 	private static final int DEFAULT_LISTEN_WINDOW = 5;

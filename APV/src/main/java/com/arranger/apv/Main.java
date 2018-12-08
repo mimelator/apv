@@ -182,7 +182,6 @@ public class Main extends PApplet {
 		audioListenerDiagnosticSwitch,
 		consoleOutputSwitch,
 		debugPulseSwitch,
-		debugAgentSwitch,
 		frameStroberSwitch,				
 		helpSwitch,
 		popularityPoolSwitch,
@@ -1467,7 +1466,6 @@ public class Main extends PApplet {
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
 		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
-		registerSwitch(debugAgentSwitch, Command.SWITCH_DEBUG_AGENT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
 		registerSwitch(helpSwitch, Command.SWITCH_HELP);
@@ -1631,7 +1629,6 @@ public class Main extends PApplet {
 		
 		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
-		debugAgentSwitch = switches.get(SWITCH_NAMES.DEBUG_AGENT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
 		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
