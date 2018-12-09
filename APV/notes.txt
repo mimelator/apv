@@ -1,18 +1,6 @@
 https://github.com/mimelator/apv
 
 
-Menus:Emojis
-	List each emoji on a line
-	if selected, show a selectInput box
-	have a clear all and reset buttons at the bottom
-		clear all blanks all emojis
-		reset reloads all emojis from the current config
-
-
-Configuration
-	Save, Reload, Load?
- 		update the disabled plugin list for serialization
-
 *****************************************************************************
 * Render vector graphics  
 	See ScaleShape under Processing Examples

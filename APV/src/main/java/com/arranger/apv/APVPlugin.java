@@ -11,7 +11,7 @@ public class APVPlugin implements PConstants {
 	 * Used for {@link #getDisplayName()}
 	 */
 	private static final String [] CLASS_NAMES_TO_ERASE = {
-			"System", "Factory", "BackDrop", "Shape", "Message", "Location", 
+			"System", "Factory", "BackDrop", "Shape", "Message", "Location", "Menu" 
 	};
 	
 	protected Main parent;

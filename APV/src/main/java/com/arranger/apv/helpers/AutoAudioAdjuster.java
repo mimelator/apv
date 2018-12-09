@@ -8,7 +8,7 @@ public class AutoAudioAdjuster extends APVPlugin {
 	
 	protected static final int DEFAULT_CHECKS_PER_RESET = 10;
 	
-	protected float targetCmdsPerSec;
+	protected float targetCmdsPerSec = 1; //Default
 	protected int numChecks;
 
 	public AutoAudioAdjuster(Main parent) {
