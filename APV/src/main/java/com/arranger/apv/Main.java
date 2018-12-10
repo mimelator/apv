@@ -327,6 +327,7 @@ public class Main extends PApplet {
 		this.procControl = procControl;
 	}
 	
+	@Override
 	public void settings() {
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
@@ -880,6 +881,7 @@ public class Main extends PApplet {
 		}
 	}
 	
+	@Override
 	public void setup() {
 		songsModel = new SongsModel(this);
 		colorsModel = new ColorsModel(this);
