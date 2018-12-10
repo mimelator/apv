@@ -35,9 +35,9 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 			try {
 				String autoLoadedFolder = parent.getConfigValueForFlag(Main.FLAGS.AUTO_LOADED_BACKGROUND_FOLDER);
 				if (autoLoadedFolder != null) {
-					//do we already have loaded shaders?
+					//do we already have loaded watermark shaders?
 					DynamicShaderHelper dynamicShaderHelper = new DynamicShaderHelper(parent);
-					if (!dynamicShaderHelper.hasLoadedShaders()) {
+					if (!dynamicShaderHelper.hasLoadedWatermarkShaders()) {
 						FileHelper fh = new FileHelper(parent);
 						String fullPath = fh.getFullPath(autoLoadedFolder);
 						Path path = new File(fullPath).toPath().normalize();

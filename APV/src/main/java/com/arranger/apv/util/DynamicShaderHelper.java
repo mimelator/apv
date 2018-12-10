@@ -55,17 +55,9 @@ public class DynamicShaderHelper extends APVPlugin {
 		return results;
 	}
 	
-	public boolean hasLoadedShaders() {
+	public boolean hasLoadedWatermarkShaders() {
 		APV<Shader> shaderSystem = parent.getShaders();
-		boolean hasLoadedShaders = false;
-		
-		for (Iterator<Shader> it = shaderSystem.getList().iterator(); it.hasNext();) {
-			if (it.next().getDisplayName().endsWith(JPG)) {
-				hasLoadedShaders = true;
-				break;
-			}
-		}
-		return hasLoadedShaders;
+		return shaderSystem.getList().stream().anyMatch(s -> s instanceof Watermark);
 	}
 	
 	private boolean isShaderOk(SHADERS s) {
