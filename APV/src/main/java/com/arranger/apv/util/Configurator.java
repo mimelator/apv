@@ -43,13 +43,14 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
-	private static final String ENABLED = "enabled";
-	private static final String CONFIG_FILE = "config.file";
+	public static final String ENABLED = "enabled";
+	public static final String POPULARITY_INDEX = "popularityIndex";
+	public static final String CONFIG_FILE = "config.file";
 	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF = "application.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
 	public static final String DISABLED_PLUGIN_KEY = "disabledPlugins";
-	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
+	public static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 	
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
@@ -317,14 +318,25 @@ public class Configurator extends APVPlugin {
 		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
 		
 			Config wrapperObj = it.next();
-
+			//Find the correct entry
+			Entry<String, ConfigValue> pluginConfigEntry = null;
+			for (Iterator<Entry<String, ConfigValue>> it2 = wrapperObj.entrySet().iterator(); it2.hasNext();) {
+				Entry<String, ConfigValue> next = it2.next();
+				String key = next.getKey();
+				if (key.equals(ENABLED) || key.equals(POPULARITY_INDEX)) {
+					continue;
+				} else {
+					pluginConfigEntry = next;
+					break;
+				}
+			}
 			
+			if (pluginConfigEntry == null) {
+				throw new RuntimeException("Unable to find plugin entry for: " + name + " config: " + wrapperObj.toString());
+			}
 			
-			//This will be something like: {FreqDetector : [...]}
-			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next(); //get 1st item
-			
-			String key = configObj.getKey(); //FreqDetector
-			ConfigList argList = (ConfigList)configObj.getValue(); //[...]
+			String key = pluginConfigEntry.getKey(); //FreqDetector
+			ConfigList argList = (ConfigList)pluginConfigEntry.getValue(); //[...]
 			
 			if (key == null || key.length() == 0) {
 				throw new RuntimeException("Unable to load plugin: " + name);
@@ -352,7 +364,7 @@ public class Configurator extends APVPlugin {
 				if (isExtendedConfig) {
 					//set the values on the plugin
 					plugin.setEnabled(wrapperObj.getBoolean(ENABLED));
-					plugin.setPopularityIndex(wrapperObj.getInt("popularityIndex"));
+					plugin.setPopularityIndex(wrapperObj.getInt(POPULARITY_INDEX));
 				}
 			}
 		}
