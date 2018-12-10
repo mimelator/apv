@@ -68,6 +68,9 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		keyBindingMap.put(" ", () -> onSelect());
 		keyBindingMap.put("\n", () -> onSelect());
 		keyBindingMap.put("⌫", () -> onBack());
+		
+		//always start off disabled
+		sw.setEnabled(false);
 	}
 
 	protected void onExit() {

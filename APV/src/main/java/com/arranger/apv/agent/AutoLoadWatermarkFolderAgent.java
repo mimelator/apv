@@ -35,13 +35,15 @@ public class AutoLoadWatermarkFolderAgent extends BaseAgent {
 			try {
 				String autoLoadedFolder = parent.getConfigValueForFlag(Main.FLAGS.AUTO_LOADED_BACKGROUND_FOLDER);
 				if (autoLoadedFolder != null) {
-					FileHelper fh = new FileHelper(parent);
-					
-					String fullPath = fh.getFullPath(autoLoadedFolder);
-					Path path = new File(fullPath).toPath().normalize();
-					List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
-					
-					new DynamicShaderHelper(parent).loadBackgrounds(parent, alpha, shaders, backgrounds, false);
+					//do we already have loaded shaders?
+					DynamicShaderHelper dynamicShaderHelper = new DynamicShaderHelper(parent);
+					if (!dynamicShaderHelper.hasLoadedShaders()) {
+						FileHelper fh = new FileHelper(parent);
+						String fullPath = fh.getFullPath(autoLoadedFolder);
+						Path path = new File(fullPath).toPath().normalize();
+						List<Path> backgrounds = fh.getAllFilesFromDir(path, ".jpg");
+						dynamicShaderHelper.loadBackgrounds(parent, alpha, shaders, backgrounds, false);
+					}
 				}
 			} catch (Exception e) {
 				logger.log(Level.INFO, e.getMessage(), e);

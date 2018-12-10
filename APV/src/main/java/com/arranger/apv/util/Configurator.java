@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +43,7 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
+	private static final String CONFIG_FILE = "config.file";
 	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF = "application.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
@@ -264,9 +267,30 @@ public class Configurator extends APVPlugin {
 	public void reload(String file) {
 		ConfigFactory.invalidateCaches();
 		if (file != null) {
-			System.setProperty("config.file", file);
+			System.setProperty(CONFIG_FILE, file);
 		}
-		conf = ConfigFactory.load();
+		try {
+			conf = ConfigFactory.load();
+		} catch (Exception e) {
+			//e.printStackTrace();
+			
+			Path applicationConfPath = Paths.get("..", "conf", APPLICATION_CONF);
+			System.out.println("Unable to load application.conf at: " + file);
+			System.out.println("Restoring reference.conf to: " + applicationConfPath.toAbsolutePath().toString());
+			
+			//TODO try to use the reference.conf
+			FileHelper fh = new FileHelper(parent);
+			fh.getResourceAsStream(REFERENCE_CONF, (stream) -> {
+				FileUtils.copyInputStreamToFile(stream, applicationConfPath.toFile());
+			});
+			System.setProperty(CONFIG_FILE, applicationConfPath.toAbsolutePath().toString());
+			
+			try {
+				conf = ConfigFactory.load();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
 		initScramble();
 	}
 	
@@ -391,7 +415,15 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig() {
-		saveCurrentConfig(true);
+		//-Dconfig.file
+		String sysConfigFile = System.getProperty(CONFIG_FILE);
+		if (sysConfigFile == null) {
+			sysConfigFile = APPLICATION_CONF;
+		}
+		
+		Path applicationConfPath = Paths.get(sysConfigFile);
+		System.out.println("saveCurrentConfig to: " + applicationConfPath.toAbsolutePath().toString());
+		saveConfigImpl(applicationConfPath.toFile(), false);
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {

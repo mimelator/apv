@@ -41,7 +41,7 @@ public class Watermark extends CustomShader {
 				quoter.quote(displayName), 
 				alpha,
 				scroll,
-				imageFile,
+				quoter.quote(imageFile),
 				shaderString);
 	}
 	

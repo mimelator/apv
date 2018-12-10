@@ -55,6 +55,19 @@ public class DynamicShaderHelper extends APVPlugin {
 		return results;
 	}
 	
+	public boolean hasLoadedShaders() {
+		APV<Shader> shaderSystem = parent.getShaders();
+		boolean hasLoadedShaders = false;
+		
+		for (Iterator<Shader> it = shaderSystem.getList().iterator(); it.hasNext();) {
+			if (it.next().getDisplayName().endsWith(JPG)) {
+				hasLoadedShaders = true;
+				break;
+			}
+		}
+		return hasLoadedShaders;
+	}
+	
 	private boolean isShaderOk(SHADERS s) {
 		return !bannedShaders.contains(s);
 	}

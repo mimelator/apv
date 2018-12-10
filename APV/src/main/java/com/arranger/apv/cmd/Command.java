@@ -96,8 +96,6 @@ public enum Command {
 	//Newer Remote oriented commands
 	SHOW_SONG_QUEUE(DeadCommandCode.next(), "Show SongQueue", "Displays the current set of songs queued to be played"),
 	SHOW_OCEAN_SET_INFO(DeadCommandCode.next(), "Show Ocean Set Info", "Displays the current Ocean and Set"),
-	SHOW_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Shows Available Set Packs", "Shows the available set packs"),
-	LOAD_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Loads all Available Set Packs", "Loads the available set packs"),
 	
 	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
 	SHOW_MARQUEE_MESSAGE(DeadCommandCode.next(), "Shows a marquee Message", "Shows a marquee message"),
@@ -111,15 +109,6 @@ public enum Command {
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
-	
-	//Set List Commands
-	//for mac... TODO investigate
-	FFWD(java.awt.event.KeyEvent.VK_NUMPAD9, "FwdSong", "Play the next song"),
-	PLAY_PAUSE(java.awt.event.KeyEvent.VK_NUMPAD8, "Play/Pause Song", "Plays or Pauses the song"),
-	PREV(java.awt.event.KeyEvent.VK_NUMPAD7, "PrevSong", "Play the previous song"),
-//	FFWD(java.awt.event.KeyEvent.VK_F9, "FwdSong", "Play the next song"),
-//	PLAY_PAUSE(java.awt.event.KeyEvent.VK_F8, "Play/Pause Song", "Plays or Pauses the song"),
-//	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
 	
 	//Hot Keys
 	HOT_KEY_1('!', "Show Frequency Response", ""),

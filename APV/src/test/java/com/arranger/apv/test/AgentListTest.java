@@ -9,7 +9,6 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.agent.BaseAgent;
 import com.arranger.apv.util.Configurator;
-import com.typesafe.config.ConfigList;
 
 public class AgentListTest extends ConfigBasedTest {
 
@@ -24,8 +23,6 @@ public class AgentListTest extends ConfigBasedTest {
 	@Test
 	public void testListingAgents() {
 		Configurator cfg = new Configurator(parent);
-		ConfigList list = cfg.getRootConfig().getList("setPackList");
-		assert(list != null);
 		
 		List<? extends APVPlugin> agentPlugins = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.AGENTS);
 		assert(agentPlugins != null);

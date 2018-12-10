@@ -40,7 +40,6 @@ import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.LIVE_SETTINGS;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.PerformanceMonitor;
-import com.arranger.apv.helpers.SetPackLoader;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
@@ -147,7 +146,6 @@ public class Main extends PApplet {
 	protected PerformanceMonitor perfMonitor;
 	protected PostFX postFX;
 	protected RandomMessagePainter randomMessagePainter;
-	protected SetPackLoader setPackLoader;
 	protected SettingsDisplay settingsDisplay;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
@@ -195,7 +193,7 @@ public class Main extends PApplet {
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
 		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
 		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
-		CONTROL_MODE("controlMode", "PERLIN|AUTO|MANUAL|SNAP"),
+		CONTROL_MODE("controlMode", "PERLIN|MANUAL"),
 		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
@@ -402,10 +400,6 @@ public class Main extends PApplet {
 
 	public MouseListener getMouseListener() {
 		return mouseListener;
-	}
-	
-	public SetPackLoader getSetPackLoader() {
-		return setPackLoader;
 	}
 	
 	public MacroHelper getMacroHelper() {
@@ -910,7 +904,6 @@ public class Main extends PApplet {
 		perfMonitor = new PerformanceMonitor(this);
 		postFX  = new PostFX(this);
 		randomMessagePainter = new RandomMessagePainter(this);
-		setPackLoader = new SetPackLoader(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		starPainter = new StarPainter(this);
@@ -1023,21 +1016,6 @@ public class Main extends PApplet {
 	
 	public SetPackModel getSetPackModel() {
 		return setPackModel;
-	}
-	
-	public void ffwd() {
-		songsModel.ffwd();
-	}
-	
-	public void playPause() {
-		//Leave this active for emergencies
-		getSceneCompleteEvent().fire();
-		//getSetListCompleteEvent().fire();
-		//throw new RuntimeException("playPause not implemented");
-	}
-
-	public void prev() {
-		songsModel.prev();
 	}
 	
 	/**
@@ -1250,7 +1228,6 @@ public class Main extends PApplet {
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
 		watermark.reloadConfiguration();
-		setPackLoader.reset();
 		
 		songsModel.reset();
 		colorsModel.reset();
@@ -1484,16 +1461,12 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
 		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
 		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
 		cs.registerHandler(Command.LOAD_CONFIGURATION, (cmd,src,mod)  -> configurator.reload(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
 		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());
 		cs.registerHandler(Command.MOUSE_CONTROL, (cmd,src,mod) -> mouseControl());	
 		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
-		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
 		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
-		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
 		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
 		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
 		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
@@ -1501,7 +1474,6 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
 		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
 		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
-		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
 		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
 		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
 		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());

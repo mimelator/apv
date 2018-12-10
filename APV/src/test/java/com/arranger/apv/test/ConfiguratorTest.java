@@ -17,7 +17,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigValue;
 
-public class ConfiguratorTest extends APVPluginTest {
+public class ConfiguratorTest extends ConfigBasedTest {
 	
 	private static final String CONFIG = "alt.properties";
 	Configurator configurator;

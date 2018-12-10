@@ -71,6 +71,12 @@ public class Switch extends APVPlugin {
 		return state != STATE.DISABLED;
 	}
 	
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		setState(enabled ? STATE.ENABLED : STATE.DISABLED);
+	}
+
 	/**
 	 * Ignores disabled
 	 */
@@ -80,6 +86,7 @@ public class Switch extends APVPlugin {
 	
 	public void setState(STATE state) {
 		this.state = state;
+		observable.update();
 	}
 	
 	/**
