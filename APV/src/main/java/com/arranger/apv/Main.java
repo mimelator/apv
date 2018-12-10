@@ -250,7 +250,6 @@ public class Main extends PApplet {
 	public enum SWITCH_NAMES {
 		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic"),
 		CONSOLE_OUTPUT("ConsoleOutput"),
-		DEBUG_AGENT("DebugAgent"),
 		DEBUG_PULSE("DebugPulse"),
 		FRAME_STROBER("FrameStrober"),
 		HELP("Help"),

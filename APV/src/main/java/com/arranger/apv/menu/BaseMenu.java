@@ -24,6 +24,8 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	protected boolean showDetails;
 	protected boolean drawPlugin;
 	
+	protected boolean shouldSaveOnDeactivate = false;
+	
 	@SuppressWarnings("unchecked")
 	public BaseMenu(Main parent) {
 		super(parent);
@@ -100,7 +102,10 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	}
 	
 	public void onDeactivate() {
-		
+		if (shouldSaveOnDeactivate) {
+			parent.getConfigurator().saveCurrentConfig();
+		}
+		shouldSaveOnDeactivate = false;
 	}
 	
 	protected boolean shouldDrawResultMsg(List<String> msgs) {

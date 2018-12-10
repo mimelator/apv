@@ -59,5 +59,6 @@ public class BackgroundSelector extends ImageSelector {
 	@Override
 	protected void onSelectedImages(List<Path> paths) {
 		watermarks = new DynamicShaderHelper(parent).loadBackgrounds(parent, DEFAULT_ALPHA, SHADERS.VALUES, paths, true);
+		shouldSaveOnDeactivate = true;
 	}
 }

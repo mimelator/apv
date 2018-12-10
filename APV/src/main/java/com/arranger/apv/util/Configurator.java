@@ -395,7 +395,7 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {
-		saveConfigImpl(new File(APPLICATION_CONF_BAK), alsoSaveOrig);
+		saveConfigImpl(new File(APPLICATION_CONF), alsoSaveOrig);
 	}
 	
 	public void saveCurrentConfig(File targetConfig) {

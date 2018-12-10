@@ -67,5 +67,6 @@ public class IconSelector extends ImageSelector {
 				imageHelper.updateImage(ICON_NAMES.random(), image, pathString);
 			}
 		}
+		shouldSaveOnDeactivate = true;
 	}
 }

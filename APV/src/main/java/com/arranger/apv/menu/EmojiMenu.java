@@ -35,6 +35,7 @@ public class EmojiMenu extends CommandBasedMenu {
 			if (i != -1) {
 				msgList.set(i, result);
 				emojisModel.setMsgList(msgList);
+				shouldSaveOnDeactivate = true;
 			}
 		}
 	}

@@ -78,6 +78,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	protected void onIncrement(int i) {
 		APVPlugin cp = getCurrentPlugin();
 		cp.setPopularityIndex(cp.getPopularityIndex() + i);
+		currentMenu.shouldSaveOnDeactivate = true;
 	}
 	
 	protected void onUp() {
@@ -112,8 +113,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		} else {
 			//select it
 			getCurrentPlugin().toggleEnabled();
-			
-			//TODO: update the disabled plugin list for serialization
+			currentMenu.shouldSaveOnDeactivate = true;
 		}
 	}
 
