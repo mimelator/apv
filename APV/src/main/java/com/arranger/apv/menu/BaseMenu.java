@@ -34,6 +34,7 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 		title = Arrays.asList(new String[] {getDisplayName()});
 		showDetails = true;
 		drawPlugin = false;
+		supportsExtendedConfig = false;
 	}
 	
 	public void draw() {

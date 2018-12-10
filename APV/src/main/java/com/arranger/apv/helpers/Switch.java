@@ -37,12 +37,13 @@ public class Switch extends APVPlugin {
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
 		this.data = data;
 		this.observable = new ObservalbleAdapter();
+		supportsExtendedConfig = false;
 	}
 	
 	public Switch(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, ""), ctx.getBoolean(1, true), ctx.getString(2, null));
 	}
-
+	
 	@Override
 	public String getConfig() {
 		//{Switch : [ForeGround, true]}

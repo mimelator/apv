@@ -18,6 +18,7 @@ public class APVPlugin implements PConstants {
 	protected int id;
 	protected int popularityIndex = 1;
 	protected boolean enabled = true;
+	protected boolean supportsExtendedConfig = true;
 
 	public APVPlugin(Main parent) {
 		this.parent = parent;
@@ -47,7 +48,11 @@ public class APVPlugin implements PConstants {
 	}
 	
 	public String getConfigEx() {
-		return String.format("%s {enabled:%s, popularityIndex:%s}", getConfig(), isEnabled(), getPopularityIndex());
+		if (supportsExtendedConfig) {
+			return String.format("%s {enabled:%s, popularityIndex:%s}", getConfig(), isEnabled(), getPopularityIndex());
+		} else {
+			return getConfig();
+		}
 	}
 	
 	public String getConfig() {

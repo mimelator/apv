@@ -28,6 +28,7 @@ public abstract class ControlSystem extends APVPlugin {
 
 	public ControlSystem(Main parent) {
 		super(parent);
+		supportsExtendedConfig = false;
 	}
 	
 	public boolean allowsMouseLocation() {
