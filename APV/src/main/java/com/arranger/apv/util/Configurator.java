@@ -43,6 +43,7 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
+	private static final String ENABLED = "enabled";
 	private static final String CONFIG_FILE = "config.file";
 	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF = "application.conf";
@@ -278,7 +279,6 @@ public class Configurator extends APVPlugin {
 			System.out.println("Unable to load application.conf at: " + file);
 			System.out.println("Restoring reference.conf to: " + applicationConfPath.toAbsolutePath().toString());
 			
-			//TODO try to use the reference.conf
 			FileHelper fh = new FileHelper(parent);
 			fh.getResourceAsStream(REFERENCE_CONF, (stream) -> {
 				FileUtils.copyInputStreamToFile(stream, applicationConfPath.toFile());
@@ -314,10 +314,17 @@ public class Configurator extends APVPlugin {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
-		scl.forEach(wrapperObj -> {
-			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next();
-			String key = configObj.getKey();
-			ConfigList argList = (ConfigList)configObj.getValue();
+		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
+		
+			Config wrapperObj = it.next();
+
+			
+			
+			//This will be something like: {FreqDetector : [...]}
+			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next(); //get 1st item
+			
+			String key = configObj.getKey(); //FreqDetector
+			ConfigList argList = (ConfigList)configObj.getValue(); //[...]
 			
 			if (key == null || key.length() == 0) {
 				throw new RuntimeException("Unable to load plugin: " + name);
@@ -339,8 +346,16 @@ public class Configurator extends APVPlugin {
 				if (!isDisabled(plugin)) {
 					systems.add(plugin);
 				}
+				
+				//is there any extended settings like {enabled: false, popularityIndex: 20}				
+				boolean isExtendedConfig = wrapperObj.entrySet().stream().anyMatch(entry -> entry.getKey().equals(ENABLED));
+				if (isExtendedConfig) {
+					//set the values on the plugin
+					plugin.setEnabled(wrapperObj.getBoolean(ENABLED));
+					plugin.setPopularityIndex(wrapperObj.getInt("popularityIndex"));
+				}
 			}
-		});
+		}
 		
 		if (shouldScrambleInitialSystems && allowScramble) {
 			Collections.shuffle(systems);
@@ -465,11 +480,13 @@ public class Configurator extends APVPlugin {
 		List<String> resultList = new ArrayList<String>();
 		buffer.append(name + " : [").append(System.lineSeparator());
 		entries.forEach(entry -> {
+			StringBuffer result = new StringBuffer();
 			if (shouldQuote) {
-				resultList.add("     " + quoter.quote(entry));
+				result.append("     " + quoter.quote(entry));
 			} else {
-				resultList.add("     " + entry);
+				result.append("     " + entry);
 			}
+			resultList.add(result.toString());
 		});
 		
 		//sort the lines
@@ -521,7 +538,7 @@ public class Configurator extends APVPlugin {
 
 	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> list) {
 		return generateConfig(systemName.name, 
-				list.stream().map(p -> p.getConfig()).collect(Collectors.toList()), 
+				list.stream().map(p -> p.getConfigEx()).collect(Collectors.toList()), 
 				true,
 				false);
 	}

@@ -46,6 +46,10 @@ public class APVPlugin implements PConstants {
 		return n;
 	}
 	
+	public String getConfigEx() {
+		return String.format("%s {enabled:%s, popularityIndex:%s}", getConfig(), isEnabled(), getPopularityIndex());
+	}
+	
 	public String getConfig() {
 		return String.format("{%s : []}", getName());
 	}
