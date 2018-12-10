@@ -752,6 +752,7 @@ public class Main extends PApplet {
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
 		updatePopularity(currentScene, true);
+		getConfigurator().saveCurrentConfig();
 		String likedMsg = "Liked :)";
 		sendMarqueeMessage(likedMsg);
 	}
