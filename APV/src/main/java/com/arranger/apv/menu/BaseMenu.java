@@ -84,7 +84,7 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 
 	@Override
 	public MenuItem getMenuItem(int index) {
-		return new MenuItemAdapter(getPlugins().get(index), this.index == index);
+		return new PluginMenuItemAdapter(getPlugins().get(index), this.index == index);
 	}
 	
 	public BaseMenu getChildMenu() {

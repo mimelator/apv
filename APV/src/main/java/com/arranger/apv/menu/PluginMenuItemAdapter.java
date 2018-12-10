@@ -3,12 +3,12 @@ package com.arranger.apv.menu;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.menu.MenuPainter.MenuItem;
 
-public class MenuItemAdapter implements MenuItem {
+public class PluginMenuItemAdapter implements MenuItem {
 
 	private APVPlugin plugin;
 	private boolean selected;
 	
-	public MenuItemAdapter(APVPlugin plugin, boolean selected) {
+	public PluginMenuItemAdapter(APVPlugin plugin, boolean selected) {
 		this.plugin = plugin;
 		this.selected = selected;
 	}
