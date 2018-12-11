@@ -15,7 +15,7 @@ public class StarMaker extends APVPlugin {
 		  PShape star = parent.createShape();
 		  star.beginShape();
 		  star.stroke(255);
-		  star.strokeWeight(2);
+		  star.strokeWeight(.5f);
 		  star.vertex(0, -50);
 		  star.vertex(14, -20);
 		  star.vertex(47, -15);

@@ -46,8 +46,10 @@ public class StarPainter extends APVPlugin {
 			//scale
 			star.scale(parent.random(scaleSmall, scaleLarge));
 			
+			
 			//move it, paint it and then reset
 			parent.translate(x, y);
+			star.rotate((float)Math.toRadians(parent.random(0, 15)));
 			parent.shape(star);
 			parent.translate(-x, -y);
 			star.resetMatrix();

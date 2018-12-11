@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.arranger.apv.Main;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.APVShape.Data;
+import com.arranger.apv.factory.SpriteFactory;
+import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.frame.Tracker;
 
 import processing.core.PApplet;
@@ -15,14 +19,17 @@ import processing.core.PVector;
  **/
 public class Tree extends Animation {
 
+	private static final int MAX_VELOCITY = -4; //-1;
+	private static final int DEFAULT_SPRITE_SIZE = 5;
 	private static final float MIN_SIZE = 3.5f;
 	private static final int GROWTH_THRESHOLD = 50;
-	private static final float SPEED = 1.5f;
+	private static final float SPEED = 3.0f;//1.5f;
 	
 	private Tracker<Tree> tracker;
 	private List<PathFinder> paths = new ArrayList<PathFinder>();
 	private int threshold;
 	private float minSize;
+	private APVShape apvShape;
 	
 	public Tree(Main parent) {
 		super(parent);
@@ -46,15 +53,21 @@ public class Tree extends Animation {
 			tracker = new Tracker<Tree>(parent, parent.getSceneCompleteEvent());
 		}
 		
-		parent.ellipseMode(CENTER);
+		if (apvShape == null) {
+			apvShape = new SpriteFactory(parent, ImageHelper.ICON_NAMES.random().name(), DEFAULT_SPRITE_SIZE).createShape(new Data() {});
+		}
+		
 		Color col = parent.getColor().getCurrentColor();
-		parent.fill(col.getRed(), col.getGreen(), col.getBlue());
 
 		List<PathFinder> newPaths = new ArrayList<PathFinder>();
 		for (PathFinder pf : paths) {
 			PVector loc = pf.location;
 			float diam = pf.diameter;
-			parent.ellipse(loc.x, loc.y, diam, diam);
+			
+			apvShape.setColor(col.getRGB());
+			parent.shape(apvShape.getShape(), loc.x, loc.y, diam, diam);
+			
+			
 			PathFinder newPf = pf.update();
 			if (newPf != null) {
 				newPaths.add(newPf);
@@ -73,6 +86,7 @@ public class Tree extends Animation {
 					System.out.println("Finished threshold: " + threshold);
 					tracker.fireEvent();
 					tracker = null;
+					apvShape = null;
 				}
 			}
 		}
@@ -85,8 +99,12 @@ public class Tree extends Animation {
 		float diameter;
 
 		PathFinder() {
-			location = new PVector(parent.width / 2, parent.height);
-			velocity = new PVector(0, -1);
+			//TODO make the orientation? configurable
+			int width = parent.width / 2;
+			float xLocation = parent.random(width * .8f, width * 1.2f); //doesn't have to be in the center
+			
+			location = new PVector(xLocation, parent.height);
+			velocity = new PVector(0, MAX_VELOCITY);
 			diameter = 32;
 		}
 
@@ -103,7 +121,7 @@ public class Tree extends Animation {
 			if (diameter > 0.5) {
 				location.add(velocity);
 				PVector bump = new PVector(parent.random(-1, 1), parent.random(-1, 1));
-				bump.mult(.1f);
+				bump.mult(.5f); //.1f
 				velocity.add(bump);
 				velocity.normalize();
 				velocity.mult(SPEED);

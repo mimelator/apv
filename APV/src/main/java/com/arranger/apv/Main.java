@@ -53,10 +53,10 @@ import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.SetPackModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
+import com.arranger.apv.scene.Forest;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Marquee;
 import com.arranger.apv.scene.Scene;
-import com.arranger.apv.scene.Tree;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
@@ -1093,8 +1093,8 @@ public class Main extends PApplet {
 			message = getRandomMessagePainter().getRandomMessage();
 		}
 		
-		Tree tree = new Tree(this);
-		setNextScene(tree, "tree");
+		Forest forest = new Forest(this);
+		setNextScene(forest, "forestMessage");
 		
 		//Send message and watermark
 		sendMessage(new String[] {message});

@@ -178,11 +178,12 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 				parent.stroke(c);
 				parent.point(loc.x, loc.y);
 			} else {
+				factoryShape.setColor(c, alpha);
 				PShape drawShape = factoryShape.getShape();
 				parent.rectMode(CENTER);
 				parent.stroke(4);
 				drawShape.setFill(true);
-				factoryShape.setColor(c, alpha);
+				drawShape.rotate((float)Math.toRadians(parent.random(0, 15)));
 				
 				parent.shape(drawShape, loc.x, loc.y);
 				
