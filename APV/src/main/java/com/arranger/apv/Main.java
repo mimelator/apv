@@ -193,6 +193,7 @@ public class Main extends PApplet {
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
 		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
 		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
+		APV_CONFIG_VERSION("configVersion", "string"),
 		CONTROL_MODE("controlMode", "PERLIN|MANUAL"),
 		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
@@ -331,10 +332,23 @@ public class Main extends PApplet {
 		loggingConfig.configureLogging();
 		
 		configurator = new Configurator(this);
+		
+		//check version
+		//TODO if there is a mismatch, how to best handle that?
+		Config rootConfig = configurator.getRootConfig();
+		if (rootConfig.hasPath(FLAGS.APV_CONFIG_VERSION.apvName())) {
+			String configurationVersion = rootConfig.getString(FLAGS.APV_CONFIG_VERSION.apvName());
+			
+			String version = new VersionInfo(this).getVersion();
+			if (!version.equals(configurationVersion)) {
+				System.out.println("Initializing with configuration version: " + configurationVersion + 
+						" and running version: " + version);
+			}
+		}
+		
 		configureSwitches();
 		
 		if (!procControl) {
-			Config rootConfig = configurator.getRootConfig();
 			boolean isFullScreen = rootConfig.getBoolean(FLAGS.FULL_SCREEN.apvName());
 			if (isFullScreen) {
 				fullScreen(RENDERER);
@@ -1650,7 +1664,7 @@ public class Main extends PApplet {
 	public String getConfig() {
 		//Version number 
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
-		buffer.append("apv.conf.version = ").append(getVersionInfo().getVersion()).append(System.lineSeparator());
+		addConstant(buffer, FLAGS.APV_CONFIG_VERSION, getVersionInfo().getVersion());
 		
 		//Constants
 		addConstant(buffer, FLAGS.CONTROL_MODE, getCurrentControlMode().name());
