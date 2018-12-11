@@ -35,7 +35,15 @@ public class Watermark extends CustomShader {
 	public String getConfig() {
 		//{Watermark : [logo, .5, "texture/wl2.jpg", [blur]]}
 		JSONQuoter quoter = new JSONQuoter(parent);
-		String shaderString = shaders.stream().map(s -> s.name()).collect(Collectors.joining(","));
+		String shaderString;
+		if (shaders == null) {
+			//I'm not sure how this can happen
+			System.out.println("Null value for shaders in Watermark");
+			shaderString = "[]";
+		} else {
+			shaderString = shaders.stream().map(s -> s.name()).collect(Collectors.joining(","));
+		}
+		
 		return String.format("{%s : [%s, %s,%b,  %s, [%s]]}", 
 				getName(), 
 				quoter.quote(displayName), 

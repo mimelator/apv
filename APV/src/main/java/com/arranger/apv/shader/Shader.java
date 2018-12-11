@@ -1,5 +1,6 @@
 package com.arranger.apv.shader;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -159,6 +160,11 @@ public class Shader extends ShapeSystem {
 		super(parent, null);
 		this.shaders = shaders;
 		this.displayName = displayName;
+		
+		if (shaders == null) {
+			System.out.println("Null Shader list!.  Please fix");
+			shaders = new ArrayList<SHADERS>();
+		}
 		
 		//if we don't have a sobel, add one
 		if (parent.isAutoAddSobleEnabled() && shaders != null) {
