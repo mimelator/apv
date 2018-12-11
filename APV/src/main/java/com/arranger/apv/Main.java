@@ -373,7 +373,11 @@ public class Main extends PApplet {
 	
 	public String getConfigValueForFlag(FLAGS flag) {
 		Config rootConfig = getConfigurator().getRootConfig();
-		return rootConfig.getString(flag.apvName());
+		if (rootConfig.hasPath(flag.apvName())) {
+			return rootConfig.getString(flag.apvName());
+		} else {
+			return "";
+		}
 	}
 	
 	public boolean getConfigBooleanForFlag(FLAGS flag) {
@@ -774,7 +778,9 @@ public class Main extends PApplet {
 	public void disLikeCurrentScene() {
 		likedScenes.getList().remove(currentScene);
 		updatePopularity(currentScene, false);
+		getConfigurator().saveCurrentConfig();
 		sendMessage(new String[] {"Disliked :("});
+		scramble();
 	}
 	
 	public List<LikedScene> getLikedScenes() {

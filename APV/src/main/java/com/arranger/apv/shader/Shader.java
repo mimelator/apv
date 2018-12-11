@@ -162,7 +162,6 @@ public class Shader extends ShapeSystem {
 		this.displayName = displayName;
 		
 		if (shaders == null) {
-			System.out.println("Null Shader list!.  Please fix");
 			shaders = new ArrayList<SHADERS>();
 		}
 		
