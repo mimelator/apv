@@ -17,7 +17,7 @@ public class Forest extends Animation {
 		super(parent);
 		
 		int numTrees = (int)parent.random(MIN_TREES, MAX_TREES);
-		IntStream.range(0, numTrees).parallel().forEach(i -> {
+		IntStream.range(0, numTrees).forEach(i -> {
 			trees.add(new Tree(parent));
 		});
 		
@@ -31,7 +31,12 @@ public class Forest extends Animation {
 
 	@Override
 	public boolean isNew() {
-		return trees.get(0).isNew();
+		Tree tree = trees.get(0);
+		if (tree != null) {
+			return tree.isNew();
+		} else {
+			return true;
+		}
 	}
 
 }
