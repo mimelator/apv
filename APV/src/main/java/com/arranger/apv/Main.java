@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -657,14 +658,20 @@ public class Main extends PApplet {
 	}
 	
 	public APVPlugin getPluginByName(APV<? extends APVPlugin> apv, String pluginDisplayName) {
-		return apv.getList().stream().filter(p -> {
+		Optional<? extends APVPlugin> findFirst = apv.getList().stream().filter(p -> {
 			String displayName = p.getDisplayName();
 			String name = p.getName();
 			boolean b1 = pluginDisplayName.equalsIgnoreCase(displayName);
 			boolean b2 = pluginDisplayName.equalsIgnoreCase(name);
 			return b1 || b2;
 			
-		}).findFirst().get();
+		}).findFirst();
+		if (findFirst.isPresent()) {
+			return findFirst.get();
+		} else {
+			System.out.println("Unable to find plugin by name: " + pluginDisplayName);
+			return null;
+		}
 	}
 	
 	public void setDefaultScene(String cause) {
@@ -1673,28 +1680,28 @@ public class Main extends PApplet {
 		addConstant(buffer, FLAGS.APV_CONFIG_VERSION, getVersionInfo().getVersion());
 		
 		//Constants
+		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
+		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
 		addConstant(buffer, FLAGS.CONTROL_MODE, getCurrentControlMode().name());
+		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
+		addConstant(buffer, FLAGS.DEBUG_AGENT_MESSAGES, String.valueOf(getConfigBoolean(FLAGS.DEBUG_AGENT_MESSAGES.apvName())));
+		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
+		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.FULL_SCREEN, String.valueOf(getConfigBoolean(FLAGS.FULL_SCREEN.apvName())));
+		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
+		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
+		addConstant(buffer, FLAGS.MARQUEE_FRAMES, String.valueOf(getMarqueeFrames()));
+		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
+		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
+		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
+		addConstant(buffer, FLAGS.PULSE_SENSITIVITY, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.PULSE_SENSITIVITY.apvName())));
+		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.SCRAMBLE_SYSTEMS, String.valueOf(getConfigBoolean(FLAGS.SCRAMBLE_SYSTEMS.apvName())));
 		addConstant(buffer, FLAGS.SCREEN_WIDTH, String.valueOf(width));
 		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
-		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
-		addConstant(buffer, FLAGS.PULSE_SENSITIVITY, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.PULSE_SENSITIVITY.apvName())));
-		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
-		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
-		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.TREE_COMPLEXITY_CUTOFF, getConfigString(FLAGS.TREE_COMPLEXITY_CUTOFF.apvName()));
 		addConstant(buffer, FLAGS.TREE_MIN_SIZE, getConfigString(FLAGS.TREE_MIN_SIZE.apvName()));
-		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
-		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
-		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
-		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
-		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
-		addConstant(buffer, FLAGS.MARQUEE_FRAMES, String.valueOf(getMarqueeFrames()));
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
-		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
-		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
-		addConstant(buffer, FLAGS.DEBUG_AGENT_MESSAGES, String.valueOf(getConfigBoolean(FLAGS.DEBUG_AGENT_MESSAGES.apvName())));
 		addConstant(buffer, FLAGS.FRAME_RATE, String.valueOf(getFrameRate()));
 		
 		

@@ -2,6 +2,7 @@ package com.arranger.apv.helpers;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.arranger.apv.APV;
@@ -16,6 +17,7 @@ import com.arranger.apv.util.draw.TextPainter;
 public class VideoGameHelper extends APVPlugin {
 	
 	public static final DecimalFormat decFormat = new DecimalFormat("#.###");
+	private static List<Command> ignoredCommands = Arrays.asList(new Command[] {Command.AUDIO_DEC, Command.AUDIO_INC});
 
 	//stats
 	CounterMap commandMap = new CounterMap();
@@ -133,6 +135,10 @@ public class VideoGameHelper extends APVPlugin {
 	}
 	
 	private void recordLastCommand(Command cmd, String source) {
+		if (ignoredCommands.contains(cmd)) {
+			return;
+		}
+		
 		commandSourceMap.add(source);
 		commandMap.add(cmd.name());
 		lastCommandName = cmd.name();
