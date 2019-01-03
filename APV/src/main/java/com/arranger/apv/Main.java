@@ -41,6 +41,7 @@ import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.LIVE_SETTINGS;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.PerformanceMonitor;
+import com.arranger.apv.helpers.RewindHelper;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
@@ -69,6 +70,7 @@ import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
 import com.arranger.apv.util.KeyListener;
+import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 import com.arranger.apv.util.LoggingConfig;
 import com.arranger.apv.util.MouseListener;
 import com.arranger.apv.util.Particles;
@@ -147,6 +149,7 @@ public class Main extends PApplet {
 	protected PerformanceMonitor perfMonitor;
 	protected PostFX postFX;
 	protected RandomMessagePainter randomMessagePainter;
+	protected RewindHelper rewindHelper;
 	protected SettingsDisplay settingsDisplay;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
@@ -766,6 +769,10 @@ public class Main extends PApplet {
 		return randomMessagePainter;
 	}
 	
+	public RewindHelper getRewindHelper() {
+		return rewindHelper;
+	}
+	
 	public StartupCommandRunner getStartupCommandRunner() {
 		return startupCommandRunner;
 	}
@@ -932,6 +939,7 @@ public class Main extends PApplet {
 		perfMonitor = new PerformanceMonitor(this);
 		postFX  = new PostFX(this);
 		randomMessagePainter = new RandomMessagePainter(this);
+		rewindHelper = new RewindHelper(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		starPainter = new StarPainter(this);
@@ -1283,6 +1291,8 @@ public class Main extends PApplet {
 		setupEvent.reset();
 	}
 	
+	
+	
 	protected void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
 		
@@ -1300,7 +1310,9 @@ public class Main extends PApplet {
 		settingsDisplay.reset();
 		TransitionSystem transition = prepareTransition(false);
 		
-		if (likedScenes.isEnabled()) {
+		if (keyListener.getSystem() == KEY_SYSTEMS.REWIND) {
+			currentScene = rewindHelper.getScene();
+		} else if (likedScenes.isEnabled()) {
 			currentScene = likedScenes.getPlugin();
 		} else {
 			currentScene = scenes.getPlugin();
@@ -1319,6 +1331,9 @@ public class Main extends PApplet {
 			}
 		}
 		
+		if (keyListener.getSystem() != KEY_SYSTEMS.REWIND) {
+			rewindHelper.addScene(currentScene);
+		}
 		drawSystem(currentScene, "scene");
 		
 		final TransitionSystem t = transition;
@@ -1460,8 +1475,10 @@ public class Main extends PApplet {
 		registerMainSwitches();
 		registerSystemCommands();
 		
-		likedScenes.registerHandler(Command.RIGHT_ARROW, (c,s,m) -> likedScenes.increment("->"));
-		likedScenes.registerHandler(Command.LEFT_ARROW, (c,s,m) -> likedScenes.decrement("<-"));
+		
+		//TODO restore this?
+//		likedScenes.registerHandler(Command.RIGHT_ARROW, (c,s,m) -> likedScenes.increment("->"));
+//		likedScenes.registerHandler(Command.LEFT_ARROW, (c,s,m) -> likedScenes.decrement("<-"));
 		
 		hotKeyHelper.register();
 		macroHelper.register();
@@ -1489,6 +1506,7 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
 		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
 		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.LEFT_ARROW, (cmd,src,mod) -> rewindHelper.enterRewindMode());
 		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
 		cs.registerHandler(Command.LOAD_CONFIGURATION, (cmd,src,mod)  -> configurator.reload(cmd.getPrimaryArg()));
 		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());

@@ -107,6 +107,8 @@ public enum Command {
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),
+	
+	//TODO Update descriptions?
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
