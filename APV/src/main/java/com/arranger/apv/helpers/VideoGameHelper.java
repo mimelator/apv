@@ -78,7 +78,12 @@ public class VideoGameHelper extends APVPlugin {
 	
 	public long getCheckpointSeconds() {
 		long totalMillis = System.currentTimeMillis() - checkPointStartTime;
-		return TimeUnit.MILLISECONDS.toSeconds(totalMillis);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(totalMillis);
+		if (seconds < 1) {
+			seconds = 1;
+		}
+		
+		return seconds;
 	}
 	
 	public float getCommandsPerSec() {
@@ -86,7 +91,8 @@ public class VideoGameHelper extends APVPlugin {
 	}
 	
 	public float getCheckPointCommandsPerSec() {
-		return (float)checkPointTotalCommands / (float)getCheckpointSeconds();
+		float cps = (float)checkPointTotalCommands / (float)getCheckpointSeconds();
+		return cps;
 	}
 
 	public String getTimeStamp() {

@@ -105,7 +105,7 @@ public class Main extends PApplet {
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
-	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
+	public static final int SCRAMBLE_QUIET_WINDOW = 600; //2 to 4 seconds
 	public static final int DEFAULT_SKIP_FRAMES_FOR_CONSOLE_OUTPUT = 200;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
