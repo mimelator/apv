@@ -184,6 +184,7 @@ public class Main extends PApplet {
 		audioListenerDiagnosticSwitch,
 		consoleOutputSwitch,
 		debugPulseSwitch,
+		flashFlagSwitch,
 		frameStroberSwitch,				
 		helpSwitch,
 		popularityPoolSwitch,
@@ -254,6 +255,7 @@ public class Main extends PApplet {
 		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic"),
 		CONSOLE_OUTPUT("ConsoleOutput"),
 		DEBUG_PULSE("DebugPulse"),
+		FLASH_FLAG("FlashFlag"),
 		FRAME_STROBER("FrameStrober"),
 		HELP("Help"),
 		MENU("Menu"),
@@ -1490,6 +1492,7 @@ public class Main extends PApplet {
 		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
+		registerSwitch(flashFlagSwitch, Command.SWITCH_FLASH_FLAG);
 		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
 		registerSwitch(helpSwitch, Command.SWITCH_HELP);
 		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
@@ -1650,6 +1653,7 @@ public class Main extends PApplet {
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
+		flashFlagSwitch = switches.get(SWITCH_NAMES.FLASH_FLAG.name);
 		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
 		popularityPoolSwitch = switches.get(SWITCH_NAMES.POPULARITY_POOL.name);
 		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);

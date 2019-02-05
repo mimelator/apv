@@ -25,6 +25,7 @@ public enum Command {
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
 	SWITCH_DEBUG_AGENT('a', "DebugAgentSwitch", "Displays the debug agent messages"),
 	SWITCH_DEBUG_PULSE(DeadCommandCode.next(), "DebugPulseSwitch", "Displays the debug pulse agent"),
+	SWITCH_FLASH_FLAG(DeadCommandCode.next(), "FlashFlagSwitch", "Enabled Flash components"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
 	SWITCH_AUDIO_LISTENER_DIAGNOSTIC('d', "Helps to Diagnose Audio Routing issues", "Enables/Disables the warning message to the screen"),
 	SWITCH_CONSOLE_OUTPUT(DeadCommandCode.next(), "Console Output Frame Switch", "Enables/Disables the frame info to console"),
