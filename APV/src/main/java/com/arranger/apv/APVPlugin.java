@@ -1,5 +1,10 @@
 package com.arranger.apv;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.arranger.apv.helpers.Switch;
+
 import processing.core.PConstants;
 
 public class APVPlugin implements PConstants {
@@ -14,6 +19,12 @@ public class APVPlugin implements PConstants {
 			"System", "Factory", "BackDrop", "Shape", "Message", "Location", "Menu" 
 	};
 	
+	@SuppressWarnings("serial")
+	private static final Set<String> FLASHERS = new HashSet<String>() {{
+	    add("Pulse");
+	    add("Strobe");
+	}};
+	
 	protected Main parent;
 	protected int id;
 	protected int popularityIndex = 1;
@@ -23,6 +34,8 @@ public class APVPlugin implements PConstants {
 	public APVPlugin(Main parent) {
 		this.parent = parent;
 		this.id = ID++;
+		
+		
 	}
 	
 	public String getName() {
@@ -64,6 +77,17 @@ public class APVPlugin implements PConstants {
 	}
 
 	public boolean isEnabled() {
+		if (enabled) {
+			//check if Flasher and Flasher enabled
+			if (isFlasher()) {
+				Switch sw = parent.getSwitches().get(Main.SWITCH_NAMES.FLASH_FLAG.name);
+//				if (!sw.isEnabled()) {
+//					System.out.println("Not showing the flasher: " + getName());
+//				}
+				
+				return sw.isEnabled();
+			}
+		}
 		return enabled;
 	}
 
@@ -83,6 +107,10 @@ public class APVPlugin implements PConstants {
 		this.popularityIndex = Math.max(0, popularityIndex);
 	}
 
+	public boolean isFlasher() {
+		return FLASHERS.contains(getName());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
