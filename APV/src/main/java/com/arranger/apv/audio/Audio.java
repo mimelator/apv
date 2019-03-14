@@ -78,9 +78,9 @@ public class Audio extends APVPlugin {
 		
 		db += offset;
 		
-		if (db < 0) {
-			System.out.println(db);
-		}
+//		if (db < 0) {
+//			System.out.println(db);
+//		}
 	}
 	
 	public float getDB() {

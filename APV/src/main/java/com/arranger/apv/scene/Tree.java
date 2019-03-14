@@ -83,7 +83,7 @@ public class Tree extends Animation {
 		if (tracker != null) {
 			if (tracker.isActive(e -> {return paths.size() > threshold;})) {
 				if (paths.size() < threshold) {
-					System.out.println("Finished threshold: " + threshold);
+//					System.out.println("Finished threshold: " + threshold);
 					tracker.fireEvent();
 					tracker = null;
 					apvShape = null;
