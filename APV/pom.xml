@@ -8,12 +8,13 @@
 	<properties>
 	    <maven.javadoc.skip>true</maven.javadoc.skip>
 	    <version>${project.version}</version>
+            <project.scm.id>github</project.scm.id>
 	</properties>
 
 	<scm>
-		<url>https://github.com/mimelator/apv</url>
+   	<url>https://github.com/mimelator/apv</url>
 		<connection>scm:git:https://github.com/mimelator/apv.git</connection>
-		<tag>APV-0.7.0</tag>
+		<tag>APV-0.7.2</tag>
 	</scm>
 	
 	<distributionManagement>
