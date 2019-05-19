@@ -52,7 +52,6 @@ public class SettingsDisplay extends APVPlugin implements TextSupplier {
 		addSettingsMessage("---------System Settings-------");
 		addSettingsMessage("Version: " + p.getVersionInfo().getVersion());
 		addSettingsMessage("Frame rate: " + (int)p.frameRate);
-		addSettingsMessage("Ocean: " + p.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
 		addSettingsMessage("Mode: " + p.getCurrentControlMode().name());
 		p.getControl().addSettingsMessages();
 		addSettingsMessage("Cmds/Sec: " + VideoGameHelper.decFormat.format(p.getVideoGameHelper().getCommandsPerSec()));

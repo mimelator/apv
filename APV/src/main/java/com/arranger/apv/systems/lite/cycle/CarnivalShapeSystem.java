@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import com.arranger.apv.APV;
 import com.arranger.apv.Main;
+import com.arranger.apv.agent.automation.AgentEvent;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
 import com.arranger.apv.factory.APVShape;
@@ -21,44 +22,54 @@ import processing.core.PVector;
  */
 public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 	
-	private static final int NUM_FLASH_DRAWS = 30;
+	private static final float HALF_SEC = .5f;
+	private static final float TWO_SEC = 2f;
+	private static final int DEFAULT_NUM_EVENTS_TO_SKIP = 3;
+	private static final int SKIP_RANGE = 3;
 	
 	private boolean useCustomColor = false;
+	private int numEventsToSkip;
 	private ColorSystem colorSystem;
 	private DrawHelper drawHelper;
 
-	public CarnivalShapeSystem(Main parent, boolean useCustomColor) {
-		this(parent, null, useCustomColor);
+	public CarnivalShapeSystem(Main parent, boolean useCustomColor, int numEventsToSkip) {
+		this(parent, null, useCustomColor, numEventsToSkip);
 	}
 	
-	public CarnivalShapeSystem(Main parent, ShapeFactory factory, boolean useCustomColor) {
+	public CarnivalShapeSystem(Main parent, ShapeFactory factory, boolean useCustomColor, int numEventsToSkip) {
 		super(parent);
 		this.useCustomColor = useCustomColor;
+		this.numEventsToSkip = numEventsToSkip;
 		this.factory = factory;
 		if (this.factory != null) {
 			this.factory.setShapeSystem(this);
 		}
 		
-		parent.getCarnivalEvent().register(() -> {
+		AgentEvent agentEvent = new AgentEvent(parent, parent.getCarnivalEvent(), numEventsToSkip, numEventsToSkip * SKIP_RANGE);
+		agentEvent.setHandler(()-> {
 			if (drawHelper == null) {
-				drawHelper = new DrawHelper(parent, NUM_FLASH_DRAWS, this, () -> drawHelper = null);
+				int numDraws = (int)(parent.getFrameRate() * parent.random(HALF_SEC, TWO_SEC));
+				//System.out.printf("Drawing: %s for %s frames\n", getConfig(), numDraws);
+				drawHelper = new DrawHelper(parent, numDraws, this, () -> drawHelper = null);
 			}
 		});
-	}
+}
 	
 	public CarnivalShapeSystem(Configurator.Context ctx) {
 		this(ctx.getParent(), 
 				(ShapeFactory)ctx.loadPlugin(0),
-				ctx.getBoolean(1, false));
+				ctx.getBoolean(1, false),
+				ctx.getInt(2, DEFAULT_NUM_EVENTS_TO_SKIP));
 	}
 
 	@Override
 	public String getConfig() {
-		//{CarnivalShapeSystem : [{CarnivalShapeSystem : [Emoji_Blitz_Star.png, 1.5]}, true]}
-		return String.format("{%s : [%s, %b]}", 
+		//{CarnivalShapeSystem : [{CarnivalShapeSystem : [Emoji_Blitz_Star.png, 1.5]}, true, 2]}
+		return String.format("{%s : [%s, %b, %s]}", 
 				getName(), 
 				factory == null ? "{}" : factory.getConfig(),
-				useCustomColor);
+				useCustomColor,
+				numEventsToSkip);
 	}
 
 	@Override
@@ -178,11 +189,12 @@ public class CarnivalShapeSystem extends LiteCycleShapeSystem {
 				parent.stroke(c);
 				parent.point(loc.x, loc.y);
 			} else {
+				factoryShape.setColor(c, alpha);
 				PShape drawShape = factoryShape.getShape();
 				parent.rectMode(CENTER);
 				parent.stroke(4);
 				drawShape.setFill(true);
-				factoryShape.setColor(c, alpha);
+				drawShape.rotate((float)Math.toRadians(parent.random(0, 15)));
 				
 				parent.shape(drawShape, loc.x, loc.y);
 				

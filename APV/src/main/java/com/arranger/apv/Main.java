@@ -5,10 +5,12 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +25,6 @@ import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.control.ControlSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
-import com.arranger.apv.db.DBSupport;
 import com.arranger.apv.event.APVChangeEvent;
 import com.arranger.apv.event.APVEvent;
 import com.arranger.apv.event.APVEvent.EventHandler;
@@ -34,27 +35,30 @@ import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.filter.Filter;
 import com.arranger.apv.gui.APVWindow;
 import com.arranger.apv.helpers.APVPulseListener;
+import com.arranger.apv.helpers.AutoAudioAdjuster;
 import com.arranger.apv.helpers.HelpDisplay;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.LIVE_SETTINGS;
 import com.arranger.apv.helpers.MacroHelper;
 import com.arranger.apv.helpers.PerformanceMonitor;
-import com.arranger.apv.helpers.SetPackLoader;
+import com.arranger.apv.helpers.RewindHelper;
 import com.arranger.apv.helpers.SettingsDisplay;
 import com.arranger.apv.helpers.Switch;
 import com.arranger.apv.helpers.Switch.STATE;
 import com.arranger.apv.helpers.VideoGameHelper;
+import com.arranger.apv.helpers.WelcomeDisplay;
 import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.menu.APVMenu;
 import com.arranger.apv.model.ColorsModel;
 import com.arranger.apv.model.EmojisModel;
 import com.arranger.apv.model.IconsModel;
 import com.arranger.apv.model.SetPackModel;
 import com.arranger.apv.model.SongsModel;
 import com.arranger.apv.msg.MessageSystem;
+import com.arranger.apv.scene.Forest;
 import com.arranger.apv.scene.LikedScene;
 import com.arranger.apv.scene.Marquee;
 import com.arranger.apv.scene.Scene;
-import com.arranger.apv.scene.Tree;
 import com.arranger.apv.shader.Shader;
 import com.arranger.apv.systems.ShapeSystem;
 import com.arranger.apv.transition.TransitionSystem;
@@ -65,7 +69,10 @@ import com.arranger.apv.util.FileHelper;
 import com.arranger.apv.util.FontHelper;
 import com.arranger.apv.util.Gravity;
 import com.arranger.apv.util.ImageHelper;
+import com.arranger.apv.util.KeyListener;
+import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 import com.arranger.apv.util.LoggingConfig;
+import com.arranger.apv.util.MouseListener;
 import com.arranger.apv.util.Particles;
 import com.arranger.apv.util.VersionInfo;
 import com.arranger.apv.util.cmdrunner.FileCommandRunner;
@@ -91,17 +98,18 @@ import processing.event.Event;
 import processing.opengl.PShader;
 
 public class Main extends PApplet {
-	
+
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 	public static final int NUMBER_PARTICLES = 50;//100;
 	public static final String RENDERER = P3D;
 	public static final int BUFFER_SIZE = 512;
 	public static final int MAX_ALPHA = 255;
-	public static final int SCRAMBLE_QUIET_WINDOW = 120; //2 to 4 seconds
+	public static final int SCRAMBLE_QUIET_WINDOW = 600; //2 to 4 seconds
 	public static final int DEFAULT_SKIP_FRAMES_FOR_CONSOLE_OUTPUT = 200;
 	public static final char SPACE_BAR_KEY_CODE = ' ';
 
+	protected APVAgent agent;
 	protected APV<ShapeSystem> backgrounds;
 	protected APV<BackDropSystem> backDrops;
 	protected APV<ColorSystem> colors;
@@ -110,42 +118,46 @@ public class Main extends PApplet {
 	protected APV<ShapeSystem> foregrounds; 
 	protected APV<LikedScene> likedScenes;
 	protected APV<LocationSystem> locations; 
-	protected APV<MessageSystem> messages;	
+	protected APV<MessageSystem> messages;
 	protected APV<Scene> scenes;	
 	protected APV<Shader> shaders;	
 	protected APV<TransitionSystem> transitions;
+	protected APVWatermark watermark;
 	
 	//Useful helper classes
-	protected APVAgent agent;
-	protected APVPulseListener pulseListener;
-	protected APVWatermark watermark;
-	protected APVSetListPlayer setListPlayer;
+	protected APVMenu apvMenu;
+	protected APVPulseListener apvPulseListener;
+	protected APVSetListPlayer apvSetListPlayer;
 	protected Audio audio;
-	protected Configurator configurator;
-	protected CommandSystem commandSystem;
-	protected DBSupport dbSupport;
-	protected Gravity gravity;
+	protected AutoAudioAdjuster autoAudioAdjuster;
 	protected ColorHelper colorHelper;
-	protected ImageHelper imageHelper;
-	protected FrameStrober frameStrober;
-	protected PerformanceMonitor perfMonitor;
-	protected SettingsDisplay settingsDisplay;
-	protected Oscillator oscillator;
-	protected LoggingConfig loggingConfig;
-	protected HelpDisplay helpDisplay;
-	protected Particles particles;
-	protected VersionInfo versionInfo;
-	protected VideoGameHelper videoGameHelper;
-	protected MacroHelper macroHelper;
-	protected HotKeyHelper hotKeyHelper;
-	protected SetPackLoader setPackLoader;
+	protected CommandSystem commandSystem;
+	protected Configurator configurator;
+	protected FileCommandRunner fileCommandRunner;
 	protected FontHelper fontHelper;
+	protected FrameStrober frameStrober;
+	protected Gravity gravity;
+	protected HelpDisplay helpDisplay;
+	protected HotKeyHelper hotKeyHelper;
+	protected ImageHelper imageHelper;
+	protected KeyListener keyListener;
+	protected LoggingConfig loggingConfig;
+	protected MacroHelper macroHelper;
+	protected MouseListener mouseListener;
+	protected Oscillator oscillator;
+	protected Particles particles;
+	protected PerformanceMonitor perfMonitor;
+	protected PostFX postFX;
 	protected RandomMessagePainter randomMessagePainter;
+	protected RewindHelper rewindHelper;
+	protected SettingsDisplay settingsDisplay;
 	protected SplineHelper splineHelper;
 	protected StarPainter starPainter;
 	protected StartupCommandRunner startupCommandRunner;
-	protected FileCommandRunner fileCommandRunner;
-	protected PostFX postFX;
+	protected VersionInfo versionInfo;
+	protected VideoGameHelper videoGameHelper;
+	protected WelcomeDisplay welcomeDisplay;
+	
 	
 	//Collections
 	protected Map<String, Switch> switches = new HashMap<String, Switch>();
@@ -168,44 +180,52 @@ public class Main extends PApplet {
 	
 	
 	//Switches for runtime
-	private Switch helpSwitch,
-					showSettingsSwitch,
-					frameStroberSwitch,
-					videoGameSwitch,
-					scrambleModeSwitch,
-					debugPulseSwitch,
-					consoleOutputSwitch;
+	private Switch 
+		audioListenerDiagnosticSwitch,
+		consoleOutputSwitch,
+		debugPulseSwitch,
+		flashFlagSwitch,
+		frameStroberSwitch,				
+		helpSwitch,
+		popularityPoolSwitch,
+		showSettingsSwitch,
+		scrambleModeSwitch,
+		videoGameSwitch,
+		welcomeSwitch;
 	
 	public enum FLAGS {
 		
-		CONTROL_MODE("controlMode", "PERLIN|AUTO|MANUAL|SNAP"),
-		FULL_SCREEN("fullScreen", "true|false"),
-		SCRAMBLE_SYSTEMS("scrambleSystems", "true|false"),
-		SCREEN_WIDTH("screen.width", "integer"),
-		SCREEN_HEIGHT("screen.height", "integer"),
-		MONITORING_ENABLED("monitoring.enabled", "true|false"),
-		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
-		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
 		AUTO_ADD_SOBLE("autoAddSoble", "true|false"),
-		TREE_COMPLEXITY_CUTOFF("treeComplexityCutoff", "0<100"),
-		TREE_MIN_SIZE("treeMinSize", "0<10"),
+		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
+		AUTO_LOADED_BACKGROUND_FOLDER("autoLoadedBackgroundFolder", "directory"),
+		APV_CONFIG_VERSION("configVersion", "string"),
+		CONTROL_MODE("controlMode", "PERLIN|MANUAL"),
+		COUNTDOWN_PCT("countdownPct", "0 <> 1"),
+		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
 		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
 		FONT_NAME("font.name", "string"),
 		FONT_SIZE("font.size", "integer"),
 		FONT_STYLE("font.style", "PLAIN|ITALIC|BOLD"),
-		SET_LIST("setList", "true|false"),
-		SET_LIST_FOLDER("setListFolder", "directory"),
-		AUTO_LOAD_SET_LIST_FOLDER("autoLoadSetListFolder", "true|false"),
+		FRAME_RATE("frameRate", "integer"),
+		FULL_SCREEN("fullScreen", "true|false"),
 		LINE_IN("lineIn", "true|false"),
 		LISTEN_ONLY("listenOnly", "true|false"),
-		WATERMARK_FRAMES("watermarkFrames", "integer"),
+		MARQUEE_FRAMES("marqueeFrames", "integer"),
+		MONITORING_ENABLED("monitoring.enabled", "true|false"),
 		MUSIC_DIR("musicDir", "directory"),
-		MONGO_HOST_PORT("mongoHostPort", "string"),
-		MONGO_DB_NAME("mongoDbName", "string"),
-		FIREBASE_ENABLED("firebase", "true|false"),
-		FIREBASE_DB_ENDPOINT("firebaseDBEndpoint", "URL"),
-		OCEAN_NAME("ocean", "string");
+		OCEAN_NAME("ocean", "string"),
+		PULSE_SENSITIVITY("pulseSensitivity", "integer"),
+		QUIET_WINDOW_SIZE("quietWindowSize", "integer"),
+		SCRAMBLE_SYSTEMS("scrambleSystems", "true|false"),
+		SCREEN_WIDTH("screen.width", "integer"),
+		SCREEN_HEIGHT("screen.height", "integer"),
+		SET_LIST("setList", "true|false"),
+		SET_LIST_FOLDER("setListFolder", "directory"),
+		TREE_COMPLEXITY_CUTOFF("treeComplexityCutoff", "0<100"),
+		TREE_MIN_SIZE("treeMinSize", "0<10"),
+		WATERMARK_FRAMES("watermarkFrames", "integer");
+		
 		
 		private String name;
 		private String description;
@@ -232,14 +252,18 @@ public class Main extends PApplet {
 	}
 
 	public enum SWITCH_NAMES {
-		
-		HELP("Help"),
-		SHOW_SETTINGS("ShowSettings"),
+		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic"),
+		CONSOLE_OUTPUT("ConsoleOutput"),
+		DEBUG_PULSE("DebugPulse"),
+		FLASH_FLAG("FlashFlag"),
 		FRAME_STROBER("FrameStrober"),
+		HELP("Help"),
+		MENU("Menu"),
+		POPULARITY_POOL("PopularityPool"),
 		SCRAMBLE_MODE("Scramble"),
+		SHOW_SETTINGS("ShowSettings"),
 		VIDEO_GAME("VideoGame"),
-		CONSOLE_OUTPUT("ConsoleOutputSwitch"),
-		DEBUG_PULSE("DebugPulse");
+		WELCOME("Welcome");
 		
 		public String name;
 
@@ -262,13 +286,13 @@ public class Main extends PApplet {
 		LOCATIONS("locations"),
 		MACROS("macros", false),
 		MESSAGES("messages"),
+		MENU("menu"),
 		PULSELISTENERS("pulseListeners", false),
 		SCENES("scenes"),
 		SHADERS("shaders"),
 		SWITCHES("switches", false),
 		TRANSITIONS("transitions"),
 		WATERMARKS("watermarks", false);
-		
 		
 		public String name;
 		public boolean isFullSystem;
@@ -308,15 +332,29 @@ public class Main extends PApplet {
 		this.procControl = procControl;
 	}
 	
+	@Override
 	public void settings() {
 		loggingConfig = new LoggingConfig(this);
 		loggingConfig.configureLogging();
 		
 		configurator = new Configurator(this);
+		
+		//check version
+		//TODO if there is a mismatch, how to best handle that?
+		Config rootConfig = configurator.getRootConfig();
+		if (rootConfig.hasPath(FLAGS.APV_CONFIG_VERSION.apvName())) {
+			String configurationVersion = rootConfig.getString(FLAGS.APV_CONFIG_VERSION.apvName());
+			
+			String version = new VersionInfo(this).getVersion();
+			if (!version.equals(configurationVersion)) {
+				System.out.println("Initializing with configuration version: " + configurationVersion + 
+						" and running version: " + version);
+			}
+		}
+		
 		configureSwitches();
 		
 		if (!procControl) {
-			Config rootConfig = configurator.getRootConfig();
 			boolean isFullScreen = rootConfig.getBoolean(FLAGS.FULL_SCREEN.apvName());
 			if (isFullScreen) {
 				fullScreen(RENDERER);
@@ -341,7 +379,11 @@ public class Main extends PApplet {
 	
 	public String getConfigValueForFlag(FLAGS flag) {
 		Config rootConfig = getConfigurator().getRootConfig();
-		return rootConfig.getString(flag.apvName());
+		if (rootConfig.hasPath(flag.apvName())) {
+			return rootConfig.getString(flag.apvName());
+		} else {
+			return "";
+		}
 	}
 	
 	public boolean getConfigBooleanForFlag(FLAGS flag) {
@@ -368,12 +410,20 @@ public class Main extends PApplet {
 		return systemMap.get(name);
 	}
 	
+	public Collection<APV<? extends APVPlugin>> getSystems() {
+		return systemMap.values();
+	}
+	
 	public FontHelper getFontHelper() {
 		return fontHelper;
 	}
+	
+	public KeyListener getKeyListener() {
+		return keyListener;
+	}
 
-	public SetPackLoader getSetPackLoader() {
-		return setPackLoader;
+	public MouseListener getMouseListener() {
+		return mouseListener;
 	}
 	
 	public MacroHelper getMacroHelper() {
@@ -396,12 +446,12 @@ public class Main extends PApplet {
 		return audio;
 	}
 	
-	public Gravity getGravity() {
-		return gravity;
+	public AutoAudioAdjuster getAutoAudioAdjuster() {
+		return autoAudioAdjuster;
 	}
 	
-	public DBSupport getDBSupport() {
-		return dbSupport;
+	public Gravity getGravity() {
+		return gravity;
 	}
 	
 	public FrameStrober getFrameStrober() {
@@ -429,11 +479,11 @@ public class Main extends PApplet {
 	}
 	
 	public APVPulseListener getPulseListener() {
-		return pulseListener;
+		return apvPulseListener;
 	}
 	
 	public APVSetListPlayer getSetListPlayer() {
-		return setListPlayer;
+		return apvSetListPlayer;
 	}
 	
 	public APVAgent getAgent() {
@@ -442,6 +492,10 @@ public class Main extends PApplet {
 	
 	public HelpDisplay getHelpDisplay() {
 		return helpDisplay;
+	}
+	
+	public WelcomeDisplay getWelcomeDisplay() {
+		return welcomeDisplay;
 	}
 	
 	public Particles getParticles() {
@@ -537,6 +591,10 @@ public class Main extends PApplet {
 		return (CoreEvent)eventMap.get(EventTypes.LOCATION);
 	}
 	
+	public CoreEvent getALDAEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.ALDA);
+	}
+	
 	public CoreEvent getColorChangeEvent() {
 		return (CoreEvent)eventMap.get(EventTypes.COLOR_CHANGE);
 	}
@@ -547,6 +605,10 @@ public class Main extends PApplet {
 	
 	public CoreEvent getSetPackStartEvent() {
 		return (CoreEvent)eventMap.get(EventTypes.SET_PACK_START);
+	}
+	
+	public CoreEvent getMousePulseEvent() {
+		return (CoreEvent)eventMap.get(EventTypes.MOUSE_PULSE);
 	}
 	
 	public boolean isMonitoringEnabled() {
@@ -569,20 +631,20 @@ public class Main extends PApplet {
 		return getConfigBoolean(FLAGS.LISTEN_ONLY.apvName());
 	}
 	
-	public boolean isFirebaseEnabled() {
-		return getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName());
-	}
-	
-	public String getFirebaseDBEndpoint() {
-		return getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName());
-	}
-	
 	public int getDefaultShapeSystemAlpha() {
 		return getConfigInt(FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA.apvName());
 	}
 	
+	public int getMarqueeFrames() {
+		return getConfigInt(FLAGS.MARQUEE_FRAMES.apvName());
+	}
+	
 	public int getWatermarkFrames() {
 		return getConfigInt(FLAGS.WATERMARK_FRAMES.apvName());
+	}
+	
+	public float getFrameRate() {
+		return getConfigFloat(FLAGS.FRAME_RATE.apvName());
 	}
 	
 	public void activateNextPlugin(SYSTEM_NAMES systemName, String pluginDisplayName, String cause) {
@@ -601,14 +663,20 @@ public class Main extends PApplet {
 	}
 	
 	public APVPlugin getPluginByName(APV<? extends APVPlugin> apv, String pluginDisplayName) {
-		return apv.getList().stream().filter(p -> {
+		Optional<? extends APVPlugin> findFirst = apv.getList().stream().filter(p -> {
 			String displayName = p.getDisplayName();
 			String name = p.getName();
 			boolean b1 = pluginDisplayName.equalsIgnoreCase(displayName);
 			boolean b2 = pluginDisplayName.equalsIgnoreCase(name);
 			return b1 || b2;
 			
-		}).findFirst().get();
+		}).findFirst();
+		if (findFirst.isPresent()) {
+			return findFirst.get();
+		} else {
+			System.out.println("Unable to find plugin by name: " + pluginDisplayName);
+			return null;
+		}
 	}
 	
 	public void setDefaultScene(String cause) {
@@ -676,6 +744,10 @@ public class Main extends PApplet {
 		return messages.getPlugin();
 	}
 	
+	public APVMenu getMenu() {
+		return apvMenu;
+	}
+	
 	public  APV<LocationSystem> getLocations() {
 		return locations;
 	}
@@ -699,6 +771,10 @@ public class Main extends PApplet {
 		return randomMessagePainter;
 	}
 	
+	public RewindHelper getRewindHelper() {
+		return rewindHelper;
+	}
+	
 	public StartupCommandRunner getStartupCommandRunner() {
 		return startupCommandRunner;
 	}
@@ -709,12 +785,18 @@ public class Main extends PApplet {
 	
 	public void likeCurrentScene() {
 		likedScenes.getList().add(new LikedScene(currentScene));
-		sendMessage(new String[] {"Liked :)"});
+		updatePopularity(currentScene, true);
+		getConfigurator().saveCurrentConfig();
+		String likedMsg = "Liked :)";
+		sendMarqueeMessage(likedMsg);
 	}
 	
 	public void disLikeCurrentScene() {
 		likedScenes.getList().remove(currentScene);
+		updatePopularity(currentScene, false);
+		getConfigurator().saveCurrentConfig();
 		sendMessage(new String[] {"Disliked :("});
+		scramble();
 	}
 	
 	public List<LikedScene> getLikedScenes() {
@@ -782,9 +864,55 @@ public class Main extends PApplet {
 			fragFilename = fragFilename.substring(indexOf, fragFilename.length());
 		}
 		
-		return super.loadShader(fragFilename);
+		try {
+			return super.loadShader(fragFilename);
+		} catch (Exception e) {
+			//On Windows, some Custom Shaders aren't loading properly
+			logger.log(Level.INFO, e.getMessage(), e);
+			logger.log(Level.SEVERE, "Unable to load shader: " + fragFilename);
+			return null;
+		}
 	}
 	
+	//Folder Selection Support.  JFileChooser (and similar) are buggy with processing
+	
+	@FunctionalInterface
+	public interface FileSelectionHandler {
+		void onSelection(File fileObject);
+	}
+	
+	private transient FileSelectionHandler fsh;
+	
+	public void selectFolder(String prompt, FileSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectFolder(prompt, "onFolderSelected");
+	}
+	
+	public void selectFile(String prompt, FileSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectOutput(prompt, "onFolderSelected");
+	}
+	
+	public void selectInputFile(String prompt, FileSelectionHandler fsh) {
+		this.fsh = fsh;
+		super.selectInput(prompt, "onFolderSelected");
+	}
+	
+	/**
+	 * The PApplet.selectFolder() API requires a named call back in the class extending PApplet.
+	 */
+	public void onFolderSelected(File selection) {
+		if (selection == null) {
+			return;
+		}
+		
+		if (fsh != null) {
+			fsh.onSelection(selection);
+			fsh = null;
+		}
+	}
+	
+	@Override
 	public void setup() {
 		songsModel = new SongsModel(this);
 		colorsModel = new ColorsModel(this);
@@ -793,31 +921,34 @@ public class Main extends PApplet {
 		setPackModel = new SetPackModel(this);
 		
 		agent = new APVAgent(this);
+		apvPulseListener = new APVPulseListener(this);
 		audio = new Audio(this, BUFFER_SIZE);
-		dbSupport = new DBSupport(this);
-		commandSystem = new CommandSystem(this);
-		frameStrober = new FrameStrober(this);
-		imageHelper = new ImageHelper(this);
+		autoAudioAdjuster = new AutoAudioAdjuster(this);
 		colorHelper = new ColorHelper(this);
+		commandSystem = new CommandSystem(this);
+		fileCommandRunner = new FileCommandRunner(this);
 		fontHelper = new FontHelper(this);
+		frameStrober = new FrameStrober(this);
 		gravity = new Gravity(this);
 		helpDisplay = new HelpDisplay(this);
+		hotKeyHelper = new HotKeyHelper(this);
+		imageHelper = new ImageHelper(this);
+		keyListener = new KeyListener(this);
+		mouseListener = new MouseListener(this);
+		macroHelper = new MacroHelper(this);
 		oscillator = new Oscillator(this);
 		particles = new Particles(this);
 		perfMonitor = new PerformanceMonitor(this);
 		postFX  = new PostFX(this);
-		pulseListener = new APVPulseListener(this);
-		macroHelper = new MacroHelper(this);
-		hotKeyHelper = new HotKeyHelper(this);
-		setPackLoader = new SetPackLoader(this);
 		randomMessagePainter = new RandomMessagePainter(this);
+		rewindHelper = new RewindHelper(this);
 		settingsDisplay = new SettingsDisplay(this);
 		splineHelper = new SplineHelper(this);
 		starPainter = new StarPainter(this);
+		startupCommandRunner = new StartupCommandRunner(this);
 		versionInfo = new VersionInfo(this);
 		videoGameHelper = new VideoGameHelper(this);
-		startupCommandRunner = new StartupCommandRunner(this);
-		fileCommandRunner = new FileCommandRunner(this);
+		welcomeDisplay = new WelcomeDisplay(this);
 		
 		systemMap.put(SYSTEM_NAMES.BACKDROPS, new APV<BackDropSystem>(this, SYSTEM_NAMES.BACKDROPS));
 		systemMap.put(SYSTEM_NAMES.BACKGROUNDS, new APV<ShapeSystem>(this, SYSTEM_NAMES.BACKGROUNDS));
@@ -828,6 +959,7 @@ public class Main extends PApplet {
 		systemMap.put(SYSTEM_NAMES.LIKED_SCENES, new APV<Scene>(this, SYSTEM_NAMES.LIKED_SCENES));
 		systemMap.put(SYSTEM_NAMES.LOCATIONS, new APV<LocationSystem>(this, SYSTEM_NAMES.LOCATIONS));
 		systemMap.put(SYSTEM_NAMES.MESSAGES, new APV<MessageSystem>(this, SYSTEM_NAMES.MESSAGES));
+		systemMap.put(SYSTEM_NAMES.MENU, new APVMenu(this));
 		systemMap.put(SYSTEM_NAMES.SCENES, new APV<Scene>(this, SYSTEM_NAMES.SCENES, false));
 		systemMap.put(SYSTEM_NAMES.SHADERS, new APV<Shader>(this, SYSTEM_NAMES.SHADERS));
 		systemMap.put(SYSTEM_NAMES.TRANSITIONS, new APV<TransitionSystem>(this, SYSTEM_NAMES.TRANSITIONS));
@@ -854,15 +986,14 @@ public class Main extends PApplet {
 
 		setDefaultScene("setup");
 		checkStartupSetList();
-		
 		fireSetupEvent();
-		
 		startupCommandRunner.runStartupCommands();
+		frameRate(getFrameRate());
 	}
 
 	public void playSetList(File directory) {
 		ensureSetListReadyToPlay();
-		setListPlayer.play(directory);
+		apvSetListPlayer.play(directory);
 		songsModel.onSetListPlayerChange();
 	}
 	
@@ -925,21 +1056,6 @@ public class Main extends PApplet {
 		return setPackModel;
 	}
 	
-	public void ffwd() {
-		songsModel.ffwd();
-	}
-	
-	public void playPause() {
-		//Leave this active for emergencies
-		getSceneCompleteEvent().fire();
-		//getSetListCompleteEvent().fire();
-		//throw new RuntimeException("playPause not implemented");
-	}
-
-	public void prev() {
-		songsModel.prev();
-	}
-	
 	/**
 	 * Reset all switches and control mode
 	 */
@@ -959,6 +1075,15 @@ public class Main extends PApplet {
 		activateNextPlugin(SYSTEM_NAMES.LOCATIONS, "Mouse", Command.MANUAL.name());
 	}
 	
+	/**
+	 * Similar to {@link #manual()} but leaves agents alone
+	 * As a result various agents might change the location mode away quickly
+	 */
+	public void mouseControl() {
+		currentControlMode = CONTROL_MODES.MANUAL;
+		activateNextPlugin(SYSTEM_NAMES.LOCATIONS, "Mouse", Command.MANUAL.name());
+	}
+	
 	public void sendMessage(String [] msgs) {
 		if (messages.isEnabled()) {
 			getMessage().onNewMessage(msgs);
@@ -970,7 +1095,7 @@ public class Main extends PApplet {
 		setNextScene(marquee, "marquee");
 		
 		//Send the message to the lower right for awhile
-		new TextDrawHelper(this, 1200, Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
+		new TextDrawHelper(this, getMarqueeFrames(), Arrays.asList(new String[] {message}), SafePainter.LOCATION.LOWER_RIGHT); 
 	}
 	
 	public void showLiveSetting(Command cmd) {
@@ -980,12 +1105,17 @@ public class Main extends PApplet {
 	}
 	
 	public void sendTreeMessage(String message) {
-		Tree tree = new Tree(this);
-		setNextScene(tree, "tree");
+		if (message == null) {
+			//get one
+			message = getRandomMessagePainter().getRandomMessage();
+		}
+		
+		Forest forest = new Forest(this);
+		setNextScene(forest, "forestMessage");
 		
 		//Send message and watermark
 		sendMessage(new String[] {message});
-		WatermarkPainter wp = new WatermarkPainter(this, 1200, message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
+		WatermarkPainter wp = new WatermarkPainter(this, getMarqueeFrames(), message, 1, LOCATION.MIDDLE, WatermarkPainter.WATERMARK_ALPHA);
 		new DrawHelper(this, wp.getNumFrames(), wp, () -> {});
 	}
 	
@@ -1008,7 +1138,7 @@ public class Main extends PApplet {
 		songs = songs.subList(model.getIndex(), songs.size() - 1);
 		messages.addAll(songs.stream().map(f -> f.getName()).collect(Collectors.toList()));
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	public void showOceanSetInfo() {
@@ -1016,7 +1146,7 @@ public class Main extends PApplet {
 		messages.add("Ocean: " + getConfigValueForFlag(Main.FLAGS.OCEAN_NAME));
 		messages.add("SetPack: " + getFriendlySetPackName(getSetPackModel().getSetPackName()));
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.MIDDLE);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.MIDDLE);
 	}
 	
 	public void showAvailableSetPacks() {
@@ -1025,7 +1155,7 @@ public class Main extends PApplet {
 		List<String> collect = getSetPackModel().getSetPackList().stream().map(s -> getFriendlySetPackName(s)).collect(Collectors.toList());
 		messages.addAll(collect);
 		
-		new TextDrawHelper(this, 1200, messages, SafePainter.LOCATION.UPPER_LEFT);
+		new TextDrawHelper(this, getMarqueeFrames(), messages, SafePainter.LOCATION.UPPER_LEFT);
 	}
 	
 	@FunctionalInterface
@@ -1088,7 +1218,9 @@ public class Main extends PApplet {
 		
 		//stop monitor agent
 		MonitorAgent monitorAgent = (MonitorAgent)getAgent().getFirstInstanceOf(MonitorAgent.class);
-		monitorAgent.shutdown();
+		if (monitorAgent != null) {
+			monitorAgent.shutdown();
+		}
 		
 		//processing
 		exit();
@@ -1126,6 +1258,7 @@ public class Main extends PApplet {
 		
 		configurator.reload(file);
 		SYSTEM_NAMES.VALUES.forEach(s -> reloadConfigurationForSystem(s));
+		assignSystems();
 		
 		//special case a couple of helpers
 		randomMessagePainter.reset();
@@ -1133,7 +1266,6 @@ public class Main extends PApplet {
 		hotKeyHelper.reloadConfiguration();
 		agent.reloadConfiguration();
 		watermark.reloadConfiguration();
-		setPackLoader.reset();
 		
 		songsModel.reset();
 		colorsModel.reset();
@@ -1161,8 +1293,15 @@ public class Main extends PApplet {
 		setupEvent.reset();
 	}
 	
+	
+	
 	protected void _draw() {
 		logger.info("Drawing frame: " + getFrameCount());
+		
+		if (apvMenu.isEnabled()) {
+			apvMenu.drawMenu();
+			return;
+		}
 		
 		scrambleModeSwitch.setState(isScrambleModeAvailable() ? STATE.ENABLED : STATE.DISABLED);
 		if (frameStroberSwitch.isEnabled()) {
@@ -1173,7 +1312,9 @@ public class Main extends PApplet {
 		settingsDisplay.reset();
 		TransitionSystem transition = prepareTransition(false);
 		
-		if (likedScenes.isEnabled()) {
+		if (keyListener.getSystem() == KEY_SYSTEMS.REWIND) {
+			currentScene = rewindHelper.getScene();
+		} else if (likedScenes.isEnabled()) {
 			currentScene = likedScenes.getPlugin();
 		} else {
 			currentScene = scenes.getPlugin();
@@ -1192,6 +1333,9 @@ public class Main extends PApplet {
 			}
 		}
 		
+		if (keyListener.getSystem() != KEY_SYSTEMS.REWIND) {
+			rewindHelper.addScene(currentScene);
+		}
 		drawSystem(currentScene, "scene");
 		
 		final TransitionSystem t = transition;
@@ -1200,6 +1344,7 @@ public class Main extends PApplet {
 		postScene(messages.isEnabled(), () -> drawSystem(getMessage(), "message"));
 		postScene(videoGameSwitch, () -> videoGameHelper.showStats());
 		postScene(helpSwitch, () -> helpDisplay.showHelp());
+		postScene(welcomeSwitch, () -> welcomeDisplay.showHelp());
 		postScene(scrambleMode, () -> doScramble());
 		postScene(() -> runControlMode());
 		postScene(screenshotMode, () -> doScreenCapture());
@@ -1312,15 +1457,15 @@ public class Main extends PApplet {
 	protected void checkStartupSetList() {
 		ensureSetListReadyToPlay();
 		if (isSetList() && !isListenOnly()) {
-			setListPlayer.playStartupSongList();
+			apvSetListPlayer.playStartupSongList();
 		}
 	}
 	
 	protected void ensureSetListReadyToPlay() {
-		if (setListPlayer != null) {
-			setListPlayer.stop();
+		if (apvSetListPlayer != null) {
+			apvSetListPlayer.stop();
 		} else {
-			setListPlayer = new APVSetListPlayer(this);
+			apvSetListPlayer = new APVSetListPlayer(this);
 		}
 	}
 
@@ -1332,8 +1477,10 @@ public class Main extends PApplet {
 		registerMainSwitches();
 		registerSystemCommands();
 		
-		likedScenes.registerHandler(Command.RIGHT_ARROW, (c,s,m) -> likedScenes.increment("->"));
-		likedScenes.registerHandler(Command.LEFT_ARROW, (c,s,m) -> likedScenes.decrement("<-"));
+		
+		//TODO restore this?
+//		likedScenes.registerHandler(Command.RIGHT_ARROW, (c,s,m) -> likedScenes.increment("->"));
+//		likedScenes.registerHandler(Command.LEFT_ARROW, (c,s,m) -> likedScenes.decrement("<-"));
 		
 		hotKeyHelper.register();
 		macroHelper.register();
@@ -1341,74 +1488,71 @@ public class Main extends PApplet {
 	}
 
 	protected void registerMainSwitches() {
-		registerSwitch(helpSwitch, Command.SWITCH_HELP);
-		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
-		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
-		registerSwitch(pulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
-		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
-		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
-		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
+		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
+		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
+		registerSwitch(flashFlagSwitch, Command.SWITCH_FLASH_FLAG);
+		registerSwitch(frameStroberSwitch, Command.SWITCH_FRAME_STROBER);
+		registerSwitch(helpSwitch, Command.SWITCH_HELP);
+		registerSwitch(likedScenes.getSwitch(), Command.SWITCH_LIKED_SCENES);
+		registerSwitch(popularityPoolSwitch, Command.SWITCH_POPULARITY_POOL);
+		registerSwitch(apvPulseListener.getSwitch(), Command.SWITCH_PULSE_LISTENER);
+		registerSwitch(showSettingsSwitch, Command.SWITCH_SETTINGS);
+		registerSwitch(videoGameSwitch, Command.SWITCH_VIDEOGAME);
+		registerSwitch(welcomeSwitch, Command.SWITCH_WELCOME);
 	}
-
+	
 	protected void registerMainCommands() {
 		CommandSystem cs = commandSystem;
 		cs.registerHandler(Command.CYCLE_CONTROL_MODE, (cmd,src,mod) -> cycleMode(!Command.isShiftDown(mod)));  
 		cs.registerHandler(Command.CYCLE_SET_PACK, (cmd,src,mod) -> cycleSetPack(!Command.isShiftDown(mod)));
-		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
-		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
-		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
-		cs.registerHandler(Command.FFWD, (cmd,src,mod) -> ffwd());
-		cs.registerHandler(Command.PLAY_PAUSE, (cmd,src,mod) -> playPause());
-		cs.registerHandler(Command.PREV, (cmd,src,mod) -> prev());
-		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
-		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
-		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());	
-		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
-		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
-		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
-		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
-		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
 		cs.registerHandler(Command.DOWN_ARROW, (cmd,src,mod) -> disLikeCurrentScene());
+		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.LEFT_ARROW, (cmd,src,mod) -> rewindHelper.enterRewindMode());
+		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
+		cs.registerHandler(Command.LOAD_CONFIGURATION, (cmd,src,mod)  -> configurator.reload(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.MANUAL, (cmd,src,mod) -> manual());
+		cs.registerHandler(Command.MOUSE_CONTROL, (cmd,src,mod) -> mouseControl());	
+		cs.registerHandler(Command.PERF_MONITOR, (cmd,src,mod) -> perfMonitor.dumpMonitorInfo(!Command.isShiftDown(mod)));
+		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
+		cs.registerHandler(Command.RANDOMIZE_COLORS, (cmd,src,mod) -> randomizeCurrentSetPackColors());
+		cs.registerHandler(Command.RANDOMIZE_SETPACK, (cmd,src,mod) -> randomizeCurrentSetPack());
+		cs.registerHandler(Command.RESET, (cmd,src,mod) -> reset());
+		cs.registerHandler(Command.RELOAD_CONFIGURATION, (cmd,src,mod)  -> reloadConfiguration());
+		cs.registerHandler(Command.SCRAMBLE, (cmd,src,mod) -> scramble());
+		cs.registerHandler(Command.SAVE_CONFIGURATION, (cmd,src,mod)  -> configurator.saveCurrentConfig());
+		cs.registerHandler(Command.SCREEN_SHOT, (cmd,src,mod) -> screenshotMode = true); //screenshot's can only be taking during draw
+		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
+		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
+		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
+		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
 		cs.registerHandler(Command.SHOW_WATERMARK, (cmd,src,mod) -> getWatermarkEvent().fire());
+		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
-		
-		cs.registerHandler(Command.SHOW_SONG_QUEUE, (cmd,src,mod) -> showSongQueue());
-		cs.registerHandler(Command.SHOW_OCEAN_SET_INFO, (cmd,src,mod) -> showOceanSetInfo());
-		cs.registerHandler(Command.SHOW_AVAILABLE_SET_PACKS, (cmd,src,mod) -> showAvailableSetPacks());
-		cs.registerHandler(Command.LOAD_AVAILABLE_SET_PACKS, (cmd,src,mod) -> getSetPackLoader().loadAllAvailableSetPacks());
-		cs.registerHandler(Command.PLAY_SET_PACK, (cmd,src,mod) -> getSetPackModel().playSetPack(Command.PLAY_SET_PACK.getPrimaryArg()));
-		cs.registerHandler(Command.SHOW_MARQUEE_MESSAGE, (cmd,src,mod) -> sendMarqueeMessage(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.SHOW_TREE_SCENE, (cmd,src,mod) -> sendTreeMessage(cmd.getPrimaryArg()));
-		cs.registerHandler(Command.FIRE_EVENT, (cmd,src,mod) -> fireEvent(cmd.getPrimaryArg()));
-		
-		cs.registerHandler(Command.LIVE_SETTINGS, (cmd,src,mod) -> showLiveSetting(cmd));
-		
-		cs.registerHandler(Command.DB_CREATE_SET_PACK_FOLDERS, (cmd,src,mod) -> dbSupport.dbCreateSetPackFolders());
-		cs.registerHandler(Command.DB_REFRESH_SET_PACK_CONFIGURATION, (cmd,src,mod) -> dbSupport.dbRefreshSetPackConfiguration());
-		
-		cs.registerHandler(Command.SHUTDOWN, (cmd,src,mod) -> System.exit(0));
+		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
+		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
 	}
 	
 	protected void registerSystemCommands() {
-		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS);
-		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS);
-		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS);
-		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS);
-		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS);
-		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS);
-		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES);
-		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS);
-		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS);
-		register(SYSTEM_NAMES.WATERMARKS, Command.SWITCH_WATERMARK, Command.CYCLE_WATERMARK);
+		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS, Command.FREEZE_FOREGROUNDS);
+		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS, Command.FREEZE_BACKGROUNDS);
+		register(SYSTEM_NAMES.BACKDROPS, Command.SWITCH_BACKDROPS, Command.CYCLE_BACKDROPS, Command.FREEZE_BACKDROPS);
+		register(SYSTEM_NAMES.COLORS, null, Command.CYCLE_COLORS, null);
+		register(SYSTEM_NAMES.FILTERS, Command.SWITCH_FILTERS, Command.CYCLE_FILTERS, Command.FREEZE_FILTERS);
+		register(SYSTEM_NAMES.LOCATIONS, null, Command.CYCLE_LOCATIONS, null);
+		register(SYSTEM_NAMES.MENU, Command.SWITCH_MENU, null, null);
+		register(SYSTEM_NAMES.MESSAGES, Command.SWITCH_MESSAGES, Command.CYCLE_MESSAGES, Command.FREEZE_MESSAGES);
+		register(SYSTEM_NAMES.SHADERS, Command.SWITCH_SHADERS, Command.CYCLE_SHADERS, Command.FREEZE_SHADERS);
+		register(SYSTEM_NAMES.TRANSITIONS, Command.SWITCH_TRANSITIONS, Command.CYCLE_TRANSITIONS, null);
+		register(SYSTEM_NAMES.WATERMARKS, Command.SWITCH_WATERMARK, Command.CYCLE_WATERMARK, null);
 	}
 	
-	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand) {
+	protected void register(SYSTEM_NAMES system, Command switchCommand, Command handlerCommand, Command freezeCommand) {
 		APV<? extends APVPlugin> apv = systemMap.get(system);
 		if (switchCommand != null) {
-			apv.registerSwitchCommand(switchCommand);
+			apv.registerSwitchCommand(switchCommand, freezeCommand);
 		}
 		apv.registerHandler(handlerCommand);
 	}
@@ -1434,6 +1578,15 @@ public class Main extends PApplet {
 		}
 	}
 	
+	protected void updatePopularity(Scene scene, boolean increment) {
+		int value = increment ? 1 : -1;
+		for (APVPlugin p : scene.getComponentsToDrawScene().getPlugins()) {
+			p.setPopularityIndex(p.getPopularityIndex() + value);
+		}
+		
+		//save to disk
+	}
+	
 	protected void setupSystems() {
 		systemMap.values().forEach(apv -> setupSystem(apv));
 	}
@@ -1456,15 +1609,26 @@ public class Main extends PApplet {
 		APV<? extends APVPlugin> originalAPV = systemMap.get(system);
 		originalAPV.unregisterHandler();
 		
-		APV<APVPlugin> reloadedAPV = new APV<APVPlugin>(this, system);
+		APV<? extends APVPlugin> reloadedAPV;
+		switch (system) {
+		case MENU:
+			reloadedAPV = new APVMenu(this);
+			break;
+		case WATERMARKS:
+			reloadedAPV = new APVWatermark(this);
+			break;
+			default:
+				reloadedAPV = new APV<APVPlugin>(this, system);
+		}
+		
 		systemMap.put(system, reloadedAPV);
 		setupSystem(reloadedAPV);
-		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand());
-		assignSystems();
+		register(system, reloadedAPV.getSwitchCommand(), originalAPV.getCommand(), originalAPV.getFreezeCommand());
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void assignSystems() {
+		apvMenu = (APVMenu) systemMap.get(SYSTEM_NAMES.MENU);
 		backDrops = (APV<BackDropSystem>)systemMap.get(SYSTEM_NAMES.BACKDROPS);
 		backgrounds = (APV<ShapeSystem>) systemMap.get(SYSTEM_NAMES.BACKGROUNDS);
 		colors = (APV<ColorSystem>) systemMap.get(SYSTEM_NAMES.COLORS);
@@ -1485,13 +1649,17 @@ public class Main extends PApplet {
 		List<Switch> ss = (List<Switch>)configurator.loadAVPPlugins(SYSTEM_NAMES.SWITCHES);
 		ss.forEach(s -> switches.put(s.name, s));
 		
-		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
-		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
-		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
-		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
-		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
+		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);
+		flashFlagSwitch = switches.get(SWITCH_NAMES.FLASH_FLAG.name);
+		helpSwitch = switches.get(SWITCH_NAMES.HELP.name);
+		popularityPoolSwitch = switches.get(SWITCH_NAMES.POPULARITY_POOL.name);
+		scrambleModeSwitch = switches.get(SWITCH_NAMES.SCRAMBLE_MODE.name);
+		showSettingsSwitch = switches.get(SWITCH_NAMES.SHOW_SETTINGS.name);
+		videoGameSwitch = switches.get(SWITCH_NAMES.VIDEO_GAME.name);
+		welcomeSwitch = switches.get(SWITCH_NAMES.WELCOME.name);
 	}
 	
 	protected void resetSwitches() {
@@ -1520,40 +1688,43 @@ public class Main extends PApplet {
 		eventMap.put(EventTypes.WATERMARK, new DrawShapeEvent(this, EventTypes.WATERMARK));
 		eventMap.put(EventTypes.APV_CHANGE, new APVChangeEvent(this));
 		eventMap.put(EventTypes.LOCATION, new CoreEvent(this, EventTypes.LOCATION));
+		eventMap.put(EventTypes.ALDA, new CoreEvent(this, EventTypes.ALDA));
 		eventMap.put(EventTypes.COLOR_CHANGE, new CoreEvent(this, EventTypes.COLOR_CHANGE));
 		eventMap.put(EventTypes.SONG_START, new CoreEvent(this, EventTypes.SONG_START));
 		eventMap.put(EventTypes.SET_PACK_START, new CoreEvent(this, EventTypes.SET_PACK_START));
+		eventMap.put(EventTypes.MOUSE_PULSE, new CoreEvent(this, EventTypes.MOUSE_PULSE));
 	}
 	
 	
 	public String getConfig() {
 		//Version number 
 		StringBuffer buffer = new StringBuffer(System.lineSeparator());
-		buffer.append("apv.conf.version = ").append(getVersionInfo().getVersion()).append(System.lineSeparator());
+		addConstant(buffer, FLAGS.APV_CONFIG_VERSION, getVersionInfo().getVersion());
 		
 		//Constants
+		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
+		addConstant(buffer, FLAGS.AUTO_LOADED_BACKGROUND_FOLDER, "\"" + getConfigString(FLAGS.AUTO_LOADED_BACKGROUND_FOLDER.apvName()) + "\"");
 		addConstant(buffer, FLAGS.CONTROL_MODE, getCurrentControlMode().name());
+		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
+		addConstant(buffer, FLAGS.DEBUG_AGENT_MESSAGES, String.valueOf(getConfigBoolean(FLAGS.DEBUG_AGENT_MESSAGES.apvName())));
+		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
+		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
 		addConstant(buffer, FLAGS.FULL_SCREEN, String.valueOf(getConfigBoolean(FLAGS.FULL_SCREEN.apvName())));
+		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
+		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
+		addConstant(buffer, FLAGS.MARQUEE_FRAMES, String.valueOf(getMarqueeFrames()));
+		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
+		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
+		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
+		addConstant(buffer, FLAGS.PULSE_SENSITIVITY, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.PULSE_SENSITIVITY.apvName())));
+		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
 		addConstant(buffer, FLAGS.SCRAMBLE_SYSTEMS, String.valueOf(getConfigBoolean(FLAGS.SCRAMBLE_SYSTEMS.apvName())));
 		addConstant(buffer, FLAGS.SCREEN_WIDTH, String.valueOf(width));
 		addConstant(buffer, FLAGS.SCREEN_HEIGHT, String.valueOf(height));	
-		addConstant(buffer, FLAGS.MONITORING_ENABLED, String.valueOf(isMonitoringEnabled()));
-		addConstant(buffer, FLAGS.QUIET_WINDOW_SIZE, String.valueOf(getConfigurator().getRootConfig().getInt(FLAGS.QUIET_WINDOW_SIZE.apvName())));
-		addConstant(buffer, FLAGS.COUNTDOWN_PCT, getConfigString(FLAGS.COUNTDOWN_PCT.apvName()));
-		addConstant(buffer, FLAGS.AUTO_ADD_SOBLE, String.valueOf(isAutoAddSobleEnabled()));
 		addConstant(buffer, FLAGS.TREE_COMPLEXITY_CUTOFF, getConfigString(FLAGS.TREE_COMPLEXITY_CUTOFF.apvName()));
 		addConstant(buffer, FLAGS.TREE_MIN_SIZE, getConfigString(FLAGS.TREE_MIN_SIZE.apvName()));
-		addConstant(buffer, FLAGS.DEBUG_SYS_MESSAGES, String.valueOf(isDebugSystemMessages()));
-		addConstant(buffer, FLAGS.DEFAULT_SHAPE_SYSTEM_ALPHA, String.valueOf(getDefaultShapeSystemAlpha()));
-		addConstant(buffer, FLAGS.LINE_IN, String.valueOf(getConfigBoolean(FLAGS.LINE_IN.apvName())));
-		addConstant(buffer, FLAGS.LISTEN_ONLY, String.valueOf(getConfigBoolean(FLAGS.LISTEN_ONLY.apvName())));
-		addConstant(buffer, FLAGS.FIREBASE_ENABLED, String.valueOf(getConfigBoolean(FLAGS.FIREBASE_ENABLED.apvName())));
-		addConstant(buffer, FLAGS.FIREBASE_DB_ENDPOINT, "\"" + getConfigString(FLAGS.FIREBASE_DB_ENDPOINT.apvName()) + "\"");
-		addConstant(buffer, FLAGS.MUSIC_DIR, "\"" + getConfigString(FLAGS.MUSIC_DIR.apvName()) + "\"");
 		addConstant(buffer, FLAGS.WATERMARK_FRAMES, String.valueOf(getWatermarkFrames()));
-		addConstant(buffer, FLAGS.MONGO_DB_NAME, getConfigString(FLAGS.MONGO_DB_NAME.apvName()));
-		addConstant(buffer, FLAGS.MONGO_HOST_PORT, "\"" + getConfigString(FLAGS.MONGO_HOST_PORT.apvName()) + "\"");
-		addConstant(buffer, FLAGS.OCEAN_NAME, "\"" + getConfigString(FLAGS.OCEAN_NAME.apvName()) + "\"");
+		addConstant(buffer, FLAGS.FRAME_RATE, String.valueOf(getFrameRate()));
 		
 		
 		//helper configs

@@ -3,4 +3,8 @@
 A java based visualizer that uses Processing, Minim and many samples from [OpenProcessing](https://www.openprocessing.org) to create visuals based on whatever your computer is "listening" to.  For more information please see the [APV Wiki](https://github.com/mimelator/apv/wiki)
 
 
-[![APV Beta Video](https://img.youtube.com/vi/7dOPPxsBnUA/0.jpg)](https://youtu.be/2xKo0HUd16w)
+[![Computing](https://i9.ytimg.com/vi/17oB5i12iJs/mq1.jpg?sqp=CMyIkeAF&rs=AOn4CLA19213s3AnXK5TLtjBvERYVBlQHA)](https://www.youtube.com/watch?v=17oB5i12iJs)
+
+
+For Download instructions see here:
+[[Download Instructions](https://github.com/mimelator/apv/blob/master/Download%20and%20Install%20APV.pdf)]

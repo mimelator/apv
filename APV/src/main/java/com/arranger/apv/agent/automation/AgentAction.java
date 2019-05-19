@@ -40,6 +40,7 @@ public class AgentAction extends APVPlugin {
 	}
 	
 	public void doAction(AutomationAgent agent) {
+		agent.fireDebugMessage();
 		switch (action) {
 		case COMMAND:
 			agent.invokeCommand(Command.valueOf(val1));

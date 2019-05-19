@@ -6,7 +6,6 @@ import com.arranger.apv.Main;
 import com.arranger.apv.loc.LocationSystem;
 import com.arranger.apv.loc.PathLocationSystem;
 import com.arranger.apv.systems.ShapeSystem;
-import com.arranger.apv.systems.lite.GridShapeSystem;
 import com.arranger.apv.util.Configurator.Context;
 import com.arranger.apv.util.draw.DrawHelper;
 import com.arranger.apv.util.frame.FrameFader;
@@ -20,7 +19,7 @@ import processing.core.PShape;
  */
 public class KaleidoscopeAgent extends BaseAgent {
 	
-	private static final int DEFAULT_NUM_SLICES = 32;
+	private static final int DEFAULT_MAX_SLICES = 32;
 	private static final int MIN_NUM_SLICES = 5;
 	
 	private static final int SLICE_CYCLE_TIME = 15;
@@ -31,14 +30,14 @@ public class KaleidoscopeAgent extends BaseAgent {
 	private static final int EASE_IN_MODIFIER = 2;
 	
 	private DrawHelper drawHelper;
-	private int slices;
+	private int maxSlices;
 	private float userRadius;
 	private int numFrames;
 	
 
-	public KaleidoscopeAgent(Main parent, int slices, float userRadius, int numFrames) {
+	public KaleidoscopeAgent(Main parent, int maxSlices, float userRadius, int numFrames) {
 		super(parent);
-		this.slices = slices;
+		this.maxSlices = maxSlices;
 		this.userRadius = userRadius;
 		this.numFrames = numFrames;
 		
@@ -51,7 +50,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 	
 	public KaleidoscopeAgent(Context ctx) {
 		this(ctx.getParent(), 
-				ctx.getInt(0, DEFAULT_NUM_SLICES),
+				ctx.getInt(0, DEFAULT_MAX_SLICES),
 				ctx.getFloat(1, DEFAULT_RADIUS),
 				ctx.getInt(2, DEFAULT_NUM_FLASH_DRAWS));
 	}
@@ -59,7 +58,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 	@Override
 	public String getConfig() {
 		//{KaleidoscopeAgent : [32, 3, 75]}
-		return String.format("{%s : [%s, %s, %s]}", getName(), slices, userRadius, numFrames);
+		return String.format("{%s : [%s, %s, %s]}", getName(), maxSlices, userRadius, numFrames);
 	}
 
 	protected class KShapeSystem extends ShapeSystem {
@@ -67,6 +66,8 @@ public class KaleidoscopeAgent extends BaseAgent {
 		private FrameFader fader;
 		private float phase;
 		private boolean useLocation = true;
+		private boolean rotateDir;
+		private float rotateRate;
 		
 		public KShapeSystem(Main parent) {
 			super(parent, null);
@@ -79,6 +80,8 @@ public class KaleidoscopeAgent extends BaseAgent {
 				PathLocationSystem pls = (PathLocationSystem)ls;
 				useLocation = !pls.isSplitter();
 			}
+			rotateDir = parent.randomBoolean();
+			rotateRate = PI / parent.random(360);
 		}
 
 		@Override
@@ -90,10 +93,14 @@ public class KaleidoscopeAgent extends BaseAgent {
 		public void draw() {
 			PImage img = parent.get();
 			
-			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, slices, SLICE_CYCLE_TIME);
+			int currentNumSlices = (int)parent.oscillate(MIN_NUM_SLICES, maxSlices, SLICE_CYCLE_TIME);
 			float angle = PI / currentNumSlices;
 			
-			phase += PI / 180;
+			if (rotateDir) {
+				phase += rotateRate;
+			} else {
+				phase -= rotateRate;
+			}
 			
 			float radius = 0.0f;
 			if (fader.isFadeActive()) {
@@ -138,7 +145,7 @@ public class KaleidoscopeAgent extends BaseAgent {
 			
 			//parent.translate(parent.width / 2, parent.height / 2);
 			
-			for (int i = 0; i < slices; i++) {
+			for (int i = 0; i < maxSlices; i++) {
 				parent.rotate(angle * 2);
 				parent.shape(mySlice);
 			}

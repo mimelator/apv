@@ -20,7 +20,7 @@ public class RandomMessagePainter extends APVPlugin {
 		initializeFonts(parent);
 		
 		parent.getRandomMessageEvent().register(() -> {
-			parent.sendMessage(new String[]{getMessage()});
+			parent.sendMessage(new String[]{getRandomMessage()});
 		});
 	}
 	
@@ -33,7 +33,7 @@ public class RandomMessagePainter extends APVPlugin {
 		return parent.getConfigurator().generateConfig(EmojisModel.MESSAGE_KEY, model.getMsgList(), false, true);
 	}
 	
-	private String getMessage() {
+	public String getRandomMessage() {
 		List<String> list = model.getMsgList();
 		return list.get((int)parent.random(list.size()));
 	}

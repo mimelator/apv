@@ -9,6 +9,7 @@ uniform sampler2D texture;
 uniform float time;
 uniform float alpha;
 uniform bool scroll;
+uniform bool mix;
 uniform vec2 resolution;
 
 varying vec4 vertColor;
@@ -33,5 +34,5 @@ void main() {
 	}
 
   	//mix
-  	gl_FragColor = vec4(backCol.rgb, alpha) * vertColor;
+  	gl_FragColor = vec4(backCol.rgb, alpha);
 }

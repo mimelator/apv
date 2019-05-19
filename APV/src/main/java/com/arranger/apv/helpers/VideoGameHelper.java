@@ -2,6 +2,7 @@ package com.arranger.apv.helpers;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.arranger.apv.APV;
@@ -16,6 +17,7 @@ import com.arranger.apv.util.draw.TextPainter;
 public class VideoGameHelper extends APVPlugin {
 	
 	public static final DecimalFormat decFormat = new DecimalFormat("#.###");
+	private static List<Command> ignoredCommands = Arrays.asList(new Command[] {Command.AUDIO_DEC, Command.AUDIO_INC});
 
 	//stats
 	CounterMap commandMap = new CounterMap();
@@ -30,6 +32,9 @@ public class VideoGameHelper extends APVPlugin {
 	String lastCommandName = "";
 	String lastNewPluginName = "";
 	
+	int checkPointTotalCommands;
+	long checkPointStartTime;
+	
 	public VideoGameHelper(Main parent) {
 		super(parent);
 		
@@ -38,6 +43,8 @@ public class VideoGameHelper extends APVPlugin {
 			parent.getAPVChangeEvent().register((apv, plugin, cause) -> recordPluginChange(apv, plugin, cause));
 			parent.getDrawEvent().register(() -> recordScene());
 		});
+		
+		resetCheckPoint();
 	}
 	
 	public CounterMap getCommandMap() {
@@ -69,8 +76,23 @@ public class VideoGameHelper extends APVPlugin {
 		return TimeUnit.MILLISECONDS.toSeconds(totalMillis);
 	}
 	
+	public long getCheckpointSeconds() {
+		long totalMillis = System.currentTimeMillis() - checkPointStartTime;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(totalMillis);
+		if (seconds < 1) {
+			seconds = 1;
+		}
+		
+		return seconds;
+	}
+	
 	public float getCommandsPerSec() {
 		return (float)totalCommands / (float)getTotalSeconds();
+	}
+	
+	public float getCheckPointCommandsPerSec() {
+		float cps = (float)checkPointTotalCommands / (float)getCheckpointSeconds();
+		return cps;
 	}
 
 	public String getTimeStamp() {
@@ -94,13 +116,20 @@ public class VideoGameHelper extends APVPlugin {
 		String [] msgs = new String[] {
 				String.format("Time: %s", getTimeStamp()),
 				String.format("Cmds/sec: %s", decFormat.format(getCommandsPerSec())),
+				String.format("Checkpoint Cmds/sec: %s", decFormat.format(getCheckPointCommandsPerSec())),
 				String.format("Last Command: %s[%d]", lastCommandName, commandMap.get(lastCommandName)),
 				String.format("Last New Plugin: %s", lastNewPluginName),
 				String.format("Total Cmd Count: %d", totalCommands),
 				String.format("Total Plugin Changes: %d", totalPluginChanges),
+				String.format("FPS: %s", parent.getFrameRate()),
 		};
 
 		new TextPainter(parent).drawText(Arrays.asList(msgs), SafePainter.LOCATION.LOWER_LEFT);
+	}
+	
+	public void resetCheckPoint() {
+		checkPointTotalCommands = 0;
+		checkPointStartTime = System.currentTimeMillis();
 	}
 	
 	private void recordPluginChange(APV<? extends APVPlugin> apv, APVPlugin plugin, String cause) {
@@ -112,10 +141,15 @@ public class VideoGameHelper extends APVPlugin {
 	}
 	
 	private void recordLastCommand(Command cmd, String source) {
+		if (ignoredCommands.contains(cmd)) {
+			return;
+		}
+		
 		commandSourceMap.add(source);
 		commandMap.add(cmd.name());
 		lastCommandName = cmd.name();
 		totalCommands++;
+		checkPointTotalCommands++;
 	}
 	
 	private void recordScene() {

@@ -17,7 +17,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigValue;
 
-public class ConfiguratorTest extends APVPluginTest {
+public class ConfiguratorTest extends ConfigBasedTest {
 	
 	private static final String CONFIG = "alt.properties";
 	Configurator configurator;
@@ -79,7 +79,7 @@ public class ConfiguratorTest extends APVPluginTest {
 		
 		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.CONTROLS);
 		assert(ss != null);
-		assert(ss.size() > 3);
+		assert(ss.size() > 1);
 		
 		ss = cfg.loadAVPPlugins(Main.SYSTEM_NAMES.LOCATIONS);
 		assert(ss != null);

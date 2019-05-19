@@ -2,18 +2,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>APV</groupId>
 	<artifactId>APV</artifactId>
-	<version>0.4.5-SNAPSHOT</version>
+	<version>0.7.4-SNAPSHOT</version>
 	<name>Audio Processing Visualizer</name>
 
 	<properties>
 	    <maven.javadoc.skip>true</maven.javadoc.skip>
 	    <version>${project.version}</version>
+            <project.scm.id>github</project.scm.id>
 	</properties>
 
 	<scm>
-		<url>https://github.com/mimelator/apv</url>
+   	<url>https://github.com/mimelator/apv</url>
 		<connection>scm:git:https://github.com/mimelator/apv.git</connection>
-		<tag>APV-0.5</tag>
+		<tag>APV-0.7.2</tag>
 	</scm>
 
 	<distributionManagement>
@@ -241,6 +242,7 @@
 		  <artifactId>firebase-admin</artifactId>
 		  <version>6.2.0</version>
 		</dependency>
+
 	</dependencies>
 
   <reporting>

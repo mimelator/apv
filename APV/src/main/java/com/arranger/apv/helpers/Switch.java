@@ -1,5 +1,7 @@
 package com.arranger.apv.helpers;
 
+import java.util.Observable;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.util.Configurator;
@@ -11,6 +13,15 @@ public class Switch extends APVPlugin {
 	public STATE state;
 	public String name;
 	public String data;
+	public ObservalbleAdapter observable;
+	
+	public class ObservalbleAdapter extends Observable {
+		
+		public void update() {
+			setChanged();
+			notifyObservers();
+		}
+	}
 	
 	public Switch(Main parent, String name) {
 		this(parent, name, true, null);
@@ -25,12 +36,14 @@ public class Switch extends APVPlugin {
 		this.name = name;
 		this.state =  enabled ? STATE.ENABLED : STATE.DISABLED;
 		this.data = data;
+		this.observable = new ObservalbleAdapter();
+		supportsExtendedConfig = false;
 	}
 	
 	public Switch(Configurator.Context ctx) {
 		this(ctx.getParent(), ctx.getString(0, ""), ctx.getBoolean(1, true), ctx.getString(2, null));
 	}
-
+	
 	@Override
 	public String getConfig() {
 		//{Switch : [ForeGround, true]}
@@ -59,6 +72,12 @@ public class Switch extends APVPlugin {
 		return state != STATE.DISABLED;
 	}
 	
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		setState(enabled ? STATE.ENABLED : STATE.DISABLED);
+	}
+
 	/**
 	 * Ignores disabled
 	 */
@@ -68,6 +87,7 @@ public class Switch extends APVPlugin {
 	
 	public void setState(STATE state) {
 		this.state = state;
+		observable.update();
 	}
 	
 	/**
@@ -79,6 +99,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.FROZEN;
 		}
+		observable.update();
 	}
 	
 	/**
@@ -90,6 +111,7 @@ public class Switch extends APVPlugin {
 		} else {
 			state = STATE.ENABLED;
 		}
+		observable.update();
 	}
 	
 	/**
@@ -108,6 +130,6 @@ public class Switch extends APVPlugin {
 			state = STATE.DISABLED;
 			break;
 		}
+		observable.update();
 	}
-	
 }

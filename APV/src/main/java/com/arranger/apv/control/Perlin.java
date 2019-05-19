@@ -125,11 +125,13 @@ public class Perlin extends PulseListeningControlSystem {
 	
 	private List<CommandHolder> initializeCommands() {
 		List<CommandHolder> commandCheckers = new ArrayList<CommandHolder>();
-		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
-		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
 		commandCheckers.add(new CommandHolder(Command.REVERSE, null));
 		commandCheckers.add(new CommandHolder(Command.REVERSE, null));
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.SCRAMBLE, null));
+		commandCheckers.add(new CommandHolder(Command.SHOW_TREE_SCENE, null));
+		commandCheckers.add(new CommandHolder(Command.SHOW_TREE_SCENE, null));
 		commandCheckers.add(new CommandHolder(Command.CYCLE_LOCATIONS, null));
 		commandCheckers.add(new CommandHolder(Command.CYCLE_COLORS, null));
 		commandCheckers.add(new CommandHolder(Command.CYCLE_FOREGROUNDS, ()-> parent.getForegrounds().isFrozen()));

@@ -36,12 +36,13 @@ public class Watermark extends CustomShader {
 		//{Watermark : [logo, .5, "texture/wl2.jpg", [blur]]}
 		JSONQuoter quoter = new JSONQuoter(parent);
 		String shaderString = shaders.stream().map(s -> s.name()).collect(Collectors.joining(","));
+		
 		return String.format("{%s : [%s, %s,%b,  %s, [%s]]}", 
 				getName(), 
 				quoter.quote(displayName), 
 				alpha,
 				scroll,
-				imageFile,
+				quoter.quote(imageFile),
 				shaderString);
 	}
 	
@@ -65,7 +66,7 @@ public class Watermark extends CustomShader {
 		
 		@Override
 		protected float getAlphaForShaderPass() {
-			return parent.oscillate(0, alpha, 10);
+			return alpha;
 		}
 	}
 }

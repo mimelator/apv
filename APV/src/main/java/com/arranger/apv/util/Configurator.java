@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,11 +43,14 @@ import com.typesafe.config.ConfigValue;
 
 public class Configurator extends APVPlugin {
 
+	public static final String ENABLED = "enabled";
+	public static final String POPULARITY_INDEX = "popularityIndex";
+	public static final String CONFIG_FILE = "config.file";
 	public static final String REFERENCE_CONF = "reference.conf";
 	public static final String APPLICATION_CONF = "application.conf";
 	public static final String APPLICATION_CONF_BAK = "application.conf.bak";
 	public static final String DISABLED_PLUGIN_KEY = "disabledPlugins";
-	private static final String SCRAMBLE_KEY = "apv.scrambleSystems";
+	public static final String SCRAMBLE_KEY = "apv.scrambleSystems";
 	
 
 	private static final Logger logger = Logger.getLogger(Configurator.class.getName());
@@ -264,9 +269,29 @@ public class Configurator extends APVPlugin {
 	public void reload(String file) {
 		ConfigFactory.invalidateCaches();
 		if (file != null) {
-			System.setProperty("config.file", file);
+			System.setProperty(CONFIG_FILE, file);
 		}
-		conf = ConfigFactory.load();
+		try {
+			conf = ConfigFactory.load();
+		} catch (Exception e) {
+			//e.printStackTrace();
+			
+			Path applicationConfPath = Paths.get("..", "conf", APPLICATION_CONF);
+			System.out.println("Unable to load application.conf at: " + file);
+			System.out.println("Restoring reference.conf to: " + applicationConfPath.toAbsolutePath().toString());
+			
+			FileHelper fh = new FileHelper(parent);
+			fh.getResourceAsStream(REFERENCE_CONF, (stream) -> {
+				FileUtils.copyInputStreamToFile(stream, applicationConfPath.toFile());
+			});
+			System.setProperty(CONFIG_FILE, applicationConfPath.toAbsolutePath().toString());
+			
+			try {
+				conf = ConfigFactory.load();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
 		initScramble();
 	}
 	
@@ -290,10 +315,28 @@ public class Configurator extends APVPlugin {
 		List<APVPlugin> systems = new ArrayList<APVPlugin>();
 		
 		List<? extends Config> scl = getSystemConfigList(name);
-		scl.forEach(wrapperObj -> {
-			Entry<String, ConfigValue> configObj = wrapperObj.entrySet().iterator().next();
-			String key = configObj.getKey();
-			ConfigList argList = (ConfigList)configObj.getValue();
+		for (Iterator<? extends Config> it = scl.iterator(); it.hasNext();) {
+		
+			Config wrapperObj = it.next();
+			//Find the correct entry
+			Entry<String, ConfigValue> pluginConfigEntry = null;
+			for (Iterator<Entry<String, ConfigValue>> it2 = wrapperObj.entrySet().iterator(); it2.hasNext();) {
+				Entry<String, ConfigValue> next = it2.next();
+				String key = next.getKey();
+				if (key.equals(ENABLED) || key.equals(POPULARITY_INDEX)) {
+					continue;
+				} else {
+					pluginConfigEntry = next;
+					break;
+				}
+			}
+			
+			if (pluginConfigEntry == null) {
+				throw new RuntimeException("Unable to find plugin entry for: " + name + " config: " + wrapperObj.toString());
+			}
+			
+			String key = pluginConfigEntry.getKey(); //FreqDetector
+			ConfigList argList = (ConfigList)pluginConfigEntry.getValue(); //[...]
 			
 			if (key == null || key.length() == 0) {
 				throw new RuntimeException("Unable to load plugin: " + name);
@@ -315,8 +358,16 @@ public class Configurator extends APVPlugin {
 				if (!isDisabled(plugin)) {
 					systems.add(plugin);
 				}
+				
+				//is there any extended settings like {enabled: false, popularityIndex: 20}				
+				boolean isExtendedConfig = wrapperObj.entrySet().stream().anyMatch(entry -> entry.getKey().equals(ENABLED));
+				if (isExtendedConfig) {
+					//set the values on the plugin
+					plugin.setEnabled(wrapperObj.getBoolean(ENABLED));
+					plugin.setPopularityIndex(wrapperObj.getInt(POPULARITY_INDEX));
+				}
 			}
-		});
+		}
 		
 		if (shouldScrambleInitialSystems && allowScramble) {
 			Collections.shuffle(systems);
@@ -391,15 +442,31 @@ public class Configurator extends APVPlugin {
 	}
 	
 	public void saveCurrentConfig() {
-		saveCurrentConfig(true);
+		//-Dconfig.file
+		String sysConfigFile = System.getProperty(CONFIG_FILE);
+		if (sysConfigFile == null) {
+			sysConfigFile = APPLICATION_CONF;
+		}
+		
+		Path applicationConfPath = Paths.get(sysConfigFile);
+		System.out.println("saveCurrentConfig to: " + applicationConfPath.toAbsolutePath().toString());
+		saveConfigImpl(applicationConfPath.toFile(), false);
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {
+		saveConfigImpl(new File(APPLICATION_CONF), alsoSaveOrig);
+	}
+	
+	public void saveCurrentConfig(File targetConfig) {
+		saveConfigImpl(targetConfig, false);
+	}
+	
+	protected void saveConfigImpl(File f, boolean alsoSaveOrig) {
 		String results = generateCurrentConfig();
 		
 		//save application.conf.bak
 		FileHelper fh = new FileHelper(parent);
-		fh.saveFile(APPLICATION_CONF_BAK, results.toString());
+		fh.saveFile(f.getAbsolutePath(), results.toString());
 		
 		//save reference.conf
 		if (alsoSaveOrig) {
@@ -425,11 +492,13 @@ public class Configurator extends APVPlugin {
 		List<String> resultList = new ArrayList<String>();
 		buffer.append(name + " : [").append(System.lineSeparator());
 		entries.forEach(entry -> {
+			StringBuffer result = new StringBuffer();
 			if (shouldQuote) {
-				resultList.add("     " + quoter.quote(entry));
+				result.append("     " + quoter.quote(entry));
 			} else {
-				resultList.add("     " + entry);
+				result.append("     " + entry);
 			}
+			resultList.add(result.toString());
 		});
 		
 		//sort the lines
@@ -481,7 +550,7 @@ public class Configurator extends APVPlugin {
 
 	private String getConfigForPlugins(Main.SYSTEM_NAMES systemName, List<? extends APVPlugin> list) {
 		return generateConfig(systemName.name, 
-				list.stream().map(p -> p.getConfig()).collect(Collectors.toList()), 
+				list.stream().map(p -> p.getConfigEx()).collect(Collectors.toList()), 
 				true,
 				false);
 	}

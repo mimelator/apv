@@ -9,6 +9,9 @@ import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 import com.arranger.apv.color.ColorSystem;
 import com.arranger.apv.color.OscillatingColor;
+import com.arranger.apv.factory.APVShape;
+import com.arranger.apv.factory.APVShape.Data;
+import com.arranger.apv.factory.ShapeFactory;
 import com.arranger.apv.util.Configurator;
 import com.arranger.apv.util.frame.Reverser;
 
@@ -47,16 +50,25 @@ public class LightWormSystem extends LiteShapeSystem {
 	private ColorSystem [] colorSystems;
 	
 	private Reverser reverser;
+	private APVShape shape;
+	
+	private class LightWormShapeData extends Data {
+		
+	}
 	
 	public LightWormSystem(Main parent) {
 		super(parent);
 	}
 	
-	public LightWormSystem(Main parent, boolean useOrigColors, int numDragons, float colorSpeed) {
+	public LightWormSystem(Main parent, boolean useOrigColors, int numDragons, float colorSpeed, ShapeFactory factory) {
 		super(parent);
 		this.useOrigColors = useOrigColors;
 		this.numDragons = numDragons;
-		this.colorSpeed = colorSpeed; 
+		this.colorSpeed = colorSpeed;
+		if (factory != null) {
+			setShapeFactory(factory);
+			shape = factory.createShape(new LightWormShapeData());
+		}
 		
 		if (!useOrigColors) {
 			parent.getSetupEvent().register(() -> {
@@ -75,7 +87,8 @@ public class LightWormSystem extends LiteShapeSystem {
 		this(ctx.getParent(), 
 				ctx.getBoolean(0, USE_ORIG_COLORS_DEFAULT),
 				ctx.getInt(1, DEFAULT_NUM_DRAGONS),
-				ctx.getFloat(2, DEFAULT_COLOR_SPEED));
+				ctx.getFloat(2, DEFAULT_COLOR_SPEED),
+				(ShapeFactory)ctx.loadPlugin(3));
 	}
 	
 	@Override
@@ -139,16 +152,19 @@ public class LightWormSystem extends LiteShapeSystem {
 			float fidx = i / (NUM_TRAILS - 1.0f);
 			float z = 1.0f + 0.2f * fidx;
 
+			Color targetColor;
 			if (useOrigColors) {
 				float currentFade = fadeTable[i];
-				float r = (sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.0f * PI) * 127 + 127) * currentFade;
-				float g = (sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.3333f * PI) * 127 + 127) * currentFade;
-				float b = (sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.6666f * PI) * 127 + 127) * currentFade;
-				parent.fill(r, g, b);
+				int r = (int)((sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.0f * PI) * 127 + 127) * currentFade);
+				int g = (int)((sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.3333f * PI) * 127 + 127) * currentFade);
+				int b = (int)((sin(fidx * COLOR_SCALAR + 1.3f * colorSpeed + 0.6666f * PI) * 127 + 127) * currentFade);
+				
+				targetColor = new Color(r, g, b, 128);
 			} else {
 				Color color = colorSystems[i % colorSystems.length].getCurrentColor();
-				parent.fill(color.getRed(), color.getGreen(), color.getBlue(), COLOR_ALPHA);
+				targetColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), COLOR_ALPHA);
 			}
+			setColor(targetColor);
 
 			int fillStart = parent.millis();
 			
@@ -159,8 +175,11 @@ public class LightWormSystem extends LiteShapeSystem {
 				float shapeX = halfWidth + iPos[0] * z;
 				float shapeY = halfHeight + iPos[1] * z;
 				
-				parent.rect(shapeX, shapeY, sz, sz);
-				//parent.ellipse(shapeX, shapeY, sz, sz); 10x slower for ellipse
+				if (shape != null) {
+					parent.shape(shape.getShape(), shapeX, shapeY, sz, sz);
+				} else {
+					parent.rect(shapeX, shapeY, sz, sz);
+				}
 			}
 			
 			fillTime += (parent.millis() - fillStart);
@@ -188,5 +207,12 @@ public class LightWormSystem extends LiteShapeSystem {
 			counter += MOTION_SPEED;
 		}
 		parent.addSettingsMessage("  --fillTime: " + fillTime);
+	}
+	
+	protected void setColor(Color c) {
+		if (shape != null) {
+			shape.setColor(c.getRGB(), c.getAlpha());
+		}
+		parent.fill(c.getRGB(), c.getAlpha());
 	}
 }

@@ -18,13 +18,19 @@ public enum Command {
 	
 	//Switches
 	SWITCH_AGENT('x', "AgentSwitch", "Enables/Disables the registered agents"),
-	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen"),
+	SWITCH_HELP('h', "HelpSwitch", "Shows/Hides the Help Screen,"),
+	SWITCH_MENU('m', "MenuSwitch", "Shows/Hides the Menu Screen,"),
+	SWITCH_WELCOME('e', "WelcomeSwitch", "Shows/Hides the Welcome Screen,"),
 	SWITCH_SETTINGS('q', "SettingsSwitch", "Shows/Hides the Help Screen"),
 	SWITCH_VIDEOGAME('v', "VideoGameSwitch", "Displays the game progress"),
-	SWITCH_DEBUG_PULSE('d', "DebugPulseSwitch", "Displays the debug pulse agent"),
+	SWITCH_DEBUG_AGENT('a', "DebugAgentSwitch", "Displays the debug agent messages"),
+	SWITCH_DEBUG_PULSE(DeadCommandCode.next(), "DebugPulseSwitch", "Displays the debug pulse agent"),
+	SWITCH_FLASH_FLAG(DeadCommandCode.next(), "FlashFlagSwitch", "Enabled Flash components"),
 	SWITCH_LIKED_SCENES('l', "LikedScenesSwitch", "Enables/Disables the Liked Scene mode"),
+	SWITCH_AUDIO_LISTENER_DIAGNOSTIC('d', "Helps to Diagnose Audio Routing issues", "Enables/Disables the warning message to the screen"),
 	SWITCH_CONSOLE_OUTPUT(DeadCommandCode.next(), "Console Output Frame Switch", "Enables/Disables the frame info to console"),
 	SWITCH_PULSE_LISTENER(DeadCommandCode.next(), "PulseListenerSwitch", "Enables/Disables the registered pulse listeners"),
+	SWITCH_POPULARITY_POOL(DeadCommandCode.next(), "PopularityPoolSwitch", "Enables/Disables the weighted like popularity of plugins when scrambled"),
 	SWITCH_WATERMARK(DeadCommandCode.next(), "WatermarkSwitch", "Enables/Disables watermarks"),
 	SWITCH_FRAME_STROBER(DeadCommandCode.next(), "FrameStroberSwitch", "Enables/Disables the strobing the screen"),
 	SWITCH_CONTINUOUS_CAPTURE(DeadCommandCode.next(), "ContinuousCaptureSwitch", "Enables/Disables the saving all frames to disk"),
@@ -37,8 +43,16 @@ public enum Command {
 	SWITCH_TRANSITIONS('6', "TransitionsSwitch", "Enables/Disables/Freezes(use <CMD>) the transitions", false),
 	SWITCH_SHADERS('7', "ShadersSwitch", "Enables/Disables/Freezes(use <CMD>) the shader", false),
 	
+	FREEZE_FOREGROUNDS(DeadCommandCode.next(), "Foregrounds ", "Freezes/UnFreezes the foregrounds"),
+	FREEZE_BACKGROUNDS(DeadCommandCode.next(), "Backgrounds", "Freezes/UnFreezes the backgrounds"),
+	FREEZE_BACKDROPS(DeadCommandCode.next(), "Backdrops", "Freezes/UnFreezes the backdrops"),
+	FREEZE_FILTERS(DeadCommandCode.next(), "Filters", "Freezes/UnFreezes the filters"),
+	FREEZE_MESSAGES(DeadCommandCode.next(), "Messages", "Freezes/UnFreezes the messages"),
+	FREEZE_TRANSITIONS(DeadCommandCode.next(), "Transitions", "Freezes/UnFreezes the transitions"),
+	FREEZE_SHADERS(DeadCommandCode.next(), "Shaders", "Freezes/UnFreezes the shader"),
+	
 	//Cyclers
-	CYCLE_MESSAGES('m', "Message", "Cycles through the message (SHIFT option)"),
+	CYCLE_MESSAGES('i', "Message", "Cycles through the message (SHIFT option)"),
 	CYCLE_TRANSITIONS('n', "Transition", "Cycles through the transition (SHIFT option)"),
 	CYCLE_COLORS('c', "Colors", "Cycles through the colors (SHIFT and ALT options)"),
 	CYCLE_FILTERS('t', "Filter", "Cycles through the filters (SHIFT and ALT options)"),
@@ -52,15 +66,17 @@ public enum Command {
 	CYCLE_WATERMARK(DeadCommandCode.next(), "Next Watermark", "Queues up the next Watermark"),
 	
 	//Typical commands
-	MANUAL('/', "Manual", "Sets mode to Manual and disabled Agents"),
+	MANUAL(DeadCommandCode.next(), "Manual", "Sets mode to Manual and disabled Agents"),
+	MOUSE_CONTROL('/', "MouseControl", "Sets mode to Manual"),
 	RESET('?', "Reset", "Resets switches to their defaults"),
 	SCRAMBLE(Main.SPACE_BAR_KEY_CODE, "SpaceBar", "Scrambles all the things"),
 	RANDOMIZE_COLORS('`', "RandomizeSetPackColors", "Randomly changes the current Set Pack color scheme"),
 	RANDOMIZE_SETPACK(DeadCommandCode.next(), "Randomize SetPack Songs and Colors", "Randomly changes the current Set Pack color scheme and shuffles songs"),
 	WINDOWS('w', "SettingsWindow", "Popup window to display Help"),
+	LOAD_CONFIGURATION(DeadCommandCode.next(), "Load Configuration", "Loads the configuration from disk"),
 	SAVE_CONFIGURATION('0', "Save Configuration", "Saves the current configuration to disk"),
-	RELOAD_CONFIGURATION('u', "Reloads Configuration", "Reloads all of the current configuration"),
-	SCREEN_SHOT('i', "ScreenShot", "Saves the current frame to disk"),
+	RELOAD_CONFIGURATION('u', "Reload Configuration", "Reloads all of the current configuration"),
+	SCREEN_SHOT(DeadCommandCode.next(), "ScreenShot", "Saves the current frame to disk"),
 	PERF_MONITOR('j', "Perf Monitor", "Outputs the slow monitor data to the console"),
 	REVERSE('r', "Reverse Path", "Changes the direction of the path"),
 	AUDIO_INC('+', "Audio++", "Increases the audio sensitivity"),
@@ -81,8 +97,6 @@ public enum Command {
 	//Newer Remote oriented commands
 	SHOW_SONG_QUEUE(DeadCommandCode.next(), "Show SongQueue", "Displays the current set of songs queued to be played"),
 	SHOW_OCEAN_SET_INFO(DeadCommandCode.next(), "Show Ocean Set Info", "Displays the current Ocean and Set"),
-	SHOW_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Shows Available Set Packs", "Shows the available set packs"),
-	LOAD_AVAILABLE_SET_PACKS(DeadCommandCode.next(), "Loads all Available Set Packs", "Loads the available set packs"),
 	
 	PLAY_SET_PACK(DeadCommandCode.next(), "Plays the named setPack", "Plays the named setPack"),
 	SHOW_MARQUEE_MESSAGE(DeadCommandCode.next(), "Shows a marquee Message", "Shows a marquee message"),
@@ -94,20 +108,13 @@ public enum Command {
 	//Key code Commands
 	DOWN_ARROW(PApplet.DOWN, "Down", "Removes the current scene from the 'liked' list"),
 	UP_ARROW(PApplet.UP, "Up", "Adds the current scene to the 'liked' list"),
+	
+	//TODO Update descriptions?
 	LEFT_ARROW(PApplet.LEFT, "Left", "Cycles through the liked scenes in reverse"),
 	RIGHT_ARROW(PApplet.RIGHT, "Right", "Cycles through the liked scenes"),
 	
-	//Set List Commands
-	//for mac... TODO investigate
-	FFWD(java.awt.event.KeyEvent.VK_NUMPAD9, "FwdSong", "Play the next song"),
-	PLAY_PAUSE(java.awt.event.KeyEvent.VK_NUMPAD8, "Play/Pause Song", "Plays or Pauses the song"),
-	PREV(java.awt.event.KeyEvent.VK_NUMPAD7, "PrevSong", "Play the previous song"),
-//	FFWD(java.awt.event.KeyEvent.VK_F9, "FwdSong", "Play the next song"),
-//	PLAY_PAUSE(java.awt.event.KeyEvent.VK_F8, "Play/Pause Song", "Plays or Pauses the song"),
-//	PREV(java.awt.event.KeyEvent.VK_F7, "PrevSong", "Play the previous song"),
-	
 	//Hot Keys
-	HOT_KEY_1('!', "", ""),
+	HOT_KEY_1('!', "Show Frequency Response", ""),
 	HOT_KEY_2('@', "", ""),
 	HOT_KEY_3('#', "", ""),
 	HOT_KEY_4('$', "", ""),
@@ -124,11 +131,7 @@ public enum Command {
 	MACRO_5('5', "", "", Event.CTRL),
 	MACRO_6('6', "", "", Event.CTRL),
 	MACRO_7('7', "", "", Event.CTRL),
-	MACRO_8('8', "", "", Event.CTRL),
-	
-	//DB Commands
-	DB_CREATE_SET_PACK_FOLDERS(DeadCommandCode.next(), "dbCreateSetPack", "Finds all of the SetPacks in the db without folders and creates them"),
-	DB_REFRESH_SET_PACK_CONFIGURATION(DeadCommandCode.next(), "dbRefreshSetPack", "Updates all of the application.conf to the latest version");
+	MACRO_8('8', "", "", Event.CTRL);
 	
 	private static final List<Command> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	

@@ -23,7 +23,7 @@ import com.arranger.apv.Main;
 import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.agent.APVAgent;
 import com.arranger.apv.audio.Audio;
-import com.arranger.apv.audio.Audio.BeatInfo;
+import com.arranger.apv.audio.BeatInfo;
 import com.arranger.apv.cmd.CommandSystem;
 import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
 import com.arranger.apv.event.APVChangeEvent;
@@ -33,7 +33,6 @@ import com.arranger.apv.event.EventTypes;
 import com.arranger.apv.helpers.APVPulseListener;
 import com.arranger.apv.helpers.HotKeyHelper;
 import com.arranger.apv.helpers.MacroHelper;
-import com.arranger.apv.helpers.SetPackLoader;
 import com.arranger.apv.util.APVSetListPlayer;
 import com.arranger.apv.util.ColorHelper;
 import com.arranger.apv.util.Configurator;
@@ -99,7 +98,6 @@ public abstract class APVPluginTest {
         BeatDetect beatDetect = Mockito.mock(BeatDetect.class);
         FFT fft = Mockito.mock(FFT.class);
         CommandSystem commandSystem = Mockito.mock(CommandSystem.class);
-        SetPackLoader sceneList = Mockito.mock(SetPackLoader.class);
         
         //mock audio and beat info
         when(parent.getAudio()).thenReturn(audio);
@@ -123,7 +121,6 @@ public abstract class APVPluginTest {
         when(parent.getConfig()).thenCallRealMethod();
         when(parent.createShape()).thenReturn(new PShape());
         when(parent.getCurrentControlMode()).thenReturn(CONTROL_MODES.MANUAL);
-        when(parent.getSetPackLoader()).thenReturn(sceneList);
         when(parent.format(Mockito.any())).thenCallRealMethod();
         when(parent.format(Mockito.any(), Mockito.anyBoolean())).thenCallRealMethod();
         when(parent.getConfigValueForFlag(Mockito.any())).thenCallRealMethod();
@@ -145,8 +142,6 @@ public abstract class APVPluginTest {
         when(parent.getAgent()).thenReturn(Mockito.mock(APVAgent.class));
         when(parent.getHotKeyHelper()).thenReturn(Mockito.mock(HotKeyHelper.class));
         when(parent.getMacroHelper()).thenReturn(Mockito.mock(MacroHelper.class));
-        
-        when(sceneList.getConfig()).thenCallRealMethod();
         
         setupConfigurator();
     }

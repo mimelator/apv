@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -47,6 +48,12 @@ public class ImageHelper extends APVPlugin {
 		}
 		
 		public static final List<ICON_NAMES> VALUES = Arrays.asList(ICON_NAMES.values());
+		public static final int SIZE = VALUES.size();
+		private static final Random RANDOM = new Random();
+
+		public static ICON_NAMES random() {
+			return VALUES.get(RANDOM.nextInt(SIZE));
+		}
 	}
 	
 	private Map<ICON_NAMES, List<ImageChangeHandler>> handlers = new HashMap<ICON_NAMES, List<ImageChangeHandler>>();

@@ -9,7 +9,6 @@ import java.util.ListIterator;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
-import com.arranger.apv.db.entity.SetpackEntity;
 
 import ddf.minim.AudioMetaData;
 import ddf.minim.AudioPlayer;
@@ -91,11 +90,11 @@ public class APVSetListPlayer extends APVPlugin {
 	}
 	
 	protected void playSongList(int index) {
-		Path path2 = songList.get(index);
-		String name = path2.getParent().getParent().toFile().getName();
-		SetpackEntity setPackEntity = parent.getDBSupport().findSetpackEntityByName(name);
-		parent.getSetPackModel().setSetpackEntity(setPackEntity);
-		parent.getSetPackStartEvent().fire();
+//		Path path2 = songList.get(index);
+//		String name = path2.getParent().getParent().toFile().getName();
+//		SetpackEntity setPackEntity = parent.getDBSupport().findSetpackEntityByName(name);
+//		parent.getSetPackModel().setSetpackEntity(setPackEntity);
+//		parent.getSetPackStartEvent().fire();
 		
 		Minim minim = parent.getAudio().getMinim();
 		new Thread(() -> {

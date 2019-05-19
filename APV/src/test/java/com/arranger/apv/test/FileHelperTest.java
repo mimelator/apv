@@ -9,9 +9,17 @@ public class FileHelperTest extends APVPluginTest {
 	private static final String DEFAULT_TEXT = "This is new text";
 	private static final String FILE_NAME = "fileHelperTest.txt";
 	
+	
 	public FileHelperTest() {
 	}
 
+	@Test
+	public void testFindBackgroundFolder() {
+		FileHelper fh = new FileHelper(parent);
+		String fullPath = fh.getFullPath("../backgrounds");
+		assert(fullPath != null);
+	}
+	
 	
 	@Test
 	public void testCreateFile() {

@@ -1,55 +1,11 @@
-BRANCH: master
 https://github.com/mimelator/apv
 
 
-
-
 *****************************************************************************
-TODO:
-[WEB] * Social Media badges that guest Djs can use (snapchat, instagram, facebook)
-[WEB] * Subscriptions for setpacks/djs/etc...
-[WEB] * Scheduled Maintenance: clean the icons and storage of firebase and processed
-[WEB] * Machine learning: An ability to record how many likes for any given scene while streaming.  Feed this data to a machine learning model
-			The training data going into the model would be encoded information describing all of the current scene components
-
-[GE] * No diagnostic insights into any of the agents
-[GE] * Modulate the Shaders.  For instance the zoom blur... slowly blur in then 'blur' out
-[GE] * Agent that Special create a random mixed setpack on the fly and play that with a few songs
-[GE] * Puzzle animation of a background iamge
-[GE] * Animations: Such as a hindu goddess with many limbs
-[GE] * Window blinds background
-[GE] * More shaders here: https://github.com/maierfelix/rokon/tree/master/shaders
-[GE] * Use ShaderDemo2 to start rendering images with glsl
-[GE] * add a blur to the edge of an image: https://www.imagemagick.org/Usage/blur/#blur ?
-[GE] * All backgrounds should be able to rotate around the center of the screen (slowly is fine)
-[GE] * Render vector graphics
-[GE] * Shrink the 3d blocks to be smaller than the projected screen.  It's cool
-
-[*] Change the frequency of some of those backdrops/shaders/backgrounds that i don't like.  This should be solved by the Like Campaign
-[*] * Download music from different sources: Soundcloud(on-hold) Spotify?  Pandora?  Napster?
-{*] * Imagine allowing DJs to add scripts to their setpacks: (Basically create custom agents for their setpacks)
-			Every 5 mintues fire this event: WATERMARK
-*****************************************************************************
-*****************************************************************************
-Issues:
-fix firebase login problem on production This was due to docker clock drift
-APVSetListPlayer doesn't pick up the the setList folder of the setPack if it was specified on the commandline (This is a feature)
-When refreshing the application, make sure you have the latest and greatest (reference.conf) in memory first.
-Import/Export is just a simple folder move, but there is no DB support :) but needs an update to the application.conf for the ocean
-[WL]: wavelength-monday | GET /apv/playlist/80S_EARLY_90S_NEW_WAVE_POST_PUNK_GOTHIC_DARKWAVE.mp3 404 113.484 ms - 3189
-	I deleted all of the songs under monday/playlist to conserve rooom when
-	transferring a zip archive to my dev laptop
-	However, the song of each song Model points not to to the SetPack but to the location in playlist
-	So right now, all monday songs are broken from the DB.  Not the setpacks...
-	FIX: Maybe also show all the possible set pack locations.  Just like searching for djs, try to search
-		for setpacks that contain this song.
-[*] A set pack titled: "Who Me?" brought down testDB4 in production when it attempted to load/run that setPack
-[*] : The difference in experience between the unlimited/unregistered setpacks vs official setpacks?
-		Should i add additional default icons/colors/messages?
-*****************************************************************************
-*****************************************************************************
-Remote Debugging:
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y -Dconfig.file=test34/application.conf -jar apv.jar
+* Render vector graphics  
+	See ScaleShape under Processing Examples
+* Puzzle animation of a background image
+* Look to use easing for some motions: https://processing.org/examples/easing.html
 *****************************************************************************
 *****************************************************************************
 Build & Release to local artifactory and github
@@ -57,91 +13,11 @@ mvn package
 mvn release:clean release:prepare release:perform
 *****************************************************************************
 *****************************************************************************
-MONGO SHELL
-sp = db.setpacks;
-sp.updateMany({}, { $set:{ folder:""  } });
-
-//find first
-var res = djs.findOne();
-
-//give all the setpacks to the first dj
-var spIds = [];
-var myCursor = db.setpacks.find();
-while (myCursor.hasNext()) {
-  var obj = myCursor.next();
-  print(obj._id);
-  spIds.push(obj._id);
-}
-db.djs.updateOne(
-	{},
-	{ $set: { "setpack" : spIds } }
-);
-
-//delete
-find by id:
- db.songs.find(ObjectId("5b04945dfe01707121b83fb6"));
- db.songs.deleteOne({"_id":ObjectId("5b04945dfe01707121b83fb6")});
-
-//add a song to a setpack
-db.setpacks.updateOne(
-	{"_id": ObjectId("5b04948dfe01707121b83fb7")},
- 	{ $addToSet: { "song": ObjectId("5b04e616e5f46c7aad888c25") } }
-);
-
-
-db.setpacks.update(
-  {name: 'AlphaTwo'},
-  {$pull: { song: ObjectId("5b04945dfe01707121b83fb6")}});
-*****************************************************************************
-*****************************************************************************
-DOCKER COMMANDS NOTES
-
-MONGO:
-#start an instance of mongo pointing at your database
-sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db mongo
-
-#start an instance that is exposed as port 37017
-sudo docker run -d -p 37017:27017 -v ~/db-bak:/data/db mongo
-
-#connect to it
-mongodb://localhost:37017/test
-
-#name an instance
-sudo docker run -d -p 27017:27017 -v ~/db-bak:/data/db --name="arranger-mongo" mongo
-
-#build the image (in the wl directory)
-docker build -t mimel/wl .
-
-#run an instance of it
-docker run -p 49160:3000 -d mimel/wl
-
-//connect to an instance of docker
-docker exec -it wavelength-arranger /bin/bash
-
-#one stop importing
-docker exec wavelength-testDB4 ./shell/importFromFirebase.sh
-*****************************************************************************
-*****************************************************************************
-Setup a softlink inside of public to the apv directory:
-cd git/wl/public
-ln -s ~/apv apv
-*****************************************************************************
-*****************************************************************************
 How to override the DefaultCommands.
 -DdefaultCommands.0
 -DdefaultCommands.0=DB_CREATE_SET_PACK_FOLDERS
 -DdefaultCommands.1=CYCLE_SET_PACK
 see apv-no-db.sh for example
-*****************************************************************************
-*****************************************************************************
-LOCAL DEVELOPMENT
-Start node local
-cd git\wl
-edit .env
-npm run devstart
-
-Start mongo
-~/mongod.sh default
 *****************************************************************************
 *****************************************************************************
 Current High Score:

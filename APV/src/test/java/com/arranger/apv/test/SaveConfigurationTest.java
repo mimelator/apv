@@ -39,7 +39,6 @@ public class SaveConfigurationTest extends ConfigBasedTest {
 		results.append(System.lineSeparator()).append(System.lineSeparator());
 		
 		results.append(parent.getConfig()).append(System.lineSeparator());
-		results.append(parent.getSetPackLoader().getConfig()).append(System.lineSeparator()).append(System.lineSeparator()); 
 		
 		Arrays.asList(Main.SYSTEM_NAMES.values()).forEach(s -> {
 			results.append(getConfigForSystem(s));
@@ -55,7 +54,7 @@ public class SaveConfigurationTest extends ConfigBasedTest {
 		buffer.append(systemName + " : [").append(System.lineSeparator());
 		for (Iterator<? extends APVPlugin> it = ss.iterator(); it.hasNext();) {
 			APVPlugin next = it.next();
-			systems.add("     " + next.getConfig());
+			systems.add("     " + next.getConfigEx());
 		}
 		
 		//sort the lines
@@ -76,7 +75,7 @@ public class SaveConfigurationTest extends ConfigBasedTest {
 		buffer.append("colors : [").append(System.lineSeparator());
 		for (Iterator<? extends APVPlugin> it = ss.iterator(); it.hasNext();) {
 			APVPlugin next = it.next();
-			String pluginConfig = next.getConfig();
+			String pluginConfig = next.getConfigEx();
 			buffer.append("   " + pluginConfig).append("\n");
 		}
 		buffer.append(System.lineSeparator()).append("]").append(System.lineSeparator());

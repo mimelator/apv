@@ -34,8 +34,10 @@ public class FileHelper extends APVPlugin {
 	public FileHelper(Main parent)  {
 		super(parent);
 		
-		String oceanName = parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME);
-		apvDir = HOME_DIR + File.separator + "apv" + File.separator + "oceans" + File.separator + oceanName;
+//		String oceanName = parent.getConfigValueForFlag(Main.FLAGS.OCEAN_NAME);
+//		apvDir = HOME_DIR + File.separator + "apv" + File.separator + "oceans" + File.separator + oceanName;
+		
+		apvDir = new File(".").getAbsolutePath();
 		
 		try {
 			rootFolder = new File(apvDir);
@@ -178,10 +180,14 @@ public class FileHelper extends APVPlugin {
 	}
 	
 	public List<Path> getAllMp3sFromDir(Path directory) {
+		return getAllFilesFromDir(directory, ".mp3");
+	}
+	
+	public List<Path> getAllFilesFromDir(Path directory, String extension) {
 		List<Path> result = null;
 		try {
 			result = Files.find(directory, Integer.MAX_VALUE, (p, bfa) -> { 
-				return p.toString().endsWith(".mp3");
+				return p.toString().endsWith(extension);
 			}).collect(Collectors.toList());
 		} catch (IOException e) {
 			debug(e);

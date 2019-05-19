@@ -7,11 +7,16 @@ import com.arranger.apv.audio.PulseListener;
 public class APVPulseListener extends APVCallbackHelper {
 	
 	private PulseListener pulseListener;
+	private int artificialFrame = -1;
 	
 	public APVPulseListener(Main parent) {
 		super(parent, Main.SYSTEM_NAMES.PULSELISTENERS);
 		parent.getSetupEvent().register(() -> {
 			pulseListener = new PulseListener(parent, 1);
+			
+			parent.getMousePulseEvent().register(() -> {
+				setArtificialPulseForNextFrame();
+			});
 		});
 	}
 	
@@ -30,5 +35,13 @@ public class APVPulseListener extends APVCallbackHelper {
 	@Override
 	public boolean isEnabled() {
 		return pulseListener.isNewPulse();
+	}
+	
+	public void setArtificialPulseForNextFrame() {
+		artificialFrame = parent.frameCount + 1;
+	}
+	
+	public boolean isArtificialPulse() {
+		return artificialFrame == parent.frameCount;
 	}
 }

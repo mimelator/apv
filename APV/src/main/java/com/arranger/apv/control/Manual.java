@@ -4,6 +4,8 @@ import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
 
 public class Manual extends ControlSystem {
+	
+	protected boolean mouseDown = false;
 
 	public Manual(Main parent) {
 		super(parent);

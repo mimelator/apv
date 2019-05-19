@@ -63,14 +63,15 @@ public class CustomShader extends Shader {
 			return;
 		}
 		
+		render.custom(pass);
+		
 		if (shaders != null) {
 			shaders.forEach(s -> {
-				s.getShaderPass().addPass(render);
+				s.getShaderPass().addPass(render, parent);
 			});
 		}
 		
 		try {
-			render.custom(pass);
 			render.compose();
 		} catch (Exception e) {
 			System.out.println("Exception caught for custom shader: " + getDisplayName());

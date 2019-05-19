@@ -1,5 +1,8 @@
 package com.arranger.apv.scene;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.back.BackDropSystem;
@@ -82,6 +85,94 @@ public class Scene extends ShapeSystem {
 			
 			return found;
 		}
+		
+		public List<APVPlugin> getPlugins() {
+			List<APVPlugin> plugins = new ArrayList<APVPlugin>();
+			
+			if (backDrop != null) {
+				plugins.add(backDrop);
+			}
+			if (bgSys != null) {
+				plugins.add(bgSys);
+			}
+			if (fgSys != null) {
+				plugins.add(fgSys);
+			}
+			if (filter != null) {
+				plugins.add(filter);
+			}
+			if (shader != null) {
+				plugins.add(shader);
+			}
+			if (colorSys != null) {
+				plugins.add(colorSys);
+			}
+			if (locSys != null) {
+				plugins.add(locSys);
+			}
+			return plugins;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((backDrop == null) ? 0 : backDrop.hashCode());
+			result = prime * result + ((bgSys == null) ? 0 : bgSys.hashCode());
+			result = prime * result + ((colorSys == null) ? 0 : colorSys.hashCode());
+			result = prime * result + ((fgSys == null) ? 0 : fgSys.hashCode());
+			result = prime * result + ((filter == null) ? 0 : filter.hashCode());
+			result = prime * result + ((locSys == null) ? 0 : locSys.hashCode());
+			result = prime * result + ((shader == null) ? 0 : shader.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Components other = (Components) obj;
+			if (backDrop == null) {
+				if (other.backDrop != null)
+					return false;
+			} else if (!backDrop.equals(other.backDrop))
+				return false;
+			if (bgSys == null) {
+				if (other.bgSys != null)
+					return false;
+			} else if (!bgSys.equals(other.bgSys))
+				return false;
+			if (colorSys == null) {
+				if (other.colorSys != null)
+					return false;
+			} else if (!colorSys.equals(other.colorSys))
+				return false;
+			if (fgSys == null) {
+				if (other.fgSys != null)
+					return false;
+			} else if (!fgSys.equals(other.fgSys))
+				return false;
+			if (filter == null) {
+				if (other.filter != null)
+					return false;
+			} else if (!filter.equals(other.filter))
+				return false;
+			if (locSys == null) {
+				if (other.locSys != null)
+					return false;
+			} else if (!locSys.equals(other.locSys))
+				return false;
+			if (shader == null) {
+				if (other.shader != null)
+					return false;
+			} else if (!shader.equals(other.shader))
+				return false;
+			return true;
+		}
 	}
 	
 	protected Components cc = new Components();
@@ -99,7 +190,7 @@ public class Scene extends ShapeSystem {
 		super(o.parent, null);
 		cc = new Components(o.cc);
 	}
-	
+
 	public void setSystems(BackDropSystem backDrop, ShapeSystem bgSys, 
 			ShapeSystem fgSys, Filter filter, Shader shader,
 			ColorSystem cs, LocationSystem ls) {
@@ -199,5 +290,28 @@ public class Scene extends ShapeSystem {
 		if (comp.shader != null) {
 			parent.drawSystem(comp.shader, "shader");
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((cc == null) ? 0 : cc.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		Scene other = (Scene) obj;
+		if (cc == null) {
+			if (other.cc != null)
+				return false;
+		} else if (!cc.equals(other.cc))
+			return false;
+		return true;
 	}
 }
