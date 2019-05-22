@@ -1,0 +1,44 @@
+#!/bin/bash
+# https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
+# https://stackoverflow.com/questions/525592/find-and-replace-inside-a-text-file-from-a-bash-command
+# Purpose:
+# Usage: template-test -m <msg> <output_file>
+
+
+########
+# ARGS
+########
+
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -m|--message)
+    MESSAGE="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+echo FILE MESSAGE  = "${MESSAGE}"
+echo OUTPUT_FILE     = "${1}"
+
+MSG=$1
+
+DEST_DIR=~/Downloads/
+
+TEMPLATE_FILE=app_build_1091220.vdf
+OUTPUT=app_build_1091220.vdf.out
+
+TARGET_PHRASE="DESCRIPTION_GOES_HERE"
+
+sed -e s/"$TARGET_PHRASE"/"$MSG"/g $TEMPLATE_FILE > $OUTPUT
