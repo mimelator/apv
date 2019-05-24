@@ -24,8 +24,8 @@ public class MouseControlAgent extends LocationAgent {
 		this.targetMode = targetMode;
 		
 		//Looking for two things
-		// 1. A mouse that doesn't move.  Change to Perlin
-		// 2. A mouse that is moving.  Ensure we're in Manual
+		// 1. A mouse that doesn't move.  Change to Perlin and hide the mouse.
+		// 2. A mouse that is moving.  Ensure we're in Manual and that the mouse isn't hiding
 		registerAgent(getDrawEvent(), () -> {
 			//is mouse moving?
 			if (parent.mouseX == prevMouseX && parent.mouseY == prevMouseY) {
@@ -34,7 +34,9 @@ public class MouseControlAgent extends LocationAgent {
 					if (parent.getControl().getControlMode() != targetMode) {
 						parent.activateNextPlugin(SYSTEM_NAMES.CONTROLS, targetMode.name(), getName());
 						parent.setCurrentControlMode(targetMode);
+						
 					}
+					parent.noCursor();
 				}
 				
 				numFramesNotMoving++;
@@ -49,6 +51,7 @@ public class MouseControlAgent extends LocationAgent {
 				if (parent.getControl().getControlMode() != CONTROL_MODES.MANUAL) {
 					parent.mouseControl();
 				}
+				parent.cursor();
 			}
 		});
 	}
