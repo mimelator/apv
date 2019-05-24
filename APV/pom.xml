@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>APV</groupId>
 	<artifactId>APV</artifactId>
-	<version>0.7.5-SNAPSHOT</version>
+	<version>0.7.6-SNAPSHOT</version>
 	<name>Audio Processing Visualizer</name>
 
 	<properties>
