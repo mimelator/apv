@@ -8,24 +8,24 @@
 	// will be resolved relative to this root.
 	// If you don't define ContentRoot, then it will be assumed to be
 	// the location of this script file, which probably isn't what you want
-	"ContentRoot"	"/home/ec2-user/sdk/tools/ContentBuilder/content"
+	"ContentRoot"	"CONTENT_ROOT"
 
 	// include all files recursivley
   "FileMapping"
   {
   	// This can be a full path, or a path relative to ContentRoot
     "LocalPath" "*"
-    
+
     // This is a path relative to the install folder of your game
     "DepotPath" "."
-    
+
     // If LocalPath contains wildcards, setting this means that all
     // matching files within subdirectories of LocalPath will also
     // be included.
     "recursive" "1"
   }
 
-	// but exclude all symbol files  
+	// but exclude all symbol files
 	// This can be a full path, or a path relative to ContentRoot
   "FileExclusion" "*.pdb"
 }
