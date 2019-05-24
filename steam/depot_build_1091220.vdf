@@ -8,7 +8,7 @@
 	// will be resolved relative to this root.
 	// If you don't define ContentRoot, then it will be assumed to be
 	// the location of this script file, which probably isn't what you want
-	"ContentRoot"	"/home/ec2-user/Downloads/apv"
+	"ContentRoot"	"/home/ec2-user/Downloads/apv/lib"
 
 	// include all files recursivley
   "FileMapping"
