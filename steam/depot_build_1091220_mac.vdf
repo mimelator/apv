@@ -3,7 +3,7 @@
 	// Set your assigned depot ID here
 	"DepotID" "1091223"
 
-	"ContentRoot"	"/home/ec2-user/wavelength/Wavelength.app"
+	"ContentRoot"	"/home/ec2-user/wavelength/Wavelength.app/"
 
 	"FileMapping"
   {

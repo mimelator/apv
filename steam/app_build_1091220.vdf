@@ -11,7 +11,6 @@
 	"depots"
 	{
 		"1091221" "depot_build_1091220.vdf"
-		//"1091222" "depot_build_1091220_library.vdf"
 		"1091223" "depot_build_1091220_mac.vdf"
 	}
 }
