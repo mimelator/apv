@@ -17,7 +17,7 @@
     "LocalPath" "*"
 
     // This is a path relative to the install folder of your game
-    "DepotPath" "lib/"
+    "DepotPath" "Contents/lib/"
 
     // If LocalPath contains wildcards, setting this means that all
     // matching files within subdirectories of LocalPath will also
