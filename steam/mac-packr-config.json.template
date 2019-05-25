@@ -1,0 +1,22 @@
+{
+    "platform": "mac",
+    "jdk": "/Users/markimel/Downloads/openjdk-1.7.0-u80-unofficial-macosx-x86_64-bundle/",
+    "executable": "wavelength",
+    "classpath": [
+        "/Users/markimel/Library/Application Support/Steam/steamapps/common/Wavelength/lib"
+    ],
+    "removelibs": [
+      ""
+    ],
+    "mainclass": "com.arranger.apv.Main",
+    "vmargs": [
+      ""
+    ],
+    "resources": [
+        "/Users/markimel/Library/Application Support/Steam/steamapps/common/Wavelength/bin",
+        "/Users/markimel/Library/Application Support/Steam/steamapps/common/Wavelength/backgrounds",
+        "/Users/markimel/Library/Application Support/Steam/steamapps/common/Wavelength/conf"
+    ],
+    "minimizejre": "soft",
+    "output": "out-mac"
+}
