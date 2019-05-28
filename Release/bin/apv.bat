@@ -1,4 +1,4 @@
 
 
 java -Dconfig.file=..\conf\application.conf^
- -classpath ..\lib\ com.arranger.apv.Main
+ -classpath ..\Java\ com.arranger.apv.Main
