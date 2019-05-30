@@ -11,7 +11,7 @@
     "LocalPath" "*"
 
     // This is a path relative to the install folder of your game
-    "DepotPath" "Contents/PlugIns"
+    "DepotPath" "Contents/PlugIns/jdk1.8.0_202.jdk"
 
     // If LocalPath contains wildcards, setting this means that all
     // matching files within subdirectories of LocalPath will also
