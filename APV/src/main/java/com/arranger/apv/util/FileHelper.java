@@ -20,6 +20,7 @@ import com.arranger.apv.Main;
 public class FileHelper extends APVPlugin {
 	
 	public static final String HOME_DIR = System.getProperty("user.home");
+	public static final String USER_DIR = System.getProperty("user.dir");
 	
 	public static final String STATS = "stats";
 	public static final String SET_PACKS = "setPacks";
@@ -68,8 +69,8 @@ public class FileHelper extends APVPlugin {
 	}
 	
 	public File getStatsFolder() {
-		String setPacksString = getFullPath(STATS);
-		return new File(setPacksString);
+		Path statsPath = new File(USER_DIR).toPath().resolve(STATS);
+		return statsPath.toFile();
 	}
 
 	public String getFullPath(String fileName) {
