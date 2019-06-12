@@ -16,7 +16,7 @@ public class SafePainter extends APVPlugin {
 	private static final Logger logger = Logger.getLogger(SafePainter.class.getName());
 	
 	public static final int INSET = 11;
-	public static final int OFFSET = TextPainter.TEXT_OFFSET;
+	public static final int OFFSET = 10;
 	
 	public enum LOCATION {
 		UPPER_LEFT(LEFT, TOP), 
