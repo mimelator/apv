@@ -25,10 +25,10 @@ public class WelcomeDisplay extends HelpDisplay {
 	@SuppressWarnings("unchecked")
 	private static final List<Command> WELCOME_COMMANDS = Arrays.asList(
 			new Command[] {
-			Command.SWITCH_HELP,
+			//Command.SWITCH_HELP,
 			Command.SCRAMBLE,
-			Command.SWITCH_WELCOME,
-			Command.HOT_KEY_1,
+			//Command.SWITCH_WELCOME,
+			//Command.HOT_KEY_1,
 			Command.RANDOMIZE_COLORS,
 			});
 	
@@ -91,7 +91,7 @@ public class WelcomeDisplay extends HelpDisplay {
 		ArrayList<String> msgs = new ArrayList<String>();
 		msgs.add(DIRECTIONS);
 		msgs.addAll(cmdMessages);
-		msgs.add("APV Version: " + parent.getVersionInfo().getVersion());
+		msgs.add("Version: " + parent.getVersionInfo().getVersion());
 		return msgs;
 	}
 }
