@@ -35,13 +35,17 @@ public class AudioTestMenu extends CommandBasedMenu {
 	}
 	
 	protected void updateResponsiveness() {
-		String result = JOptionPane.showInputDialog("Responsiveness level");
-		try {
-			float floatResult = Float.parseFloat(result);
-			parent.getAutoAudioAdjuster().setTargetCmdsPerSec(floatResult);
-			shouldSaveOnDeactivate = true;
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "Unable to parse number: " + result, "Responsiveness", JOptionPane.INFORMATION_MESSAGE);
-		}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+				String result = JOptionPane.showInputDialog("Responsiveness level");
+				try {
+					float floatResult = Float.parseFloat(result);
+					parent.getAutoAudioAdjuster().setTargetCmdsPerSec(floatResult);
+					shouldSaveOnDeactivate = true;
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Unable to parse number: " + result, "Responsiveness", JOptionPane.INFORMATION_MESSAGE);
+				}
+			 }
+	    });
 	}
 }

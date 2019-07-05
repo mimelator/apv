@@ -27,16 +27,21 @@ public class EmojiMenu extends CommandBasedMenu {
 	}
 
 	protected void updateEmoji(String orig) {
-		String result = JOptionPane.showInputDialog(orig);
-		if (result != null) {
-			EmojisModel emojisModel = parent.getEmojisModel();
-			List<String> msgList = emojisModel.getMsgList();
-			int i = msgList.indexOf(orig);
-			if (i != -1) {
-				msgList.set(i, result);
-				emojisModel.setMsgList(msgList);
-				shouldSaveOnDeactivate = true;
-			}
-		}
+		 java.awt.EventQueue.invokeLater(new Runnable() {
+		        public void run() {
+		        	String result = JOptionPane.showInputDialog(orig);
+					if (result != null) {
+						EmojisModel emojisModel = parent.getEmojisModel();
+						List<String> msgList = emojisModel.getMsgList();
+						int i = msgList.indexOf(orig);
+						if (i != -1) {
+							msgList.set(i, result);
+							emojisModel.setMsgList(msgList);
+							shouldSaveOnDeactivate = true;
+						}
+					}
+		        }
+		    });
 	}
 }
+

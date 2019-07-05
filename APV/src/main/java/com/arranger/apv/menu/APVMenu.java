@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 import com.arranger.apv.APV;
 import com.arranger.apv.APVPlugin;
@@ -27,6 +28,8 @@ import processing.event.KeyEvent;
 	     Save, Reload, Load?
  */
 public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
+	
+	private static final Logger logger = Logger.getLogger(APVMenu.class.getName());
 	
 	public static final String DIRECTIONS = "Use the Arrow keys to navigate up and down the list.\n" +
 			"  Use the left and right Arrow keys to vote up or down the 'popularity' of the plugins.\n" +
@@ -140,8 +143,12 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	
 	public void onKeyEvent(KeyEvent keyEvent) {
 		String keyForKeyEvent = Command.getKeyForKeyEvent(keyEvent);
-		if (keyBindingMap.containsKey(keyForKeyEvent)) {
-			keyBindingMap.get(keyForKeyEvent).onCommand();
+		if (keyForKeyEvent != null) {
+			if (keyBindingMap.containsKey(keyForKeyEvent)) {
+				keyBindingMap.get(keyForKeyEvent).onCommand();
+			} else {
+				logger.info("skipping unknown keyForKeyEvent: " + keyForKeyEvent);
+			}
 		}
 	}
 	
