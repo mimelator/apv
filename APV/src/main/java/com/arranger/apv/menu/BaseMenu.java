@@ -38,7 +38,13 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 	}
 	
 	public void draw() {
+		//Hack for: https://github.com/mimelator/apv/issues/15
+		float transx = parent.width * .1f;
+		parent.translate(-transx, 0);
 		titlePainter.drawText(title, LOCATION.UPPER_RIGHT);
+		parent.translate(transx, 0);
+		//Hack for: https://github.com/mimelator/apv/issues/15
+		
 		menuPainter.draw(showDetails);
 		
 		if (drawPlugin) {
