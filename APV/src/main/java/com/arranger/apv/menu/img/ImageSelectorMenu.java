@@ -50,6 +50,11 @@ public class ImageSelectorMenu extends CommandBasedMenu {
 		return menuItems;
 	}
 	
+	@Override
+	protected List<String> getTitleStrings() {
+		return new ArrayList<String>();
+	}
+	
 	protected ImageSelector getCurrentSelector() {
 		return menuItems.get(getIndex()).getImageSelector();
 	}

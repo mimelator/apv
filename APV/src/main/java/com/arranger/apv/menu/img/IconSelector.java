@@ -13,10 +13,11 @@ import processing.core.PImage;
 
 public class IconSelector extends ImageSelector {
 	
-	private static final String DIRECTIONS = "Choose a group of images to use as backgrounds.\n" + 
-			"  The images must be PNGs and look much better with transparent sections..  \n" + 
-			"  If you use images larger than 1MB the program might crash or run erratically. \n" + 
-			"  After choosing the images, you can navigate to the Plugins Menu->Foregrounds to see some of the Sprite Factory foregrounds which use icons.. ";
+	private static final String DIRECTIONS = "Choose a group of smaller images to use as little icons.\n" + 
+			"  The smaller the image the better and they must be PNGs. (Transparency is a plus).  \n" + 
+			"  If you use images larger than 1MB Wavelength might crash or run erratically. \n" + 
+			"  After choosing the images, you can use the Menu->Plugins->Foregrounds\n" +
+			"  to see some of the Sprite Plugins which use icons.. ";
 	
 	private List<Path> paths;
 
