@@ -182,6 +182,7 @@ public class Main extends PApplet {
 	//Switches for runtime
 	private Switch 
 		audioListenerDiagnosticSwitch,
+		commandModeSwitch,
 		consoleOutputSwitch,
 		debugPulseSwitch,
 		flashFlagSwitch,
@@ -254,6 +255,7 @@ public class Main extends PApplet {
 	public enum SWITCH_NAMES {
 		AUDIO_LISTENER_DIAGNOSTIC("AudioListenerDiagnostic"),
 		CONSOLE_OUTPUT("ConsoleOutput"),
+		COMMAND_MODE("CommandMode"),
 		DEBUG_PULSE("DebugPulse"),
 		FLASH_FLAG("FlashFlag"),
 		FRAME_STROBER("FrameStrober"),
@@ -468,6 +470,26 @@ public class Main extends PApplet {
 	
 	public Configurator getConfigurator() {
 		return configurator;
+	}
+	
+	public void restoreCommandSystem() {
+		if (isCommandMode()) {
+			getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
+		} else {
+			getKeyListener().setSystem(KEY_SYSTEMS.DEFAULT);
+		}
+	}
+	
+	List<Command> DEFAULT_COMMANDS = Arrays.asList(new Command [] {
+			Command.SWITCH_MENU,
+			Command.SWITCH_WELCOME,
+			Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC,
+			Command.RANDOMIZE_COLORS,
+			Command.SCRAMBLE,
+		});
+		
+	public boolean isDefaultCommand(Command cmd) {
+		return DEFAULT_COMMANDS.contains(cmd);
 	}
 	
 	public CommandSystem getCommandSystem() {
@@ -1008,6 +1030,13 @@ public class Main extends PApplet {
 		screenshotMode = false;
 	}
 	
+	/**
+	 * Whether or not the Command Switch is enabled for advanced users
+	 */
+	public boolean isCommandMode() {
+		return commandModeSwitch.isEnabled();
+	}
+	
 	public boolean isScrambleModeAvailable() {
 		if (lastScrambleFrame + SCRAMBLE_QUIET_WINDOW > getFrameCount()) {
 			return false;
@@ -1312,9 +1341,12 @@ public class Main extends PApplet {
 		settingsDisplay.reset();
 		TransitionSystem transition = prepareTransition(false);
 		
-		if (keyListener.getSystem() == KEY_SYSTEMS.REWIND) {
-			currentScene = rewindHelper.getScene();
-		} else if (likedScenes.isEnabled()) {
+//		if (keyListener.getSystem() == KEY_SYSTEMS.REWIND) {
+//			currentScene = rewindHelper.getScene();
+//		} else 
+		
+		
+		if (likedScenes.isEnabled()) {
 			currentScene = likedScenes.getPlugin();
 		} else {
 			currentScene = scenes.getPlugin();
@@ -1333,9 +1365,9 @@ public class Main extends PApplet {
 			}
 		}
 		
-		if (keyListener.getSystem() != KEY_SYSTEMS.REWIND) {
-			rewindHelper.addScene(currentScene);
-		}
+//		if (keyListener.getSystem() != KEY_SYSTEMS.REWIND) {
+//			rewindHelper.addScene(currentScene);
+//		}
 		drawSystem(currentScene, "scene");
 		
 		final TransitionSystem t = transition;
@@ -1471,6 +1503,7 @@ public class Main extends PApplet {
 
 	protected void initControlMode() {
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(getConfigString(FLAGS.CONTROL_MODE.apvName()));
+		keyListener.setSystem(KEY_SYSTEMS.DEFAULT);
 	}
 	
 	protected void initializeCommands() {
@@ -1490,6 +1523,7 @@ public class Main extends PApplet {
 	protected void registerMainSwitches() {
 		registerSwitch(agent.getSwitch(), Command.SWITCH_AGENT);
 		registerSwitch(audioListenerDiagnosticSwitch, Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC);
+		registerSwitch(commandModeSwitch, Command.SWITCH_COMMAND_MODE);
 		registerSwitch(consoleOutputSwitch, Command.SWITCH_CONSOLE_OUTPUT);
 		registerSwitch(debugPulseSwitch, Command.SWITCH_DEBUG_PULSE);
 		registerSwitch(flashFlagSwitch, Command.SWITCH_FLASH_FLAG);
@@ -1532,9 +1566,23 @@ public class Main extends PApplet {
 		cs.registerHandler(Command.TRANSITION_FRAMES_INC, (cmd,src,mod) -> {transitions.forEach(t -> {t.incrementTransitionFrames();});});
 		cs.registerHandler(Command.TRANSITION_FRAMES_DEC, (cmd,src,mod) -> {transitions.forEach(t -> {t.decrementTransitionFrames();});});
 		cs.registerHandler(Command.UP_ARROW, (cmd,src,mod) -> likeCurrentScene());
-		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> new APVWindow(this));
+		cs.registerHandler(Command.WINDOWS, (cmd,src,mod) -> lauchWindow(this));
 	}
 	
+	protected void lauchWindow(Main parent) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+	        	new APVWindow(parent);
+	        }
+		});
+	}
+	
+	/**
+	 * Each of these commands will allow the user to:
+	 * Enable/Disable the System (foregrounds, backgrounds, filters, shaders, etc...)
+	 * Cycle to the next plugin for that system
+	 * Freeze the current plugin for that system
+	 */
 	protected void registerSystemCommands() {
 		register(SYSTEM_NAMES.FOREGROUNDS, Command.SWITCH_FOREGROUNDS, Command.CYCLE_FOREGROUNDS, Command.FREEZE_FOREGROUNDS);
 		register(SYSTEM_NAMES.BACKGROUNDS, Command.SWITCH_BACKGROUNDS, Command.CYCLE_BACKGROUNDS, Command.FREEZE_BACKGROUNDS);
@@ -1650,6 +1698,7 @@ public class Main extends PApplet {
 		ss.forEach(s -> switches.put(s.name, s));
 		
 		audioListenerDiagnosticSwitch = switches.get(SWITCH_NAMES.AUDIO_LISTENER_DIAGNOSTIC.name);
+		commandModeSwitch = switches.get(SWITCH_NAMES.COMMAND_MODE.name);
 		consoleOutputSwitch = switches.get(SWITCH_NAMES.CONSOLE_OUTPUT.name);
 		debugPulseSwitch = switches.get(SWITCH_NAMES.DEBUG_PULSE.name);
 		frameStroberSwitch = switches.get(SWITCH_NAMES.FRAME_STROBER.name);

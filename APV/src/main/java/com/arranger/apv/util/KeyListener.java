@@ -13,10 +13,10 @@ public class KeyListener extends APVPlugin {
 	}
 	
 	public static enum KEY_SYSTEMS {
-		COMMAND, MENU, REWIND
+		DEFAULT, COMMAND, MENU, REWIND
 	}
 	
-	private KEY_SYSTEMS system = KEY_SYSTEMS.COMMAND;
+	private KEY_SYSTEMS system = KEY_SYSTEMS.DEFAULT;
 
 	public KeyListener(Main parent) {
 		super(parent);
@@ -37,6 +37,7 @@ public class KeyListener extends APVPlugin {
 				kel = parent.getRewindHelper();
 				break;
 			case COMMAND:
+			case DEFAULT:
 			default:
 				kel = parent.getCommandSystem();
 		}

@@ -6,7 +6,6 @@ import java.util.List;
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
-import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 
 public class ConfigurationMenu extends CommandBasedMenu {
 
@@ -64,7 +63,7 @@ public class ConfigurationMenu extends CommandBasedMenu {
 	protected void loadConfiguration(String configFile) {
 		parent.reloadConfiguration(configFile, () -> {
 			parent.getMenu().toggleEnabled();
-			parent.getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
+			parent.restoreCommandSystem();
 		});
 	}
 }

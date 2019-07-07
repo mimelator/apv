@@ -59,7 +59,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 				currentMenu.setIndex(0);
 				currentMenu.onActivate();
 			} else {
-				parent.getKeyListener().setSystem(KEY_SYSTEMS.COMMAND);
+				parent.restoreCommandSystem();
 			}
 		});
 		

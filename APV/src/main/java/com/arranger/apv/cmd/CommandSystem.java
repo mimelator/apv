@@ -69,6 +69,16 @@ public class CommandSystem extends APVPlugin implements KeyEventListener {
 		int modifiers = keyEvent.getModifiers();
 		if (cmd != null) {
 			String source = Command.getSource(keyEvent);
+			logger.log(Level.INFO, "invoking keyEvent: " + cmd);
+			
+			if (!parent.isCommandMode()) {
+				//Filter out many key commands when in default mode
+				if (!parent.isDefaultCommand(cmd)) {
+					System.out.println("Not executing advanced command: " + cmd.name());
+					return;
+				}
+			} 
+				
 			invokeCommand(cmd, source, modifiers);
 		} else {
 			if (!Command.isMetaDown(modifiers) && !Command.isControlDown(modifiers) && !Command.isAltDown(modifiers)) {
@@ -82,6 +92,7 @@ public class CommandSystem extends APVPlugin implements KeyEventListener {
 			List<RegisteredCommandHandler> list = registeredCommands.get(command);
 			if (list != null  && !list.isEmpty()) {
 				list.forEach(c -> {
+					logger.log(Level.INFO, "invoking command: " + c.getName());
 					c.handler.onCommand(command, source, modifiers);
 				});
 				lastCommand = list.get(list.size() - 1);
@@ -111,6 +122,8 @@ public class CommandSystem extends APVPlugin implements KeyEventListener {
 	public Command getLastCommand() {
 		return (lastCommand != null) ? lastCommand.command : null;
 	}
+	
+	
 
 	public static class RegisteredCommandHandler {
 		
