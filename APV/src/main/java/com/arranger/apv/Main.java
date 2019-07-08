@@ -485,6 +485,7 @@ public class Main extends PApplet {
 			Command.SWITCH_WELCOME,
 			Command.SWITCH_AUDIO_LISTENER_DIAGNOSTIC,
 			Command.RANDOMIZE_COLORS,
+			Command.HOT_KEY_1,
 			Command.SCRAMBLE,
 		});
 		
@@ -1504,6 +1505,7 @@ public class Main extends PApplet {
 	protected void initControlMode() {
 		currentControlMode = ControlSystem.CONTROL_MODES.valueOf(getConfigString(FLAGS.CONTROL_MODE.apvName()));
 		keyListener.setSystem(KEY_SYSTEMS.DEFAULT);
+		commandModeSwitch.setEnabled(false); //false by default regardless of what is configured
 	}
 	
 	protected void initializeCommands() {

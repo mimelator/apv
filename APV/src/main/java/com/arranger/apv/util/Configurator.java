@@ -450,23 +450,27 @@ public class Configurator extends APVPlugin {
 		
 		Path applicationConfPath = Paths.get(sysConfigFile);
 		System.out.println("saveCurrentConfig to: " + applicationConfPath.toAbsolutePath().toString());
-		saveConfigImpl(applicationConfPath.toFile(), false);
+		saveConfigImpl(applicationConfPath.toFile(), false, true);
 	}
 	
 	public void saveCurrentConfig(boolean alsoSaveOrig) {
-		saveConfigImpl(new File(APPLICATION_CONF), alsoSaveOrig);
+		saveConfigImpl(new File(APPLICATION_CONF), alsoSaveOrig, false);
 	}
 	
 	public void saveCurrentConfig(File targetConfig) {
-		saveConfigImpl(targetConfig, false);
+		saveConfigImpl(targetConfig, false, false);
 	}
 	
-	protected void saveConfigImpl(File f, boolean alsoSaveOrig) {
+	protected void saveConfigImpl(File f, boolean alsoSaveOrig, boolean makeBackup) {
 		String results = generateCurrentConfig();
 		
 		//save application.conf.bak
 		FileHelper fh = new FileHelper(parent);
 		fh.saveFile(f.getAbsolutePath(), results.toString());
+		
+		if (makeBackup) {
+			fh.saveFile(f.getAbsolutePath() + ".bak", results.toString());
+		}
 		
 		//save reference.conf
 		if (alsoSaveOrig) {
