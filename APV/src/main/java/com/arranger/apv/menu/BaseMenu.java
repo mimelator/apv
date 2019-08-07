@@ -33,13 +33,10 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 		supportsExtendedConfig = false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void draw() {
-		//Hack for: https://github.com/mimelator/apv/issues/15
-		float transx = parent.width * .1f;
-		parent.translate(-transx, 0);
-		titlePainter.drawText(getTitleStrings(), LOCATION.UPPER_RIGHT);
-		parent.translate(transx, 0);
-		//Hack for: https://github.com/mimelator/apv/issues/15
+		List<String> textToList = Arrays.asList(new String[] {getDisplayName()});
+		drawText(textToList, LOCATION.UPPER_RIGHT, true);
 		
 		menuPainter.draw(showDetails);
 		
@@ -64,10 +61,21 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 			new TextPainter(parent).drawText(msgs, LOCATION.UPPER_MIDDLE);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	protected List<String> getTitleStrings() {
-		 return Arrays.asList(new String[] {getDisplayName()});
+
+	protected void drawText(List<String> msgs, LOCATION location, boolean offset) {
+		//Hack for: https://github.com/mimelator/apv/issues/15
+		if (offset) {
+			float transx = parent.width * .1f;
+			parent.translate(-transx, 0);
+		}
+		
+		titlePainter.drawText(msgs, location);
+		
+		if (offset) {
+			float transx = parent.width * .1f;
+			parent.translate(transx, 0);
+		}
+		//Hack for: https://github.com/mimelator/apv/issues/15
 	}
 	
 	/**

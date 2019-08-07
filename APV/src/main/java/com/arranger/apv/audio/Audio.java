@@ -4,6 +4,10 @@ package com.arranger.apv.audio;
 import java.nio.file.Path;
 import java.util.stream.IntStream;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Mixer.Info;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.cmd.Command;
@@ -25,33 +29,24 @@ public class Audio extends APVPlugin {
 	protected BeatInfo beatInfo;
 	protected AudioSource source;
 	protected Minim minim;
+	protected Info currentMixerInfo;
 	protected int db = 0;
 	protected boolean lineIn = false;
+	
 	
 	public Audio(Main parent, int bufferSize) {
 		super(parent);
 		minim = new Minim(parent);
 		
-		boolean lineIn = parent.getConfigBoolean(APV_LINE_IN);
-		if (lineIn) {
-			System.out.println("Listening to line in");
-			lineIn = true;
-			source = minim.getLineIn(Minim.MONO, bufferSize);
-		} else {
+		lineIn = parent.getConfigBoolean(APV_LINE_IN);
+		if (!lineIn) {
 			System.out.println("Not using Line In, finding first mp3 to play");
 			Path mp3 = new FileHelper(parent).getFirstMp3FromMusicDir();
 			source = minim.loadFile(mp3.toAbsolutePath().toString());
-		}
-		
-		beatInfo = new BeatInfo(parent, source);
-		if (source instanceof AudioPlayer) {
 			AudioPlayer audioPlayer = (AudioPlayer)source;
 			audioPlayer.loop();
-		} else if (source instanceof AudioInput) {
-			AudioInput audioInput = (AudioInput)source;
-			if (audioInput.isMonitoring()) {
-				audioInput.disableMonitoring();
-			}
+		} else {
+			configureLineIn(parent, bufferSize);
 		}
 		
 		parent.getSetupEvent().register(() -> {
@@ -59,6 +54,43 @@ public class Audio extends APVPlugin {
 			cs.registerHandler(Command.AUDIO_INC, (command, source, modifiers) -> onCommand(command));
 			cs.registerHandler(Command.AUDIO_DEC, (command, source, modifiers) -> onCommand(command));
 		});
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void configureLineIn(Main parent, int bufferSize) {
+		System.out.println("Attemingt to configure the audio input line in");
+		Info[] mixerInfo = AudioSystem.getMixerInfo();
+		for (Info info : mixerInfo) {
+			currentMixerInfo = info;
+			System.out.println("trying to get the mixer from info: " + info.getName() + ":" + info.getDescription());
+			Mixer mixer = AudioSystem.getMixer(info);
+			minim.setInputMixer(mixer);
+		    source = minim.getLineIn(Minim.MONO, bufferSize);
+			try {
+				boolean result = connectLineIn(parent, source);
+				if (result == true) {
+					return;
+				}
+				
+//				if (connectLineIn(parent, source)) {
+//					return;
+//				}
+			} catch (Throwable t) {
+				System.out.print(t.getMessage());
+			}
+		}
+	}
+
+	protected boolean connectLineIn(Main parent, AudioSource source) {
+		beatInfo = new BeatInfo(parent, source);
+		if (source instanceof AudioInput) {
+			AudioInput audioInput = (AudioInput)source;
+			if (audioInput.isMonitoring()) {
+				audioInput.disableMonitoring();
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isLineIn() {
@@ -93,6 +125,10 @@ public class Audio extends APVPlugin {
 
 	public BeatInfo getBeatInfo() {
 		return beatInfo;
+	}
+	
+	public Info getCurrentMixerInfo() {
+		return currentMixerInfo;	
 	}
 	
 	public static void scale(float [] samples, float dBvalue) {

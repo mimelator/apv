@@ -3,6 +3,7 @@ package com.arranger.apv;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -937,6 +938,16 @@ public class Main extends PApplet {
 	
 	@Override
 	public void setup() {
+		// Creating a File object that represents the disk file and Assign o to output stream 
+		try {
+			File logFile = new File("wavelength.log");
+			System.out.println("writing to logfile: " + logFile.getAbsolutePath());
+			System.setOut(new java.io.PrintStream(logFile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
 		songsModel = new SongsModel(this);
 		colorsModel = new ColorsModel(this);
 		emojisModel = new EmojisModel(this);

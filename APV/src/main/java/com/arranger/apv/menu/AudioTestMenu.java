@@ -3,11 +3,15 @@ package com.arranger.apv.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.Mixer.Info;
 import javax.swing.JOptionPane;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.systems.lite.FreqDetector;
+import com.arranger.apv.util.draw.SafePainter.LOCATION;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class AudioTestMenu extends CommandBasedMenu {
 	
@@ -19,9 +23,14 @@ public class AudioTestMenu extends CommandBasedMenu {
 		showDetails = false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void draw() {
 		super.draw();
 		freqDetector.draw();
+		
+		Info currentMixerInfo = parent.getAudio().getCurrentMixerInfo();
+		List<String> textToList = Arrays.asList(new String[] {"Audio input", currentMixerInfo.getName(), currentMixerInfo.getDescription()});
+		drawText(textToList, LOCATION.MIDDLE, false);
 	}
 
 	@Override
