@@ -1,5 +1,7 @@
 package com.arranger.apv.audio;
 
+import java.util.stream.IntStream;
+
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 
@@ -16,6 +18,7 @@ public class BeatInfo extends APVPlugin {
 	protected BeatDetect freqDetector;
 	protected FFT fft;
 	protected AudioListener listener;
+	protected AudioFilter highPassFilter;
 	
 	public BeatInfo(Main parent, AudioSource source) {
 		super(parent);
@@ -45,6 +48,8 @@ public class BeatInfo extends APVPlugin {
 		createFFT();
 		createListener();
 		source.addListener(listener);
+		
+		highPassFilter = new AudioFilter(parent, parent.getFilterFreq(), (int)source.sampleRate(), AudioFilter.PassType.Highpass, 1);
 	}
 	
 	public void updateSource(AudioSource newSource) {
@@ -83,6 +88,11 @@ public class BeatInfo extends APVPlugin {
 	private void createListener() {
 		this.listener = new AudioListener() {
 			public void samples(float[] samps) {
+				IntStream.range(0, samps.length).forEach(i -> {
+					highPassFilter.update(samps[i]);
+					samps[i] = highPassFilter.getValue();
+				});
+				
 				Audio.scale(samps, parent.getAudio().getDB());
 				pulseDetector.detect(samps);
 				freqDetector.detect(samps);

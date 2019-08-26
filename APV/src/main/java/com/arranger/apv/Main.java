@@ -206,6 +206,7 @@ public class Main extends PApplet {
 		DEBUG_AGENT_MESSAGES("debugAgentMessages", "true|false"),
 		DEBUG_SYS_MESSAGES("debugSystemMessages", "true|false"),
 		DEFAULT_SHAPE_SYSTEM_ALPHA("defaultShapeSystemAlpha", "integer"),
+		FILTER_FREQUENCY("filterFreq", "1 < 20000"),
 		FONT_NAME("font.name", "string"),
 		FONT_SIZE("font.size", "integer"),
 		FONT_STYLE("font.style", "PLAIN|ITALIC|BOLD"),
@@ -665,6 +666,10 @@ public class Main extends PApplet {
 	
 	public int getWatermarkFrames() {
 		return getConfigInt(FLAGS.WATERMARK_FRAMES.apvName());
+	}
+	
+	public int getFilterFreq() {
+		return getConfigInt(FLAGS.FILTER_FREQUENCY.apvName());
 	}
 	
 	public float getFrameRate() {
