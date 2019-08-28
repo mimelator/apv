@@ -16,10 +16,8 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class WelcomeDisplay extends HelpDisplay {
 	
-	public static final String DIRECTIONS = "Welcome to Wavelength\n" + 
-			"  Press 'm' to access the menu and 'e' to dismiss this message\n" + 
-			"  You can also access many other commands like the following:\n";
-	
+	private static final String WELCOME_TEXT = "WELCOME_TEXT";
+
 	private List<String> messages;
 	
 	@SuppressWarnings("unchecked")
@@ -89,7 +87,9 @@ public class WelcomeDisplay extends HelpDisplay {
 		});
 		
 		ArrayList<String> msgs = new ArrayList<String>();
-		msgs.add(DIRECTIONS);
+		
+		String directions = parent.getConfigString(WELCOME_TEXT);
+		msgs.add(directions);
 		msgs.addAll(cmdMessages);
 		msgs.add("Version: " + parent.getVersionInfo().getVersion());
 		return msgs;
