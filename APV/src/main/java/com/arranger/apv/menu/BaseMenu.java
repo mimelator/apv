@@ -1,5 +1,7 @@
 package com.arranger.apv.menu;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +124,21 @@ public abstract class BaseMenu extends APVPlugin implements MenuProvider {
 			parent.getConfigurator().saveCurrentConfig();
 		}
 		shouldSaveOnDeactivate = false;
+	}
+	
+	/**
+	 * @param point
+	 * @return index of menu item, or -1
+	 */
+	public int getIndexForPoint(Point2D point) {
+		for (int i = 0; i < size(); i++) {
+			Rectangle2D rect = menuPainter.getRectForMenuItem(i, true);
+			if (rect.contains(point)) {
+				return i;
+			}
+		};
+		
+		return -1;
 	}
 	
 	protected boolean shouldDrawResultMsg(List<String> msgs) {

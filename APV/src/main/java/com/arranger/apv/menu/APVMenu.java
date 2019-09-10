@@ -1,5 +1,6 @@
 package com.arranger.apv.menu;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,10 @@ import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
 import com.arranger.apv.Main.SYSTEM_NAMES;
 import com.arranger.apv.cmd.Command;
+import com.arranger.apv.control.ControlSystem.CONTROL_MODES;
+import com.arranger.apv.loc.LocationSystem;
+import com.arranger.apv.loc.MouseLocationSystem;
+import com.arranger.apv.util.KeyListener;
 import com.arranger.apv.util.KeyListener.KEY_SYSTEMS;
 import com.arranger.apv.util.KeyListener.KeyEventListener;
 import com.arranger.apv.util.draw.SafePainter;
@@ -48,7 +53,7 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	private Stack<BaseMenu> menuStack;
 	
 	public APVMenu(Main parent) {
-		super(parent, Main.SYSTEM_NAMES.MENU, false);
+		super(parent, Main.SYSTEM_NAMES.MENU, false);	
 		mainMenu = new MainMenu(parent);
 		menuStack = new Stack<BaseMenu>();
 		
@@ -74,6 +79,10 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		
 		//always start off disabled
 		sw.setEnabled(false);
+		
+		parent.getMousePulseEvent().register(() -> {
+			onMouseClickEvent();
+		});
 	}
 
 	protected void onExit() {
@@ -128,6 +137,20 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 	}
 	
 	public void drawMenu() {
+		//check mouse motion
+		if (parent.getCurrentControlMode() == CONTROL_MODES.MANUAL) {
+			Point2D pt = parent.getCurrentPoint();
+			//does this pt fit in any of the menu items horizontally?
+			//logger.info("APVMenu::drawMenu::CurrentPoint:" + pt);
+			
+			//Check mouse index
+			int mouseIndex = currentMenu.getIndexForPoint(pt);
+			if (mouseIndex != -1) {
+				currentMenu.setIndex(mouseIndex);
+			}
+		}
+		
+		
 		//prep and draw menu
 		parent.fill(0);
 		parent.rect(0, 0, parent.width, parent.height);
@@ -139,6 +162,21 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 			parent.textSize(parent.getGraphics().textSize * .75f);
 			parent.text(DIRECTIONS, parent.width / 2, parent.height * .85f);
 		}).paint();
+	}
+	
+	/**
+	 * Respond to mouse clicks.
+	 */
+	public void onMouseClickEvent() {
+		boolean isMenuActive = isMenuActive();
+		if (isMenuActive) {
+			onSelect();
+		}
+	}
+
+	protected boolean isMenuActive() {
+		boolean isMenuActive = parent.getKeyListener().getSystem() == KeyListener.KEY_SYSTEMS.MENU;
+		return isMenuActive;
 	}
 	
 	public void onKeyEvent(KeyEvent keyEvent) {
@@ -167,6 +205,22 @@ public class APVMenu extends APV<BaseMenu> implements KeyEventListener {
 		@Override
 		public boolean hasChildMenus() {
 			return true;
+		}
+
+		@Override
+		public void onActivate() {
+			super.onActivate();
+		
+			LocationSystem mouseLoc = parent.getLocations().getFirstInstanceOf(MouseLocationSystem.class);
+			parent.getLocations().setNextPlugin(mouseLoc, "ActivatingMenu", false);//Don't check quiet window.  Insist on the change
+			
+			parent.setCurrentControlMode(CONTROL_MODES.MANUAL);
+			
+			CONTROL_MODES ccm = parent.getCurrentControlMode();
+			logger.info("APVMenu::current Control Mode: " + ccm);
+			
+			LocationSystem currentLocationSystem = parent.getLocations().getPlugin();
+			logger.info("APVMenu::current Location System: " + currentLocationSystem);
 		}
 	}
 	

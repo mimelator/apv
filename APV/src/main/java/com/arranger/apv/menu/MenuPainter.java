@@ -1,6 +1,7 @@
 package com.arranger.apv.menu;
 
 import java.awt.Color;
+import java.awt.geom.Rectangle2D;
 
 import com.arranger.apv.APVPlugin;
 import com.arranger.apv.Main;
@@ -43,37 +44,65 @@ public class MenuPainter extends APVPlugin {
 		textPainter = new TextPainter(parent);
 	}
 	
+	/**
+	 * calculate whether the count * (fontSize + spacing) is larger than
+		 the height of the screen
+		If so, reduce the text size
+	 */
+	protected boolean isOverflowMenu() {
+		float totalUsableHeight = parent.height - (2 * OFFSET);
+		return (OFFSET * provider.size() > totalUsableHeight);
+	}
+	
+	protected float getHeightPerRow() {
+		float totalUsableHeight = parent.height - (2 * OFFSET);
+		int count = provider.size();
+		return totalUsableHeight / count;
+	}
+	
+	protected float getCalculatedOffsetPerRow() {
+		if (isOverflowMenu()) {
+			return getHeightPerRow();
+		} else {
+			return OFFSET;
+		}
+	}
+	
 	public void draw(boolean showDetails) {
 		//center stuff
 		int x = OFFSET;
 		int y = INSET;
 		parent.translate(x, y);
 		
-		int currentColor = parent.getColor().getCurrentColor().getRGB();
+		Color currentColorObj = parent.getColor().getCurrentColor();
+		int currentColor = currentColorObj.getRGB();
 		
-		//calculate whether the count * (fontSize + spacing) is larger than
-		// the height of the screen
-		//  If so, reduce the text size
-		int count = provider.size();
-		float offset = OFFSET;
-		float totalUsableHeight = parent.height - (2 * offset);
+		float offset = getCalculatedOffsetPerRow();
+		float vOffset = (.1f * offset);
 		
-		if (offset * count > totalUsableHeight) {
-			float heightPerRow = totalUsableHeight / count;
-			float fontSize = heightPerRow * .80f;
-			offset = heightPerRow;
-			
+		//TODO What do for mouse selection?
+		if (isOverflowMenu()) {
+			float fontSize = getCalculatedOffsetPerRow() * .80f;
 			parent.textSize(fontSize);
 		}
 		
 		parent.textAlign(LEFT, TOP);
 		
-		for (int index = 0; index < count; index++) {
+		for (int index = 0; index < provider.size(); index++) {
 			MenuItem item = provider.getMenuItem(index);
 			if (item.isSelected()) {
+				
+				//@SEE #getRectForMenuItem
+				float top_left_y = (index * offset) + vOffset;
+				
+				//lighter full row
 				parent.rectMode(CORNER);
+				parent.fill(currentColorObj.brighter().brighter().getRGB(), 127);
+				parent.rect(0, top_left_y, parent.width * .8f, offset); 
+				
+				//Little cursor
 				parent.fill(currentColor);
-				parent.rect(0, index * offset, offset / 2, offset);
+				parent.rect(0, top_left_y, offset / 2, offset);
 				
 				if (showDetails) {
 					//draw the config
@@ -92,5 +121,17 @@ public class MenuPainter extends APVPlugin {
 		}
 		
 		parent.translate(-x, -y);
+	}
+	
+	public Rectangle2D getRectForMenuItem(int index, boolean includeScreenOffsets) {
+		float offset = getCalculatedOffsetPerRow();
+		float vOffset = (.1f * offset);
+		float top_left_y = (index * offset) + vOffset;
+		
+		if (includeScreenOffsets) {
+			return new Rectangle2D.Float(0 + offset, top_left_y + offset, parent.width * .8f, offset);
+		} else {
+			return new Rectangle2D.Float(0, top_left_y, parent.width * .8f, offset);
+		}
 	}
 }

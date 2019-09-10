@@ -3,3 +3,5 @@
 /.DS_Store
 /reference.conf
 /application.conf
+/application.conf.bak
+/wavelength.log
